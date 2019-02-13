@@ -31,7 +31,7 @@ namespace DNTFrameworkCore.EntityFramework.Tests.Context.Hooks
             var entity = new TimestampedSoftDeletedEntity();
 
             ((IHook) hook).Hook(entity, null);
-            Assert.AreEqual(DateTime.Today, entity.LastModificationDateTime.Value.Date);
+            Assert.AreEqual(DateTimeOffset.UtcNow.Date, entity.LastModificationDateTime.Value.Date);
         }
     }
 }
