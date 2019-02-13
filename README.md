@@ -1,6 +1,6 @@
 DNTFrameworkCore
 ======
-[![Build status](https://ci.appveyor.com/api/projects/status/c76v8m5ry9jg1u9h/branch/master?svg=true)](https://ci.appveyor.com/project/rabbal/dntframeworkcore/branch/master)
+[![Build status](https://rabbal.visualstudio.com/DNTFrameworkCore/_apis/build/status/DNTFrameworkCore-Master-CI)](https://rabbal.visualstudio.com/DNTFrameworkCore/_build/latest?definitionId=3)
 
 `DNTFrameworkCore` is a Lightweight and 
 Extensible Infrastructure for Building Web Applications
