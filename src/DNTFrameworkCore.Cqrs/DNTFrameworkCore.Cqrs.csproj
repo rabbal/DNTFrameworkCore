@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>7.3</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="8.1.2" />
+      <PackageReference Include="MediatR" Version="6.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Behaviors" />
+      <Folder Include="Commands" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DNTFrameworkCore\DNTFrameworkCore.csproj" />
+    </ItemGroup>
+
+</Project>
