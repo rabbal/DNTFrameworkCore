@@ -3,7 +3,7 @@ using DNTFrameworkCore.Domain.Entities.Tracking;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Identity
 {
-    public class UserClaim : ModificationTrackingEntity<int>
+    public class UserClaim : ModificationTrackingEntity
     {
         public const int MaxClaimTypeLength = 256;
 

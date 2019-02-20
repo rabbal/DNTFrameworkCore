@@ -3,7 +3,7 @@ using DNTFrameworkCore.Domain.Entities.Tracking;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Identity
 {
-    public class UserToken : CreationTrackingEntity<int>
+    public class UserToken : CreationTrackingEntity
     {
         public const int MaxAccessTokenHashLength = 256;
         public const int MaxRefreshTokenIdHashLength = 256;

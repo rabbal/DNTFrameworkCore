@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace DNTFrameworkCore.Helper
+namespace DNTFrameworkCore.Helpers
 {
     public class LazyConcurrentDictionary<TKey, TValue>
     {

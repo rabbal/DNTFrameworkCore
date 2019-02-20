@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using DNTFrameworkCore.Extensions;
-using DNTFrameworkCore.Helper;
+using DNTFrameworkCore.Helpers;
 
 namespace DNTFrameworkCore.ReflectionToolkit
 {

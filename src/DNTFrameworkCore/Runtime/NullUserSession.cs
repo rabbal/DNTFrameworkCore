@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DNTFrameworkCore.Helper;
+using DNTFrameworkCore.Helpers;
 using DNTFrameworkCore.MultiTenancy;
 
 namespace DNTFrameworkCore.Runtime

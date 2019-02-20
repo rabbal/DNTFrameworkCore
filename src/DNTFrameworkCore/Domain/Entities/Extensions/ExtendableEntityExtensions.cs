@@ -8,9 +8,9 @@ namespace DNTFrameworkCore.Domain.Entities.Extensions
 {
     public static class ExtendableEntityExtensions
     {
-        public static T GetData<T>(this IExtendableEntity entity, string name, bool handleType = false)
+        public static T ReadExtensionValue<T>(this IExtendableEntity entity, string name, bool handleType = false)
         {
-            return entity.GetData<T>(
+            return entity.ReadExtensionValue<T>(
                 name,
                 handleType
                     ? new JsonSerializer {TypeNameHandling = TypeNameHandling.All}
@@ -18,7 +18,7 @@ namespace DNTFrameworkCore.Domain.Entities.Extensions
             );
         }
 
-        public static T GetData<T>(this IExtendableEntity entity, string name, JsonSerializer jsonSerializer)
+        public static T ReadExtensionValue<T>(this IExtendableEntity entity, string name, JsonSerializer jsonSerializer)
         {
             Guard.ArgumentNotNull(entity, nameof(entity));
             Guard.ArgumentNotNull(name, nameof(name));
@@ -35,10 +35,10 @@ namespace DNTFrameworkCore.Domain.Entities.Extensions
             return (T) prop.ToObject(typeof(T), jsonSerializer ?? JsonSerializer.CreateDefault());
         }
 
-        public static void SetData<T>(this IExtendableEntity entity, string name, T value,
+        public static void SetExtensionValue<T>(this IExtendableEntity entity, string name, T value,
             bool handleType = false)
         {
-            entity.SetData(
+            entity.SetExtensionValue(
                 name,
                 value,
                 handleType
@@ -47,7 +47,7 @@ namespace DNTFrameworkCore.Domain.Entities.Extensions
             );
         }
 
-        public static void SetData<T>(this IExtendableEntity entity, string name, T value,
+        public static void SetExtensionValue<T>(this IExtendableEntity entity, string name, T value,
             JsonSerializer jsonSerializer)
         {
             Guard.ArgumentNotNull(entity, nameof(entity));
@@ -83,7 +83,7 @@ namespace DNTFrameworkCore.Domain.Entities.Extensions
             entity.ExtensionJson = data;
         }
 
-        public static bool RemoveData(this IExtendableEntity entity, string name)
+        public static bool RemoveExtensionValue(this IExtendableEntity entity, string name)
         {
             Guard.ArgumentNotNull(entity, nameof(entity));
 
@@ -103,7 +103,5 @@ namespace DNTFrameworkCore.Domain.Entities.Extensions
 
             return true;
         }
-
-        //TODO: string[] GetExtendedPropertyNames(...)
     }
 }

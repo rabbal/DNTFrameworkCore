@@ -53,8 +53,8 @@ namespace DNTFrameworkCore.Domain.Entities
         {
             var fields = GetFields();
 
-            var startValue = 17;
-            var multiplier = 59;
+            const int startValue = 17;
+            const int multiplier = 59;
 
             var hashCode = startValue;
 

@@ -6,7 +6,7 @@ namespace DNTFrameworkCore.Web.MultiTenancy
 {
     public static class StructureMapApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseTenantContainers(this IApplicationBuilder app)
+        public static IApplicationBuilder UseDNTTenantContainers(this IApplicationBuilder app)
         {
             Guard.ArgumentNotNull(app, nameof(app));
            

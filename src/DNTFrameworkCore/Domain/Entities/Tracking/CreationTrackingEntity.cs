@@ -2,7 +2,7 @@
 
 namespace DNTFrameworkCore.Domain.Entities.Tracking
 {
-    public abstract class CreationTrackingEntity : CreationTrackingEntity<long>
+    public abstract class CreationTrackingEntity : CreationTrackingEntity<int>
     {
     }
 

@@ -8,7 +8,7 @@ namespace DNTFrameworkCore.TestAPI.Domain.Identity
     /// Base Class For TPH Inheritance Strategy
     /// Storage of System's Permissions
     /// </summary>
-    public abstract class Permission : ModificationTrackingEntity<int>
+    public abstract class Permission : ModificationTrackingEntity
     {
         public const int MaxNameLength = 128;
 
@@ -24,7 +24,7 @@ namespace DNTFrameworkCore.TestAPI.Domain.Identity
 
         public Claim ToClaim()
         {
-            return new Claim(ConstantClaims.Permission, Name);
+            return new Claim(DNTClaimTypes.Permission, Name);
         }
 
         public void InitializeFromClaim(Claim other)

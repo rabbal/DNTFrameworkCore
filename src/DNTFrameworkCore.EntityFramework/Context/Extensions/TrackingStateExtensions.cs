@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DNTFrameworkCore.EntityFramework.Context.Extensions
 {
     /// <summary>
-    /// Extension methods for classes implementing <see cref="IHaveTrackingState"/>.
+    /// Extension methods for classes implementing <see cref="ITrackedEntity"/>.
     /// </summary>
     public static class TrackingStateExtensions
     {

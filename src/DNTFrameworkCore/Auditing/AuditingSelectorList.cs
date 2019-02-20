@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DNTFrameworkCore.Helper;
+using DNTFrameworkCore.Helpers;
 
 namespace DNTFrameworkCore.Auditing
 {

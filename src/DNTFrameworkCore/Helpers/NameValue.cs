@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DNTFrameworkCore.Helper
+namespace DNTFrameworkCore.Helpers
 {
     /// <summary>
     /// Can be used to store Name/Value (or Key/Value) pairs.

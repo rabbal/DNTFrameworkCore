@@ -117,7 +117,7 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
         /// </summary>
         /// <param name="context">Used to query and save changes to a database</param>
         /// <param name="items">Objects that implement IHaveTrackingState</param>
-        public static void DetachEntities(this DbContext context, IEnumerable<IHaveTrackingState> items)
+        public static void DetachEntities(this DbContext context, IEnumerable<ITrackedEntity> items)
         {
             foreach (var item in items)
                 context.DetachEntities(item);
@@ -128,7 +128,7 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
         /// </summary>
         /// <param name="context">Used to query and save changes to a database</param>
         /// <param name="item">Object that implements IHaveTrackingState</param>
-        public static void DetachEntities(this DbContext context, IHaveTrackingState item)
+        public static void DetachEntities(this DbContext context, ITrackedEntity item)
         {
             context.TraverseGraph(item, n => n.Entry.State = EntityState.Detached);
         }
@@ -138,7 +138,7 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
         /// </summary>
         /// <param name="context">Used to query and save changes to a database</param>
         /// <param name="item">Object that implements IHaveTrackingState</param>
-        public static void LoadRelatedEntities(this DbContext context, IHaveTrackingState item)
+        public static void LoadRelatedEntities(this DbContext context, ITrackedEntity item)
         {
             context.TraverseGraph(item, n =>
             {
@@ -157,7 +157,7 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
         /// </summary>
         /// <param name="context">Used to query and save changes to a database</param>
         /// <param name="items">Objects that implement IHaveTrackingState</param>
-        public static void LoadRelatedEntities(this DbContext context, IEnumerable<IHaveTrackingState> items)
+        public static void LoadRelatedEntities(this DbContext context, IEnumerable<ITrackedEntity> items)
         {
             foreach (var item in items)
                 context.LoadRelatedEntities(item);
@@ -168,7 +168,7 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
         /// </summary>
         /// <param name="context">Used to query and save changes to a database</param>
         /// <param name="item">Object that implements IHaveTrackingState</param>
-        public static async Task LoadRelatedEntitiesAsync(this DbContext context, IHaveTrackingState item)
+        public static async Task LoadRelatedEntitiesAsync(this DbContext context, ITrackedEntity item)
         {
             await context.TraverseGraphAsync(item, async n =>
             {
@@ -187,7 +187,7 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
         /// </summary>
         /// <param name="context">Used to query and save changes to a database</param>
         /// <param name="items">Objects that implement IHaveTrackingState</param>
-        public static async Task LoadRelatedEntitiesAsync(this DbContext context, IEnumerable<IHaveTrackingState> items)
+        public static async Task LoadRelatedEntitiesAsync(this DbContext context, IEnumerable<ITrackedEntity> items)
         {
             foreach (var item in items)
                 await context.LoadRelatedEntitiesAsync(item);

@@ -37,14 +37,14 @@ namespace DNTFrameworkCore.TestAPI.Authentication
                 return;
             }
 
-            var serialNumberClaim = claimsIdentity.FindFirst(ConstantClaims.SerialNumber);
+            var serialNumberClaim = claimsIdentity.FindFirst(DNTClaimTypes.SerialNumber);
             if (serialNumberClaim == null)
             {
                 context.Fail("This is not our issued token. It has no serial-number.");
                 return;
             }
 
-            var userIdString = claimsIdentity.FindFirst(ConstantClaims.UserId).Value;
+            var userIdString = claimsIdentity.FindFirst(DNTClaimTypes.UserId).Value;
             if (!long.TryParse(userIdString, out var userId))
             {
                 context.Fail("This is not our issued token. It has no user-id.");

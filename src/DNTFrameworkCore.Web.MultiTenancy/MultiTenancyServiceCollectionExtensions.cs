@@ -9,7 +9,7 @@ namespace DNTFrameworkCore.Web.MultiTenancy
 {
     public static class MultiTenancyServiceCollectionExtensions
     {
-        public static IServiceCollection AddMultiTenancy<TResolver>(this IServiceCollection services,
+        public static IServiceCollection AddDNTMultiTenancy<TResolver>(this IServiceCollection services,
             MultiTenancyDatabaseStrategy strategy = MultiTenancyDatabaseStrategy.HybridDatabase)
             where TResolver : class, ITenantResolver
         {

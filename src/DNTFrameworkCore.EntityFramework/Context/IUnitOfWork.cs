@@ -22,8 +22,8 @@ namespace DNTFrameworkCore.EntityFramework.Context
         void UpdateRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : class;
         void RemoveRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : class;
 
-        void ApplyChanges(IHaveTrackingState root);
-        void AcceptChanges(IHaveTrackingState root);
+        void ApplyChanges(ITrackedEntity root);
+        void AcceptChanges(ITrackedEntity root);
 
         int ExecuteSqlCommand(string query);
         int ExecuteSqlCommand(string query, params object[] parameters);

@@ -10,11 +10,11 @@ using DNTFrameworkCore.Runtime;
 
 namespace DNTFrameworkCore.Extensions
 {
-    public static class ClaimsIdentityExtensions
+    public static class IdentityExtensions
     {
         public static T GetUserId<T>(this IIdentity identity) where T : IConvertible
         {
-            var id = identity?.GetUserClaimValue(ConstantClaims.UserId);
+            var id = identity?.FindUserClaimValue(DNTClaimTypes.UserId);
 
             if (id != null) return (T) Convert.ChangeType(id, typeof(T), CultureInfo.InvariantCulture);
 
@@ -23,7 +23,7 @@ namespace DNTFrameworkCore.Extensions
 
         public static long? GetUserId(this IIdentity identity)
         {
-            var id = identity?.GetUserClaimValue(ConstantClaims.UserId);
+            var id = identity?.FindUserClaimValue(DNTClaimTypes.UserId);
 
             if (id.IsEmpty()) return null;
 
@@ -34,7 +34,7 @@ namespace DNTFrameworkCore.Extensions
 
         public static long GetTenantId(this IIdentity identity)
         {
-            var tenantClaim = identity?.GetUserClaimValue(ConstantClaims.TenantId);
+            var tenantClaim = identity?.FindUserClaimValue(DNTClaimTypes.TenantId);
 
             if (tenantClaim.IsEmpty()) return default;
 
@@ -43,7 +43,7 @@ namespace DNTFrameworkCore.Extensions
 
         public static long? GetImpersonatorTenantId(this IIdentity identity)
         {
-            var tenantClaim = identity?.GetUserClaimValue(ConstantClaims.ImpersonatorTenantId);
+            var tenantClaim = identity?.FindUserClaimValue(DNTClaimTypes.ImpersonatorTenantId);
 
             if (tenantClaim.IsEmpty()) return default;
 
@@ -52,7 +52,7 @@ namespace DNTFrameworkCore.Extensions
 
         public static long? GetImpersonatorUserId(this IIdentity identity)
         {
-            var tenantClaim = identity?.GetUserClaimValue(ConstantClaims.ImpersonatorUserId);
+            var tenantClaim = identity?.FindUserClaimValue(DNTClaimTypes.ImpersonatorUserId);
 
             if (tenantClaim.IsEmpty()) return default;
 
@@ -65,7 +65,7 @@ namespace DNTFrameworkCore.Extensions
 
             var claimsIdentity = identity as ClaimsIdentity;
 
-            var permissionClaims = claimsIdentity?.FindAll(ConstantClaims.Permission);
+            var permissionClaims = claimsIdentity?.FindAll(DNTClaimTypes.Permission);
 
             if (permissionClaims == null) return new List<string>();
 
@@ -78,7 +78,7 @@ namespace DNTFrameworkCore.Extensions
 
             var claimsIdentity = identity as ClaimsIdentity;
 
-            var roleClaims = claimsIdentity?.FindAll(ConstantClaims.Role);
+            var roleClaims = claimsIdentity?.FindAll(DNTClaimTypes.Role);
 
             if (roleClaims == null) return new List<string>();
 
@@ -90,19 +90,19 @@ namespace DNTFrameworkCore.Extensions
             return identity?.FindFirst(claimType)?.Value;
         }
 
-        public static string GetUserClaimValue(this IIdentity identity, string claimType)
+        public static string FindUserClaimValue(this IIdentity identity, string claimType)
         {
             return (identity as ClaimsIdentity)?.FindFirstValue(claimType);
         }
 
         public static string GetUserFirstName(this IIdentity identity)
         {
-            return identity?.GetUserClaimValue(ConstantClaims.GivenName);
+            return identity?.FindUserClaimValue(DNTClaimTypes.GivenName);
         }
 
         public static string GetUserLastName(this IIdentity identity)
         {
-            return identity?.GetUserClaimValue(ConstantClaims.Surname);
+            return identity?.FindUserClaimValue(DNTClaimTypes.Surname);
         }
 
         public static string GetUserFullName(this IIdentity identity)
@@ -118,7 +118,7 @@ namespace DNTFrameworkCore.Extensions
 
         public static string GetUserName(this IIdentity identity)
         {
-            return identity?.GetUserClaimValue(ConstantClaims.UserName);
+            return identity?.FindUserClaimValue(DNTClaimTypes.UserName);
         }
     }
 }

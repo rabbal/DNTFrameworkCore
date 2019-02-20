@@ -5,7 +5,7 @@ namespace DNTFrameworkCore.Extensions
 {
     public static class ExpressionExtensions
     {
-        public static Expression<Func<T, bool>> CombineExpressions<T>(this Expression<Func<T, bool>> expression1,
+        public static Expression<Func<T, bool>> Combine<T>(this Expression<Func<T, bool>> expression1,
             Expression<Func<T, bool>> expression2)
         {
             var parameter = Expression.Parameter(typeof(T));
@@ -34,10 +34,8 @@ namespace DNTFrameworkCore.Extensions
 
             public override Expression Visit(Expression node)
             {
-                if (node == _oldValue) return _newValue;
-
-                return base.Visit(node);
+                return node == _oldValue ? _newValue : base.Visit(node);
             }
-        }   
+        }
     }
 }

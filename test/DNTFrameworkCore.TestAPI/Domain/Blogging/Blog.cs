@@ -3,7 +3,7 @@ using DNTFrameworkCore.Domain.Entities.Tracking;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Blogging
 {
-    public class Blog : TrackableEntity<int>, IAggregateRoot
+    public class Blog : TrackableEntity, IAggregateRoot
     {
         public const int MaxTitleLength = 50;
         public const int MaxUrlLength = 50;

@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.Domain.Entities
 
         public override string ToString() => "${Name} ({Id})";
 
-        public static IEnumerable<T> GetAll<T>() where T : Enumeration
+        public static IEnumerable<T> List<T>() where T : Enumeration
         {
             var fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
 
@@ -61,7 +61,7 @@ namespace DNTFrameworkCore.Domain.Entities
 
         private static T Parse<T, TK>(TK value, string description, Func<T, bool> predicate) where T : Enumeration
         {
-            var matchingItem = GetAll<T>().FirstOrDefault(predicate);
+            var matchingItem = List<T>().FirstOrDefault(predicate);
 
             if (matchingItem == null)
                 throw new InvalidOperationException($"'{value}' is not a valid {description} in {typeof(T)}");

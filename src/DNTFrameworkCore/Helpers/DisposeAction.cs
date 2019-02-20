@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace DNTFrameworkCore.Helper
+namespace DNTFrameworkCore.Helpers
 {
     /// <summary>
     /// This class can be used to provide an action when

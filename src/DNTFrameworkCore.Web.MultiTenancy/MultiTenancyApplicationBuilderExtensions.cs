@@ -7,14 +7,14 @@ namespace DNTFrameworkCore.Web.MultiTenancy
 {
     public static class MultiTenancyApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseMultiTenancy(this IApplicationBuilder app)
+        public static IApplicationBuilder UseDNTMultiTenancy(this IApplicationBuilder app)
         {
             Guard.ArgumentNotNull(app, nameof(app));
             
             return app.UseMiddleware<TenantResolutionMiddleware>();
         }
 
-        public static IApplicationBuilder UsePerTenant<TTenant>(this IApplicationBuilder app,
+        public static IApplicationBuilder UseDNTPerTenant<TTenant>(this IApplicationBuilder app,
             Action<TenantPipelineBuilderContext, IApplicationBuilder> configuration)
         {
             Guard.ArgumentNotNull(app, nameof(app));

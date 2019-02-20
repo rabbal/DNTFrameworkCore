@@ -2,6 +2,10 @@
 
 namespace DNTFrameworkCore.Domain.Entities.Tracking
 {
+    public abstract class TrackableEntity : TrackableEntity<int>
+    {
+    }
+
     public abstract class TrackableEntity<TKey> : Entity<TKey>, ITrackable where TKey : IEquatable<TKey>
     {
         public DateTimeOffset CreationDateTime { get; set; }
@@ -14,7 +18,7 @@ namespace DNTFrameworkCore.Domain.Entities.Tracking
         public long? CreatorUserId { get; set; }
     }
 
-    public abstract class TrackableEntity<TKey,TUser> : TrackableEntity<TKey>, ITrackable<TUser>
+    public abstract class TrackableEntity<TKey, TUser> : TrackableEntity<TKey>, ITrackable<TUser>
         where TUser : Entity where TKey : IEquatable<TKey>
     {
         public TUser CreatorUser { get; set; }

@@ -16,7 +16,7 @@ namespace DNTFrameworkCore.Web.EntityFramework
                 var services = scope.ServiceProvider;
 
                 var logger = services.GetRequiredService<ILogger<TContext>>();
-                var initializers = services.GetServices<IDbInitializer>();
+                var initializers = services.GetServices<IDbSeed>();
 
                 var context = services.GetService<TContext>();
 
@@ -32,7 +32,7 @@ namespace DNTFrameworkCore.Web.EntityFramework
 
                     foreach (var initializer in initializers)
                     {
-                        initializer.Initialize();
+                        initializer.Seed();
                     }
 
                     logger.LogInformation($"Migrated database associated with context {typeof(TContext).Name}");

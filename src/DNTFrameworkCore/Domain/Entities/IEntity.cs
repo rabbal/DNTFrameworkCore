@@ -1,6 +1,6 @@
 namespace DNTFrameworkCore.Domain.Entities
 {
-    public interface IEntity : IHaveTrackingState
+    public interface IEntity : ITrackedEntity
     {
     }
 }

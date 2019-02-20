@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace DNTFrameworkCore.Helper
+namespace DNTFrameworkCore.Helpers
 {
     public static class ValidationHelper
     {

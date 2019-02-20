@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq.Expressions;
 using DNTFrameworkCore.Application.Services;
-using DNTFrameworkCore.Helper;
+using DNTFrameworkCore.Helpers;
 
 namespace DNTFrameworkCore.Auditing
 {

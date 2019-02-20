@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 using DNTFrameworkCore.Domain.Entities;
 using DNTFrameworkCore.EntityFramework.Context.Extensions;
 using DNTFrameworkCore.Exceptions;
+using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.GuardToolkit;
-using DNTFrameworkCore.Helper;
+using DNTFrameworkCore.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -86,11 +87,11 @@ namespace DNTFrameworkCore.EntityFramework.Context
             base.RemoveRange(entities);
         }
 
-        public void ApplyChanges(IHaveTrackingState root)
+        public void ApplyChanges(ITrackedEntity root)
         {
             ChangeTracker.TrackGraph(root, node =>
             {
-                if (!(node.Entry.Entity is IHaveTrackingState haveTrackingState)) return;
+                if (!(node.Entry.Entity is ITrackedEntity haveTrackingState)) return;
 
                 node.Entry.State = EntityState.Detached;
 
@@ -122,7 +123,7 @@ namespace DNTFrameworkCore.EntityFramework.Context
                                 return;
                             }
 
-                            var parent = node.SourceEntry.Entity as IHaveTrackingState;
+                            var parent = node.SourceEntry.Entity as ITrackedEntity;
                             if (node.SourceEntry.State == EntityState.Deleted
                                 || parent?.TrackingState == TrackingState.Deleted)
                             {
@@ -159,11 +160,11 @@ namespace DNTFrameworkCore.EntityFramework.Context
             });
         }
 
-        public void AcceptChanges(IHaveTrackingState root)
+        public void AcceptChanges(ITrackedEntity root)
         {
             this.TraverseGraph(root, n =>
             {
-                if (!(n.Entry.Entity is IHaveTrackingState haveTrackingState)) return;
+                if (!(n.Entry.Entity is ITrackedEntity haveTrackingState)) return;
 
                 if (haveTrackingState.TrackingState != TrackingState.Unchanged)
                     haveTrackingState.TrackingState = TrackingState.Unchanged;
@@ -328,42 +329,9 @@ namespace DNTFrameworkCore.EntityFramework.Context
 
             expression = expression == null
                 ? tenantFilterExpression
-                : CombineExpressions(expression, tenantFilterExpression);
+                : expression.Combine(tenantFilterExpression);
 
             return expression;
-        }
-
-        private Expression<Func<T, bool>> CombineExpressions<T>(Expression<Func<T, bool>> expression1,
-            Expression<Func<T, bool>> expression2)
-        {
-            var parameter = Expression.Parameter(typeof(T));
-
-            var leftVisitor = new ReplaceExpressionVisitor(expression1.Parameters[0], parameter);
-            var left = leftVisitor.Visit(expression1.Body);
-
-            var rightVisitor = new ReplaceExpressionVisitor(expression2.Parameters[0], parameter);
-            var right = rightVisitor.Visit(expression2.Body);
-
-            return Expression.Lambda<Func<T, bool>>(
-                Expression.AndAlso(left ?? throw new InvalidOperationException(nameof(left)),
-                    right ?? throw new InvalidOperationException(nameof(right))), parameter);
-        }
-
-        private class ReplaceExpressionVisitor : ExpressionVisitor
-        {
-            private readonly Expression _newValue;
-            private readonly Expression _oldValue;
-
-            public ReplaceExpressionVisitor(Expression oldValue, Expression newValue)
-            {
-                _oldValue = oldValue;
-                _newValue = newValue;
-            }
-
-            public override Expression Visit(Expression node)
-            {
-                return node == _oldValue ? _newValue : base.Visit(node);
-            }
         }
     }
 }

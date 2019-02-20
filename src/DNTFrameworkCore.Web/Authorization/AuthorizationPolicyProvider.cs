@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DNTFrameworkCore.Helper;
+using DNTFrameworkCore.Helpers;
 using DNTFrameworkCore.Runtime;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
@@ -29,7 +29,7 @@ namespace DNTFrameworkCore.Web.Authorization
                 var permissionNames = policyName.Substring(PermissionAuthorizeAttribute.PolicyPrefix.Length).Split(',');
 
                 return new AuthorizationPolicyBuilder()
-                    .RequireClaim(ConstantClaims.Permission, permissionNames)
+                    .RequireClaim(DNTClaimTypes.Permission, permissionNames)
                     .Build();
             });
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DNTFrameworkCore.Helper
+namespace DNTFrameworkCore.Helpers
 {
     /// <summary>
     /// Used to represent a named type selector.

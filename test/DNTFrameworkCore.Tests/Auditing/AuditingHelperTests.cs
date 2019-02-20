@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 using DNTFrameworkCore.Auditing;
-using DNTFrameworkCore.Helper;
+using DNTFrameworkCore.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Shouldly;

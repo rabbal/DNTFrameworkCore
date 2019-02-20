@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using DNTFrameworkCore.Extensions;
 
-namespace DNTFrameworkCore.Helper
+namespace DNTFrameworkCore.Helpers
 {
     /// <summary>
     /// Get the string name and type of a property or field. Eg <c>string name = Property.Name&lt;string&gt;(x =&gt; x.Length);</c>

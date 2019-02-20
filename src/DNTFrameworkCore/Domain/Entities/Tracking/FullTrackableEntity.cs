@@ -2,7 +2,7 @@
 
 namespace DNTFrameworkCore.Domain.Entities.Tracking
 {
-    public abstract class FullTrackableEntity : FullTrackableEntity<long>
+    public abstract class FullTrackableEntity : FullTrackableEntity<int>
     {
     }
 

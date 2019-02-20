@@ -95,15 +95,15 @@ namespace DNTFrameworkCore.TestAPI.Authentication
                     _configuration.Value.Issuer),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
                     ClaimValueTypes.Integer64, _configuration.Value.Issuer),
-                new Claim(ConstantClaims.UserId, user.Id.ToString(), ClaimValueTypes.Integer64,
+                new Claim(DNTClaimTypes.UserId, user.Id.ToString(), ClaimValueTypes.Integer64,
                     _configuration.Value.Issuer),
-                new Claim(ConstantClaims.UserName, user.UserName, ClaimValueTypes.String,
+                new Claim(DNTClaimTypes.UserName, user.UserName, ClaimValueTypes.String,
                     _configuration.Value.Issuer),
-                new Claim(ConstantClaims.DisplayName, user.DisplayName, ClaimValueTypes.String,
+                new Claim(DNTClaimTypes.DisplayName, user.DisplayName, ClaimValueTypes.String,
                     _configuration.Value.Issuer),
-                new Claim(ConstantClaims.SerialNumber, user.SerialNumber, ClaimValueTypes.String,
+                new Claim(DNTClaimTypes.SerialNumber, user.SerialNumber, ClaimValueTypes.String,
                     _configuration.Value.Issuer),
-                new Claim(ConstantClaims.UserData, user.Id.ToString(), ClaimValueTypes.String,
+                new Claim(DNTClaimTypes.UserData, user.Id.ToString(), ClaimValueTypes.String,
                     _configuration.Value.Issuer)
             };
 
@@ -116,7 +116,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
             var roles = await _roleManager.FindUserRolesIncludeClaimsAsync(user.Id);
             foreach (var role in roles)
             {
-                claims.Add(new Claim(ConstantClaims.Role, role.Name, ClaimValueTypes.String,
+                claims.Add(new Claim(DNTClaimTypes.Role, role.Name, ClaimValueTypes.String,
                     _configuration.Value.Issuer));
             }
 
@@ -134,7 +134,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
             var permissions = rolePermissions.Union(grantedPermissions).Except(deniedPermissions);
             foreach (var permission in permissions)
             {
-                claims.Add(new Claim(ConstantClaims.Permission, permission, ClaimValueTypes.String,
+                claims.Add(new Claim(DNTClaimTypes.Permission, permission, ClaimValueTypes.String,
                     _configuration.Value.Issuer));
             }
 

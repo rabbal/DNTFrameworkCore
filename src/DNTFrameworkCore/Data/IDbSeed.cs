@@ -2,8 +2,8 @@ using DNTFrameworkCore.Dependency;
 
 namespace DNTFrameworkCore.Data
 {
-    public interface IDbInitializer : IScopedDependency
+    public interface IDbSeed : IScopedDependency
     {
-        void Initialize();
+        void Seed();
     }
 }

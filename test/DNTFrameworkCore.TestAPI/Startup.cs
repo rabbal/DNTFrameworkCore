@@ -50,6 +50,7 @@ namespace DNTFrameworkCore.TestAPI
                     // options.Timeout=TimeSpan.FromMinutes(3);
                     //options.IsolationLevel=IsolationLevel.ReadCommitted;
                 });
+            
             services.AddDNTProtectionRepository<ProjectDbContext>();
             services.AddDNTCommonWeb()
                 .AddDNTDataProtection();

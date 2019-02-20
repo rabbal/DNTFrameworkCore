@@ -13,19 +13,19 @@ using Microsoft.Extensions.Options;
 
 namespace DNTFrameworkCore.TestAPI.Application.Common
 {
-    public class DbInitializer : IDbInitializer
+    public class DbSeed : IDbSeed
     {
         private readonly IUnitOfWork _uow;
         private readonly IOptionsSnapshot<ProjectSettings> _settings;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IPermissionService _permissionManager;
-        private readonly ILogger<DbInitializer> _logger;
+        private readonly ILogger<DbSeed> _logger;
 
-        public DbInitializer(IUnitOfWork uow,
+        public DbSeed(IUnitOfWork uow,
             IOptionsSnapshot<ProjectSettings> settings,
             IPasswordHasher passwordHasher,
             IPermissionService permissionManager,
-            ILogger<DbInitializer> logger)
+            ILogger<DbSeed> logger)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
@@ -34,7 +34,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public void Initialize()
+        public void Seed()
         {
             SeedIdentity();
         }
@@ -57,7 +57,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
             }
             else
             {
-                _logger.LogInformation($"{nameof(Initialize)}: Administrators role already exists.");
+                _logger.LogInformation($"{nameof(Seed)}: Administrators role already exists.");
             }
 
             var rolePermissionNames = role.Permissions.Select(a => a.Name).ToList();
@@ -68,7 +68,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
             role.Permissions.AddRange(newPermissions);
 
             _logger.LogInformation(
-                $"{nameof(Initialize)}: newPermissions: {string.Join("\n", newPermissions.Select(a => a.Name))}");
+                $"{nameof(Seed)}: newPermissions: {string.Join("\n", newPermissions.Select(a => a.Name))}");
 
             var admin = _settings.Value.UserSeed;
 
@@ -93,7 +93,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
             }
             else
             {
-                _logger.LogInformation($"{nameof(Initialize)}: Admin user already exists.");
+                _logger.LogInformation($"{nameof(Seed)}: Admin user already exists.");
             }
 
             if (user.Roles.All(ur => ur.RoleId != role.Id))
@@ -102,7 +102,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
             }
             else
             {
-                _logger.LogInformation($"{nameof(Initialize)}: Admin user already is assigned to Administrators role.");
+                _logger.LogInformation($"{nameof(Seed)}: Admin user already is assigned to Administrators role.");
             }
 
             user.Permissions.Clear();

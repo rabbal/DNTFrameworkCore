@@ -27,6 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Application\Catalog" />
       <Folder Include="Application\Identity\Handlers" />
     </ItemGroup>
 

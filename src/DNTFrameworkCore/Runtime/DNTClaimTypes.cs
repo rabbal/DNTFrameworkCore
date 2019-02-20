@@ -2,7 +2,7 @@ using System.Security.Claims;
 
 namespace DNTFrameworkCore.Runtime
 {
-    public static class ConstantClaims
+    public static class DNTClaimTypes
     {
         public const string UserName = ClaimTypes.Name;
         public const string GivenName = ClaimTypes.GivenName;
