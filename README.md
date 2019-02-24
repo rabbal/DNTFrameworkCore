@@ -11,10 +11,14 @@ Extensible Infrastructure for Building High Quality Web Applications Based on AS
 * Less bug and stop bug propagation 
 * Reduce the training time of the new developer with low knowledge about OOP and OOD
  
-## Installing
+ ![Blog CRUD API](https://github.com/rabbal/DNTFrameworkCore/tree/master/docs/blog-crud-api.jpg)
+ 
+ ![Blog CRUD Service](https://github.com/rabbal/DNTFrameworkCore/tree/master/docs/blog-crud-service.jpg)
+ 
+## Installation
 
-```
-PM> Install-Package DNTFrameworkCore
+To create your first project based on DNTFrameworkCore you can install the following packages:
+```PM> Install-Package DNTFrameworkCore
 PM> Install-Package DNTFrameworkCore.EntityFramework
 PM> Install-Package DNTFrameworkCore.EntityFramework.SqlServer
 PM> Install-Package DNTFrameworkCore.Web
@@ -22,6 +26,22 @@ PM> Install-Package DNTFrameworkCore.Web.EntityFramework
 PM> Install-Package DNTFrameworkCore.FluentValidation
 PM> Install-Package DNTFrameworkCore.Web.MultiTenancy
 ```
+
+OR
+
+1- Run the following command to install boilerplate project template based on ASP.NET Core Web API and DNTFrameworkCore:
+
+```dotnet new --install DNTFrameworkCoreTemplateAPI::*‌‌```
+
+2- Create new project with installed template:
+
+```dotnet new dntcore-api```
+
+Now you have a solution like below that contains complete identity management feature include user,role and dynamic permission management and also integrated with persistent JWT authentication machanism:
+
+![Solution Structure](https://github.com/rabbal/DNTFrameworkCore/tree/master/docs/dnt-solution.jpg)
+
+For more info about templates you can watch [DNTFrameworkCoreTemplate repository](https://github.com/rabbal/DNTFrameworkCoreTemplate)
 
 ## Features
 
@@ -50,7 +70,7 @@ PM> Install-Package DNTFrameworkCore.Web.MultiTenancy
 ## Usage
 [DNTFrameworkCore.TestAPI Complete ASP.NET Core Web API](https://github.com/rabbal/DNTFrameworkCore/tree/master/test/DNTFrameworkCore.TestAPI)
 
-**Create new entity**
+**Create Entity**
 ```c#
 public class Task : TrackableEntity<int>, IAggregateRoot, INumberedEntity
 {
@@ -89,7 +109,7 @@ public class ProjectDbContext : DbContextCore
     }
 }
 ```
-**Create Model(s)/DTO(s)**
+**Create Model/DTO**
 ```c#
 [LocalizationResource(Name = "SharedResource", Location = "DNTFrameworkCore.TestAPI")]
 public class TaskModel : MasterModel<int>, IValidatableObject
@@ -111,7 +131,9 @@ public class TaskModel : MasterModel<int>, IValidatableObject
     }
 }
 ```
-Based on validation infrastructure, you can validate Model/DTO with various approach, using by DataAnnotation ValidateAttribute, Implementing IValidatableObject or Implement IModelValidator<T> that exist in DNTFrameworkCore package.
+
+Note: Based on validation infrastructure, you can validate Model/DTO with various approach, using by DataAnnotation ValidateAttribute, Implementing IValidatableObject or Implement IModelValidator<T> that exist in DNTFrameworkCore package.
+
 ```c#
 public class TaskValidator : ModelValidator<TaskModel>
 {
@@ -134,6 +156,7 @@ public class TaskReadModel : MasterModel<int>
     public TaskState State { get; set; } = TaskState.Todo;
 }
 ```
+
 **Implement Service**
  
 ```c#
@@ -169,6 +192,7 @@ public class TaskService : CrudService<Task, int, TaskReadModel, TaskModel, Task
     }
 }
 ```
+
 In DNTFrameworkCore.EntityFramework [there is no dependency to AutoMapper](https://cezarypiatek.github.io/post/why-i-dont-use-automapper/) or other mapper libraries, then you can do mapping between Entity and Model manually by implementing MapToModel and MapToEntity abstract methods.
 
 **Implement API Controller**
@@ -186,4 +210,21 @@ public class
     protected override string ViewPermissionName => PermissionNames.Tasks_View;
     protected override string DeletePermissionName => PermissionNames.Tasks_Delete;
 }
+```
+
+```c#
+
+[Route("api/[controller]")]
+public class BlogsController : CrudController<IBlogService, int, BlogModel>
+{
+    public BlogsController(IBlogService service) : base(service)
+    {
+    }
+
+    protected override string CreatePermissionName => PermissionNames.Blogs_Create;
+    protected override string EditPermissionName => PermissionNames.Blogs_Edit;
+    protected override string ViewPermissionName => PermissionNames.Blogs_View;
+    protected override string DeletePermissionName => PermissionNames.Blogs_Delete;
+}
+
 ```

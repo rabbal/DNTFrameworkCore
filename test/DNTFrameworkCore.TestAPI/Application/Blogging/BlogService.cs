@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.TestAPI.Application.Blogging
 {
+    
     public interface IBlogService : ICrudService<int, BlogModel>
     {
     }

@@ -12,9 +12,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace DNTFrameworkCore.TestAPI
 {
@@ -68,9 +72,41 @@ namespace DNTFrameworkCore.TestAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
             {
+                app.UseExceptionHandler(appBuilder =>
+                {
+                    appBuilder.Use(async (context, next) =>
+                    {
+                        var error = context.Features[typeof(IExceptionHandlerFeature)] as IExceptionHandlerFeature;
+                        if (error?.Error is SecurityTokenExpiredException)
+                        {
+                            context.Response.StatusCode = 401;
+                            context.Response.ContentType = "application/json";
+                            await context.Response.WriteAsync(JsonConvert.SerializeObject(new
+                            {
+                                Message = "authentication token expired"
+                            }));
+                        }
+                        else if (error?.Error != null)
+                        {
+                            context.Response.StatusCode = 500;
+                            context.Response.ContentType = "application/json";
+                            const string message = "متأسفانه مشکلی در فرآیند انجام درخواست شما پیش آمده است!";
+
+                            await context.Response.WriteAsync(JsonConvert.SerializeObject(new
+                            {
+                                Message = message
+                            }));
+                        }
+                        else
+                        {
+                            await next();
+                        }
+                    });
+                });
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

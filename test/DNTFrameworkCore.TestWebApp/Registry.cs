@@ -1,4 +1,3 @@
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,8 +21,6 @@ namespace DNTFrameworkCore.TestWebApp
             services.AddMvc()
                 .AddMvcLocalization()
                 .AddViewLocalization()
-                .AddFluentValidation(configuration =>
-                    configuration.RegisterValidatorsFromAssemblyContaining<Program>())
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
     }

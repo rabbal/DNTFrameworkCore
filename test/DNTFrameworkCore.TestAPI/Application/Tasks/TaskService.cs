@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.EntityFramework.Application;
 using DNTFrameworkCore.Linq;
@@ -26,15 +27,9 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
 
         protected override IQueryable<TaskReadModel> BuildReadQuery(TaskFilteredPagedQueryModel model)
         {
-            return EntitySet.AsNoTracking().WhereIf(model.State.HasValue, t => t.State == model.State)
-                .Select(t => new TaskReadModel
-                {
-                    Id = t.Id,
-                    RowVersion = t.RowVersion,
-                    State = t.State,
-                    Title = t.Title,
-                    Number = t.Number
-                });
+            return EntitySet.AsNoTracking()
+                .WhereIf(model.State.HasValue, t => t.State == model.State)
+                .ProjectTo<TaskReadModel>(_mapper.ConfigurationProvider);
         }
 
         protected override Task MapToEntity(TaskModel model)

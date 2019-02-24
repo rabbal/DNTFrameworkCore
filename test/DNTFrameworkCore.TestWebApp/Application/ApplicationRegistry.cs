@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Castle.DynamicProxy;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.Dependency;
@@ -6,6 +9,7 @@ using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.FluentValidation;
 using DNTFrameworkCore.Transaction.Interception;
 using DNTFrameworkCore.Validation.Interception;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.TestWebApp.Application
@@ -16,7 +20,7 @@ namespace DNTFrameworkCore.TestWebApp.Application
 
         public static void AddApplication(this IServiceCollection services)
         {
-           services.Scan(scan => scan
+            services.Scan(scan => scan
                 .FromCallingAssembly()
                 .AddClasses(classes => classes.AssignableTo<ISingletonDependency>())
                 .AsMatchingInterface()
@@ -30,7 +34,9 @@ namespace DNTFrameworkCore.TestWebApp.Application
                 .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)))
                 .AsImplementedInterfaces()
                 .WithTransientLifetime());
-            
+
+            services.AddValidatorsFromAssembly(typeof(ApplicationRegistry).Assembly);
+
             foreach (var descriptor in services.Where(s => typeof(IApplicationService).IsAssignableFrom(s.ServiceType))
                 .ToList())
             {

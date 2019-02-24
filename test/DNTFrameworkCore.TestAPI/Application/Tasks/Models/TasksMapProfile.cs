@@ -8,6 +8,8 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks.Models
     {
         public TasksMapProfile()
         {
+            CreateMap<Task, TaskReadModel>(MemberList.None);
+            
             CreateMap<TaskModel, Task>(MemberList.None)
                 .ForMember(d => d.NormalizedTitle, m => m.MapFrom(s => s.Title.NormalizePersianTitle()))
                 .ReverseMap();

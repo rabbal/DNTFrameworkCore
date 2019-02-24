@@ -12,7 +12,7 @@ namespace DNTFrameworkCore.Validation
             var failures = results as ModelValidationResult[] ?? results.ToArray();
             if (!failures.Any()) return Result.Ok();
 
-            var message = string.Join("\n", failures.Where(a => a.MemberName.IsEmpty()));
+            var message = string.Join("\n", failures.Where(a => string.IsNullOrEmpty(a.MemberName)));
 
             var result = Result.Failed(message, failures);
 

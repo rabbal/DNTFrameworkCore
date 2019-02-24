@@ -9,8 +9,7 @@ namespace DNTFrameworkCore.Functional
     public class Result
     {
         private readonly List<ModelValidationResult> _failures;
-
-        private static readonly Result OkResult = new Result(true, string.Empty);
+        private static readonly Result _ok = new Result(true, string.Empty);
 
         protected Result(bool succeeded, string message) : this(succeeded, message,
             Enumerable.Empty<ModelValidationResult>())
@@ -34,7 +33,7 @@ namespace DNTFrameworkCore.Functional
         [DebuggerStepThrough]
         public static Result Ok()
         {
-            return OkResult;
+            return _ok;
         }
 
         [DebuggerStepThrough]
