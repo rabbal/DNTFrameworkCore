@@ -11,14 +11,15 @@ Extensible Infrastructure for Building High Quality Web Applications Based on AS
 * Less bug and stop bug propagation 
 * Reduce the training time of the new developer with low knowledge about OOP and OOD
  
- ![Blog CRUD API](https://github.com/rabbal/DNTFrameworkCore/tree/master/docs/blog-crud-api.jpg)
+ ![Blog CRUD API](https://github.com/rabbal/DNTFrameworkCore/blob/master/docs/blog-crud-api.JPG)
  
- ![Blog CRUD Service](https://github.com/rabbal/DNTFrameworkCore/tree/master/docs/blog-crud-service.jpg)
+ ![Blog CRUD Service](https://github.com/rabbal/DNTFrameworkCore/blob/master/docs/blog-crud-service.JPG)
  
 ## Installation
 
 To create your first project based on DNTFrameworkCore you can install the following packages:
-```PM> Install-Package DNTFrameworkCore
+```
+PM> Install-Package DNTFrameworkCore
 PM> Install-Package DNTFrameworkCore.EntityFramework
 PM> Install-Package DNTFrameworkCore.EntityFramework.SqlServer
 PM> Install-Package DNTFrameworkCore.Web
@@ -39,7 +40,7 @@ OR
 
 Now you have a solution like below that contains complete identity management feature include user,role and dynamic permission management and also integrated with persistent JWT authentication machanism:
 
-![Solution Structure](https://github.com/rabbal/DNTFrameworkCore/tree/master/docs/dnt-solution.jpg)
+![Solution Structure](https://github.com/rabbal/DNTFrameworkCore/blob/master/docs/dnt-solution.jpg)
 
 For more info about templates you can watch [DNTFrameworkCoreTemplate repository](https://github.com/rabbal/DNTFrameworkCoreTemplate)
 
