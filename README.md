@@ -5,7 +5,7 @@
 
 `DNTFrameworkCore` is a Lightweight and 
 Extensible Infrastructure for Building High Quality Web Applications Based on ASP.NET Core and has the following goals:
-* Common structures in various applications like Cross-Cutting Concerns and ect
+* Common structures in various applications like Cross-Cutting Concerns and etc
 * Follow DRY principle to focus on main business logic
 * Reduce the development time
 * Less bug and stop bug propagation 
