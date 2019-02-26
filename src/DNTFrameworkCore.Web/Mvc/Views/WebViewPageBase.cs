@@ -1,6 +1,4 @@
 ﻿using System.Globalization;
-using System.Threading.Tasks;
-using DNTFrameworkCore.Application.Features;
 using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.Runtime;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -17,7 +15,6 @@ namespace DNTFrameworkCore.Web.Mvc.Views
     {
         [RazorInject] public IHtmlLocalizerFactory HtmlLocalizerFactory { get; set; }
         [RazorInject] public IUserSession UserSession { get; set; }
-        [RazorInject] public IFeatureChecker FeatureChecker { get; set; }
 
         private IHtmlLocalizer HtmlLocalizer =>
             HtmlLocalizerFactory.Create(LocalizationResourceName, LocalizationResourceLocation);
@@ -95,26 +92,6 @@ namespace DNTFrameworkCore.Web.Mvc.Views
         protected bool IsGranted(string permissionName)
         {
             return UserSession.IsGranted(permissionName);
-        }
-
-        /// <summary>
-        /// Determines whether is given feature enabled.
-        /// </summary>
-        /// <param name="featureName">Name of the feature.</param>
-        /// <returns>True, if enabled; False if not.</returns>
-        protected Task<bool> IsFeatureEnabledAsync(string featureName)
-        {
-            return FeatureChecker.IsEnabledAsync(featureName);
-        }
-
-        /// <summary>
-        /// Gets current value of a feature.
-        /// </summary>
-        /// <param name="featureName">Feature name</param>
-        /// <returns>Value of the feature</returns>
-        protected Task<string> ReadFeatureValueAsync(string featureName)
-        {
-            return FeatureChecker.ReadValueAsync(featureName);
         }
     }
 }

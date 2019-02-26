@@ -1,5 +1,4 @@
 ﻿using System;
-using DNTFrameworkCore.Application.Features;
 using DNTFrameworkCore.Auditing;
 using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Caching;
@@ -23,10 +22,7 @@ namespace DNTFrameworkCore
         {
             services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
             services.AddScoped<ITenant>(provider => new TenantWrapper(null));
-            services.AddTransient<FeatureDependencyContext>();
             services.AddTransient<PermissionDependencyContext>();
-            services.AddScoped<IFeatureValueStore>(provider => NullFeatureValueStore.Instance);
-            services.AddScoped<IFeatureChecker, FeatureChecker>();
             services.AddScoped<IEventBus, EventBus>();
             services.AddScoped<IUserSession>(provider => NullUserSession.Instance);
             services.AddSingleton<IRandomNumberProvider, RandomNumberProvider>();

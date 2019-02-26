@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Castle.DynamicProxy;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.Dependency;
@@ -9,7 +6,6 @@ using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.FluentValidation;
 using DNTFrameworkCore.Transaction.Interception;
 using DNTFrameworkCore.Validation.Interception;
-using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.TestWebApp.Application

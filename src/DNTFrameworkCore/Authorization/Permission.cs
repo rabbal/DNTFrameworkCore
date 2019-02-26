@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using DNTFrameworkCore.Application.Features;
 using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.Localization;
 using DNTFrameworkCore.MultiTenancy;
@@ -42,11 +41,6 @@ namespace DNTFrameworkCore.Authorization
         public MultiTenancySides MultiTenancySides { get; set; }
 
         /// <summary>
-        /// Depended feature(s) of this permission.
-        /// </summary>
-        public IFeatureDependency FeatureDependency { get; set; }
-
-        /// <summary>
         /// List of child permissions. A child permission can be granted only if parent is granted.
         /// </summary>
         public IReadOnlyList<Permission> Children => _children.ToImmutableList();
@@ -65,8 +59,7 @@ namespace DNTFrameworkCore.Authorization
             string name,
             ILocalizableString displayName = null,
             ILocalizableString description = null,
-            MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
-            IFeatureDependency featureDependency = null)
+            MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant)
         {
             Guard.ArgumentNotNull(name, nameof(name));
 
@@ -74,7 +67,6 @@ namespace DNTFrameworkCore.Authorization
             DisplayName = displayName;
             Description = description;
             MultiTenancySides = multiTenancySides;
-            FeatureDependency = featureDependency;
 
             _children = new List<Permission>();
         }
@@ -88,10 +80,9 @@ namespace DNTFrameworkCore.Authorization
             string name,
             ILocalizableString displayName = null,
             ILocalizableString description = null,
-            MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
-            IFeatureDependency featureDependency = null)
+            MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant)
         {
-            var permission = new Permission(name, displayName, description, multiTenancySides, featureDependency)
+            var permission = new Permission(name, displayName, description, multiTenancySides)
                 {Parent = this};
             _children.Add(permission);
             return permission;
@@ -101,11 +92,10 @@ namespace DNTFrameworkCore.Authorization
             string name,
             ILocalizableString displayName = null,
             ILocalizableString description = null,
-            MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
-            IFeatureDependency featureDependency = null
+            MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant
         )
         {
-            var permission = new Permission(name, displayName, description, multiTenancySides, featureDependency);
+            var permission = new Permission(name, displayName, description, multiTenancySides);
 
             return permission;
         }

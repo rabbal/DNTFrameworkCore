@@ -1,10 +1,8 @@
 using System;
 using DNTFrameworkCore.Auditing;
-using DNTFrameworkCore.Configuration;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.EntityFramework.Application;
 using DNTFrameworkCore.EntityFramework.Auditing;
-using DNTFrameworkCore.EntityFramework.Configuration;
 using DNTFrameworkCore.EntityFramework.Context;
 using DNTFrameworkCore.EntityFramework.Context.Hooks;
 using DNTFrameworkCore.EntityFramework.Context.Internal;
@@ -27,12 +25,6 @@ namespace DNTFrameworkCore.EntityFramework
             where TDbContext : DbContext
         {
             services.Replace(ServiceDescriptor.Transient(typeof(IAuditingStore), typeof(AuditLogStore<TDbContext>)));
-        }
-
-        public static void AddDNTSettingStore<TDbContext>(this IServiceCollection services)
-            where TDbContext : DbContext
-        {
-            services.AddScoped<ISettingStore, SettingStore<TDbContext>>();
         }
 
         public static void AddDNTProtectionRepository<TDbContext>(this IServiceCollection services)

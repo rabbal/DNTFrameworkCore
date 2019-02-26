@@ -36,17 +36,5 @@ namespace DNTFrameworkCore.Runtime
 
             return session.TenantId.Value;
         }
-
-        /// <summary>
-        /// Creates <see cref="UserIdentifier"/> from given session.
-        /// Returns null if <see cref="IUserSession.UserId"/> is null.
-        /// </summary>
-        /// <param name="session">The session.</param>
-        public static UserIdentifier ToUserIdentifier(this IUserSession session)
-        {
-            return session.UserId == null
-                ? null
-                : new UserIdentifier(session.TenantId, session.GetUserId());
-        }   
     }
 }
