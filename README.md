@@ -58,7 +58,6 @@ For more info about templates you can watch [DNTFrameworkCoreTemplate repository
 * DbLogger Provider
 * Auditing
 * DataProtectionKeys DbRepository 
-* Name-Value Setting Management
 * Hooks
 * SoftDelete
 * MultiTenancy
