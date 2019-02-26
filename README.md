@@ -229,3 +229,13 @@ public class BlogsController : CrudController<IBlogService, int, BlogModel>
 }
 
 ```
+
+## ASP.NET Boilerplate
+A small part of this project like the following sections are taken from [ABP](https://github.com/aspnetboilerplate/aspnetboilerplate)
+- FeatureManagement
+- Name-Value SettingMangement
+- ValidationInterceptor wiht some change to apply Function Programming Concepts
+- Navigation Management
+- Auditing Interception
+
+`I'll remove them from this infrastructure ASAP`
