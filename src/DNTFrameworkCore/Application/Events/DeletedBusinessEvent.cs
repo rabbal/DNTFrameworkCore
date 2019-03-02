@@ -5,11 +5,11 @@ using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Eventing;
 
 namespace DNTFrameworkCore.Application.Events
-{
-    public class CreatedDomainEvent<TModel, TKey> : IDomainEvent
+{  
+    public class DeletedBusinessEvent<TModel, TKey> : IBusinessEvent
         where TModel : MasterModel<TKey> where TKey : IEquatable<TKey>
     {
-        public CreatedDomainEvent(IEnumerable<TModel> models)
+        public DeletedBusinessEvent(IEnumerable<TModel> models)
         {
             Models = models.ToImmutableList();
         }

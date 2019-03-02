@@ -8,7 +8,7 @@ namespace DNTFrameworkCore.Eventing
 {
     public interface IEventBus : IScopedDependency
     {
-        Task<Result> TriggerAsync<T>(T domainEvent) where T : IDomainEvent;
+        Task<Result> TriggerAsync<T>(T @event) where T : IBusinessEvent;
     }
 
     internal class EventBus : IEventBus
@@ -20,21 +20,21 @@ namespace DNTFrameworkCore.Eventing
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
-        public async Task<Result> TriggerAsync<T>(T domainEvent) where T : IDomainEvent
+        public async Task<Result> TriggerAsync<T>(T @event) where T : IBusinessEvent
         {
-            var eventType = domainEvent.GetType();
-            var handlerType = typeof(IDomainEventHandler<>).MakeGenericType(eventType);
+            var eventType = @event.GetType();
+            var handlerType = typeof(IBusinessEventHandler<>).MakeGenericType(eventType);
 
             foreach (var handler in _provider.GetServices(handlerType))
             {
                 var method = handlerType.GetMethod(
-                    nameof(IDomainEventHandler<T>.Handle),
+                    nameof(IBusinessEventHandler<T>.Handle),
                     new[] {eventType}
                 );
 
                 if (method == null) continue;
 
-                var result = await (Task<Result>) method.Invoke(handler, new object[] {domainEvent});
+                var result = await (Task<Result>) method.Invoke(handler, new object[] {@event});
 
                 if (!result.Succeeded)
                     return result;

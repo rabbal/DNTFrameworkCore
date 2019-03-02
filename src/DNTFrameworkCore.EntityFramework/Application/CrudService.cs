@@ -152,7 +152,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
 
             await AfterMappingAsync(entities, modelItems);
 
-            result = await EventBus.TriggerCreatingDomainEventAsync<TModel, TKey>(modelItems);
+            result = await EventBus.TriggerCreatingEventAsync<TModel, TKey>(modelItems);
             if (!result.Succeeded) return result;
 
             UnitOfWork.AddRange(entities);
@@ -166,7 +166,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
             result = await AfterCreateAsync(modelItems);
             if (!result.Succeeded) return result;
 
-            result = await EventBus.TriggerCreatedDomainEventAsync<TModel, TKey>(modelItems);
+            result = await EventBus.TriggerCreatedEventAsync<TModel, TKey>(modelItems);
 
             return result;
         }
@@ -208,7 +208,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
 
             await AfterMappingAsync(entities, modelItems);
 
-            result = await EventBus.TriggerEditingDomainEventAsync<TModel, TKey>(modifieds);
+            result = await EventBus.TriggerEditingEventAsync<TModel, TKey>(modifieds);
             if (!result.Succeeded) return result;
 
             MarkAsModified(entities);
@@ -224,7 +224,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
             result = await AfterEditAsync(modifieds);
             if (!result.Succeeded) return result;
 
-            result = await EventBus.TriggerEditedDomainEventAsync<TModel, TKey>(modifieds);
+            result = await EventBus.TriggerEditedEventAsync<TModel, TKey>(modifieds);
 
             return result;
         }
@@ -269,7 +269,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
 
             var entities = MapToEntity(modelItems);
 
-            result = await EventBus.TriggerDeletingDomainEventAsync<TModel, TKey>(modelItems);
+            result = await EventBus.TriggerDeletingEventAsync<TModel, TKey>(modelItems);
             if (!result.Succeeded) return result;
 
             UnitOfWork.RemoveRange(entities);
@@ -278,7 +278,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
             result = await AfterDeleteAsync(modelItems);
             if (!result.Succeeded) return result;
 
-            result = await EventBus.TriggerDeletedDomainEventAsync<TModel, TKey>(modelItems);
+            result = await EventBus.TriggerDeletedEventAsync<TModel, TKey>(modelItems);
 
             return result;
         }

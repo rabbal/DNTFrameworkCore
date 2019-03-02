@@ -75,7 +75,9 @@ namespace DNTFrameworkCore.Functional
                 return Ok();
 
             var message = string.Join(seperator, failedResults.Select(x => x.Message).ToArray());
-            return Failed(message);
+            var failures = failedResults.SelectMany(r => r.Failures).ToList();
+
+            return Failed(message, failures);
         }
 
         [DebuggerStepThrough]
@@ -93,7 +95,7 @@ namespace DNTFrameworkCore.Functional
         [DebuggerStepThrough]
         public static Result Combine<T>(string seperator, params Result<T>[] results)
         {
-            var untyped = results.Select(result => (Result) result).ToArray();
+            var untyped = results.Select(result => (Result)result).ToArray();
             return Combine(seperator, untyped);
         }
 

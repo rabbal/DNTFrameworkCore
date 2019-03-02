@@ -44,7 +44,7 @@ namespace DNTFrameworkCore.TestAPI.Application
                 .AddClasses(classes => classes.AssignableTo<ITransientDependency>())
                 .AsMatchingInterface()
                 .WithTransientLifetime()
-                .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)))
+                .AddClasses(classes => classes.AssignableTo(typeof(IBusinessEventHandler<>)))
                 .AsImplementedInterfaces()
                 .WithTransientLifetime());
 

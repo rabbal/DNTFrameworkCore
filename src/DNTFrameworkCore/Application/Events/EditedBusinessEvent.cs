@@ -6,10 +6,10 @@ using DNTFrameworkCore.Eventing;
 
 namespace DNTFrameworkCore.Application.Events
 {
-    public class EditedDomainEvent<TModel,TKey> : IDomainEvent
+    public class EditedBusinessEvent<TModel,TKey> : IBusinessEvent
         where TModel : MasterModel<TKey> where TKey : IEquatable<TKey>
     {
-        public EditedDomainEvent(IEnumerable<ModifiedModel<TModel>> models)
+        public EditedBusinessEvent(IEnumerable<ModifiedModel<TModel>> models)
         {
             Models = models.ToImmutableList();
         }

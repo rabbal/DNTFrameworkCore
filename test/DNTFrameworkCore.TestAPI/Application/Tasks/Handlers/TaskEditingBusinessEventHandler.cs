@@ -8,18 +8,18 @@ using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.TestAPI.Application.Tasks.Handlers
 {
-    public class TaskEditingDomainEventHandler : IDomainEventHandler<EditingDomainEvent<TaskModel, int>>
+    public class TaskEditingBusinessEventHandler : IBusinessEventHandler<EditingBusinessEvent<TaskModel, int>>
     {
-        private readonly ILogger<TaskEditingDomainEventHandler> _logger;
+        private readonly ILogger<TaskEditingBusinessEventHandler> _logger;
 
-        public TaskEditingDomainEventHandler(ILogger<TaskEditingDomainEventHandler> logger)
+        public TaskEditingBusinessEventHandler(ILogger<TaskEditingBusinessEventHandler> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public Task<Result> Handle(EditingDomainEvent<TaskModel, int> domainEvent)
+        public Task<Result> Handle(EditingBusinessEvent<TaskModel, int> @event)
         {
-            foreach (var model in domainEvent.Models)
+            foreach (var model in @event.Models)
             {
                 _logger.LogInformation($"Title changed from: {model.OriginalValue.Title} to: {model.NewValue.Title}");
             }

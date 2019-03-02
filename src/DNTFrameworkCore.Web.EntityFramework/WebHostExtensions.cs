@@ -13,26 +13,22 @@ namespace DNTFrameworkCore.Web.EntityFramework
         {
             using (var scope = webHost.Services.CreateScope())
             {
-                var services = scope.ServiceProvider;
+                var provider = scope.ServiceProvider;
 
-                var logger = services.GetRequiredService<ILogger<TContext>>();
-                var initializers = services.GetServices<IDbSeed>();
+                var logger = provider.GetRequiredService<ILogger<TContext>>();
+                var dbSeeds = provider.GetServices<IDbSeed>();
 
-                var context = services.GetService<TContext>();
+                var context = provider.GetRequiredService<TContext>();
 
                 try
                 {
                     logger.LogInformation($"Migrating database associated with context {typeof(TContext).Name}");
 
-                    //if the sql server container is not created on run docker compose this
-                    //migration can't fail for network related exception. The retry options for DbContext only 
-                    //apply to transient exceptions.
-
                     context.Database.Migrate();
 
-                    foreach (var initializer in initializers)
+                    foreach (var dbSeed in dbSeeds)
                     {
-                        initializer.Seed();
+                        dbSeed.Seed();
                     }
 
                     logger.LogInformation($"Migrated database associated with context {typeof(TContext).Name}");

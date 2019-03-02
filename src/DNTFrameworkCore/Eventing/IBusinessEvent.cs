@@ -1,6 +1,6 @@
 ﻿namespace DNTFrameworkCore.Eventing
 {
-    public interface IDomainEvent
+    public interface IBusinessEvent
     {
     }
 }

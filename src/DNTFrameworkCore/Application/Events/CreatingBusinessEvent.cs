@@ -6,14 +6,14 @@ using DNTFrameworkCore.Eventing;
 
 namespace DNTFrameworkCore.Application.Events
 {
-    public class EditingDomainEvent<TModel, TKey> : IDomainEvent
+    public class CreatingBusinessEvent<TModel, TKey> : IBusinessEvent
         where TModel : MasterModel<TKey> where TKey : IEquatable<TKey>
     {
-        public EditingDomainEvent(IEnumerable<ModifiedModel<TModel>> models)
+        public CreatingBusinessEvent(IEnumerable<TModel> models)
         {
             Models = models.ToImmutableList();
         }
 
-        public IReadOnlyList<ModifiedModel<TModel>> Models { get; }
+        public IReadOnlyList<TModel> Models { get; }
     }
 }

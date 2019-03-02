@@ -15,14 +15,14 @@ namespace DNTFrameworkCore.Tests.Eventing
         {
             var services = new ServiceCollection();
             services.AddDNTFramework();
-            services.AddTransient<IDomainEventHandler<SimpleDomainEvent>, SimpleDomainEventHandler1>();
-            services.AddTransient<IDomainEventHandler<SimpleDomainEvent>, SimpleDomainEventHandler2>();
+            services.AddTransient<IBusinessEventHandler<SimpleBusinessEvent>, SimpleBusinessEventHandler1>();
+            services.AddTransient<IBusinessEventHandler<SimpleBusinessEvent>, SimpleBusinessEventHandler2>();
             var bus = services.BuildServiceProvider().GetRequiredService<IEventBus>();
 
-            var result = await bus.TriggerAsync(new SimpleDomainEvent("TestValue"));
+            var result = await bus.TriggerAsync(new SimpleBusinessEvent("TestValue"));
             result.Succeeded.ShouldBeTrue();
-            SimpleDomainEventHandler1.HandleCount.ShouldBe(1);
-            SimpleDomainEventHandler2.HandleCount.ShouldBe(1);
+            SimpleBusinessEventHandler1.HandleCount.ShouldBe(1);
+            SimpleBusinessEventHandler2.HandleCount.ShouldBe(1);
         }
 
         [Test]
@@ -30,51 +30,51 @@ namespace DNTFrameworkCore.Tests.Eventing
         {
             var services = new ServiceCollection();
             services.AddDNTFramework();
-            services.AddTransient<IDomainEventHandler<SimpleDomainEvent>, FailedSimpleDomainEventHandler>();
+            services.AddTransient<IBusinessEventHandler<SimpleBusinessEvent>, FailedSimpleBusinessEventHandler>();
             var bus = services.BuildServiceProvider().GetRequiredService<IEventBus>();
 
-            var result = await bus.TriggerAsync(new SimpleDomainEvent("TestValue"));
+            var result = await bus.TriggerAsync(new SimpleBusinessEvent("TestValue"));
             result.Succeeded.ShouldBeFalse();
-            FailedSimpleDomainEventHandler.HandleCount.ShouldBe(1);
-            result.Message.ShouldBe(nameof(FailedSimpleDomainEventHandler));
+            FailedSimpleBusinessEventHandler.HandleCount.ShouldBe(1);
+            result.Message.ShouldBe(nameof(FailedSimpleBusinessEventHandler));
         }
 
-        private class SimpleDomainEventHandler1 : IDomainEventHandler<SimpleDomainEvent>
+        private class SimpleBusinessEventHandler1 : IBusinessEventHandler<SimpleBusinessEvent>
         {
             public static int HandleCount { get; set; }
 
-            public Task<Result> Handle(SimpleDomainEvent domainEvent)
+            public Task<Result> Handle(SimpleBusinessEvent @event)
             {
                 ++HandleCount;
                 return Task.FromResult(Result.Ok());
             }
         }
 
-        private class SimpleDomainEventHandler2 : IDomainEventHandler<SimpleDomainEvent>
+        private class SimpleBusinessEventHandler2 : IBusinessEventHandler<SimpleBusinessEvent>
         {
             public static int HandleCount { get; set; }
 
-            public Task<Result> Handle(SimpleDomainEvent domainEvent)
+            public Task<Result> Handle(SimpleBusinessEvent @event)
             {
                 ++HandleCount;
                 return Task.FromResult(Result.Ok());
             }
         }
 
-        private class FailedSimpleDomainEventHandler : IDomainEventHandler<SimpleDomainEvent>
+        private class FailedSimpleBusinessEventHandler : IBusinessEventHandler<SimpleBusinessEvent>
         {
             public static int HandleCount { get; set; }
 
-            public Task<Result> Handle(SimpleDomainEvent domainEvent)
+            public Task<Result> Handle(SimpleBusinessEvent @event)
             {
                 ++HandleCount;
-                return Task.FromResult(Result.Failed(nameof(FailedSimpleDomainEventHandler)));
+                return Task.FromResult(Result.Failed(nameof(FailedSimpleBusinessEventHandler)));
             }
         }
 
-        private class SimpleDomainEvent : IDomainEvent
+        private class SimpleBusinessEvent : IBusinessEvent
         {
-            public SimpleDomainEvent(string value)
+            public SimpleBusinessEvent(string value)
             {
                 Value = value;
             }
