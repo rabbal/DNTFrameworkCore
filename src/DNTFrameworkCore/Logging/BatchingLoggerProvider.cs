@@ -10,16 +10,16 @@ namespace DNTFrameworkCore.Logging
 {
     public abstract class BatchingLoggerProvider : ILoggerProvider
     {
-        private readonly List<LogMessage> _currentBatch = new List<LogMessage>();
+        private readonly IList<LogMessage> _currentBatch = new List<LogMessage>();
         private readonly TimeSpan _interval;
         private readonly int? _queueSize;
         private readonly int? _batchSize;
-
         private BlockingCollection<LogMessage> _messageQueue;
         private Task _outputTask;
         private CancellationTokenSource _cancellationTokenSource;
+        private readonly IServiceProvider _provider;
 
-        protected BatchingLoggerProvider(IOptions<BatchingLoggerOptions> options)
+        protected BatchingLoggerProvider(IOptions<BatchingLoggerOptions> options, IServiceProvider provider)
         {
             // NOTE: Only IsEnabled is monitored
 
@@ -39,6 +39,7 @@ namespace DNTFrameworkCore.Logging
             _interval = loggerOptions.FlushPeriod;
             _batchSize = loggerOptions.BatchSize;
             _queueSize = loggerOptions.BackgroundQueueSize;
+            _provider = provider;
 
             Start();
         }
@@ -80,14 +81,13 @@ namespace DNTFrameworkCore.Logging
             return Task.Delay(interval, cancellationToken);
         }
 
-        internal void AddMessage(DateTimeOffset timestamp, string message, string level)
+        internal void AddMessage(LogMessage message)
         {
             if (!_messageQueue.IsAddingCompleted)
             {
                 try
                 {
-                    _messageQueue.Add(new LogMessage {Message = message, Timestamp = timestamp, Level = level},
-                        _cancellationTokenSource.Token);
+                    _messageQueue.Add(message, _cancellationTokenSource.Token);
                 }
                 catch
                 {
@@ -134,7 +134,8 @@ namespace DNTFrameworkCore.Logging
 
         public ILogger CreateLogger(string categoryName)
         {
-            return new BatchingLogger(this, categoryName);
+            return new BatchingLogger(this, _provider, categoryName);
         }
     }
+
 }

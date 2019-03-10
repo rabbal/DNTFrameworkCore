@@ -1,9 +1,9 @@
+using DNTFrameworkCore.Logging;
 using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.EntityFramework.Logging
 {
-    public class DbLoggerOptions
+    public class DbLoggerOptions : BatchingLoggerOptions
     {
-        public LogLevel MinLevel { get; set; } = LogLevel.Warning;
     }
 }

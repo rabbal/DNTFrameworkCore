@@ -23,7 +23,7 @@ namespace DNTFrameworkCore.TestAPI
 {
     public static class Registry
     {
-        public static void AddWeb(this IServiceCollection services)
+        public static void AddWebAPI(this IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -45,7 +45,7 @@ namespace DNTFrameworkCore.TestAPI
                 {
                     options.AddPolicy("CorsPolicy",
                         builder => builder
-                            .WithOrigins("http://localhost:4200")
+                            .SetIsOriginAllowed(host => true)
                             .AllowAnyMethod()
                             .AllowAnyHeader()
                             .AllowCredentials());
@@ -59,11 +59,7 @@ namespace DNTFrameworkCore.TestAPI
                     options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Include;
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    //options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                    //var resolver = options.SerializerSettings.ContractResolver;
-                    //if (resolver == null) return;
-                    //var res = resolver as DefaultContractResolver;
-                    //res.NamingStrategy = null; // Enable PascalCasing
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Error;
                 })
                 .AddDataAnnotationsLocalization(o =>
                 {

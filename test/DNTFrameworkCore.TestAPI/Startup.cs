@@ -62,7 +62,7 @@ namespace DNTFrameworkCore.TestAPI
             services.AddInfrastructure(Configuration);
             services.AddApplication(Configuration);
             services.AddResources();
-            services.AddWeb();
+            services.AddWebAPI();
             services.AddJwtAuthentication(Configuration);
         }
 

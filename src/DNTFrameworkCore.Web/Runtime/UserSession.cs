@@ -62,7 +62,7 @@ namespace DNTFrameworkCore.Web.Runtime
 
         public bool IsGranted(string permission)
         {
-            return Roles.Any(permissionName => permissionName == permission);
+            return Permissions.Any(permissionName => permissionName == permission);
         }
     }
 }
