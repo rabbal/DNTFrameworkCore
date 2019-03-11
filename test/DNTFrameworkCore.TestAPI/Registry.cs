@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
@@ -18,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace DNTFrameworkCore.TestAPI
 {
@@ -41,6 +43,7 @@ namespace DNTFrameworkCore.TestAPI
                     options.UseFilteredPagedQueryModelBinder<TaskFilteredPagedQueryModel>();
                     options.Filters.Add<GlobalExceptionFilter>();
                 })
+                .AddApiExplorer()
                 .AddCors(options =>
                 {
                     options.AddPolicy("CorsPolicy",
@@ -83,6 +86,39 @@ namespace DNTFrameworkCore.TestAPI
 
             services.AddAntiforgery(x => x.HeaderName = "X-XSRF-TOKEN");
             services.AddSignalR();
+
+             services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "API Documentation",
+                    Description = "DNTFrameworkCore API Documentation",
+                    Contact = new Contact
+                    {
+                        Email = "gholamrezarabbal@gmail.com",
+                        Name = "GholamReza Rabbal",
+                        Url = "https://www.dotnettips.info/user/%D8%BA%D9%84%D8%A7%D9%85%D8%B1%D8%B6%D8%A7%20%D8%B1%D8%A8%D8%A7%D9%84"
+                    }
+                });
+
+                 c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                {
+                    In = "header",
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
+                    Name = "Authorization",
+                    Type = "apiKey"
+                });
+
+                 c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                    {"Bearer", new string[] { }},
+                    {"oauth2", new string[] { }}
+                });
+
+                 c.EnableAnnotations();
+
+             });
         }
 
         public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)

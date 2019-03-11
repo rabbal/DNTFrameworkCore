@@ -54,7 +54,7 @@ namespace DNTFrameworkCore.TestAPI
                     // options.Timeout=TimeSpan.FromMinutes(3);
                     //options.IsolationLevel=IsolationLevel.ReadCommitted;
                 });
-            
+
             services.AddDNTProtectionRepository<ProjectDbContext>();
             services.AddDNTCommonWeb()
                 .AddDNTDataProtection();
@@ -117,6 +117,11 @@ namespace DNTFrameworkCore.TestAPI
             app.UseMvc();
             app.UseSignalR(routes => { routes.MapHub<NotificationHub>("/api/notificationhub"); });
             app.UseEFSecondLevelCache();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
         }
     }
 }
