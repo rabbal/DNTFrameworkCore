@@ -67,7 +67,7 @@ namespace DNTFrameworkCore.EntityFramework.SqlServer.Numbering
             var lockKey = $"Tenant_{_uow.TenantId}_" + entityName;
             var option = _options.Value.NumberedEntityMap[entityType];
 
-            _uow.ObtainApplicationLevelDatabaseLock(lockKey);
+            _uow.AcquireDistributedLock(lockKey);
 
             var nextNumber = option.Start.ToString();
 
