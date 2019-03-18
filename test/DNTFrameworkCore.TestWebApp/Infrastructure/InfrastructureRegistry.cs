@@ -15,8 +15,8 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure
             IServiceCollection serviceCollection = new ServiceCollection();
             serviceCollection.AddLogging(builder =>
                 builder.AddConsole()
-                    //.AddFilter(category: DbLoggerCategory.Database.Command.Name, level: LogLevel.Information));
-                    .AddFilter(level => true)); // log everything
+                    .AddFilter(category: DbLoggerCategory.Database.Command.Name, level: LogLevel.Information));
+                    //.AddFilter(level => true)); // log everything
             return serviceCollection.BuildServiceProvider().GetRequiredService<ILoggerFactory>();
         }
 
@@ -33,14 +33,13 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure
 //                                .FromMinutes(Configuration.GetValue(nameof(optionsBuilder.CommandTimeout),
 //                                    defaultValue: 3)).TotalSeconds;
 //                            optionsBuilder.CommandTimeout(minutes);
-                            // optionsBuilder.UseRowNumberForPaging();
                         })
                     .ConfigureWarnings(warnings =>
                     {
                         warnings.Throw(RelationalEventId.QueryClientEvaluationWarning);
                         warnings.Throw(CoreEventId.IncludeIgnoredWarning);
-                    })
-                    .UseLoggerFactory(BuildLoggerFactory());
+                    });
+                    //.UseLoggerFactory(BuildLoggerFactory());
             });
         }
     }

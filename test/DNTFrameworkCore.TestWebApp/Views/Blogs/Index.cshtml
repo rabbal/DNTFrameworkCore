@@ -1,0 +1,7 @@
+@using DNTFrameworkCore.Application.Models;
+@model PagedListModel<DNTFrameworkCore.TestWebApp.Application.Blogging.Models.BlogModel,FilteredPagedQueryModel>
+
+@foreach (var item in Model.Result.Items)
+{
+    @item.Title
+}

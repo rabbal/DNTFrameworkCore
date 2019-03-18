@@ -1,0 +1,11 @@
+@model DNTFrameworkCore.TestWebApp.Application.Blogging.Models.BlogModel
+@Html.ValidationSummary()
+@using (Html.BeginForm(Model.IsNew ? "Create" : "Edit","Blogs"))
+{
+    
+    @Html.HiddenFor(m=>m.Id)
+    @Html.EditorFor(m=>m.Title)
+    @Html.EditorFor(m=>m.Url)
+    <button type="submit" class="btn btn-info">submit</button>
+    <button type="submit" class="btn btn-info" name="save-continue" value="true">submit & continue</button>
+}

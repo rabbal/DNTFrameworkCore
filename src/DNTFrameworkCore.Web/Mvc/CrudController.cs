@@ -1,18 +1,19 @@
 using System;
-using System.Net;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Mapping;
+using DNTFrameworkCore.Web.ActionSelectors;
 using DNTFrameworkCore.Web.Authorization;
 using DNTFrameworkCore.Web.Extensions;
+using DNTFrameworkCore.Web.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DNTFrameworkCore.Web.API
+namespace DNTFrameworkCore.Web.Mvc
 {
     [Authorize]
     public abstract class
@@ -155,10 +156,8 @@ namespace DNTFrameworkCore.Web.API
         }
     }
 
-    [ApiController]
-    [Produces("application/json")]
     public abstract class
-        CrudControllerBase<TKey, TReadModel, TModel, TFilteredPagedQueryModel> : ControllerBase
+        CrudControllerBase<TKey, TReadModel, TModel, TFilteredPagedQueryModel> : Controller
         where TReadModel : MasterModel<TKey>
         where TModel : MasterModel<TKey>, new()
         where TFilteredPagedQueryModel : class, IFilteredPagedQueryModel, new()
@@ -171,6 +170,8 @@ namespace DNTFrameworkCore.Web.API
         protected abstract string EditPermissionName { get; }
         protected abstract string ViewPermissionName { get; }
         protected abstract string DeletePermissionName { get; }
+        protected abstract string ViewName { get; }
+        protected virtual string ListViewName { get; } = "_List";
 
         protected abstract Task<IPagedQueryResult<TReadModel>> ReadPagedListAsync(TFilteredPagedQueryModel query);
         protected abstract Task<Maybe<TModel>> FindAsync(TKey id);
@@ -180,98 +181,96 @@ namespace DNTFrameworkCore.Web.API
         protected abstract Task<bool> ExistsAsync(TKey id);
 
         [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
-        public async Task<IActionResult> Get(TFilteredPagedQueryModel query)
+        public async Task<IActionResult> Index()
         {
             if (!await CheckPermissionAsync(ViewPermissionName))
             {
                 return Forbid();
             }
 
-            var result = await ReadPagedListAsync(query ?? Factory<TFilteredPagedQueryModel>.CreateInstance());
-
-            return Ok(result);
+            var model = await ReadPagedListModelAsync();
+            return RenderIndex(model);
         }
 
-        [HttpGet("{id:long}")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
-        public async Task<ActionResult<TModel>> Get([BindRequired] TKey id)
+        [HttpGet, AjaxOnly, NoResponseCache]
+        public async Task<IActionResult> List(TFilteredPagedQueryModel query)
         {
-            if (!await CheckPermissionAsync(EditPermissionName))
+            if (!await CheckPermissionAsync(ViewPermissionName))
             {
                 return Forbid();
             }
 
-            var model = await FindAsync(id);
+            var model = await ReadPagedListModelAsync(query);
 
-            return model.HasValue ? (ActionResult)Ok(model.Value) : NotFound();
+            return PartialView(ListViewName, model);
         }
 
-        [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
-        public async Task<ActionResult<TModel>> Post(TModel model)
+        private async Task<PagedListModel<TReadModel, TFilteredPagedQueryModel>> ReadPagedListModelAsync(
+            TFilteredPagedQueryModel query = null)
+        {
+            query = query ?? Factory<TFilteredPagedQueryModel>.CreateInstance();
+            var result = await ReadPagedListAsync(query);
+
+            var model = new PagedListModel<TReadModel, TFilteredPagedQueryModel>
+            {
+                Query = query,
+                Result = result
+            };
+
+            return model;
+        }
+
+        protected virtual IActionResult RenderIndex(PagedListModel<TReadModel, TFilteredPagedQueryModel> model)
+        {
+            return Request.IsAjaxRequest()
+                ? (IActionResult)PartialView(model)
+                : View(model);
+        }
+
+        protected virtual IActionResult RenderView(TModel model)
+        {
+            return PartialView(ViewName, model);
+        }
+
+        [HttpGet, NoResponseCache, AjaxOnly]
+        public async Task<IActionResult> Create()
         {
             if (!await CheckPermissionAsync(CreatePermissionName))
             {
                 return Forbid();
             }
 
-            var result = await CreateAsync(model);
-            if (result.Succeeded)
-            {
-                return Created("", model);
-            }
-
-            ModelState.AddModelError(result);
-            return BadRequest(ModelState);
+            return RenderView(Factory<TModel>.CreateInstance());
         }
 
-        [HttpPut("{id:long}")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> Put([BindRequired] TKey id, TModel model)
+        [HttpPost, ValidateAntiForgeryToken, AjaxOnly]
+        [ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public async Task<IActionResult> Create(TModel model, bool continueEditing)
         {
-            if (!model.Id.Equals(id))
-            {
-                return BadRequest();
-            }
-
-            if (!await CheckPermissionAsync(EditPermissionName))
+            if (!await CheckPermissionAsync(CreatePermissionName))
             {
                 return Forbid();
             }
 
-            if (!await ExistsAsync(id))
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return BadRequest(ModelState);
             }
 
-            model.Id = id;
-
-            var result = await EditAsync(model);
+            var result = await CreateAsync(model);
             if (result.Succeeded)
             {
-                return NoContent();
+                return continueEditing ? RenderView(model) : Ok();
             }
 
             ModelState.AddModelError(result);
             return BadRequest(ModelState);
         }
 
-        [HttpDelete("{id}")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> Delete([BindRequired] TKey id)
+        [HttpGet, NoResponseCache, AjaxOnly]
+        public async Task<IActionResult> Edit([BindRequired] TKey id)
         {
-            if (!await CheckPermissionAsync(DeletePermissionName))
+            if (!await CheckPermissionAsync(EditPermissionName))
             {
                 return Forbid();
             }
@@ -282,10 +281,56 @@ namespace DNTFrameworkCore.Web.API
                 return NotFound();
             }
 
+            return RenderView(model.Value);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, ExportModelState]
+        [ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public async Task<IActionResult> Edit(TModel model, bool continueEditing)
+        {
+            if (!await CheckPermissionAsync(EditPermissionName))
+            {
+                return Forbid();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!await ExistsAsync(model.Id))
+            {
+                return NotFound();
+            }
+
+            var result = await EditAsync(model);
+            if (result.Succeeded)
+            {
+                return continueEditing ? RenderView(model) : Ok();
+            }
+
+            ModelState.AddModelError(result);
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost, AjaxOnly, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete([FromBody] Id<TKey> id)
+        {
+            if (!await CheckPermissionAsync(DeletePermissionName))
+            {
+                return Forbid();
+            }
+
+            var model = await FindAsync(id.Value);
+            if (!model.HasValue)
+            {
+                return NotFound();
+            }
+
             var result = await DeleteAsync(model.Value);
             if (result.Succeeded)
             {
-                return NoContent();
+                return Ok();
             }
 
             ModelState.AddModelError(result);

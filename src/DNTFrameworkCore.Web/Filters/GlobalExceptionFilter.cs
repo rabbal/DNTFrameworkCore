@@ -8,12 +8,12 @@ using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.Web.Filters
 {
-    public class GlobalExceptionFilter : IExceptionFilter
+    public class ExceptionFilter : IExceptionFilter
     {
         private readonly IHostingEnvironment _env;
-        private readonly ILogger<GlobalExceptionFilter> _logger;
+        private readonly ILogger<ExceptionFilter> _logger;
 
-        public GlobalExceptionFilter(IHostingEnvironment env, ILogger<GlobalExceptionFilter> logger)
+        public ExceptionFilter(IHostingEnvironment env, ILogger<ExceptionFilter> logger)
         {
             _env = env;
             _logger = logger;

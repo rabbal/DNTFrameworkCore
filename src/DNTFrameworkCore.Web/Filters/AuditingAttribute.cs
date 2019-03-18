@@ -9,12 +9,12 @@ using Microsoft.Extensions.Options;
 
 namespace DNTFrameworkCore.Web.Filters
 {
-    public class AuditingFilterAttribute : IAsyncActionFilter
+    public class AuditingAttribute : IAsyncActionFilter
     {
         private readonly IOptions<AuditingOptions> _configuration;
         private readonly IAuditingHelper _helper;
 
-        public AuditingFilterAttribute(IOptions<AuditingOptions> configuration, IAuditingHelper helper)
+        public AuditingAttribute(IOptions<AuditingOptions> configuration, IAuditingHelper helper)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _helper = helper ?? throw new ArgumentNullException(nameof(helper));

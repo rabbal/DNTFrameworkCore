@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Antiforgery.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
 
 namespace DNTFrameworkCore.Web.Security
 {
@@ -31,7 +33,10 @@ namespace DNTFrameworkCore.Web.Security
         public AntiforgeryTokenSet GetAndStoreTokens(HttpContext httpContext)
         {
             var result = _defaultAntiforgery.GetAndStoreTokens(httpContext);
-            httpContext.DisableBrowserCache();
+             httpContext.Response.Headers[HeaderNames.CacheControl] =
+                         new StringValues(new[] { "no-cache", "max-age=0", "must-revalidate", "no-store" });
+            httpContext.Response.Headers[HeaderNames.Expires] = "-1";
+            httpContext.Response.Headers[HeaderNames.Pragma] = "no-cache";
             return result;
         }
 

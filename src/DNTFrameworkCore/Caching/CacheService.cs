@@ -128,7 +128,7 @@ namespace DNTFrameworkCore.Caching
                 return result;
             }
 
-            lock (TypeLock<T>.SyncLock)
+            lock (TypeLock<T>.Lock)
             {
                 if (_memoryCache.TryGetValue(cacheKey, out result))
                 {
@@ -189,7 +189,7 @@ namespace DNTFrameworkCore.Caching
 
         private static class TypeLock<T>
         {
-            public static readonly object SyncLock = new object();
+            public static readonly object Lock = new object();
         }
     }
 }
