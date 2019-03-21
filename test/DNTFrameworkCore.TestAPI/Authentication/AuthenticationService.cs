@@ -66,7 +66,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
             _antiForgery.RegenerateAntiForgeryCookies(claims);
 
-            return SignInResult.Success(token);
+            return SignInResult.Ok(token);
         }
 
         /// <summary>

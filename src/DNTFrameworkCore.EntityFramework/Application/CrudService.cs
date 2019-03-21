@@ -26,7 +26,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
         where TModel : MasterModel<TKey>
         where TKey : IEquatable<TKey>
     {
-        protected CrudService(CrudServiceDependency dependency) : base(dependency)
+        protected CrudService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
         {
         }
     }
@@ -39,7 +39,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
         where TReadModel : MasterModel<TKey>
         where TKey : IEquatable<TKey>
     {
-        protected CrudService(CrudServiceDependency dependency) : base(dependency)
+        protected CrudService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
         {
         }
     }
@@ -57,12 +57,10 @@ namespace DNTFrameworkCore.EntityFramework.Application
         protected readonly IUnitOfWork UnitOfWork;
         protected readonly DbSet<TEntity> EntitySet;
 
-        protected CrudService(CrudServiceDependency dependency)
+        protected CrudService(IUnitOfWork uow, IEventBus bus)
         {
-            Guard.ArgumentNotNull(dependency, nameof(dependency));
-
-            UnitOfWork = dependency.UnitOfWork;
-            EventBus = dependency.EventBus;
+            UnitOfWork = uow ?? throw new ArgumentNullException(nameof(uow));
+            EventBus = bus ?? throw new ArgumentNullException(nameof(bus));
             EntitySet = UnitOfWork.Set<TEntity>();
         }
 
@@ -88,7 +86,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
 
         public Task<IReadOnlyList<TModel>> FindAsync(params TKey[] ids)
         {
-            return FindAsync((IEnumerable<TKey>) ids);
+            return FindAsync((IEnumerable<TKey>)ids);
         }
 
         public Task<IReadOnlyList<TModel>> FindAsync()
@@ -138,7 +136,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
         {
             Guard.ArgumentNotNull(model, nameof(model));
 
-            return CreateAsync(new[] {model});
+            return CreateAsync(new[] { model });
         }
 
         [Transactional]
@@ -191,7 +189,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
         {
             Guard.ArgumentNotNull(model, nameof(model));
 
-            return EditAsync(new[] {model});
+            return EditAsync(new[] { model });
         }
 
         [Transactional]
@@ -255,7 +253,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
         {
             Guard.ArgumentNotNull(model, nameof(model));
 
-            return DeleteAsync(new[] {model});
+            return DeleteAsync(new[] { model });
         }
 
         [Transactional]
@@ -348,7 +346,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
 
             var result = models.Select(
                 model => new ModifiedModel<TModel>
-                    {NewValue = model, OriginalValue = originals[model.Id]}).ToList();
+                { NewValue = model, OriginalValue = originals[model.Id] }).ToList();
 
             return result;
         }

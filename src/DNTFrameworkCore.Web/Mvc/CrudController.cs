@@ -15,7 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.Web.Mvc
 {
-    [Authorize]
+    //[Authorize]
     public abstract class
         CrudController<TCrudService, TKey, TModel> : CrudControllerBase<TKey, TModel, TModel,
             FilteredPagedQueryModel>
@@ -171,6 +171,8 @@ namespace DNTFrameworkCore.Web.Mvc
         protected abstract string ViewPermissionName { get; }
         protected abstract string DeletePermissionName { get; }
         protected abstract string ViewName { get; }
+        protected virtual bool HasPrefix { get; } = false;
+        protected string Prefix => HasPrefix ? "Model" : string.Empty;
         protected virtual string ListViewName { get; } = "_List";
 
         protected abstract Task<IPagedQueryResult<TReadModel>> ReadPagedListAsync(TFilteredPagedQueryModel query);
@@ -260,10 +262,11 @@ namespace DNTFrameworkCore.Web.Mvc
             var result = await CreateAsync(model);
             if (result.Succeeded)
             {
+                ModelState.Clear();
                 return continueEditing ? RenderView(model) : Ok();
             }
 
-            ModelState.AddModelError(result);
+            ModelState.AddModelError(result, Prefix);
             return BadRequest(ModelState);
         }
 
@@ -306,10 +309,11 @@ namespace DNTFrameworkCore.Web.Mvc
             var result = await EditAsync(model);
             if (result.Succeeded)
             {
+                ModelState.Clear();
                 return continueEditing ? RenderView(model) : Ok();
             }
 
-            ModelState.AddModelError(result);
+            ModelState.AddModelError(result, Prefix);
             return BadRequest(ModelState);
         }
 
@@ -339,7 +343,7 @@ namespace DNTFrameworkCore.Web.Mvc
 
         private async Task<bool> CheckPermissionAsync(string permissionName)
         {
-            return (await AuthorizationService.AuthorizeAsync(User, BuildPolicyName(permissionName))).Succeeded;
+            return await Task.FromResult(true);// (await AuthorizationService.AuthorizeAsync(User, BuildPolicyName(permissionName))).Succeeded;
         }
 
         private static string BuildPolicyName(string permission)

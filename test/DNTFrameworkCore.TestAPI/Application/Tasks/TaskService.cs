@@ -4,6 +4,8 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.EntityFramework.Application;
+using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Linq;
 using DNTFrameworkCore.TestAPI.Application.Tasks.Models;
 using DNTFrameworkCore.TestAPI.Domain.Tasks;
@@ -20,7 +22,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
     {
         private readonly IMapper _mapper;
 
-        public TaskService(CrudServiceDependency dependency, IMapper mapper) : base(dependency)
+        public TaskService(IUnitOfWork uow, IEventBus bus, IMapper mapper) : base(uow, bus)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }

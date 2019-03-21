@@ -1,11 +1,17 @@
-@model DNTFrameworkCore.TestWebApp.Application.Blogging.Models.BlogModel
+@model DNTFrameworkCore.TestWebApp.Models.BlogViewModel
+<div class="modal-body">
 @Html.ValidationSummary()
-@using (Html.BeginForm(Model.IsNew ? "Create" : "Edit","Blogs"))
+@using (Html.BeginForm(Model.IsNew ? "Create" : "Edit","Blogs",null,FormMethod.Post,true,htmlAttributes:new{data_ajax="true",data_ajax_update = "#main-modal div.modal-content"}))
 {
-    
+    @if(Model.RowVersion!=null)
+    {
+        @Html.Hidden("RowVersion",Convert.ToBase64String(Model.RowVersion))
+    }
     @Html.HiddenFor(m=>m.Id)
     @Html.EditorFor(m=>m.Title)
     @Html.EditorFor(m=>m.Url)
+    @Html.EditorFor(m=>m.IsAdmin)
     <button type="submit" class="btn btn-info">submit</button>
     <button type="submit" class="btn btn-info" name="save-continue" value="true">submit & continue</button>
 }
+</div>

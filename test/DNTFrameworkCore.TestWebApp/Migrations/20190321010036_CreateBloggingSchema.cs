@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
+namespace DNTFrameworkCore.TestWebApp.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class CreateBloggingSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

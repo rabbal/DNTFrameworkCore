@@ -36,8 +36,8 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Context
 
             builder.UseSqlServer(connectionString);
 
-            return new ProjectDbContext(new DbContextCoreDependency<ProjectDbContext>(provider.GetService<IHookEngine>(),
-                provider.GetService<IUserSession>(), builder.Options));
+            return new ProjectDbContext(provider.GetService<IHookEngine>(),
+                provider.GetService<IUserSession>(), builder.Options);
         }
 
         private class StubHookEngine : IHookEngine

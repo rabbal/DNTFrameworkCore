@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.EntityFramework.Application;
+using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.TestAPI.Application.Identity.Models;
 using DNTFrameworkCore.TestAPI.Domain.Identity;
@@ -21,7 +23,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
     {
         private readonly IUserManager _manager;
 
-        public UserService(CrudServiceDependency dependency, IUserManager manager) : base(dependency)
+        public UserService(IUnitOfWork uow, IEventBus bus, IUserManager manager) : base(uow, bus)
         {
             _manager = manager ?? throw new ArgumentNullException(nameof(manager));
         }
@@ -58,7 +60,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
                 NormalizedUserName = model.UserName.ToUpperInvariant(),
                 NormalizedDisplayName = model.DisplayName.NormalizePersianTitle(),
                 Roles = model.Roles.Select(r => new UserRole
-                    {Id = r.Id, RoleId = r.RoleId, TrackingState = r.TrackingState}).ToList(),
+                { Id = r.Id, RoleId = r.RoleId, TrackingState = r.TrackingState }).ToList(),
                 Permissions = model.Permissions.Select(p => new UserPermission
                 {
                     Id = p.Id,
@@ -85,7 +87,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
                 DisplayName = entity.DisplayName,
                 UserName = entity.UserName,
                 Roles = entity.Roles.Select(r => new UserRoleModel
-                    {Id = r.Id, RoleId = r.RoleId, TrackingState = r.TrackingState}).ToList(),
+                { Id = r.Id, RoleId = r.RoleId, TrackingState = r.TrackingState }).ToList(),
                 Permissions = entity.Permissions.Where(p => p.IsGranted).Select(p => new PermissionModel
                 {
                     Id = p.Id,

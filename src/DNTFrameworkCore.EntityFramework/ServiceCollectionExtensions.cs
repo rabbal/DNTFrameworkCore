@@ -58,8 +58,6 @@ namespace DNTFrameworkCore.EntityFramework
         public static void AddDNTUnitOfWork<TDbContext>(this IServiceCollection services)
             where TDbContext : DbContextCore
         {
-            services.AddScoped<DbContextCoreDependency<TDbContext>>();
-            services.AddTransient<CrudServiceDependency>();
             services.AddScoped(provider => (IUnitOfWork) provider.GetRequiredService(typeof(TDbContext)));
             services.AddScoped<ITransactionProvider, TransactionProvider<TDbContext>>();
             services.AddScoped<IHookEngine, HookEngine>();

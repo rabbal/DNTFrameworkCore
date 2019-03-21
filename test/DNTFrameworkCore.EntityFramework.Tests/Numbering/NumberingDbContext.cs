@@ -1,5 +1,6 @@
 using DNTFrameworkCore.EntityFramework.Context;
 using DNTFrameworkCore.EntityFramework.SqlServer.Numbering;
+using DNTFrameworkCore.Runtime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -7,7 +8,9 @@ namespace DNTFrameworkCore.EntityFramework.Tests.Numbering
 {
     public class NumberingDbContext : DbContextCore
     {
-        public NumberingDbContext(DbContextCoreDependency<NumberingDbContext> dependency) : base(dependency)
+        public NumberingDbContext(IHookEngine hookEngine,
+            IUserSession session,
+            DbContextOptions<NumberingDbContext> options) : base(hookEngine, session, options)
         {
         }
 
@@ -15,7 +18,7 @@ namespace DNTFrameworkCore.EntityFramework.Tests.Numbering
         {
             modelBuilder.ApplyConfiguration(new TestTaskConfiguration());
             modelBuilder.ApplyNumberedEntityConfiguration();
-            
+
             base.OnModelCreating(modelBuilder);
         }
     }
@@ -25,7 +28,7 @@ namespace DNTFrameworkCore.EntityFramework.Tests.Numbering
         public void Configure(EntityTypeBuilder<TestTask> builder)
         {
             builder.Property(t => t.Number).HasMaxLength(50).IsRequired();
-            
+
             builder.ToTable(nameof(TestTask));
         }
     }

@@ -5,6 +5,7 @@ using DNTFrameworkCore.EntityFramework.Context;
 using DNTFrameworkCore.EntityFramework.DataProtection;
 using DNTFrameworkCore.EntityFramework.Logging;
 using DNTFrameworkCore.EntityFramework.SqlServer.Numbering;
+using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.TestAPI.Infrastructure.Mappings.Blogging;
 using DNTFrameworkCore.TestAPI.Infrastructure.Mappings.Identity;
 using EFSecondLevelCache.Core.Contracts;
@@ -16,7 +17,10 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Context
 {
     public class ProjectDbContext : DbContextCore
     {
-        public ProjectDbContext(DbContextCoreDependency<ProjectDbContext> dependency) : base(dependency)
+        public ProjectDbContext(
+            IHookEngine hookEngine,
+            IUserSession session,
+            DbContextOptions<ProjectDbContext> options) : base(hookEngine, session, options)
         {
         }
 

@@ -25,5 +25,27 @@ namespace DNTFrameworkCore.Helpers
                 k => new Lazy<TValue>(() => valueFactory(k), LazyThreadSafetyMode.ExecutionAndPublication));
             return lazyResult.Value;
         }
+
+        public TValue AddOrUpdate(TKey key, TValue addValue, Func<TKey, TValue, TValue> updateValueFactory)
+        {
+            var lazyResult = _concurrentDictionary.AddOrUpdate(
+                key,
+                new Lazy<TValue>(() => addValue),
+                (k, currentValue) => new Lazy<TValue>(() => updateValueFactory(k, currentValue.Value),
+                                                      LazyThreadSafetyMode.ExecutionAndPublication));
+            return lazyResult.Value;
+        }
+
+        public TValue AddOrUpdate(TKey key, Func<TKey, TValue> addValueFactory, Func<TKey, TValue, TValue> updateValueFactory)
+        {
+            var lazyResult = _concurrentDictionary.AddOrUpdate(
+                key,
+                k => new Lazy<TValue>(() => addValueFactory(k)),
+                (k, currentValue) => new Lazy<TValue>(() => updateValueFactory(k, currentValue.Value),
+                                                      LazyThreadSafetyMode.ExecutionAndPublication));
+            return lazyResult.Value;
+        }
+
+        public int Count => _concurrentDictionary.Count;
     }
 }

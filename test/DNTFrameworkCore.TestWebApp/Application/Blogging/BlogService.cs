@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Blogging
 {
+
     public interface IBlogService : ICrudService<int, BlogModel>
     {
     }
@@ -23,23 +24,19 @@ namespace DNTFrameworkCore.TestWebApp.Application.Blogging
     {
         private readonly ILogger<BlogService> _logger;
 
-        public BlogService(CrudServiceDependency dependency, ILogger<BlogService> logger) : base(dependency)
+        public BlogService(IUnitOfWork uow, IEventBus bus, ILogger<BlogService> logger) : base(uow, bus)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         protected override IQueryable<BlogModel> BuildReadQuery(FilteredPagedQueryModel model)
         {
-            _logger.LogInformation(nameof(BuildReadQuery));
-
             return EntitySet.AsNoTracking().Select(b => new BlogModel
-                {Id = b.Id, RowVersion = b.RowVersion, Url = b.Url, Title = b.Title});
+            { Id = b.Id, RowVersion = b.RowVersion, Url = b.Url, Title = b.Title });
         }
 
         protected override Blog MapToEntity(BlogModel model)
         {
-            _logger.LogInformation(nameof(MapToEntity));
-
             return new Blog
             {
                 Id = model.Id,
@@ -52,8 +49,6 @@ namespace DNTFrameworkCore.TestWebApp.Application.Blogging
 
         protected override BlogModel MapToModel(Blog entity)
         {
-            _logger.LogInformation(nameof(MapToModel));
-
             return new BlogModel
             {
                 Id = entity.Id,
@@ -119,6 +114,13 @@ namespace DNTFrameworkCore.TestWebApp.Application.Blogging
             _logger.LogInformation(nameof(AfterDeleteAsync));
 
             return Task.FromResult(Ok());
+        }
+
+        protected override Task BeforeSaveAsync(IReadOnlyList<Blog> entities, List<BlogModel> models)
+        {
+            _logger.LogInformation(nameof(BeforeSaveAsync));
+
+            return base.BeforeSaveAsync(entities, models);
         }
     }
 }

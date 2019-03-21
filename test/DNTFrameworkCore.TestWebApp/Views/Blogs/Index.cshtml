@@ -1,6 +1,17 @@
 @using DNTFrameworkCore.Application.Models;
 @model PagedListModel<DNTFrameworkCore.TestWebApp.Application.Blogging.Models.BlogModel,FilteredPagedQueryModel>
-
+ <a href="#"
+               role="button"
+               data-ajax="true"
+               data-ajax-method="GET"
+               data-ajax-update="#main-modal div.modal-content"
+               data-ajax-url="@Url.Action("Create","Blogs")"
+               data-toggle="modal"
+               data-target="#main-modal"
+               class="btn btn-default">
+                <i class="fa fa-plus"></i>
+                New Blog
+            </a>
 @foreach (var item in Model.Result.Items)
 {
     @item.Title

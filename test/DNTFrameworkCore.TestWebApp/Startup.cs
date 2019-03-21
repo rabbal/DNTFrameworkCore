@@ -44,7 +44,7 @@ namespace DNTFrameworkCore.TestWebApp
                 });
             services.AddDNTCommonWeb();
             services.AddInfrastructure(Configuration);
-            services.AddApplication();
+            services.AddApplication(Configuration);
             services.AddResources();
             services.AddWeb();
         }
@@ -63,12 +63,12 @@ namespace DNTFrameworkCore.TestWebApp
                 app.UseHsts();
             }
 
+            app.UseAuthentication();
+
             app.UseDNTFramework();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
-            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

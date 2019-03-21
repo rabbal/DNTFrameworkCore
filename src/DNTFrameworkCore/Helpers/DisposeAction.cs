@@ -10,7 +10,7 @@ namespace DNTFrameworkCore.Helpers
     public class DisposeAction : IDisposable
     {
         public static readonly DisposeAction Empty = new DisposeAction(null);
-
+        
         private Action _action;
 
         /// <summary>

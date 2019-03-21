@@ -7,21 +7,21 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
+namespace DNTFrameworkCore.TestWebApp.Migrations
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20190131142005_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20190321010036_CreateBloggingSchema")]
+    partial class CreateBloggingSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
+                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Blog", b =>
+            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Blogging.Blog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

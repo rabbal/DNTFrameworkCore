@@ -2,6 +2,8 @@ using System.Linq;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.EntityFramework.Application;
+using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.TestAPI.Application.Identity.Models;
 using DNTFrameworkCore.TestAPI.Domain.Identity;
 using DNTFrameworkCore.TestAPI.Helpers;
@@ -15,7 +17,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
 
     public class RoleService : CrudService<Role, long, RoleReadModel, RoleModel>, IRoleService
     {
-        public RoleService(CrudServiceDependency dependency) : base(dependency)
+        public RoleService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
         {
         }
 

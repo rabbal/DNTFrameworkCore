@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.EntityFramework.Application;
+using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestAPI.Application.Blogging.Models;
 using DNTFrameworkCore.TestAPI.Domain.Blogging;
@@ -13,7 +15,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.TestAPI.Application.Blogging
 {
-    
+
     public interface IBlogService : ICrudService<int, BlogModel>
     {
     }
@@ -22,7 +24,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Blogging
     {
         private readonly ILogger<BlogService> _logger;
 
-        public BlogService(CrudServiceDependency dependency, ILogger<BlogService> logger) : base(dependency)
+        public BlogService(IUnitOfWork uow, IEventBus bus, ILogger<BlogService> logger) : base(uow, bus)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -30,7 +32,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Blogging
         protected override IQueryable<BlogModel> BuildReadQuery(FilteredPagedQueryModel model)
         {
             return EntitySet.AsNoTracking().Select(b => new BlogModel
-                {Id = b.Id, RowVersion = b.RowVersion, Url = b.Url, Title = b.Title});
+            { Id = b.Id, RowVersion = b.RowVersion, Url = b.Url, Title = b.Title });
         }
 
         protected override Blog MapToEntity(BlogModel model)

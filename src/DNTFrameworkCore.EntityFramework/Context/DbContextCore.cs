@@ -12,6 +12,7 @@ using DNTFrameworkCore.Exceptions;
 using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.Helpers;
+using DNTFrameworkCore.Runtime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -27,12 +28,13 @@ namespace DNTFrameworkCore.EntityFramework.Context
 
         private readonly IHookEngine _hookEngine;
 
-        protected DbContextCore(DbContextCoreDependency dependency) : base(dependency.DbContextOptions)
+        protected DbContextCore(
+            IHookEngine hookEngine,
+            IUserSession session,
+            DbContextOptions options) : base(options)
         {
-            Guard.ArgumentNotNull(dependency, nameof(dependency));
-
-            _hookEngine = dependency.HookEngine;
-            TenantId = dependency.Session.TenantId ?? 0;
+            _hookEngine = hookEngine ?? throw new ArgumentNullException(nameof(hookEngine));
+            TenantId = (session ?? throw new ArgumentNullException(nameof(session))).TenantId ?? 0;
         }
 
         public DbTransaction Transaction => Database.CurrentTransaction?.GetDbTransaction();
@@ -281,7 +283,7 @@ namespace DNTFrameworkCore.EntityFramework.Context
             {
                 ConfigureQueryFiltersMethodInfo
                     .MakeGenericMethod(entityType.ClrType)
-                    .Invoke(this, new object[] {modelBuilder, entityType});
+                    .Invoke(this, new object[] { modelBuilder, entityType });
             }
         }
 
@@ -317,7 +319,7 @@ namespace DNTFrameworkCore.EntityFramework.Context
             if (typeof(ISoftDeleteEntity).IsAssignableFrom(typeof(TEntity)))
             {
                 Expression<Func<TEntity, bool>> deleteFilterExpression = e =>
-                    !DeleteFilterEnabled || !((ISoftDeleteEntity) e).IsDeleted;
+                    !DeleteFilterEnabled || !((ISoftDeleteEntity)e).IsDeleted;
 
                 expression = deleteFilterExpression;
             }
@@ -325,7 +327,7 @@ namespace DNTFrameworkCore.EntityFramework.Context
             if (!typeof(ITenantEntity).IsAssignableFrom(typeof(TEntity))) return expression;
 
             Expression<Func<TEntity, bool>> tenantFilterExpression = e =>
-                !TenantFilterEnabled || ((ITenantEntity) e).TenantId == TenantId;
+                !TenantFilterEnabled || ((ITenantEntity)e).TenantId == TenantId;
 
             expression = expression == null
                 ? tenantFilterExpression

@@ -1,5 +1,8 @@
+using System;
+using CacheManager.Core;
 using DNTFrameworkCore.EntityFramework;
 using DNTFrameworkCore.TestWebApp.Infrastructure.Context;
+using EFSecondLevelCache.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
@@ -15,32 +18,45 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure
             IServiceCollection serviceCollection = new ServiceCollection();
             serviceCollection.AddLogging(builder =>
                 builder.AddConsole()
-                    .AddFilter(category: DbLoggerCategory.Database.Command.Name, level: LogLevel.Information));
-                    //.AddFilter(level => true)); // log everything
+                    //.AddFilter(category: DbLoggerCategory.Database.Command.Name, level: LogLevel.Information));
+                    .AddFilter(level => true)); // log everything
             return serviceCollection.BuildServiceProvider().GetRequiredService<ILoggerFactory>();
         }
-
+        
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration
         )
         {
             services.AddDNTUnitOfWork<ProjectDbContext>();
             services.AddDbContext<ProjectDbContext>(builder =>
             {
+                builder.EnableSensitiveDataLogging();
                 builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
                         optionsBuilder =>
                         {
-//                            var minutes = (int) TimeSpan
-//                                .FromMinutes(Configuration.GetValue(nameof(optionsBuilder.CommandTimeout),
-//                                    defaultValue: 3)).TotalSeconds;
-//                            optionsBuilder.CommandTimeout(minutes);
+                            var seconds = (int) TimeSpan
+                                .FromMinutes(configuration.GetValue(nameof(optionsBuilder.CommandTimeout),
+                                    3)).TotalSeconds;
+                            optionsBuilder.CommandTimeout(seconds);
+                            optionsBuilder.MigrationsHistoryTable("MigrationHistory", "dbo");
                         })
                     .ConfigureWarnings(warnings =>
                     {
                         warnings.Throw(RelationalEventId.QueryClientEvaluationWarning);
                         warnings.Throw(CoreEventId.IncludeIgnoredWarning);
-                    });
-                    //.UseLoggerFactory(BuildLoggerFactory());
+                    })
+                    .UseLoggerFactory(BuildLoggerFactory());
             });
+            
+            services.AddEFSecondLevelCache();
+
+            // Add an in-memory cache service provider
+            services.AddSingleton(typeof(ICacheManager<>), typeof(BaseCacheManager<>));
+            services.AddSingleton(typeof(ICacheManagerConfiguration),
+                new CacheManager.Core.ConfigurationBuilder()
+                    .WithJsonSerializer()
+                    .WithMicrosoftMemoryCacheHandle("MemoryCache1")
+                    .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromMinutes(10))
+                    .Build());
         }
     }
 }
