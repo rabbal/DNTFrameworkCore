@@ -29,7 +29,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
             if (claimsIdentity?.Claims == null || !claimsIdentity.Claims.Any())
             {
                 // this is not our issued cookie
-                await handleUnauthorizedRequest(context);
+                await HandleUnauthorizedRequest(context);
                 return;
             }
 
@@ -37,29 +37,29 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
             if (serialNumberClaim == null)
             {
                 // this is not our issued cookie
-                await handleUnauthorizedRequest(context);
+                await HandleUnauthorizedRequest(context);
                 return;
             }
 
             var userIdString = claimsIdentity.FindFirst(ClaimTypes.UserData).Value;
-            if (!int.TryParse(userIdString, out int userId))
+            if (!long.TryParse(userIdString, out var userId))
             {
                 // this is not our issued cookie
-                await handleUnauthorizedRequest(context);
+                await HandleUnauthorizedRequest(context);
                 return;
             }
 
-            var user = await _manager.FindAsync(userId).ConfigureAwait(false);
+            var user = await _manager.FindAsync(userId);
             if (!user.HasValue || user.Value.SerialNumber != serialNumberClaim.Value || !user.Value.IsActive)
             {
                 // user has changed his/her password/permissions/roles/stat/IsActive
-                await handleUnauthorizedRequest(context);
+                await HandleUnauthorizedRequest(context);
             }
 
-            await _manager.UpdateLastActivityDateAsync(user.Value).ConfigureAwait(false);
+            await _manager.UpdateLastActivityDateAsync(user.Value);
         }
 
-        private Task handleUnauthorizedRequest(CookieValidatePrincipalContext context)
+        private Task HandleUnauthorizedRequest(CookieValidatePrincipalContext context)
         {
             context.RejectPrincipal();
             return context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

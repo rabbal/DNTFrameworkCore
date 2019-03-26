@@ -40,9 +40,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
 
         public async Task<Maybe<User>> FindAsync(long userId)
         {
-            return await _users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(a => a.Id == userId);
+            return await _users.FindAsync(userId);
         }
 
         public async Task<Maybe<User>> FindIncludeClaimsAsync(long userId)
@@ -80,7 +78,6 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
             }
 
             user.LastLoggedInDateTime = DateTimeOffset.UtcNow;
-            _uow.Entry(user).State = EntityState.Modified;
             await _uow.SaveChangesAsync();
         }
 

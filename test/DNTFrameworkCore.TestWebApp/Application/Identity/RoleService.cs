@@ -8,14 +8,14 @@ using DNTFrameworkCore.TestWebApp.Application.Identity.Models;
 using DNTFrameworkCore.TestWebApp.Domain.Identity;
 using DNTFrameworkCore.TestWebApp.Helpers;
 using Microsoft.EntityFrameworkCore;
-
+using DNTFrameworkCore.Linq;
 namespace DNTFrameworkCore.TestWebApp.Application.Identity
 {
-    public interface IRoleService : ICrudService<long, RoleReadModel, RoleModel>
+    public interface IRoleService : ICrudService<long, RoleReadModel, RoleModel, RoleFilteredPagedQueryModel>
     {
     }
 
-    public class RoleService : CrudService<Role, long, RoleReadModel, RoleModel>, IRoleService
+    public class RoleService : CrudService<Role, long, RoleReadModel, RoleModel, RoleFilteredPagedQueryModel>, IRoleService
     {
         public RoleService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
         {
@@ -27,9 +27,13 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
                 .Include(r => r.Permissions);
         }
 
-        protected override IQueryable<RoleReadModel> BuildReadQuery(FilteredPagedQueryModel model)
+        protected override IQueryable<RoleReadModel> BuildReadQuery(RoleFilteredPagedQueryModel model)
         {
-            return EntitySet.AsNoTracking().Select(r => new RoleReadModel
+            return EntitySet.AsNoTracking()
+            .WhereIf(
+                model.Permissions != null && model.Permissions.Any(),
+                r => r.Permissions.Any(p => model.Permissions.Contains(p.Name)))
+            .Select(r => new RoleReadModel
             {
                 Id = r.Id,
                 Name = r.Name,

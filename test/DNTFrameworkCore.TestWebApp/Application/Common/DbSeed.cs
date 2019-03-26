@@ -16,13 +16,13 @@ namespace DNTFrameworkCore.TestWebApp.Application.Common
     public class DbSeed : IDbSeed
     {
         private readonly IUnitOfWork _uow;
-        private readonly IOptionsSnapshot<ProjectSettings> _settings;
+        private readonly IOptionsSnapshot<ProjectSetting> _settings;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IPermissionService _permissionManager;
         private readonly ILogger<DbSeed> _logger;
 
         public DbSeed(IUnitOfWork uow,
-            IOptionsSnapshot<ProjectSettings> settings,
+            IOptionsSnapshot<ProjectSetting> settings,
             IPasswordHasher passwordHasher,
             IPermissionService permissionManager,
             ILogger<DbSeed> logger)

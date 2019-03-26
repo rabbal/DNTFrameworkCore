@@ -1,3 +1,4 @@
+using System;
 using DNTFrameworkCore.TestWebApp.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -18,6 +19,7 @@ namespace DNTFrameworkCore.TestWebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddScoped<ICookieValidator, CookieValidator>();
             services.AddAuthentication(options =>
                 {
                     options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -27,13 +29,14 @@ namespace DNTFrameworkCore.TestWebApp
                 .AddCookie(options =>
                 {
                     options.SlidingExpiration = false;
-                    options.LoginPath = "/Auth/Login";
-                    options.LogoutPath = "/Auth/Logout";
+                    options.LoginPath = "/Account/Login";
+                    options.LogoutPath = "/Account/Logout";
                     //options.AccessDeniedPath = new PathString("/Home/Forbidden/");
-                    options.Cookie.Name = "auth.dntframework";
+                    options.Cookie.Name = "auth";
                     options.Cookie.HttpOnly = true;
                     options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-                    options.Cookie.SameSite = SameSiteMode.Lax;
+                    options.Cookie.SameSite = SameSiteMode.Strict;
+                    options.ExpireTimeSpan = TimeSpan.FromDays(15);
                     options.Events = new CookieAuthenticationEvents
                     {
                         OnValidatePrincipal = context =>

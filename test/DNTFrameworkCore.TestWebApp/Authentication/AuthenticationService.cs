@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Dependency;
+using DNTFrameworkCore.Logging;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.TestWebApp.Application.Identity;
 using DNTFrameworkCore.TestWebApp.Resources;
@@ -13,13 +14,14 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace DNTFrameworkCore.TestWebApp.Authentication
 {
     public interface IAuthenticationService : IScopedDependency
     {
-        Task<SignInResult> SignInAsync(string userName, string password);
+        Task<SignInResult> SignInAsync(string userName, string password, bool persistent = false);
         Task SignOutAsync();
     }
 
@@ -30,12 +32,16 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
         private readonly IMessageLocalizer _localizer;
         private readonly IHttpContextAccessor _context;
         private readonly IConfiguration _configuration;
+        private readonly IUserSession _session;
+        private readonly ILogger<AuthenticationService> _logger;
 
         public AuthenticationService(
             IUserManager userManager,
             IRoleManager roleManager,
             IMessageLocalizer localizer,
             IHttpContextAccessor context,
+            IUserSession session,
+            ILogger<AuthenticationService> logger,
             IConfiguration configuration)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
@@ -43,9 +49,11 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
             _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _session = session ?? throw new ArgumentNullException(nameof(session));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<SignInResult> SignInAsync(string userName, string password)
+        public async Task<SignInResult> SignInAsync(string userName, string password, bool persistent)
         {
             var userMaybe = await _userManager.FindByNameAsync(userName);
             if (!userMaybe.HasValue) return SignInResult.Failed(_localizer["SignIn.Messages.Failure"]);
@@ -62,17 +70,20 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
             var claims = await GenerateCookieClaimsAsync(userId);
 
             var loginCookieExpirationDays = _configuration.GetValue<int>("LoginCookieExpirationDays", defaultValue: 30);
+
             await _context.HttpContext.SignInAsync(
                CookieAuthenticationDefaults.AuthenticationScheme,
                claims,
                new AuthenticationProperties
                {
-                   IsPersistent = true, // "Remember Me"
+                   IsPersistent = persistent, // "Remember Me"
                    IssuedUtc = DateTimeOffset.UtcNow,
                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(loginCookieExpirationDays)
                });
 
             await _userManager.UpdateLastActivityDateAsync(user);
+
+            _logger.LogInformation(LoggingEvents.LOGIN, $"{userName} logged in.");
 
             return SignInResult.Ok();
         }
@@ -83,6 +94,11 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
         /// </summary>
         public async Task SignOutAsync()
         {
+            if (_session.IsAuthenticated && _session.UserId.HasValue)
+            {
+                await _userManager.UpdateSerialNumberAsync(_session.UserId.Value);
+                _logger.LogInformation(LoggingEvents.LOGOUT, $"{_session.UserName} logged out.");
+            }
             await _context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
 

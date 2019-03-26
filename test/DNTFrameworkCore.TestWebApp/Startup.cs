@@ -67,7 +67,11 @@ namespace DNTFrameworkCore.TestWebApp
 
             app.UseDNTFramework();
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+             app.UseFileServer(new FileServerOptions
+            {
+                // Don't expose file system
+                EnableDirectoryBrowsing = false
+            });
             app.UseCookiePolicy();
 
             app.UseMvc(routes =>

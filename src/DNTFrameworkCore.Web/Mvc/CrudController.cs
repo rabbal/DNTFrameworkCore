@@ -15,7 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.Web.Mvc
 {
-    //[Authorize]
+    [Authorize]
     public abstract class
         CrudController<TCrudService, TKey, TModel> : CrudControllerBase<TKey, TModel, TModel,
             FilteredPagedQueryModel>
@@ -343,7 +343,7 @@ namespace DNTFrameworkCore.Web.Mvc
 
         private async Task<bool> CheckPermissionAsync(string permissionName)
         {
-            return await Task.FromResult(true);// (await AuthorizationService.AuthorizeAsync(User, BuildPolicyName(permissionName))).Succeeded;
+            return (await AuthorizationService.AuthorizeAsync(User, BuildPolicyName(permissionName))).Succeeded;
         }
 
         private static string BuildPolicyName(string permission)

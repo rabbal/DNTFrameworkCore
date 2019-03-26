@@ -16,6 +16,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
         Task<Maybe<User>> FindIncludeClaimsAsync(long userId);
         Task<Maybe<User>> FindByNameAsync(string name);
         Task UpdateLastActivityDateAsync(User user);
+        Task UpdateSerialNumberAsync(long userId);
         string NewSerialNumber();
         Task<Maybe<User>> FindCurrentUserAsync();
         string HashPassword(string password);
@@ -40,9 +41,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
 
         public async Task<Maybe<User>> FindAsync(long userId)
         {
-            return await _users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(a => a.Id == userId);
+            return await _users.FindAsync(userId);
         }
 
         public async Task<Maybe<User>> FindIncludeClaimsAsync(long userId)
@@ -80,7 +79,6 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
             }
 
             user.LastLoggedInDateTime = DateTimeOffset.UtcNow;
-            _uow.Entry(user).State = EntityState.Modified;
             await _uow.SaveChangesAsync();
         }
 
@@ -97,6 +95,16 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
         public bool VerifyHashedPassword(string hashedPassword, string providedPassword)
         {
             return _hasher.VerifyHashedPassword(hashedPassword, providedPassword) != PasswordVerificationResult.Failed;
+        }
+
+        public async Task UpdateSerialNumberAsync(long userId)
+        {
+            var user = await FindAsync(userId);
+            if (user.HasValue)
+            {
+                user.Value.SerialNumber = NewSerialNumber();
+                await _uow.SaveChangesAsync();
+            }
         }
     }
 }

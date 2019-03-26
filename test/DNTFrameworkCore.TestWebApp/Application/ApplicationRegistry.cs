@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.TestWebApp.Application
 
         public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<ProjectSettings>(configuration.Bind);
+            services.Configure<ProjectSetting>(configuration.Bind);
 
             services.AddAutoMapper();
             services.AddDNTNumbering(options =>

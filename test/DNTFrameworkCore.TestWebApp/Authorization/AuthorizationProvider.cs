@@ -8,15 +8,41 @@ namespace DNTFrameworkCore.TestWebApp.Authorization
     {
         public IEnumerable<Permission> ProvidePermissions()
         {
-            yield return Permission.CreatePermission(PermissionNames.Administration, L(PermissionNames.Administration))
-                .CreateChildPermission(PermissionNames.Administration_Blogs_View,
-                    L(PermissionNames.Administration_Blogs_View))
-                .CreateChildPermission(PermissionNames.Administration_Blogs_Create,
-                    L(PermissionNames.Administration_Blogs_Create))
-                .CreateChildPermission(PermissionNames.Administration_Blogs_Edit,
-                    L(PermissionNames.Administration_Blogs_Edit))
-                .CreateChildPermission(PermissionNames.Administration_Blogs_Delete,
-                    L(PermissionNames.Administration_Blogs_Delete));
+           yield return Permission.CreatePermission(PermissionNames.Blogs_View,
+                L(PermissionNames.Blogs_View));
+            yield return Permission.CreatePermission(PermissionNames.Blogs_Create,
+                L(PermissionNames.Blogs_Create));
+            yield return Permission.CreatePermission(PermissionNames.Blogs_Edit,
+                L(PermissionNames.Blogs_Edit));
+            yield return Permission.CreatePermission(PermissionNames.Blogs_Delete,
+                L(PermissionNames.Blogs_Delete));
+            
+            yield return Permission.CreatePermission(PermissionNames.Roles_View,
+                L(PermissionNames.Roles_View));
+            yield return Permission.CreatePermission(PermissionNames.Roles_Create,
+                L(PermissionNames.Roles_Create));
+            yield return Permission.CreatePermission(PermissionNames.Roles_Edit,
+                L(PermissionNames.Roles_Edit));
+            yield return Permission.CreatePermission(PermissionNames.Roles_Delete,
+                L(PermissionNames.Roles_Delete));
+            
+            yield return Permission.CreatePermission(PermissionNames.Users_View,
+                L(PermissionNames.Users_View));
+            yield return Permission.CreatePermission(PermissionNames.Users_Create,
+                L(PermissionNames.Users_Create));
+            yield return Permission.CreatePermission(PermissionNames.Users_Edit,
+                L(PermissionNames.Users_Edit));
+            yield return Permission.CreatePermission(PermissionNames.Users_Delete,
+                L(PermissionNames.Users_Delete));
+            
+            yield return Permission.CreatePermission(PermissionNames.Tasks_View,
+                L(PermissionNames.Tasks_View));
+            yield return Permission.CreatePermission(PermissionNames.Tasks_Create,
+                L(PermissionNames.Tasks_Create));
+            yield return Permission.CreatePermission(PermissionNames.Tasks_Edit,
+                L(PermissionNames.Tasks_Edit));
+            yield return Permission.CreatePermission(PermissionNames.Tasks_Delete,
+                L(PermissionNames.Tasks_Delete));
         }
 
         private ILocalizableString L(string name)

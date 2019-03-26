@@ -18,7 +18,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
         <PackageReference Include="Scrutor" Version="3.0.2" />
     </ItemGroup>
-
+ 
     <ItemGroup>
         <ProjectReference Include="..\..\src\DNTFrameworkCore.EntityFramework.SqlServer\DNTFrameworkCore.EntityFramework.SqlServer.csproj" />
         <ProjectReference Include="..\..\src\DNTFrameworkCore.EntityFramework\DNTFrameworkCore.EntityFramework.csproj" />

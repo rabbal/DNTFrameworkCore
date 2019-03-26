@@ -5,23 +5,20 @@ using DNTFrameworkCore.TestWebApp.Application.Blogging;
 using DNTFrameworkCore.TestWebApp.Application.Blogging.Models;
 using Microsoft.AspNetCore.Mvc;
 using DNTFrameworkCore.TestWebApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DNTFrameworkCore.TestWebApp.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
-        private readonly IBlogService _service;
 
-        public HomeController(IBlogService service)
+        public HomeController()
         {
-            _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var result = await _service.CreateAsync(new BlogModel
-                {Title = string.Empty, Url = "blog1.blogging.info"});
-
             return View();
         }
 
