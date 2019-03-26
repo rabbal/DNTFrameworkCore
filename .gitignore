@@ -3,6 +3,9 @@
 
 # DNTFrameworkCore
 test/DNTFrameworkCore.TestAPI/Logs
+!test/DNTFrameworkCore.TestWebApp/wwwroot/lib/
+test/DNTFrameworkCore.TestWebApp/wwwroot/lib/*
+!test/DNTFrameworkCore.TestWebApp/wwwroot/lib/jquery-ajax-unobtrusive/
 
 # Nuget packages
 nupkg/

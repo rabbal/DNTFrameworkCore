@@ -35,11 +35,6 @@
         "nprogress.css",
         "nprogress.js"
       ]
-    },
-    {
-      "provider": "unpkg",
-      "library": "jquery-ajax-unobtrusive@3.2.6",
-      "destination": "wwwroot\\lib\\jquery-ajax-unobtrusive"
     }
   ]
 }
