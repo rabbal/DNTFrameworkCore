@@ -1,67 +1,49 @@
 @model DNTFrameworkCore.TestWebApp.Models.Roles.RoleModalViewModel
-@{
-    var role= Model;
-}
+
 <div class="modal-header">
-   
-    <h4 class="modal-title">
-        @if(role.IsNew)
-        {
-            @:Create New Role
-        }
-        else {
-            @:Edit Role
-        }
-    </h4>
-     <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title" asp-if="Model.IsNew">Create New Role</h4>
+    <h4 class="modal-title" asp-if="!Model.IsNew">Edit Role</h4>
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
 </div>
-<div class="modal-body">
- @Html.ValidationSummary(true,null,new{@class="alert alert-danger"})
-
-<form asp-action="@(role.IsNew ? "Create" : "Edit")" asp-controller="Roles" modal-form="role-modal">
-  <input type="hidden" name="save-continue" value="true" />
-  <input asp-for="RowVersion" type="hidden"/>
-  <input asp-for="Id" type="hidden"/>
-  <div class="form-group row">
-          
-          <div class="col col-md-8">                      
-              <label asp-for="Name" class="col-form-label text-md-left"></label>
-              <input asp-for="Name" autocomplete="off" class="form-control" />
-              <span asp-validation-for="Name" class="text-danger"></span>
+<form asp-action="@(Model.IsNew ? "Create" : "Edit")" asp-controller="Roles" asp-modal-form="RoleForm">
+    <div class="modal-body">
+        <input type="hidden" name="save-continue" value="true" />
+        <input asp-for="RowVersion" type="hidden"/>
+        <input asp-for="Id" type="hidden"/>
+        <div class="form-group row">
+                <div class="col col-md-8">                      
+                    <label asp-for="Name" class="col-form-label text-md-left"></label>
+                    <input asp-for="Name" autocomplete="off" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+              </div>
         </div>
-  </div>
-  <div class="form-group row">
-          
-          <div class="col">
-              <label asp-for="Description" class="col-form-label text-md-left"></label>
-               <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-              <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-  </div> 
-
+        <div class="form-group row">
+              <div class="col">
+                    <label asp-for="Description" class="col-form-label text-md-left"></label>
+                     <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+              </div>
+        </div> 
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-light btn-circle" asp-modal-link asp-modal-toggle="false"
+            asp-controller="Roles" asp-action="Delete" asp-route-id="@Model.Id" asp-if="!Model.IsNew" asp-permission="@PermissionNames.Roles_Delete"
+            title="Delete Role">
+            <i class="fa fa-trash text-danger"></i>
+        </a>
+        <a class="btn btn-light btn-circle" title="Refresh Role" asp-if="!Model.IsNew" asp-modal-link asp-modal-toggle="false"
+            asp-controller="Roles" asp-action="Edit" asp-route-id="@Model.Id">
+            <i class="fa fa-repeat"></i>
+        </a>
+        <a class="btn btn-light btn-circle mr-auto" title="New Role" asp-modal-link asp-modal-toggle="false"
+            asp-controller="Roles" asp-action="Create">
+            <i class="fa fa-plus"></i>
+        </a>
+        <button type="button" class="btn btn-outline-primary" data-dismiss="modal">
+            <i class="fa fa-ban"></i>&nbsp; Cancel
+        </button>
+        <button type="submit" class="btn btn-primary">
+            <i class="fa fa-save"></i>&nbsp; Save Changes
+        </button>
+    </div>
 </form>
-</div>
-
-<div class="modal-footer" id="role-modal-options">
-
-    <button type="button" class="btn btn-light btn-circle" condition="!@Model.IsNew">
-        <i class="fa fa-trash text-danger"></i>
-    </button>
-    <a href="#" class="btn btn-light btn-circle" condition="!@Model.IsNew" modal-reload-link="@Url.Action("Edit","Roles",new{id=Model.Id})">
-        <i class="fa fa-refresh"></i>
-    </a>
-
-    <a href="#" class="btn btn-light btn-circle mr-auto" modal-reload-link="@Url.Action("Create","Roles")">
-        <i class="fa fa-plus"></i>
-    </a>
-
-    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">
-        <i class="fa fa-ban"></i>
-        Cancel
-    </button>
-    <button type="button" onclick="$('#role-modal').submit()" class="btn btn-primary">
-        <i class="fa fa-save"></i>
-        Save Changes</button>
-</div>
-
-

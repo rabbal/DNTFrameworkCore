@@ -1,0 +1,68 @@
+
+@using DNTFrameworkCore.Application.Models;
+@using DNTFrameworkCore.TestWebApp.Application.Invoices.Models;
+@model PagedListModel<InvoiceReadModel,FilteredPagedQueryModel>
+
+@{
+    LocalizationResourceLocation = "DNTFrameworkCore.TestWebApp";
+    ViewBag.Title = L("Administration.Views.Invoice.Index.Title");
+    // ViewBag.ActiveMenu = AdministrationMenuNames.InvoiceManagement;
+}
+
+<div class="row margin-bottom-5">
+    <div class="col-md-12">
+        
+        <a href="#" class="btn btn-info"
+            modal-link="@Url.Action("Create","Invoices")" 
+            has-permission="@PermissionNames.Invoices_Create">
+            
+            <i class="fa fa-plus"></i>
+            New Invoice
+        </a>
+
+        <a href="#filterPanel"
+           rroduct="button"
+           data-toggle="collapse"
+           aria-expanded="false"
+           aria-controls="filterPanel"
+           class="btn btn-info">
+            <i class="fa fa-filter"></i>
+            Filter
+        </a>
+        <!-- Split button -->
+        <div class="btn-group">
+            <a href="#" rroduct="button" class="btn btn-info">Export To PDF</a>
+            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li class="dropdown-item"><a href="#">PDF</a></li>
+                <li class="dropdown-item"><a href="#">Excel</a></li>
+                <li class="dropdown-item"><a href="#">CSV</a></li>
+                <li class="dropdown-item"><a href="#">XML</a></li>
+                <li class="dropdown-item"><a href="#">JSON</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<hr/>
+
+<div class="row">
+    <div class="col-md-12" id="UsersList">
+        @foreach (var item in Model.Result.Items)
+        {
+            <a href="#" class="btn btn-secondary" modal-link="@Url.Action("Edit","Invoices", new {id=item.Id})" has-permission="@PermissionNames.Invoices_Edit">
+            <i class="fa fa-pencil"></i>
+            @item.Number 
+        </a>
+
+        }
+    </div>
+</div>
+
+@section Scripts{
+<partial name="_ValidationScriptsPartial"></partial>
+
+}

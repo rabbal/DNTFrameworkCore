@@ -4,7 +4,7 @@ using DNTFrameworkCore.Application.Models;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Identity.Models
 {
-    public class RoleModel : MasterModel, IValidatableObject
+    public class RoleModel : MasterModel<long>, IValidatableObject
     {
         [Required]
         [StringLength(50)]
@@ -16,6 +16,11 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity.Models
             if (Name == "Admin")
             {
                 yield return new ValidationResult("IValidatableObject Message", new[] { nameof(Name) });
+            }
+
+            if (Name == "Admin2")
+            {
+                yield return new ValidationResult("IValidatableObject Message");
             }
         }
     }

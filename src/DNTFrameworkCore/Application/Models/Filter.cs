@@ -36,7 +36,7 @@ namespace DNTFrameworkCore.Application.Models
         /// <summary>
         ///     Get a flattened list of all child filter expressions.
         /// </summary>
-        public IList<Filter> All()
+        public IList<Filter> List()
         {
             var filters = new List<Filter>();
 
@@ -48,14 +48,18 @@ namespace DNTFrameworkCore.Application.Models
         private void Collect(ICollection<Filter> filters)
         {
             if (Filters != null && Filters.Any())
+            {
                 foreach (var filter in Filters)
                 {
                     filters.Add(filter);
 
                     filter.Collect(filters);
                 }
+            }
             else
+            {
                 filters.Add(this);
+            }
         }
 
         /// <summary>
@@ -65,20 +69,23 @@ namespace DNTFrameworkCore.Application.Models
         public string ToExpression(IList<Filter> filters)
         {
             if (Filters != null && Filters.Any())
-                return "(" +
-                       string.Join(" " + Logic + " ",
-                           Filters.Select(filter => filter.ToExpression(filters)).ToArray()) +
-                       ")";
+            {
+                return "(" + string.Join(" " + Logic + " ", Filters.Select(filter => filter.ToExpression(filters)).ToArray()) + ")";
+            }
 
             var index = filters.IndexOf(this);
 
             var comparison = Operators[Operator];
 
             if (Operator == "doesnotcontain")
+            {
                 return $"!{Field}.{comparison}(@{index})";
+            }
 
             if (comparison == "StartsWith" || comparison == "EndsWith" || comparison == "Contains")
+            {
                 return $"{Field}.{comparison}(@{index})";
+            }
 
             return $"{Field} {comparison} @{index}";
         }

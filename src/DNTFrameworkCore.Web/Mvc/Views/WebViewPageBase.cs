@@ -7,10 +7,6 @@ using Microsoft.AspNetCore.Mvc.Razor.Internal;
 
 namespace DNTFrameworkCore.Web.Mvc.Views
 {
-    public abstract class WebViewPageBase : WebViewPageBase<dynamic>
-    {
-    }
-
     public abstract class WebViewPageBase<TModel> : RazorPage<TModel>
     {
         [RazorInject] public IHtmlLocalizerFactory HtmlLocalizerFactory { get; set; }

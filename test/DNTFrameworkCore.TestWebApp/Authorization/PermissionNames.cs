@@ -21,5 +21,15 @@ namespace DNTFrameworkCore.TestWebApp.Authorization
         public const string Tasks_Create = nameof(Tasks_Create);
         public const string Tasks_Edit = nameof(Tasks_Edit);
         public const string Tasks_Delete = nameof(Tasks_Delete);
+        
+        public const string Products_View = nameof(Products_View);
+        public const string Products_Create = nameof(Products_Create);
+        public const string Products_Edit = nameof(Products_Edit);
+        public const string Products_Delete = nameof(Products_Delete);
+
+        public const string Invoices_View = nameof(Invoices_View);
+        public const string Invoices_Create = nameof(Invoices_Create);
+        public const string Invoices_Edit = nameof(Invoices_Edit);
+        public const string Invoices_Delete = nameof(Invoices_Delete);
     }
 }

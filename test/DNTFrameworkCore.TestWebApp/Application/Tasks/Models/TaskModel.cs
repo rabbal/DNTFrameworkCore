@@ -7,7 +7,7 @@ using DNTFrameworkCore.TestWebApp.Domain.Tasks;
 namespace DNTFrameworkCore.TestWebApp.Application.Tasks.Models
 {
     [LocalizationResource(Name = "SharedResource", Location = "DNTFrameworkCore.TestWebApp")]
-    public class TaskModel : MasterModel<int>, IValidatableObject
+    public class TaskModel : MasterModel, IValidatableObject
     {
         public string Title { get; set; }
 

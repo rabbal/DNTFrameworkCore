@@ -17,7 +17,7 @@ namespace DNTFrameworkCore.Domain.Entities.Tracking
 
     public abstract class ModificationTrackingEntity<TKey, TUser> : ModificationTrackingEntity<TKey>,
         IModificationTracking<TUser>
-        where TUser : Entity where TKey : IEquatable<TKey>
+        where TUser : Entity<long> where TKey : IEquatable<TKey>
     {
         public TUser LastModifierUser { get; set; }
     }

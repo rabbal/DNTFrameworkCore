@@ -25,7 +25,7 @@ namespace DNTFrameworkCore.Application.Services
     public interface
         ICrudService<in TKey, TReadModel, TModel> : ICrudService<TKey, TReadModel, TModel, FilteredPagedQueryModel>
         where TModel : MasterModel<TKey>
-        where TReadModel : MasterModel<TKey>
+        where TReadModel : Model<TKey>
         where TKey : IEquatable<TKey>
     {
     }
@@ -39,7 +39,7 @@ namespace DNTFrameworkCore.Application.Services
     /// <typeparam name="TKey">type of PrimaryKey </typeparam>
     public interface ICrudService<in TKey, TReadModel, TModel, in TFilteredPagedQueryModel> : IApplicationService
         where TModel : MasterModel<TKey>
-        where TReadModel : MasterModel<TKey>
+        where TReadModel : Model<TKey>
         where TFilteredPagedQueryModel : IFilteredPagedQueryModel
         where TKey : IEquatable<TKey>
     {

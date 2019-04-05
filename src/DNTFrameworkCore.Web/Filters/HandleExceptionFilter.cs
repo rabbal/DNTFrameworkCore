@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using DNTFrameworkCore.Exceptions;
 using DNTFrameworkCore.Web.Results;
 using Microsoft.AspNetCore.Hosting;
@@ -8,12 +8,12 @@ using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.Web.Filters
 {
-    public class ExceptionFilter : IExceptionFilter
+    public class HandleExceptionFilter : IExceptionFilter
     {
         private readonly IHostingEnvironment _env;
-        private readonly ILogger<ExceptionFilter> _logger;
+        private readonly ILogger<HandleExceptionFilter> _logger;
 
-        public ExceptionFilter(IHostingEnvironment env, ILogger<ExceptionFilter> logger)
+        public HandleExceptionFilter(IHostingEnvironment env, ILogger<HandleExceptionFilter> logger)
         {
             _env = env;
             _logger = logger;

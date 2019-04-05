@@ -1,3 +1,5 @@
+using DNTFrameworkCore.Dependency;
+
 namespace DNTFrameworkCore.Mapping
 {
     /// <summary>
@@ -5,7 +7,7 @@ namespace DNTFrameworkCore.Mapping
     /// </summary>
     /// <typeparam name="TSource">The type of the object to map from.</typeparam>
     /// <typeparam name="TDestination">The type of the object to map to.</typeparam>
-    public interface IMapper<in TSource, in TDestination>
+    public interface IMapper<in TSource, in TDestination> : ITransientDependency
     {
         /// <summary>
         /// Maps the specified source object into the destination object.

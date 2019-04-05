@@ -3,7 +3,7 @@ using DNTFrameworkCore.Domain.Entities;
 
 namespace DNTFrameworkCore.Application.Models
 {
-    public abstract class MasterModel : MasterModel<long>
+    public abstract class MasterModel : MasterModel<int>
     {
     }
 

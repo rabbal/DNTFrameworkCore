@@ -15,7 +15,7 @@ namespace DNTFrameworkCore.Domain.Entities.Tracking
     }
 
     public abstract class CreationTrackingEntity<TKey, TUser> : CreationTrackingEntity<TKey>, ICreationTracking<TUser>
-        where TUser : Entity where TKey : IEquatable<TKey>
+        where TUser : Entity<long> where TKey : IEquatable<TKey>
     {
         public TUser CreatorUser { get; set; }
     }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Routing;
 
-namespace DNTFrameworkCore.Web.ActionSelectors
+namespace DNTFrameworkCore.Web.Mvc
 {
     /// <summary>
     /// Determines whether the HttpRequest's X-Requested-With header has XMLHttpRequest value.

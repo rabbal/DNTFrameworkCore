@@ -4,7 +4,6 @@ using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Mapping;
-using DNTFrameworkCore.Web.ActionSelectors;
 using DNTFrameworkCore.Web.Authorization;
 using DNTFrameworkCore.Web.Extensions;
 using DNTFrameworkCore.Web.Filters;
@@ -66,7 +65,7 @@ namespace DNTFrameworkCore.Web.Mvc
         CrudController<TCrudService, TKey, TReadModel, TModel> : CrudControllerBase<TKey, TReadModel, TModel,
             FilteredPagedQueryModel>
         where TCrudService : class, ICrudService<TKey, TReadModel, TModel>
-        where TReadModel : MasterModel<TKey>
+        where TReadModel : Model<TKey>
         where TModel : MasterModel<TKey>, new()
         where TKey : IEquatable<TKey>
     {
@@ -113,7 +112,7 @@ namespace DNTFrameworkCore.Web.Mvc
         CrudController<TCrudService, TKey, TReadModel, TModel, TFilteredPagedQueryModel> :
             CrudControllerBase<TKey, TReadModel, TModel, TFilteredPagedQueryModel>
         where TCrudService : class, ICrudService<TKey, TReadModel, TModel, TFilteredPagedQueryModel>
-        where TReadModel : MasterModel<TKey>
+        where TReadModel : Model<TKey>
         where TModel : MasterModel<TKey>, new()
         where TFilteredPagedQueryModel : class, IFilteredPagedQueryModel, new()
         where TKey : IEquatable<TKey>
@@ -158,7 +157,7 @@ namespace DNTFrameworkCore.Web.Mvc
 
     public abstract class
         CrudControllerBase<TKey, TReadModel, TModel, TFilteredPagedQueryModel> : Controller
-        where TReadModel : MasterModel<TKey>
+        where TReadModel : Model<TKey>
         where TModel : MasterModel<TKey>, new()
         where TFilteredPagedQueryModel : class, IFilteredPagedQueryModel, new()
         where TKey : IEquatable<TKey>
@@ -171,9 +170,9 @@ namespace DNTFrameworkCore.Web.Mvc
         protected abstract string ViewPermissionName { get; }
         protected abstract string DeletePermissionName { get; }
         protected abstract string ViewName { get; }
-        protected virtual bool HasPrefix { get; } = false;
-        protected string Prefix => HasPrefix ? "Model" : string.Empty;
         protected virtual string ListViewName { get; } = "_List";
+        protected virtual bool HasModelPrefix { get; } = false;
+        private string ModelPrefix => HasModelPrefix ? "Model" : string.Empty;
 
         protected abstract Task<IPagedQueryResult<TReadModel>> ReadPagedListAsync(TFilteredPagedQueryModel query);
         protected abstract Task<Maybe<TModel>> FindAsync(TKey id);
@@ -194,7 +193,7 @@ namespace DNTFrameworkCore.Web.Mvc
             return RenderIndex(model);
         }
 
-        [HttpGet, AjaxOnly, NoResponseCache]
+        [HttpPost, AjaxOnly, ValidateAntiForgeryToken, NoResponseCache]
         public async Task<IActionResult> List(TFilteredPagedQueryModel query)
         {
             if (!await CheckPermissionAsync(ViewPermissionName))
@@ -242,7 +241,8 @@ namespace DNTFrameworkCore.Web.Mvc
                 return Forbid();
             }
 
-            return RenderView(Factory<TModel>.CreateInstance());
+            var model = Factory<TModel>.CreateInstance();
+            return RenderView(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken, AjaxOnly]
@@ -266,7 +266,7 @@ namespace DNTFrameworkCore.Web.Mvc
                 return continueEditing ? RenderView(model) : Ok();
             }
 
-            ModelState.AddModelError(result, Prefix);
+            ModelState.AddModelError(result, ModelPrefix);
             return BadRequest(ModelState);
         }
 
@@ -287,7 +287,7 @@ namespace DNTFrameworkCore.Web.Mvc
             return RenderView(model.Value);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, ExportModelState]
+        [HttpPost, ValidateAntiForgeryToken, AjaxOnly]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Edit(TModel model, bool continueEditing)
         {
@@ -301,11 +301,6 @@ namespace DNTFrameworkCore.Web.Mvc
                 return BadRequest(ModelState);
             }
 
-            if (!await ExistsAsync(model.Id))
-            {
-                return NotFound();
-            }
-
             var result = await EditAsync(model);
             if (result.Succeeded)
             {
@@ -313,19 +308,19 @@ namespace DNTFrameworkCore.Web.Mvc
                 return continueEditing ? RenderView(model) : Ok();
             }
 
-            ModelState.AddModelError(result, Prefix);
+            ModelState.AddModelError(result, ModelPrefix);
             return BadRequest(ModelState);
         }
 
-        [HttpPost, AjaxOnly, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete([FromBody] Id<TKey> id)
+        [HttpPost, ValidateAntiForgeryToken, AjaxOnly, NoResponseCache]
+        public async Task<IActionResult> Delete([BindRequired]TKey id)
         {
             if (!await CheckPermissionAsync(DeletePermissionName))
             {
                 return Forbid();
             }
 
-            var model = await FindAsync(id.Value);
+            var model = await FindAsync(id);
             if (!model.HasValue)
             {
                 return NotFound();

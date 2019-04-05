@@ -40,7 +40,6 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
             return EntitySet.AsNoTracking().Select(u => new UserReadModel
             {
                 Id = u.Id,
-                RowVersion = u.RowVersion,
                 IsActive = u.IsActive,
                 UserName = u.UserName,
                 DisplayName = u.DisplayName,

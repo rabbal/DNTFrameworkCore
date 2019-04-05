@@ -41,7 +41,7 @@ namespace DNTFrameworkCore.TestAPI
                     // options.UseYeKeModelBinder();
                     options.UseDefaultFilteredPagedQueryModelBinder();
                     options.UseFilteredPagedQueryModelBinder<TaskFilteredPagedQueryModel>();
-                    options.Filters.Add<ExceptionFilter>();
+                    options.Filters.Add<HandleExceptionFilter>();
                 })
                 .AddApiExplorer()
                 .AddCors(options =>

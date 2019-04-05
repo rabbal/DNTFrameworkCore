@@ -158,7 +158,8 @@ namespace DNTFrameworkCore.Tests.Auditing
             var services = new ServiceCollection();
 
             services.AddDNTFramework()
-                .AddAuditingOptions(options);
+                .AddAuditing(options);
+                
             services.AddLogging();
 
             var helper = services.BuildServiceProvider().GetRequiredService<IAuditingHelper>();

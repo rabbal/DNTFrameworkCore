@@ -230,6 +230,55 @@ namespace DNTFrameworkCore.TestWebApp.Migrations
                     b.ToTable("Blog");
                 });
 
+            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Catalog.Product", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("CreationDateTime");
+
+                    b.Property<string>("CreatorBrowserName")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("CreatorIp")
+                        .HasMaxLength(256);
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<DateTimeOffset?>("LastModificationDateTime");
+
+                    b.Property<string>("LastModifierBrowserName")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("LastModifierIp")
+                        .HasMaxLength(256);
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Number")
+                        .IsUnique()
+                        .HasName("UIX_Product_Number");
+
+                    b.ToTable("Product");
+                });
+
             modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Identity.Permission", b =>
                 {
                     b.Property<int>("Id")
@@ -480,6 +529,77 @@ namespace DNTFrameworkCore.TestWebApp.Migrations
                     b.ToTable("UserRole");
                 });
 
+            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Invoices.Invoice", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("CreationDateTime");
+
+                    b.Property<string>("CreatorBrowserName")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("CreatorIp")
+                        .HasMaxLength(256);
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1024);
+
+                    b.Property<DateTimeOffset?>("LastModificationDateTime");
+
+                    b.Property<string>("LastModifierBrowserName")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("LastModifierIp")
+                        .HasMaxLength(256);
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Number")
+                        .IsUnique()
+                        .HasName("UIX_Invoice_Number");
+
+                    b.ToTable("Invoice");
+                });
+
+            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Invoices.InvoiceItem", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("InvoiceId");
+
+                    b.Property<long>("ProductId");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<decimal>("UnitDiscount");
+
+                    b.Property<decimal>("UnitPrice");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("InvoiceItem");
+                });
+
             modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Tasks.Task", b =>
                 {
                     b.Property<int>("Id")
@@ -592,6 +712,19 @@ namespace DNTFrameworkCore.TestWebApp.Migrations
                     b.HasOne("DNTFrameworkCore.TestWebApp.Domain.Identity.User", "User")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Invoices.InvoiceItem", b =>
+                {
+                    b.HasOne("DNTFrameworkCore.TestWebApp.Domain.Invoices.Invoice", "Invoice")
+                        .WithMany("Items")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DNTFrameworkCore.TestWebApp.Domain.Catalog.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

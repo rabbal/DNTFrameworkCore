@@ -146,7 +146,7 @@ namespace DNTFrameworkCore.EntityFramework.Context
 
                             break;
                         case RelationshipType.OneToMany:
-                            // If IHaveTrackingState is set deleted set entity state to unchanged,
+                            // If ITrackedEntity is set deleted set entity state to unchanged,
                             // since it may be related to other entities.
                             if (haveTrackingState.TrackingState == TrackingState.Deleted)
                             {

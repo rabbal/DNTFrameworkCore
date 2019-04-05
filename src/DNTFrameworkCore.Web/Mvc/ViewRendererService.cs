@@ -37,12 +37,12 @@ namespace DNTFrameworkCore.Web.Mvc
         /// <summary>
         /// Renders a .cshtml file as an string.
         /// </summary>
-        Task<string> RenderViewToStringAsync(string viewNameOrPath);
+        Task<string> RenderViewToStringAsync(string viewName);
 
         /// <summary>
         /// Renders a .cshtml file as an string.
         /// </summary>
-        Task<string> RenderViewToStringAsync<TModel>(string viewNameOrPath, TModel model);
+        Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model);
     }
 
     /// <summary>
@@ -73,25 +73,25 @@ namespace DNTFrameworkCore.Web.Mvc
         /// <summary>
         /// Renders a .cshtml file as an string.
         /// </summary>
-        public Task<string> RenderViewToStringAsync(string viewNameOrPath)
+        public Task<string> RenderViewToStringAsync(string viewName)
         {
-            return RenderViewToStringAsync(viewNameOrPath, string.Empty);
+            return RenderViewToStringAsync(viewName, string.Empty);
         }
 
         /// <summary>
         /// Renders a .cshtml file as an string.
         /// </summary>
-        public async Task<string> RenderViewToStringAsync<TModel>(string viewNameOrPath, TModel model)
+        public async Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model)
         {
             var actionContext = GetActionContext();
 
-            var viewEngineResult = _viewEngine.FindView(actionContext, viewNameOrPath, isMainPage: false);
+            var viewEngineResult = _viewEngine.FindView(actionContext, viewName, isMainPage: false);
             if (!viewEngineResult.Success)
             {
-                viewEngineResult = _viewEngine.GetView("~/", viewNameOrPath, isMainPage: false);
+                viewEngineResult = _viewEngine.GetView("~/", viewName, isMainPage: false);
                 if (!viewEngineResult.Success)
                 {
-                    throw new FileNotFoundException($"Couldn't find '{viewNameOrPath}'");
+                    throw new FileNotFoundException($"Couldn't find '{viewName}'");
                 }
             }
 

@@ -11,6 +11,7 @@ using DNTFrameworkCore.Domain.Entities;
 using DNTFrameworkCore.EntityFramework.Context;
 using DNTFrameworkCore.EntityFramework.Context.Extensions;
 using DNTFrameworkCore.Eventing;
+using DNTFrameworkCore.Exceptions;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.Transaction;
@@ -36,7 +37,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
         ICrudService<TKey, TReadModel, TModel>
         where TEntity : Entity<TKey>, IAggregateRoot, new()
         where TModel : MasterModel<TKey>
-        where TReadModel : MasterModel<TKey>
+        where TReadModel : Model<TKey>
         where TKey : IEquatable<TKey>
     {
         protected CrudService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
@@ -49,7 +50,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
         ICrudService<TKey, TReadModel, TModel, TFilteredPagedQueryModel>
         where TEntity : Entity<TKey>, IAggregateRoot, new()
         where TModel : MasterModel<TKey>
-        where TReadModel : MasterModel<TKey>
+        where TReadModel : Model<TKey>
         where TFilteredPagedQueryModel : class, IFilteredPagedQueryModel
         where TKey : IEquatable<TKey>
     {
@@ -342,7 +343,10 @@ namespace DNTFrameworkCore.EntityFramework.Application
             var originals = (await FindAsync(models.Select(a => a.Id))).OrderBy(a => a.Id)
                 .ToDictionary(a => a.Id);
 
-            //TODO: throw exception if count of originals not equals with count of models
+            if (models.Count != originals.Count)
+            {
+                throw new DbConcurrencyException();
+            }
 
             var result = models.Select(
                 model => new ModifiedModel<TModel>

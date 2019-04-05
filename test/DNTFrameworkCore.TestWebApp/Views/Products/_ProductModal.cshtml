@@ -1,0 +1,78 @@
+@model DNTFrameworkCore.TestWebApp.Application.Catalog.Models.ProductModel
+<div class="modal-header">
+   
+    <h4 class="modal-title">
+        @if(Model.IsNew)
+        {
+            @:Create New Product
+        }
+        else {
+            @:Edit Product
+        }
+    </h4>
+     <button type="button" class="close" data-dismiss="modal">&times;</button>
+</div>
+<div class="modal-body">
+ @Html.ValidationSummary(true,null,new{@class="alert alert-danger"})
+
+<form asp-action="@(Model.IsNew ? "Create" : "Edit")" asp-controller="Products" modal-form="product-modal">
+  <input type="hidden" name="save-continue" value="true" />
+  <input asp-for="RowVersion" type="hidden"/>
+  <input asp-for="Id" type="hidden"/>
+ 
+   <div class="form-group row">
+        <div class="col">                      
+            <label asp-for="Title" class="col-form-label text-md-left"></label>
+            <input asp-for="Title" autocomplete="off" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+  </div>
+  <div class="row">
+      <div class="col col-md-6">
+        <div class="form-group">
+            <label asp-for="Number" class="col-form-label text-md-left"></label>
+            <input asp-for="Number" readonly="@(!Model.IsNew)" autocomplete="off" class="form-control" />
+            <span asp-validation-for="Number" class="text-danger"></span>
+        </div>
+      </div>
+      <div class="col col-md-6">
+        <div class="form-group ">
+                
+            <label asp-for="Price" class="col-form-label text-md-left"></label>
+            <input asp-for="Price" class="form-control" type="number"/>
+            <span asp-validation-for="Price" class="text-danger"></span>
+        
+        </div> 
+
+      </div>
+  </div>
+  
+  
+</form>
+</div>
+
+<div class="modal-footer" id="product-modal-options">
+
+    <button type="button" class="btn btn-light btn-circle" condition="!@Model.IsNew" title="Delete Product">
+        <i class="fa fa-trash text-danger"></i>
+    </button>
+    <a href="#" class="btn btn-light btn-circle" condition="!@Model.IsNew" title="Refresh Product"
+    modal-reload-link="@Url.Action("Edit","Products",new{id=Model.Id})">
+        <i class="fa fa-repeat"></i>
+    </a>
+
+    <a href="#" class="btn btn-light btn-circle mr-auto" title="New Product"
+     modal-reload-link="@Url.Action("Create","Products")">
+        <i class="fa fa-plus"></i>
+    </a>
+
+    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">
+        <i class="fa fa-ban"></i>
+        Cancel
+    </button>
+    <button type="button" onclick="$('#product-modal').submit()" class="btn btn-primary">
+        <i class="fa fa-save"></i>
+        Save Changes</button>
+</div>
+
+

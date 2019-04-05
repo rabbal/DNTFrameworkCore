@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace DNTFrameworkCore.Application.Models
 {
-    public abstract class DetailModel : DetailModel<long>
+    public abstract class DetailModel : DetailModel<int>
     {
     }
 

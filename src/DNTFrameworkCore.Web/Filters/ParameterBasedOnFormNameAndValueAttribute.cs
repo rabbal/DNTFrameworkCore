@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace DNTFrameworkCore.Web.Filters
 {
-
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class ParameterBasedOnFormNameAndValueAttribute : ActionFilterAttribute
     {
@@ -20,11 +19,8 @@ namespace DNTFrameworkCore.Web.Filters
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            var formValues = filterContext.HttpContext.Request.Form[_name];
-            filterContext.ActionArguments[_actionParameterName] = formValues.Count > 0 && formValues
-                .ToString()
-                .ToLowerInvariant()
-                .Equals(_value.ToLowerInvariant());
+            var formValue = filterContext.HttpContext.Request.Form[_name];
+            filterContext.ActionArguments[_actionParameterName] = !string.IsNullOrEmpty(formValue) && formValue.Equals(_value);
         }
     }
 }

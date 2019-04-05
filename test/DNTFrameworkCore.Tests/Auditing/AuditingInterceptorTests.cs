@@ -19,11 +19,12 @@ namespace DNTFrameworkCore.Tests.Auditing
             var proxyGenerator = new ProxyGenerator();
 
             services.AddDNTFramework()
-                .AddAuditingOptions(options =>
+                .AddAuditing(options =>
                 {
                     options.Enabled = true;
                     options.EnabledForAnonymousUsers = true;
                 });
+
             services.AddScoped<IPartyService, PartyService>();
             services.Replace(ServiceDescriptor.Describe(typeof(IAuditingStore), typeof(StubAuditingStore),
                 ServiceLifetime.Scoped));
@@ -45,7 +46,7 @@ namespace DNTFrameworkCore.Tests.Auditing
             var proxyGenerator = new ProxyGenerator();
 
             services.AddDNTFramework()
-                .AddAuditingOptions(options =>
+                .AddAuditing(options =>
                 {
                     options.Enabled = true;
                     options.EnabledForAnonymousUsers = true;

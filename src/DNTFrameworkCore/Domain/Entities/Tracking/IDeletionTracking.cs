@@ -8,7 +8,7 @@
     }
 
     public interface IDeletionTracking<TUser> : IDeletionTracking
-        where TUser : Entity
+        where TUser : Entity<long>
     {
         TUser DeleterUser { get; set; }
     }

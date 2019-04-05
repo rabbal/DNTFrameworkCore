@@ -7,13 +7,13 @@ namespace DNTFrameworkCore.Domain.Entities
 {
     public abstract class Enumeration : IComparable
     {
-        public long Id { get; }
+        public int Id { get; }
         public string Name { get; }
 
         protected Enumeration()
         { }
 
-        protected Enumeration(long id, string name)
+        protected Enumeration(int id, string name)
         {
             Id = id;
             Name = name;
@@ -41,7 +41,7 @@ namespace DNTFrameworkCore.Domain.Entities
 
         public override int GetHashCode() => Id.GetHashCode();
 
-        public static long AbsoluteDifference(Enumeration firstValue, Enumeration secondValue)
+        public static int AbsoluteDifference(Enumeration firstValue, Enumeration secondValue)
         {
             var absoluteDifference = Math.Abs(firstValue.Id - secondValue.Id);
             return absoluteDifference;
@@ -53,9 +53,9 @@ namespace DNTFrameworkCore.Domain.Entities
             return matchingItem;
         }
 
-        public static T FromDisplayName<T>(string displayName) where T : Enumeration
+        public static T FromName<T>(string name) where T : Enumeration
         {
-            var matchingItem = Parse<T, string>(displayName, "display name", item => item.Name == displayName);
+            var matchingItem = Parse<T, string>(name, "name", item => item.Name == name);
             return matchingItem;
         }
 

@@ -65,7 +65,7 @@ namespace DNTFrameworkCore.Web.API
         CrudController<TCrudService, TKey, TReadModel, TModel> : CrudControllerBase<TKey, TReadModel, TModel,
             FilteredPagedQueryModel>
         where TCrudService : class, ICrudService<TKey, TReadModel, TModel>
-        where TReadModel : MasterModel<TKey>
+        where TReadModel : Model<TKey>
         where TModel : MasterModel<TKey>, new()
         where TKey : IEquatable<TKey>
     {
@@ -112,7 +112,7 @@ namespace DNTFrameworkCore.Web.API
         CrudController<TCrudService, TKey, TReadModel, TModel, TFilteredPagedQueryModel> :
             CrudControllerBase<TKey, TReadModel, TModel, TFilteredPagedQueryModel>
         where TCrudService : class, ICrudService<TKey, TReadModel, TModel, TFilteredPagedQueryModel>
-        where TReadModel : MasterModel<TKey>
+        where TReadModel : Model<TKey>
         where TModel : MasterModel<TKey>, new()
         where TFilteredPagedQueryModel : class, IFilteredPagedQueryModel, new()
         where TKey : IEquatable<TKey>
@@ -159,7 +159,7 @@ namespace DNTFrameworkCore.Web.API
     [Produces("application/json")]
     public abstract class
         CrudControllerBase<TKey, TReadModel, TModel, TFilteredPagedQueryModel> : ControllerBase
-        where TReadModel : MasterModel<TKey>
+        where TReadModel : Model<TKey>
         where TModel : MasterModel<TKey>, new()
         where TFilteredPagedQueryModel : class, IFilteredPagedQueryModel, new()
         where TKey : IEquatable<TKey>

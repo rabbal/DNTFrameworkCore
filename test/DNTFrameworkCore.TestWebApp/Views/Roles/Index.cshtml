@@ -9,15 +9,10 @@
 
 <div class="row margin-bottom-5">
     <div class="col-md-12">
-        
-        <a href="#" class="btn btn-info"
-            modal-link="@Url.Action("Create","Roles")" 
-            has-permission="@PermissionNames.Roles_Create">
-            
+        <a class="btn btn-info" asp-modal-link asp-permission="@PermissionNames.Roles_Create" asp-controller="Roles" asp-action="Create">
             <i class="fa fa-plus"></i>
             New Role
         </a>
-
         <a href="#filterPanel"
            role="button"
            data-toggle="collapse"
@@ -51,9 +46,10 @@
     <div class="col-md-12" id="UsersList">
         @foreach (var item in Model.PagedList.Result.Items)
         {
-            <a href="#" class="btn btn-secondary" modal-link="@Url.Action("Edit","Roles",new {id=item.Id})" has-permission="@PermissionNames.Roles_Edit">
-            <i class="fa fa-pencil"></i>
-            @item.Name 
+            <a  class="btn btn-secondary" asp-modal-link
+                asp-controller="Roles" asp-action="Edit" asp-route-id="@item.Id" asp-permission="@PermissionNames.Roles_Edit">
+                <i class="fa fa-pencil"></i>
+                @item.Name 
         </a>
 
         }

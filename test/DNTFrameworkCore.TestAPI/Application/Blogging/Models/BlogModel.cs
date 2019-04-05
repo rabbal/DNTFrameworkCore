@@ -6,7 +6,7 @@ using DNTFrameworkCore.Localization;
 namespace DNTFrameworkCore.TestAPI.Application.Blogging.Models
 {
     [LocalizationResource(Name = "SharedResource", Location = "DNTFrameworkCore.TestAPI")]
-    public class BlogModel : MasterModel<int>, IValidatableObject
+    public class BlogModel : MasterModel, IValidatableObject
     {
         public string Title { get; set; }
 

@@ -5,7 +5,7 @@
     }
 
     public interface ITrackable<TUser> : ITrackable, ICreationTracking<TUser>, IModificationTracking<TUser>
-        where TUser : Entity
+        where TUser : Entity<long>
     {
     }
 }

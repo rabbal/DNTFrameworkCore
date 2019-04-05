@@ -5,7 +5,7 @@
     }
 
     public interface IFullTrackable<TUser> : IFullTrackable, ITrackable<TUser>, IDeletionTracking<TUser>
-        where TUser : Entity
+        where TUser : Entity<long>
     {
     }
 }

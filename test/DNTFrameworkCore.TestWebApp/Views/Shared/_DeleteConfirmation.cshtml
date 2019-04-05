@@ -1,0 +1,21 @@
+@model DNTFrameworkCore.Web.Mvc.Models.DeleteConfirmationModel
+<div class="modal-header">
+    <h4 class="modal-title">Delete Confirmation</h4>
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+</div>
+<form asp-action="@Model.ActionName" asp-controller="@Model.ControllerName" asp-area="@Model.AreaName" asp-modal-form="delete-confirmation">
+    <div class="modal-body">
+        <input name="Id" value="@Model.ModelId" type="hidden"/>    
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+            <i class="fa fa-ban"></i>&nbsp; Cancel
+        </button>
+        <button type="submit" class="btn btn-danger">
+            <i class="fa fa-trash"></i>&nbsp; Delete
+        </button>
+    </div>
+</form>
+
+    
+    

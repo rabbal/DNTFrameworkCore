@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DNTFrameworkCore.Domain.Entities
 {
-    public abstract class Entity : Entity<long>
+    public abstract class Entity : Entity<int>
     {
     }
 

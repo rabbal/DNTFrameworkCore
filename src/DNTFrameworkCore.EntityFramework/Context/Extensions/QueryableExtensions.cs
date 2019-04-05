@@ -79,7 +79,7 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
 
             if (filter?.Logic == null) return query;
 
-            var filters = filter.All();
+            var filters = filter.List();
 
             // Get all filter values as array (needed by the Where method of Dynamic Linq)
             var values = filters.Select(f => f.Value).ToArray();

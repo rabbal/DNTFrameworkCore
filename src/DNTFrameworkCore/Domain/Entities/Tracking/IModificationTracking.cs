@@ -8,7 +8,7 @@
     }
 
     public interface IModificationTracking<TUser> : IModificationTracking
-        where TUser : Entity
+        where TUser : Entity<long>
     {
         TUser LastModifierUser { get; set; }
     }

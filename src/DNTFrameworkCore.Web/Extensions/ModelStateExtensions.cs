@@ -33,11 +33,11 @@ namespace DNTFrameworkCore.Web.Extensions
 
             foreach (var failure in result.Failures)
             {
-                var key = string.IsNullOrEmpty(prefix) ? failure.MemberName : prefix + "." + failure.MemberName;
-                if (!modelState.ContainsKey(failure.MemberName) ||
-                    modelState[failure.MemberName].Errors.All(i => i.ErrorMessage != failure.Message))
+                var key = string.IsNullOrEmpty(prefix) || string.IsNullOrEmpty(failure.MemberName) ? failure.MemberName : prefix + "." + failure.MemberName;
+                if (!modelState.ContainsKey(key) ||
+                    modelState[key].Errors.All(i => i.ErrorMessage != failure.Message))
                 {
-                    modelState.AddModelError(failure.MemberName, failure.Message);
+                    modelState.AddModelError(key, failure.Message);
                 }
             }
 

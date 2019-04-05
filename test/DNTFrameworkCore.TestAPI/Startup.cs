@@ -35,29 +35,17 @@ namespace DNTFrameworkCore.TestAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDNTFramework()
-                .AddDataAnnotationValidation()
                 .AddModelValidation()
                 .AddFluentModelValidation()
-                .AddValidationOptions(options =>
-                {
-                    /*options.IgnoredTypes.Add(typeof());*/
-                })
-                .AddMemoryCache()
-                .AddAuditingOptions(options =>
-                {
-                    // options.Enabled = true;
-                    // options.EnabledForAnonymousUsers = false;
-                    // options.IgnoredTypes.Add(typeof());
-                    // options.Selectors.Add(new NamedTypeSelector("SelectorName", type => type == typeof()));
-                }).AddTransactionOptions(options =>
+                .AddAuditing()
+                .AddTransaction(options =>
                 {
                     // options.Timeout=TimeSpan.FromMinutes(3);
                     //options.IsolationLevel=IsolationLevel.ReadCommitted;
                 });
 
             services.AddDNTProtectionRepository<ProjectDbContext>();
-            services.AddDNTCommonWeb()
-                .AddDNTDataProtection();
+            services.AddDNTCommonWeb().AddDNTDataProtection();
 
             services.AddInfrastructure(Configuration);
             services.AddApplication(Configuration);

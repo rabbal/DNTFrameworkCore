@@ -8,7 +8,7 @@
     }
 
     public interface ICreationTracking<TUser> : ICreationTracking
-        where TUser : Entity
+        where TUser : Entity<long>
     {
         TUser CreatorUser { get; set; }
     }

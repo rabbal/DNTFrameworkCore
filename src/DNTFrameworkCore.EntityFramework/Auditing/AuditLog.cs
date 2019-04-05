@@ -6,7 +6,7 @@ using DNTFrameworkCore.Extensions;
 
 namespace DNTFrameworkCore.EntityFramework.Auditing
 {
-    public class AuditLog : Entity
+    public class AuditLog : Entity<long>
     {
         /// <summary>
         /// Maximum length of <see cref="ServiceName"/> property.

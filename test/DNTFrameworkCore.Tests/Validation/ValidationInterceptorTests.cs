@@ -22,7 +22,7 @@ namespace DNTFrameworkCore.Tests.Validation
             var proxyGenerator = new ProxyGenerator();
 
             services.AddDNTFramework()
-                .AddDataAnnotationValidation();
+                .AddModelValidation();
 
             services.AddScoped<IPartyService, PartyService>();
 
@@ -45,7 +45,7 @@ namespace DNTFrameworkCore.Tests.Validation
             var proxyGenerator = new ProxyGenerator();
 
             services.AddDNTFramework()
-                .AddDataAnnotationValidation();
+                .AddModelValidation();
 
             services.AddScoped<IPartyService, PartyService>();
 
@@ -68,7 +68,7 @@ namespace DNTFrameworkCore.Tests.Validation
             var proxyGenerator = new ProxyGenerator();
 
             services.AddDNTFramework()
-                .AddDataAnnotationValidation();
+                .AddModelValidation();
 
             services.AddScoped<IPartyService, PartyService>();
 
@@ -91,7 +91,7 @@ namespace DNTFrameworkCore.Tests.Validation
             var proxyGenerator = new ProxyGenerator();
 
             services.AddDNTFramework()
-                .AddDataAnnotationValidation();
+                .AddModelValidation();
 
             services.AddScoped<IPartyService, PartyService>();
 

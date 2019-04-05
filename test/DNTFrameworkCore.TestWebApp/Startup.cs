@@ -23,25 +23,11 @@ namespace DNTFrameworkCore.TestWebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDNTFramework()
-                .AddDataAnnotationValidation()
                 .AddModelValidation()
                 .AddFluentModelValidation()
-                .AddValidationOptions(options =>
-                {
-                    /*options.IgnoredTypes.Add(typeof());*/
-                })
-                .AddMemoryCache()
-                .AddAuditingOptions(options =>
-                {
-                    // options.Enabled = true;
-                    // options.EnabledForAnonymousUsers = false;
-                    // options.IgnoredTypes.Add(typeof());
-                    // options.Selectors.Add(new NamedTypeSelector("SelectorName", type => type == typeof()));
-                }).AddTransactionOptions(options =>
-                {
-                    // options.Timeout=TimeSpan.FromMinutes(3);
-                    //options.IsolationLevel=IsolationLevel.ReadCommitted;
-                });
+                .AddAuditing()
+                .AddTransaction();
+                
             services.AddDNTCommonWeb();
             services.AddInfrastructure(Configuration);
             services.AddApplication(Configuration);
@@ -59,6 +45,7 @@ namespace DNTFrameworkCore.TestWebApp
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                // app.UseStatusCodePagesWithReExecute("/error/index/{0}");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
