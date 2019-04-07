@@ -26,8 +26,8 @@
         </div> 
     </div>
     <div class="modal-footer">
-        <a class="btn btn-light btn-circle" asp-modal-link asp-modal-toggle="false"
-            asp-controller="Roles" asp-action="Delete" asp-route-id="@Model.Id" asp-if="!Model.IsNew" asp-permission="@PermissionNames.Roles_Delete"
+        <a class="btn btn-light btn-circle" asp-modal-delete-link asp-model-id="@Model.Id" asp-modal-toggle="false"
+            asp-controller="Roles" asp-action="Delete" asp-if="!Model.IsNew" asp-permission="@PermissionNames.Roles_Delete"
             title="Delete Role">
             <i class="fa fa-trash text-danger"></i>
         </a>

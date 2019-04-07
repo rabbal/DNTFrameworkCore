@@ -9,10 +9,7 @@ namespace DNTFrameworkCore.Web.Mvc.TagHelpers.Ajax
 
         [HtmlAttributeName(ModalFormAttributeName)]
         public string FormId { get; set; }
-        public ModalFormTagHelper() : base()
-        {
-        }
-
+        
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.Attributes.Add("id", FormId);

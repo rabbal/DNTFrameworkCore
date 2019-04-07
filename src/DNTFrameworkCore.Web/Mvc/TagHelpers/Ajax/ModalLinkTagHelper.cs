@@ -12,9 +12,6 @@ namespace DNTFrameworkCore.Web.Mvc.TagHelpers.Ajax
 
         [HtmlAttributeName(ModalToggleAttributeName)]
         public bool ModalToggle { get; set; } = true;
-        public ModalLinkTagHelper() : base()
-        {
-        }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {

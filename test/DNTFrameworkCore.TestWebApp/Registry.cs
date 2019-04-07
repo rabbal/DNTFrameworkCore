@@ -4,7 +4,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace DNTFrameworkCore.TestWebApp
 {
@@ -52,7 +55,15 @@ namespace DNTFrameworkCore.TestWebApp
                 });
 
             services.AddLocalization();
-            services.AddHttpContextAccessor();
+             services.AddHttpContextAccessor();
+            services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            // Allows injecting IUrlHelper as a dependency
+            services.AddScoped(serviceProvider =>
+            {
+                var actionContext = serviceProvider.GetService<IActionContextAccessor>().ActionContext;
+                var urlHelperFactory = serviceProvider.GetService<IUrlHelperFactory>();
+                return urlHelperFactory?.GetUrlHelper(actionContext);
+            });
             services.AddMvc()
                 .AddMvcLocalization()
                 .AddViewLocalization()
