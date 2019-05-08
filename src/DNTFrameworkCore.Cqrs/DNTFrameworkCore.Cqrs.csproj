@@ -2,12 +2,12 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <LangVersion>7.3</LangVersion>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="8.1.2" />
-      <PackageReference Include="MediatR" Version="6.0.0" />
+      <PackageReference Include="FluentValidation" Version="8.3.0" />
+      <PackageReference Include="MediatR" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>

@@ -10,7 +10,18 @@
         <input type="hidden" name="save-continue" value="true" />
         <input asp-for="RowVersion" type="hidden"/>
         <input asp-for="Id" type="hidden"/>
-        <div class="form-group row">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link  active" href="#information" role="tab" data-toggle="tab" aria-selected="true">Role Information</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#permissions" role="tab" data-toggle="tab">Permissions</a>
+            </li>
+        </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="information">
+          <div class="form-group row">
                 <div class="col col-md-8">                      
                     <label asp-for="Name" class="col-form-label text-md-left"></label>
                     <input asp-for="Name" autocomplete="off" class="form-control" />
@@ -24,6 +35,15 @@
                     <span asp-validation-for="Description" class="text-danger"></span>
               </div>
         </div> 
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="permissions">
+            @foreach(var permission in Model.Permissions)
+            {
+                <partial name="_Permission" model="permission"/>
+            }
+      </div>
+    </div>
+        
     </div>
     <div class="modal-footer">
         <a class="btn btn-light btn-circle" asp-modal-delete-link asp-model-id="@Model.Id" asp-modal-toggle="false"
@@ -39,7 +59,7 @@
             asp-controller="Roles" asp-action="Create">
             <i class="fa fa-plus"></i>
         </a>
-        <button type="button" class="btn btn-outline-primary" data-dismiss="modal">
+        <button type="button" class="btn btn-light" data-dismiss="modal">
             <i class="fa fa-ban"></i>&nbsp; Cancel
         </button>
         <button type="submit" class="btn btn-primary">

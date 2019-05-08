@@ -9,10 +9,10 @@
     <RepositoryUrl>https://github.com/rabbal/DNTFrameworkCore</RepositoryUrl>
     <PackageTags>.NET Core; ASP.NET Core; EFCore; Multitenancy; Validation; Transaction; Framework; Design; Logging; SOLID; Event-Driven; Domain</PackageTags>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="7.6.103" />
+    <PackageReference Include="FluentValidation" Version="8.3.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DNTFrameworkCore\DNTFrameworkCore.csproj" />

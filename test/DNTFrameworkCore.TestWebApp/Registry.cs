@@ -54,8 +54,8 @@ namespace DNTFrameworkCore.TestWebApp
                     };
                 });
 
-            services.AddLocalization();
-             services.AddHttpContextAccessor();
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddHttpContextAccessor();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
             // Allows injecting IUrlHelper as a dependency
             services.AddScoped(serviceProvider =>

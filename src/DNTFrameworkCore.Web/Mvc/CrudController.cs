@@ -206,7 +206,7 @@ namespace DNTFrameworkCore.Web.Mvc
             return PartialView(ListViewName, model);
         }
 
-        private async Task<PagedListModel<TReadModel, TFilteredPagedQueryModel>> ReadPagedListModelAsync(
+        protected async Task<PagedListModel<TReadModel, TFilteredPagedQueryModel>> ReadPagedListModelAsync(
             TFilteredPagedQueryModel query = null)
         {
             query = query ?? Factory<TFilteredPagedQueryModel>.CreateInstance();

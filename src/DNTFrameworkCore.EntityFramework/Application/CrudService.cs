@@ -111,7 +111,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
             return result;
         }
 
-        private async Task<IReadOnlyList<TModel>> FindAsync(Expression<Func<TEntity, bool>> predicate)
+        protected async Task<IReadOnlyList<TModel>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
             var entities = await BuildFindQuery().Where(predicate).ToListAsync();
 

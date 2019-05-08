@@ -32,7 +32,7 @@ namespace DNTFrameworkCore.Extensions
             return userId;
         }
 
-        public static long GetTenantId(this IIdentity identity)
+        public static long? GetTenantId(this IIdentity identity)
         {
             var tenantClaim = identity?.FindUserClaimValue(DNTClaimTypes.TenantId);
 

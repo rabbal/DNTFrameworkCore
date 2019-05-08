@@ -104,7 +104,6 @@ namespace DNTFrameworkCore.TestAPI
             app.UseAuthentication();
             app.UseMvc();
             app.UseSignalR(routes => { routes.MapHub<NotificationHub>("/api/notificationhub"); });
-            app.UseEFSecondLevelCache();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

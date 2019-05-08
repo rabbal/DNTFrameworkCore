@@ -22,6 +22,8 @@
             <i class="fa fa-filter"></i>
             Filter
         </a>
+        <select asp-items="Model.Permissions.ToSelectListItem()" class="form-control">
+        </select>
         <!-- Split button -->
         <div class="btn-group">
             <a href="#" role="button" class="btn btn-info">Export To PDF</a>

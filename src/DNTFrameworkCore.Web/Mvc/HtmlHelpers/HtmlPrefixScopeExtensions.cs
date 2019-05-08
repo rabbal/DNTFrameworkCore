@@ -24,7 +24,7 @@ namespace DNTFrameworkCore.Web.Mvc.HtmlHelpers
         /// <param name="htmlHelper"></param>
         /// <param name="collectionName">The name of the collection property from the Model that owns this item.</param>
         /// <returns></returns>
-        public static IDisposable BeginCollectionItem<TModel>(this HtmlHelper<TModel> htmlHelper, string collectionName)
+        public static IDisposable BeginCollectionItem<TModel>(this IHtmlHelper<TModel> htmlHelper, string collectionName)
         {
             Guard.ArgumentNotEmpty(collectionName, nameof(collectionName));
 
@@ -34,7 +34,7 @@ namespace DNTFrameworkCore.Web.Mvc.HtmlHelpers
                 collectionName = htmlFieldPrefix.Substring(0, htmlFieldPrefix.LastIndexOf(collectionName, StringComparison.Ordinal) + collectionName.Length);
             }
 
-            var collectionIndexFieldName =$"{collectionName}.Index";
+            var collectionIndexFieldName = $"{collectionName}.Index";
 
             string itemIndex = null;
             if (htmlHelper.ViewData.ContainsKey(JQueryTemplatingEnabledKey))
@@ -64,7 +64,7 @@ namespace DNTFrameworkCore.Web.Mvc.HtmlHelpers
             await htmlHelper.RenderPartialAsync(partialViewName, model, viewData);
         }
 
-        public static async Task RenderPartialCollectionAsync<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, string partialViewName)
+        public static async Task RenderPartialCollectionAsync<TModel, TProperty>(this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, string partialViewName)
           where TProperty : IEnumerable
         {
             var metadata = ExpressionMetadataProvider.FromLambdaExpression(expression, htmlHelper.ViewData, htmlHelper.MetadataProvider);
@@ -91,12 +91,15 @@ namespace DNTFrameworkCore.Web.Mvc.HtmlHelpers
             {
                 httpContext.Items[collectionIndexFieldName] = previousIndexes = new Queue<string>();
 
-                string previousIndexValues = httpContext.Request.Form[collectionIndexFieldName];
-                if (!String.IsNullOrWhiteSpace(previousIndexValues))
+                if (httpContext.Request.HasFormContentType)
                 {
-                    foreach (string index in previousIndexValues.Split(','))
+                    string previousIndexValues = httpContext.Request.Form[collectionIndexFieldName];
+                    if (!String.IsNullOrWhiteSpace(previousIndexValues))
                     {
-                        previousIndexes.Enqueue(index);
+                        foreach (string index in previousIndexValues.Split(','))
+                        {
+                            previousIndexes.Enqueue(index);
+                        }
                     }
                 }
             }
@@ -104,9 +107,9 @@ namespace DNTFrameworkCore.Web.Mvc.HtmlHelpers
             return previousIndexes.Count > 0 ? previousIndexes.Dequeue() : Guid.NewGuid().ToString();
         }
 
-        public static IDisposable BeginHtmlFieldPrefixScope(this HtmlHelper html, string htmlFieldPrefix)
+        public static IDisposable BeginHtmlFieldPrefixScope(this IHtmlHelper htmlHelper, string htmlFieldPrefix)
         {
-            return new HtmlFieldPrefixScope(html.ViewData.TemplateInfo, htmlFieldPrefix);
+            return new HtmlFieldPrefixScope(htmlHelper.ViewData.TemplateInfo, htmlFieldPrefix);
         }
 
         private class HtmlFieldPrefixScope : IDisposable

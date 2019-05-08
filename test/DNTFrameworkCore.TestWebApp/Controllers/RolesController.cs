@@ -1,4 +1,7 @@
+using System;
+using System.Linq;
 using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.TestWebApp.Application.Identity;
 using DNTFrameworkCore.TestWebApp.Application.Identity.Models;
 using DNTFrameworkCore.TestWebApp.Authorization;
@@ -6,13 +9,22 @@ using DNTFrameworkCore.TestWebApp.Models.Roles;
 using DNTFrameworkCore.Web.Extensions;
 using DNTFrameworkCore.Web.Mvc;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace DNTFrameworkCore.TestWebApp.Controllers
 {
     public class RolesController : CrudController<IRoleService, long, RoleReadModel, RoleModel, RoleFilteredPagedQueryModel>
     {
-        public RolesController(IRoleService service) : base(service)
+        private readonly IPermissionService _permissionService;
+        private readonly IStringLocalizerFactory _localizerFactory;
+
+        public RolesController(
+            IRoleService service,
+            IPermissionService permissionService,
+            IStringLocalizerFactory localizerFactory) : base(service)
         {
+            _permissionService = permissionService ?? throw new ArgumentNullException(nameof(permissionService));
+            _localizerFactory = localizerFactory ?? throw new ArgumentNullException(nameof(localizerFactory));
         }
 
         protected override string CreatePermissionName => PermissionNames.Roles_Create;
@@ -26,7 +38,10 @@ namespace DNTFrameworkCore.TestWebApp.Controllers
             var indexModel = new RoleIndexViewModel
             {
                 PagedList = model,
-                // Permissions=
+                Permissions = _permissionService
+                    .ReadList()
+                    .Select(p => new LookupItem { Value = p.Name, Text = p.DisplayName.Localize(_localizerFactory) })
+                    .ToList()
             };
             return Request.IsAjaxRequest()
                 ? (IActionResult)PartialView(indexModel)
