@@ -2,12 +2,12 @@
 
 namespace DNTFrameworkCore.Timing
 {
-    public interface IClock
+    public interface IDateTime
     {
         DateTimeOffset UtcNow { get; }
         DateTimeOffset Now { get; }
     }
-    public class Clock : IClock
+    public class DateTime : IDateTime
     {
         public DateTimeOffset UtcNow => DateTimeOffset.UtcNow;
         public DateTimeOffset Now => DateTimeOffset.Now;

@@ -32,7 +32,7 @@ namespace DNTFrameworkCore
             services.AddSingleton<IPermissionService, PermissionService>();
             services.AddMemoryCache();
             services.AddSingleton<ICacheService, MemoryCacheService>();
-            services.AddScoped<IClock, Clock>();
+            services.AddScoped<IDateTime, Timing.DateTime>();
 
             return new DNTBuilder(services);
         }
