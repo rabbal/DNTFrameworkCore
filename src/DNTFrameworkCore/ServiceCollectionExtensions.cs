@@ -9,6 +9,7 @@ using DNTFrameworkCore.Mapping;
 using DNTFrameworkCore.MultiTenancy;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.Threading.BackgroundTasks;
+using DNTFrameworkCore.Timing;
 using DNTFrameworkCore.Transaction;
 using DNTFrameworkCore.Transaction.Interception;
 using DNTFrameworkCore.Validation;
@@ -31,6 +32,7 @@ namespace DNTFrameworkCore
             services.AddSingleton<IPermissionService, PermissionService>();
             services.AddMemoryCache();
             services.AddSingleton<ICacheService, MemoryCacheService>();
+            services.AddScoped<IClock, Clock>();
 
             return new DNTBuilder(services);
         }
