@@ -1,8 +1,8 @@
 namespace DNTFrameworkCore.Validation
 {
-    public class ModelValidationResult
+    public class ValidationFailure
     {
-        public ModelValidationResult(string memberName, string message)
+        public ValidationFailure(string memberName, string message)
         {
             MemberName = memberName ?? string.Empty;
             Message = message ?? string.Empty;

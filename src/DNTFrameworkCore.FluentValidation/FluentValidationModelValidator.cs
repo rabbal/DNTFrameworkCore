@@ -8,22 +8,22 @@ namespace DNTFrameworkCore.FluentValidation
 {
     internal class FluentValidationModelValidator<T> : ModelValidator<T>
     {
-        private readonly IValidatorFactory _validatorFactory;
+        private readonly IValidatorFactory _factory;
 
-        public FluentValidationModelValidator(IValidatorFactory validatorFactory)
+        public FluentValidationModelValidator(IValidatorFactory factory)
         {
-            _validatorFactory = validatorFactory ?? throw new ArgumentNullException(nameof(validatorFactory));
+            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
         }
 
-        public override IEnumerable<ModelValidationResult> Validate(T model)
+        public override IEnumerable<ValidationFailure> Validate(T model)
         {
-            var fvValidator = _validatorFactory.GetValidator(model.GetType());
+            var fvValidator = _factory.GetValidator(model.GetType());
 
-            if (fvValidator == null) return Enumerable.Empty<ModelValidationResult>();
+            if (fvValidator == null) return Enumerable.Empty<ValidationFailure>();
 
             var validationResult = fvValidator.Validate(model);
             var failures = validationResult.Errors
-                .Select(e => new ModelValidationResult(e.PropertyName, e.ErrorMessage))
+                .Select(e => new ValidationFailure(e.PropertyName, e.ErrorMessage))
                 .ToList();
 
             return failures;

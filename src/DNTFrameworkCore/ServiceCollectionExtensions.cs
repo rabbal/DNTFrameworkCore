@@ -5,7 +5,6 @@ using DNTFrameworkCore.Caching;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.GuardToolkit;
-using DNTFrameworkCore.Mapping;
 using DNTFrameworkCore.MultiTenancy;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.Threading.BackgroundTasks;

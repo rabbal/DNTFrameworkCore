@@ -16,7 +16,7 @@ namespace DNTFrameworkCore.Validation.Interception
             _provider = provider ?? throw new ArgumentNullException();
         }
 
-        public IEnumerable<ModelValidationResult> Validate(object parameter)
+        public IEnumerable<ValidationFailure> Validate(object parameter)
         {
             var properties = TypeDescriptor.GetProperties(parameter).Cast<PropertyDescriptor>();
             foreach (var property in properties)
@@ -37,7 +37,7 @@ namespace DNTFrameworkCore.Validation.Interception
 
                 foreach (var attribute in validationAttributes)
                 {
-                    var failures = new List<ModelValidationResult>();
+                    var failures = new List<ValidationFailure>();
 
                     var result = attribute.GetValidationResult(property.GetValue(parameter), validationContext);
 
@@ -49,23 +49,23 @@ namespace DNTFrameworkCore.Validation.Interception
                     {
                         foreach (var memberName in result.MemberNames)
                         {
-                            var validationResult = new ModelValidationResult(memberName, message);
+                            var failure = new ValidationFailure(memberName, message);
 
-                            failures.Add(validationResult);
+                            failures.Add(failure);
                         }
                     }
 
                     if (failures.Count == 0)
                     {
                         // result.MemberNames was null or empty.
-                        failures.Add(new ModelValidationResult(string.Empty, message));
+                        failures.Add(new ValidationFailure(string.Empty, message));
                     }
 
                     return failures;
                 }
             }
 
-            return Enumerable.Empty<ModelValidationResult>();
+            return Enumerable.Empty<ValidationFailure>();
         }
     }
 }

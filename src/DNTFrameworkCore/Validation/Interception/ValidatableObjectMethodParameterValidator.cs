@@ -6,11 +6,11 @@ namespace DNTFrameworkCore.Validation.Interception
 {
     public class ValidatableObjectMethodParameterValidator : IMethodParameterValidator
     {
-        public IEnumerable<ModelValidationResult> Validate(object parameter)
+        public IEnumerable<ValidationFailure> Validate(object parameter)
         {
             if (parameter == null || !(parameter is IValidatableObject validatable))
             {
-                return Enumerable.Empty<ModelValidationResult>();
+                return Enumerable.Empty<ValidationFailure>();
             }
 
             var failures = validatable.Validate(new ValidationContext(parameter));
@@ -18,7 +18,7 @@ namespace DNTFrameworkCore.Validation.Interception
             return ToModelValidationResult(failures);
         }
 
-        private static IEnumerable<ModelValidationResult> ToModelValidationResult(
+        private static IEnumerable<ValidationFailure> ToModelValidationResult(
             IEnumerable<ValidationResult> failures)
         {
             foreach (var result in failures)
@@ -27,13 +27,13 @@ namespace DNTFrameworkCore.Validation.Interception
 
                 if (result.MemberNames == null || !result.MemberNames.Any())
                 {
-                    yield return new ModelValidationResult(memberName: null, message: result.ErrorMessage);
+                    yield return new ValidationFailure(memberName: null, message: result.ErrorMessage);
                 }
                 else
                 {
                     foreach (var memberName in result.MemberNames)
                     {
-                        yield return new ModelValidationResult(memberName, result.ErrorMessage);
+                        yield return new ValidationFailure(memberName, result.ErrorMessage);
                     }
                 }
             }

@@ -1,5 +1,6 @@
 using System.Linq;
 using AutoMapper;
+using MediatR;
 using Castle.DynamicProxy;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.Dependency;
@@ -27,7 +28,7 @@ namespace DNTFrameworkCore.TestWebApp.Application
         {
             services.Configure<ProjectSetting>(configuration.Bind);
 
-            services.AddAutoMapper();
+            services.AddAutoMapper(typeof(ApplicationRegistry));
             services.AddDNTNumbering(options =>
             {
                 options.NumberedEntityMap[typeof(Task)] = new NumberedEntityOption
@@ -77,7 +78,7 @@ namespace DNTFrameworkCore.TestWebApp.Application
                     ProxyGenerator.CreateInterfaceProxyWithTargetInterface(
                         descriptor.ServiceType,
                         target, serviceProvider.GetRequiredService<ValidationInterceptor>(),
-                        (IInterceptor)serviceProvider.GetRequiredService<TransactionInterceptor>()));
+                        serviceProvider.GetRequiredService<TransactionInterceptor>()));
             }
         }
     }

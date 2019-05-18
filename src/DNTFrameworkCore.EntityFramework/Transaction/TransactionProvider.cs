@@ -1,6 +1,5 @@
 using System;
 using System.Data;
-using DNTFrameworkCore.EntityFramework.Context;
 using DNTFrameworkCore.Transaction;
 using Microsoft.EntityFrameworkCore;
 

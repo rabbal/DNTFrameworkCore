@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.Dependency
@@ -32,9 +30,9 @@ namespace DNTFrameworkCore.Dependency
         {
             using (var scope = provider.CreateScope())
             {
-                var context = scope.ServiceProvider.GetRequiredService<TS>();
-                callback(context);
-                if (context is IDisposable disposable)
+                var service = scope.ServiceProvider.GetRequiredService<TS>();
+                callback(service);
+                if (service is IDisposable disposable)
                 {
                     disposable.Dispose();
                 }
@@ -48,8 +46,53 @@ namespace DNTFrameworkCore.Dependency
         {
             using (var scope = provider.CreateScope())
             {
-                var context = scope.ServiceProvider.GetRequiredService<TS>();
-                return callback(context);
+                var service = scope.ServiceProvider.GetRequiredService<TS>();
+                return callback(service);
+            }
+        }
+
+        /// <summary>
+        /// Creates an IServiceScope which contains an IServiceProvider used to resolve dependencies from a newly created scope and then runs an associated callback.
+        /// </summary>
+        public static async Task RunScoped<T, TS>(this IServiceProvider provider, Func<TS, T, Task> callback)
+        {
+            using (var scope = provider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var service = scope.ServiceProvider.GetRequiredService<TS>();
+
+                await callback(service, scope.ServiceProvider.GetRequiredService<T>());
+                if (service is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates an IServiceScope which contains an IServiceProvider used to resolve dependencies from a newly created scope and then runs an associated callback.
+        /// </summary>
+        public static async Task RunScoped<TS>(this IServiceProvider provider, Func<TS, Task> callback)
+        {
+            using (var scope = provider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var service = scope.ServiceProvider.GetRequiredService<TS>();
+                await callback(service);
+                if (service is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates an IServiceScope which contains an IServiceProvider used to resolve dependencies from a newly created scope and then runs an associated callback.
+        /// </summary>
+        public static async Task<T> RunScoped<T, TS>(this IServiceProvider provider, Func<TS, Task<T>> callback)
+        {
+            using (var scope = provider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var service = scope.ServiceProvider.GetRequiredService<TS>();
+                return await callback(service);
             }
         }
     }

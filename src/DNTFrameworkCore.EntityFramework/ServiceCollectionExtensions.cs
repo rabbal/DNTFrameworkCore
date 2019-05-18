@@ -1,7 +1,6 @@
 using System;
 using DNTFrameworkCore.Auditing;
 using DNTFrameworkCore.Cryptography;
-using DNTFrameworkCore.EntityFramework.Application;
 using DNTFrameworkCore.EntityFramework.Auditing;
 using DNTFrameworkCore.EntityFramework.Context;
 using DNTFrameworkCore.EntityFramework.Context.Hooks;

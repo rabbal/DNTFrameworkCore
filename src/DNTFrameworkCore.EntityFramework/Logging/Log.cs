@@ -1,10 +1,9 @@
 ﻿using System;
 using DNTFrameworkCore.Domain.Entities;
-using DNTFrameworkCore.Domain.Entities.Tracking;
 
 namespace DNTFrameworkCore.EntityFramework.Logging
 {
-   /// <summary>
+    /// <summary>
     /// Represents a log in the logging database.
     /// </summary>
     public class Log : Entity<Guid>

@@ -22,22 +22,21 @@ namespace DNTFrameworkCore.Validation.Interception
 
         private readonly IOptions<ValidationOptions> _options;
         private readonly IEnumerable<IMethodParameterValidator> _validators;
-
-        private readonly IList<ModelValidationResult> _failures;
+        private readonly IList<ValidationFailure> _failures;
         private readonly IList<IShouldNormalize> _objectsToBeNormalized;
 
-
-        public MethodInvocationValidator(IOptions<ValidationOptions> options,
+        public MethodInvocationValidator(
+            IOptions<ValidationOptions> options,
             IEnumerable<IMethodParameterValidator> validators)
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _validators = validators ?? throw new ArgumentNullException(nameof(validators));
 
-            _failures = new List<ModelValidationResult>();
+            _failures = new List<ValidationFailure>();
             _objectsToBeNormalized = new List<IShouldNormalize>();
         }
 
-        public IEnumerable<ModelValidationResult> Validate(MethodInfo method, object[] parameterValues)
+        public IEnumerable<ValidationFailure> Validate(MethodInfo method, object[] parameterValues)
         {
             Guard.ArgumentNotNull(method, nameof(method));
             Guard.ArgumentNotNull(parameterValues, nameof(parameterValues));
@@ -46,17 +45,17 @@ namespace DNTFrameworkCore.Validation.Interception
 
             if (parameters.IsNullOrEmpty())
             {
-                return Enumerable.Empty<ModelValidationResult>();
+                return Enumerable.Empty<ValidationFailure>();
             }
 
             if (!method.IsPublic)
             {
-                return Enumerable.Empty<ModelValidationResult>();
+                return Enumerable.Empty<ValidationFailure>();
             }
 
             if (IsValidationSkipped(method))
             {
-                return Enumerable.Empty<ModelValidationResult>();
+                return Enumerable.Empty<ValidationFailure>();
             }
 
             if (parameters.Length != parameterValues.Length)
@@ -79,7 +78,7 @@ namespace DNTFrameworkCore.Validation.Interception
                 objectToBeNormalized.Normalize();
             }
 
-            return Enumerable.Empty<ModelValidationResult>();
+            return Enumerable.Empty<ValidationFailure>();
         }
 
         protected virtual bool IsValidationSkipped(MethodInfo method)
@@ -106,7 +105,7 @@ namespace DNTFrameworkCore.Validation.Interception
                     !parameterInfo.IsOut &&
                     !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType, true))
                 {
-                    _failures.Add(new ModelValidationResult(parameterInfo.Name, parameterInfo.Name + " is null!"));
+                    _failures.Add(new ValidationFailure(parameterInfo.Name, parameterInfo.Name + " is null!"));
                 }
 
                 return;
@@ -115,9 +114,9 @@ namespace DNTFrameworkCore.Validation.Interception
             ValidateObjectRecursively(parameterValue, 1);
         }
 
-        protected virtual void ValidateObjectRecursively(object validatingObject, int currentDepth)
+        protected virtual void ValidateObjectRecursively(object validatingObject, int depth)
         {
-            if (currentDepth > MaxRecursiveParameterValidationDepth)
+            if (depth > MaxRecursiveParameterValidationDepth)
             {
                 return;
             }
@@ -144,7 +143,7 @@ namespace DNTFrameworkCore.Validation.Interception
             {
                 foreach (var item in (IEnumerable) validatingObject)
                 {
-                    ValidateObjectRecursively(item, currentDepth + 1);
+                    ValidateObjectRecursively(item, depth + 1);
                 }
             }
 
@@ -164,18 +163,18 @@ namespace DNTFrameworkCore.Validation.Interception
                     continue;
                 }
 
-                ValidateObjectRecursively(property.GetValue(validatingObject), currentDepth + 1);
+                ValidateObjectRecursively(property.GetValue(validatingObject), depth + 1);
             }
         }
 
         protected virtual void SetValidationErrors(object parameter)
         {
-            foreach (var parameterValidator in _validators)
+            foreach (var validator in _validators)
             {
-                if (!ShouldValidateUsingValidator(parameter, parameterValidator.GetType())) continue;
+                if (!ShouldValidateUsingValidator(parameter, validator.GetType())) continue;
 
-                var validationResults = parameterValidator.Validate(parameter);
-                _failures.AddRange(validationResults);
+                var failures = validator.Validate(parameter);
+                _failures.AddRange(failures);
             }
         }
 

@@ -1,43 +1,47 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AD7C17EC-ABF0-4488-BB43-A27E0A99BCEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore", "src\DNTFrameworkCore\DNTFrameworkCore.csproj", "{0CD853F9-95D1-48C9-BF04-3C3A6184BC5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore", "src\DNTFrameworkCore\DNTFrameworkCore.csproj", "{0CD853F9-95D1-48C9-BF04-3C3A6184BC5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Cqrs", "src\DNTFrameworkCore.Cqrs\DNTFrameworkCore.Cqrs.csproj", "{AF163E89-971C-44B4-B6D8-8F92502C9361}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Cqrs", "src\DNTFrameworkCore.Cqrs\DNTFrameworkCore.Cqrs.csproj", "{AF163E89-971C-44B4-B6D8-8F92502C9361}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.EntityFramework", "src\DNTFrameworkCore.EntityFramework\DNTFrameworkCore.EntityFramework.csproj", "{E7985323-0747-4CE1-B15B-86D5DA6E223E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.EntityFramework", "src\DNTFrameworkCore.EntityFramework\DNTFrameworkCore.EntityFramework.csproj", "{E7985323-0747-4CE1-B15B-86D5DA6E223E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.FluentValidation", "src\DNTFrameworkCore.FluentValidation\DNTFrameworkCore.FluentValidation.csproj", "{9089B685-1DAD-4A34-9215-CD43D650C924}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.FluentValidation", "src\DNTFrameworkCore.FluentValidation\DNTFrameworkCore.FluentValidation.csproj", "{9089B685-1DAD-4A34-9215-CD43D650C924}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Web", "src\DNTFrameworkCore.Web\DNTFrameworkCore.Web.csproj", "{4B1E89CD-920F-4A20-BF0E-4C11ED6D0CD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Web", "src\DNTFrameworkCore.Web\DNTFrameworkCore.Web.csproj", "{4B1E89CD-920F-4A20-BF0E-4C11ED6D0CD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Web.EntityFramework", "src\DNTFrameworkCore.Web.EntityFramework\DNTFrameworkCore.Web.EntityFramework.csproj", "{FBB23304-5843-476F-9C78-94E804FE6DD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Web.EntityFramework", "src\DNTFrameworkCore.Web.EntityFramework\DNTFrameworkCore.Web.EntityFramework.csproj", "{FBB23304-5843-476F-9C78-94E804FE6DD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Web.MultiTenancy", "src\DNTFrameworkCore.Web.MultiTenancy\DNTFrameworkCore.Web.MultiTenancy.csproj", "{3EC0C829-17C9-4D29-B89A-ED33DB8E7023}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Web.MultiTenancy", "src\DNTFrameworkCore.Web.MultiTenancy\DNTFrameworkCore.Web.MultiTenancy.csproj", "{3EC0C829-17C9-4D29-B89A-ED33DB8E7023}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{CE6239C1-7484-493B-B672-CEDA073ADF1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Tests", "test\DNTFrameworkCore.Tests\DNTFrameworkCore.Tests.csproj", "{E2A43723-5110-4DAD-8771-F934E3D17FE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Tests", "test\DNTFrameworkCore.Tests\DNTFrameworkCore.Tests.csproj", "{E2A43723-5110-4DAD-8771-F934E3D17FE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.TestWebApp", "test\DNTFrameworkCore.TestWebApp\DNTFrameworkCore.TestWebApp.csproj", "{2FE8506E-035C-45B1-9929-CB12DDDA2A52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.TestWebApp", "test\DNTFrameworkCore.TestWebApp\DNTFrameworkCore.TestWebApp.csproj", "{2FE8506E-035C-45B1-9929-CB12DDDA2A52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.TestAPI", "test\DNTFrameworkCore.TestAPI\DNTFrameworkCore.TestAPI.csproj", "{459BF4C5-D6D8-44EC-AB3E-037634954470}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.TestAPI", "test\DNTFrameworkCore.TestAPI\DNTFrameworkCore.TestAPI.csproj", "{459BF4C5-D6D8-44EC-AB3E-037634954470}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.EntityFramework.Tests", "test\DNTFrameworkCore.EntityFramework.Tests\DNTFrameworkCore.EntityFramework.Tests.csproj", "{FC10C36F-1D34-4A49-9579-800CE267711C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.EntityFramework.Tests", "test\DNTFrameworkCore.EntityFramework.Tests\DNTFrameworkCore.EntityFramework.Tests.csproj", "{FC10C36F-1D34-4A49-9579-800CE267711C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.FluentValidation.Tests", "test\DNTFrameworkCore.FluentValidation.Tests\DNTFrameworkCore.FluentValidation.Tests.csproj", "{8EC21B67-463C-4EA6-A125-DCDD835106CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.FluentValidation.Tests", "test\DNTFrameworkCore.FluentValidation.Tests\DNTFrameworkCore.FluentValidation.Tests.csproj", "{8EC21B67-463C-4EA6-A125-DCDD835106CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Web.Tests", "test\DNTFrameworkCore.Web.Tests\DNTFrameworkCore.Web.Tests.csproj", "{D358349B-A911-4CB5-8680-39AD650C49C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Web.Tests", "test\DNTFrameworkCore.Web.Tests\DNTFrameworkCore.Web.Tests.csproj", "{D358349B-A911-4CB5-8680-39AD650C49C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Web.MultiTenancy.Tests", "test\DNTFrameworkCore.Web.MultiTenancy.Tests\DNTFrameworkCore.Web.MultiTenancy.Tests.csproj", "{30379D4A-9A47-4EA3-964F-B9EF0DC75E98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Web.MultiTenancy.Tests", "test\DNTFrameworkCore.Web.MultiTenancy.Tests\DNTFrameworkCore.Web.MultiTenancy.Tests.csproj", "{30379D4A-9A47-4EA3-964F-B9EF0DC75E98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Web.EntityFramework.Tests", "test\DNTFrameworkCore.Web.EntityFramework.Tests\DNTFrameworkCore.Web.EntityFramework.Tests.csproj", "{EFF425CD-5E05-41A6-8CB6-057B2D140046}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Web.EntityFramework.Tests", "test\DNTFrameworkCore.Web.EntityFramework.Tests\DNTFrameworkCore.Web.EntityFramework.Tests.csproj", "{EFF425CD-5E05-41A6-8CB6-057B2D140046}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.EntityFramework.SqlServer", "src\DNTFrameworkCore.EntityFramework.SqlServer\DNTFrameworkCore.EntityFramework.SqlServer.csproj", "{06AF5FE8-9380-4093-8BF6-9FC2F1CAB9D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.EntityFramework.SqlServer", "src\DNTFrameworkCore.EntityFramework.SqlServer\DNTFrameworkCore.EntityFramework.SqlServer.csproj", "{06AF5FE8-9380-4093-8BF6-9FC2F1CAB9D3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Cqrs.EntityFramework", "src\DNTFrameworkCore.Cqrs.EntityFramework\DNTFrameworkCore.Cqrs.EntityFramework.csproj", "{F9C5BCBB-5FF9-4087-93C7-99D3436CD57D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.TestCqrsAPI", "test\DNTFrameworkCore.TestCqrsAPI\DNTFrameworkCore.TestCqrsAPI.csproj", "{5EE2E405-87D2-495B-B2BC-F657F8DF483E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,9 +51,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0CD853F9-95D1-48C9-BF04-3C3A6184BC5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -244,6 +245,33 @@ Global
 		{06AF5FE8-9380-4093-8BF6-9FC2F1CAB9D3}.Release|x64.Build.0 = Release|Any CPU
 		{06AF5FE8-9380-4093-8BF6-9FC2F1CAB9D3}.Release|x86.ActiveCfg = Release|Any CPU
 		{06AF5FE8-9380-4093-8BF6-9FC2F1CAB9D3}.Release|x86.Build.0 = Release|Any CPU
+		{F9C5BCBB-5FF9-4087-93C7-99D3436CD57D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9C5BCBB-5FF9-4087-93C7-99D3436CD57D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9C5BCBB-5FF9-4087-93C7-99D3436CD57D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F9C5BCBB-5FF9-4087-93C7-99D3436CD57D}.Debug|x64.Build.0 = Debug|Any CPU
+		{F9C5BCBB-5FF9-4087-93C7-99D3436CD57D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F9C5BCBB-5FF9-4087-93C7-99D3436CD57D}.Debug|x86.Build.0 = Debug|Any CPU
+		{F9C5BCBB-5FF9-4087-93C7-99D3436CD57D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9C5BCBB-5FF9-4087-93C7-99D3436CD57D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9C5BCBB-5FF9-4087-93C7-99D3436CD57D}.Release|x64.ActiveCfg = Release|Any CPU
+		{F9C5BCBB-5FF9-4087-93C7-99D3436CD57D}.Release|x64.Build.0 = Release|Any CPU
+		{F9C5BCBB-5FF9-4087-93C7-99D3436CD57D}.Release|x86.ActiveCfg = Release|Any CPU
+		{F9C5BCBB-5FF9-4087-93C7-99D3436CD57D}.Release|x86.Build.0 = Release|Any CPU
+		{5EE2E405-87D2-495B-B2BC-F657F8DF483E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EE2E405-87D2-495B-B2BC-F657F8DF483E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EE2E405-87D2-495B-B2BC-F657F8DF483E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5EE2E405-87D2-495B-B2BC-F657F8DF483E}.Debug|x64.Build.0 = Debug|Any CPU
+		{5EE2E405-87D2-495B-B2BC-F657F8DF483E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5EE2E405-87D2-495B-B2BC-F657F8DF483E}.Debug|x86.Build.0 = Debug|Any CPU
+		{5EE2E405-87D2-495B-B2BC-F657F8DF483E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EE2E405-87D2-495B-B2BC-F657F8DF483E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EE2E405-87D2-495B-B2BC-F657F8DF483E}.Release|x64.ActiveCfg = Release|Any CPU
+		{5EE2E405-87D2-495B-B2BC-F657F8DF483E}.Release|x64.Build.0 = Release|Any CPU
+		{5EE2E405-87D2-495B-B2BC-F657F8DF483E}.Release|x86.ActiveCfg = Release|Any CPU
+		{5EE2E405-87D2-495B-B2BC-F657F8DF483E}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0CD853F9-95D1-48C9-BF04-3C3A6184BC5B} = {AD7C17EC-ABF0-4488-BB43-A27E0A99BCEE}
@@ -262,5 +290,10 @@ Global
 		{30379D4A-9A47-4EA3-964F-B9EF0DC75E98} = {CE6239C1-7484-493B-B672-CEDA073ADF1E}
 		{EFF425CD-5E05-41A6-8CB6-057B2D140046} = {CE6239C1-7484-493B-B672-CEDA073ADF1E}
 		{06AF5FE8-9380-4093-8BF6-9FC2F1CAB9D3} = {AD7C17EC-ABF0-4488-BB43-A27E0A99BCEE}
+		{F9C5BCBB-5FF9-4087-93C7-99D3436CD57D} = {AD7C17EC-ABF0-4488-BB43-A27E0A99BCEE}
+		{5EE2E405-87D2-495B-B2BC-F657F8DF483E} = {CE6239C1-7484-493B-B672-CEDA073ADF1E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {68AE140E-AF3A-4DAA-9F5A-7F427E4D6E44}
 	EndGlobalSection
 EndGlobal

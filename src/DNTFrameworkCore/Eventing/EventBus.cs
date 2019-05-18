@@ -29,15 +29,14 @@ namespace DNTFrameworkCore.Eventing
             {
                 var method = handlerType.GetMethod(
                     nameof(IBusinessEventHandler<T>.Handle),
-                    new[] {eventType}
+                    new[] { eventType }
                 );
 
                 if (method == null) continue;
 
-                var result = await (Task<Result>) method.Invoke(handler, new object[] {@event});
+                var result = await (Task<Result>)method.Invoke(handler, new object[] { @event });
 
-                if (!result.Succeeded)
-                    return result;
+                if (!result.Succeeded) return result;
             }
 
             return Result.Ok();

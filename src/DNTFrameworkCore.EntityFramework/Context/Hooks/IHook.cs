@@ -1,5 +1,4 @@
-﻿using System;
-using DNTFrameworkCore.Dependency;
+﻿using DNTFrameworkCore.Dependency;
 using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.EntityFramework.Context.Hooks

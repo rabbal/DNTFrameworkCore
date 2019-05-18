@@ -18,11 +18,11 @@ namespace DNTFrameworkCore.TestWebApp.Application.Invoices.Validators
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
         }
-        public override IEnumerable<ModelValidationResult> Validate(InvoiceModel model)
+        public override IEnumerable<ValidationFailure> Validate(InvoiceModel model)
         {
             if (CheckDuplicateNumber(model))
             {
-                yield return new ModelValidationResult(nameof(InvoiceModel.Number), _localizer["Invoice.Fields.Number.Unique"]);
+                yield return new ValidationFailure(nameof(InvoiceModel.Number), _localizer["Invoice.Fields.Number.Unique"]);
             }
         }
 

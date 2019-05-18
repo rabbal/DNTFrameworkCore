@@ -121,9 +121,9 @@ namespace DNTFrameworkCore.Tests.Validation
 
         public class TestParameterValidator : ModelValidator<TestParameter>
         {
-            public override IEnumerable<ModelValidationResult> Validate(TestParameter model)
+            public override IEnumerable<ValidationFailure> Validate(TestParameter model)
             {
-                yield return new ModelValidationResult("TestMember", nameof(IModelValidator));
+                yield return new ValidationFailure("TestMember", nameof(IModelValidator));
             }
         }
 

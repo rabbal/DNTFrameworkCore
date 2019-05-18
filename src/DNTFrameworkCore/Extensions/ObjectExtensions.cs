@@ -10,6 +10,10 @@ namespace DNTFrameworkCore.Extensions
 {
     public static class ObjectExtensions
     {
+        public static string GetGenericTypeName(this object @object)
+        {
+            return @object.GetType().GetGenericTypeName();
+        }
         /// <summary>
         /// Converts given object to a value type using <see cref="Convert.ChangeType(object,System.TypeCode)"/> method.
         /// </summary>
@@ -21,10 +25,10 @@ namespace DNTFrameworkCore.Extensions
         {
             if (typeof(T) == typeof(Guid))
             {
-                return (T) TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(obj.ToString());
+                return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(obj.ToString());
             }
 
-            return (T) Convert.ChangeType(obj, typeof(T), CultureInfo.InvariantCulture);
+            return (T)Convert.ChangeType(obj, typeof(T), CultureInfo.InvariantCulture);
         }
 
         /// <summary>

@@ -10,7 +10,6 @@ using DNTFrameworkCore.Domain.Entities;
 using DNTFrameworkCore.EntityFramework.Context.Extensions;
 using DNTFrameworkCore.Exceptions;
 using DNTFrameworkCore.Extensions;
-using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.Helpers;
 using DNTFrameworkCore.Runtime;
 using Microsoft.EntityFrameworkCore;
@@ -225,7 +224,7 @@ namespace DNTFrameworkCore.EntityFramework.Context
             return result;
         }
 
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             BeforeSaveChanges();
 

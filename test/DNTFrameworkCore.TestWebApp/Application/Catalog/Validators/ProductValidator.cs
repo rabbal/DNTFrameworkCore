@@ -20,11 +20,11 @@ namespace DNTFrameworkCore.TestWebApp.Application.Catalog.Validators
             _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
         }
         
-        public override IEnumerable<ModelValidationResult> Validate(ProductModel model)
+        public override IEnumerable<ValidationFailure> Validate(ProductModel model)
         {
             if (CheckDuplicateNumber(model))
             {
-                yield return new ModelValidationResult(nameof(ProductModel.Number), _localizer["Product.Fields.Number.Unique"]);
+                yield return new ValidationFailure(nameof(ProductModel.Number), _localizer["Product.Fields.Number.Unique"]);
             }
         }
 

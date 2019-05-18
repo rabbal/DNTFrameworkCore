@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 namespace DNTFrameworkCore.EntityFramework.Context
 {
     public interface
-        IUnitOfWork : IDisposable, IScopedDependency //Todo: support for multiple DbContext, INamedDependency
+        IUnitOfWork : IDisposable, IScopedDependency
     {
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
         EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
@@ -31,7 +31,7 @@ namespace DNTFrameworkCore.EntityFramework.Context
         Task<int> ExecuteSqlCommandAsync(string query, params object[] parameters);
 
         int SaveChanges();
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken());
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
         DbTransaction Transaction { get; }
         DbConnection Connection { get; }

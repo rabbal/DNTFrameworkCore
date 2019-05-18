@@ -11,11 +11,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Behaviors" />
-      <Folder Include="Commands" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\DNTFrameworkCore\DNTFrameworkCore.csproj" />
     </ItemGroup>
 

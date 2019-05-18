@@ -7,7 +7,7 @@ namespace DNTFrameworkCore.Validation
 {
     public abstract class ModelValidator<TModel> : IModelValidator<TModel>
     {
-        IEnumerable<ModelValidationResult> IModelValidator.Validate(object model)
+        IEnumerable<ValidationFailure> IModelValidator.Validate(object model)
         {
             Guard.ArgumentNotNull(model, nameof(model));
 
@@ -25,6 +25,6 @@ namespace DNTFrameworkCore.Validation
             return typeof(TModel).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
         }
 
-        public abstract IEnumerable<ModelValidationResult> Validate(TModel model);
+        public abstract IEnumerable<ValidationFailure> Validate(TModel model);
     }
 }

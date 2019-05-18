@@ -8,17 +8,17 @@ namespace DNTFrameworkCore.Functional
 {
     public class Result
     {
-        private readonly List<ModelValidationResult> _failures;
+        private readonly List<ValidationFailure> _failures;
         private static readonly Result _ok = new Result(true, string.Empty);
 
         protected Result(bool succeeded, string message) : this(succeeded, message,
-            Enumerable.Empty<ModelValidationResult>())
+            Enumerable.Empty<ValidationFailure>())
         {
             Succeeded = succeeded;
             Message = message;
         }
 
-        protected Result(bool succeeded, string message, IEnumerable<ModelValidationResult> failures)
+        protected Result(bool succeeded, string message, IEnumerable<ValidationFailure> failures)
         {
             Succeeded = succeeded;
             Message = message;
@@ -28,7 +28,7 @@ namespace DNTFrameworkCore.Functional
         public bool Succeeded { get; }
         public string Message { get; }
 
-        public IReadOnlyList<ModelValidationResult> Failures => _failures.AsReadOnly();
+        public IReadOnlyList<ValidationFailure> Failures => _failures.AsReadOnly();
 
         [DebuggerStepThrough]
         public static Result Ok()
@@ -43,7 +43,7 @@ namespace DNTFrameworkCore.Functional
         }
 
         [DebuggerStepThrough]
-        public static Result Failed(string message, IEnumerable<ModelValidationResult> failures)
+        public static Result Failed(string message, IEnumerable<ValidationFailure> failures)
         {
             return new Result(false, message, failures);
         }
@@ -55,7 +55,7 @@ namespace DNTFrameworkCore.Functional
         }
 
         [DebuggerStepThrough]
-        public static Result<T> Failed<T>(string message, IEnumerable<ModelValidationResult> failures)
+        public static Result<T> Failed<T>(string message, IEnumerable<ValidationFailure> failures)
         {
             return new Result<T>(default, false, message, failures);
         }
@@ -117,7 +117,7 @@ namespace DNTFrameworkCore.Functional
             _value = value;
         }
 
-        protected internal Result(T value, bool succeeded, string message, IEnumerable<ModelValidationResult> failures)
+        protected internal Result(T value, bool succeeded, string message, IEnumerable<ValidationFailure> failures)
             : base(succeeded, message, failures)
         {
             _value = value;

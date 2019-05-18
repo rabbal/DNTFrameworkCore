@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace DNTFrameworkCore.Functional
 {
     public static class MaybeExtensions
-    {
+    {      
         public static Result<T> ToResult<T>(this Maybe<T> maybe, string message)
             where T : class
         {

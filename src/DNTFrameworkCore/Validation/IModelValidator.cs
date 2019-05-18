@@ -11,9 +11,9 @@ namespace DNTFrameworkCore.Validation
         /// </summary>
         /// <param name="model">model to validate</param>
         /// <returns>
-        /// A list of <see cref="ModelValidationResult"/> indicating the results of validating the model value.
+        /// A list of <see cref="ValidationFailure"/> indicating the results of validating the model value.
         /// </returns>
-        IEnumerable<ModelValidationResult> Validate(TModel model);
+        IEnumerable<ValidationFailure> Validate(TModel model);
     }
 
     public interface IModelValidator
@@ -24,9 +24,9 @@ namespace DNTFrameworkCore.Validation
         /// </summary>
         /// <param name="model">model to validate</param>
         /// <returns>
-        /// A list of <see cref="ModelValidationResult"/> indicating the results of validating the model value.
+        /// A list of <see cref="ValidationFailure"/> indicating the results of validating the model value.
         /// </returns>
-        IEnumerable<ModelValidationResult> Validate(object model);
+        IEnumerable<ValidationFailure> Validate(object model);
 
         bool CanValidateInstancesOfType(Type type);
     }

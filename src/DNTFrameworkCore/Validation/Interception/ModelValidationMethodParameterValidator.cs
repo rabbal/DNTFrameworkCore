@@ -13,17 +13,17 @@ namespace DNTFrameworkCore.Validation.Interception
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
-        public IEnumerable<ModelValidationResult> Validate(object parameter)
+        public IEnumerable<ValidationFailure> Validate(object parameter)
         {
             if (parameter == null)
             {
-                return Enumerable.Empty<ModelValidationResult>();
+                return Enumerable.Empty<ValidationFailure>();
             }
 
             var validatorType = typeof(IModelValidator<>).MakeGenericType(parameter.GetType());
 
             if (!(_provider.GetService(validatorType) is IModelValidator validator))
-                return Enumerable.Empty<ModelValidationResult>();
+                return Enumerable.Empty<ValidationFailure>();
 
             var failures = validator.Validate(parameter);
 

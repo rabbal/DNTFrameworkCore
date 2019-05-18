@@ -16,7 +16,7 @@ namespace DNTFrameworkCore.Eventing
     {
         public abstract Task<Result> Handle(T @event);
         protected Result Faild(string message) => Result.Failed(message);
-        protected Result Faild(string message, IEnumerable<ModelValidationResult> failures) => Result.Failed(message, failures);
+        protected Result Faild(string message, IEnumerable<ValidationFailure> failures) => Result.Failed(message, failures);
         protected Result Ok() => Result.Ok();
     }
 }
