@@ -73,8 +73,7 @@ namespace DNTFrameworkCore.Functional
 
         public static Result Ensure(this Result result, Func<bool> predicate, string message)
         {
-            if (!result.Succeeded)
-                return result;
+            if (!result.Succeeded) return result;
 
             return !predicate() ? Result.Failed(message) : Result.Ok();
         }
@@ -175,7 +174,7 @@ namespace DNTFrameworkCore.Functional
         {
             var result = await resultTask.ConfigureAwait(false);
 
-            if (!result.Succeeded) Result.Failed<T>(result.Message, result.Failures);
+            if (!result.Succeeded) return Result.Failed<T>(result.Message, result.Failures);
 
             var value = await func().ConfigureAwait(false);
 
@@ -186,7 +185,7 @@ namespace DNTFrameworkCore.Functional
         {
             var result = await resultTask.ConfigureAwait(false);
 
-            if (!result.Succeeded) Result.Failed<TK>(result.Message, result.Failures);
+            if (!result.Succeeded) return Result.Failed<TK>(result.Message, result.Failures);
 
             return await func(result.Value).ConfigureAwait(false);
         }
@@ -195,7 +194,7 @@ namespace DNTFrameworkCore.Functional
         {
             var result = await resultTask.ConfigureAwait(false);
 
-            if (!result.Succeeded) Result.Failed<T>(result.Message, result.Failures);
+            if (!result.Succeeded) return Result.Failed<T>(result.Message, result.Failures);
 
             return await func().ConfigureAwait(false);
         }
@@ -204,7 +203,7 @@ namespace DNTFrameworkCore.Functional
         {
             var result = await resultTask.ConfigureAwait(false);
 
-            if (!result.Succeeded) Result.Failed<TK>(result.Message, result.Failures);
+            if (!result.Succeeded) return Result.Failed<TK>(result.Message, result.Failures);
 
             return await func().ConfigureAwait(false);
         }
@@ -213,7 +212,7 @@ namespace DNTFrameworkCore.Functional
         {
             var result = await resultTask.ConfigureAwait(false);
 
-            if (!result.Succeeded) Result.Failed(result.Message, result.Failures);
+            if (!result.Succeeded) return Result.Failed(result.Message, result.Failures);
 
             return await func(result.Value).ConfigureAwait(false);
         }
@@ -459,7 +458,7 @@ namespace DNTFrameworkCore.Functional
 
         public static async Task<Result<T>> OnSuccess<T>(this Result result, Func<Task<T>> func)
         {
-            if (!result.Succeeded) Result.Failed<T>(result.Message, result.Failures);
+            if (!result.Succeeded) return Result.Failed<T>(result.Message, result.Failures);
 
             var value = await func().ConfigureAwait(false);
 
@@ -468,28 +467,28 @@ namespace DNTFrameworkCore.Functional
 
         public static async Task<Result<TK>> OnSuccess<T, TK>(this Result<T> result, Func<T, Task<Result<TK>>> func)
         {
-            if (!result.Succeeded) Result.Failed<TK>(result.Message, result.Failures);
+            if (!result.Succeeded) return Result.Failed<TK>(result.Message, result.Failures);
 
             return await func(result.Value).ConfigureAwait(false);
         }
 
         public static async Task<Result<T>> OnSuccess<T>(this Result result, Func<Task<Result<T>>> func)
         {
-            if (!result.Succeeded) Result.Failed<T>(result.Message, result.Failures);
+            if (!result.Succeeded) return Result.Failed<T>(result.Message, result.Failures);
 
             return await func().ConfigureAwait(false);
         }
 
         public static async Task<Result<TK>> OnSuccess<T, TK>(this Result<T> result, Func<Task<Result<TK>>> func)
         {
-            if (!result.Succeeded) Result.Failed<TK>(result.Message, result.Failures);
+            if (!result.Succeeded) return Result.Failed<TK>(result.Message, result.Failures);
 
             return await func().ConfigureAwait(false);
         }
 
         public static async Task<Result> OnSuccess<T>(this Result<T> result, Func<T, Task<Result>> func)
         {
-            if (!result.Succeeded) Result.Failed(result.Message, result.Failures);
+            if (!result.Succeeded) return Result.Failed(result.Message, result.Failures);
 
             return await func(result.Value).ConfigureAwait(false);
         }
@@ -546,4 +545,5 @@ namespace DNTFrameworkCore.Functional
             return result;
         }
     }
+
 }
