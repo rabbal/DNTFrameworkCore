@@ -8,13 +8,13 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
 {
     public static class UnitOfWorkExtensions
     {
-        public static void ApplyChanges(this IUnitOfWork uow, IEnumerable<ITrackedEntity> roots)
+        public static void ApplyChanges(this IUnitOfWork uow, IEnumerable<IHasTrackingState> roots)
         {
             foreach (var root in roots)
                 uow.ApplyChanges(root);
         }
 
-        public static void AcceptChanges(this IUnitOfWork uow, IEnumerable<ITrackedEntity> roots)
+        public static void AcceptChanges(this IUnitOfWork uow, IEnumerable<IHasTrackingState> roots)
         {
             foreach (var root in roots)
                 uow.AcceptChanges(root);

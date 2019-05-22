@@ -1,6 +1,5 @@
 using System.Linq;
 using AutoMapper;
-using MediatR;
 using Castle.DynamicProxy;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.Dependency;

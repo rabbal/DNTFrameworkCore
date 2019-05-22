@@ -36,6 +36,8 @@ namespace DNTFrameworkCore.Web.Runtime
 
         public string UserName => _context?.HttpContext?.User?.Identity.Name;
 
+        public long? BranchId => _context?.HttpContext?.User?.Identity.GetBranchId();
+
         public long? TenantId => UserId.HasValue
             ? _context?.HttpContext?.User?.Identity.GetTenantId()
             : _tenant.Value?.Id;

@@ -1,5 +1,3 @@
-using System;
-
 namespace DNTFrameworkCore.TestWebApp.Authentication
 {
     public class SignInResult

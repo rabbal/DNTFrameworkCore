@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("DNTFrameworkCore.EntityFramework.DataProtection.DataProtectionKey", b =>
+            modelBuilder.Entity("DNTFrameworkCore.EntityFramework.Protection.DataProtectionKey", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()

@@ -1,5 +1,4 @@
 using System;
-using DNTFrameworkCore.Domain.Entities;
 using DNTFrameworkCore.Domain.Entities.Tracking;
 using DNTFrameworkCore.EntityFramework.Context.Hooks;
 using Microsoft.EntityFrameworkCore;

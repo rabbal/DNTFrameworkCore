@@ -1,5 +1,4 @@
-﻿using System;
-using DNTFrameworkCore.EntityFramework;
+﻿using DNTFrameworkCore.EntityFramework;
 using DNTFrameworkCore.FluentValidation;
 using DNTFrameworkCore.TestAPI.Application;
 using DNTFrameworkCore.TestAPI.Hubs;
@@ -7,11 +6,7 @@ using DNTFrameworkCore.TestAPI.Infrastructure;
 using DNTFrameworkCore.TestAPI.Infrastructure.Context;
 using DNTFrameworkCore.TestAPI.Resources;
 using DNTFrameworkCore.Web;
-using EFSecondLevelCache.Core;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -37,7 +32,6 @@ namespace DNTFrameworkCore.TestAPI
             services.AddDNTFramework()
                 .AddModelValidation()
                 .AddFluentModelValidation()
-                .AddAuditing()
                 .AddTransaction(options =>
                 {
                     // options.Timeout=TimeSpan.FromMinutes(3);

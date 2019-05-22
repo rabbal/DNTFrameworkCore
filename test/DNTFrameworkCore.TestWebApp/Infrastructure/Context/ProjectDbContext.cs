@@ -1,8 +1,7 @@
 using System.Linq;
-using DNTFrameworkCore.EntityFramework.Auditing;
 using DNTFrameworkCore.EntityFramework.Caching;
 using DNTFrameworkCore.EntityFramework.Context;
-using DNTFrameworkCore.EntityFramework.DataProtection;
+using DNTFrameworkCore.EntityFramework.Protection;
 using DNTFrameworkCore.EntityFramework.Logging;
 using DNTFrameworkCore.EntityFramework.SqlServer.Numbering;
 using DNTFrameworkCore.Runtime;
@@ -42,9 +41,8 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Context
             modelBuilder.ApplyConfiguration(new InvoiceItemConfiguration());
             modelBuilder.ApplyLogConfiguration();
             modelBuilder.ApplyNumberedEntityConfiguration();
-            modelBuilder.ApplyDataProtectionKeyConfiguration();
+            modelBuilder.ApplyProtectionKeyConfiguration();
             modelBuilder.ApplySqlCacheConfiguration();
-            modelBuilder.ApplyAuditLogConfiguration();
 
             base.OnModelCreating(modelBuilder);
         }

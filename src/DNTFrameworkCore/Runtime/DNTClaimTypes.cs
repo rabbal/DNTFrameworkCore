@@ -12,6 +12,7 @@ namespace DNTFrameworkCore.Runtime
         public const string DisplayName = "https://www.DNTFramework.com/identity/claims/displayName";
         public const string UserData = ClaimTypes.UserData;
         public const string Role = ClaimTypes.Role;
+        public const string BranchId = "https://www.DNTFramework.com/identity/claims/branchId";
         public const string TenantId = "https://www.DNTFramework.com/identity/claims/tenantId";
         public const string Permission = "https://www.DNTFramework.com/identity/claims/permission";
         public const string ImpersonatorUserId = "https://www.DNTFramework.com/identity/claims/impersonatorUserId";

@@ -32,6 +32,14 @@ namespace DNTFrameworkCore.Extensions
             return userId;
         }
 
+        public static long? GetBranchId(this IIdentity identity)
+        {
+            var branchClaim = identity?.FindUserClaimValue(DNTClaimTypes.BranchId);
+
+            if (branchClaim.IsEmpty()) return default;
+
+            return !long.TryParse(branchClaim, out var branchId) ? default : branchId;
+        }
         public static long? GetTenantId(this IIdentity identity)
         {
             var tenantClaim = identity?.FindUserClaimValue(DNTClaimTypes.TenantId);

@@ -7,14 +7,14 @@ using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Dependency;
 using Microsoft.EntityFrameworkCore;
 
-namespace DNTFrameworkCore.EntityFramework.DataProtection
+namespace DNTFrameworkCore.EntityFramework.Protection
 {
-    public class DataProtectionRepository<TContext> : IDataProtectionRepository
+    public class ProtectionRepository<TContext> : IProtectionRepository
         where TContext : DbContext
     {
         private readonly IServiceProvider _provider;
 
-        public DataProtectionRepository(IServiceProvider provider)
+        public ProtectionRepository(IServiceProvider provider)
         {
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
@@ -23,7 +23,7 @@ namespace DNTFrameworkCore.EntityFramework.DataProtection
         {
             return _provider.RunScoped<ReadOnlyCollection<XElement>, TContext>(context =>
             {
-                var dataProtectionKeys = context.Set<DataProtectionKey>();
+                var dataProtectionKeys = context.Set<ProtectionKey>();
                 return new ReadOnlyCollection<XElement>(dataProtectionKeys.Select(k => XElement.Parse(k.XmlValue))
                     .ToList());
             });
@@ -35,7 +35,7 @@ namespace DNTFrameworkCore.EntityFramework.DataProtection
             // without using the current request's context and changing its internal state.
             _provider.RunScoped<TContext>(context =>
             {
-                var dataProtectionKeys = context.Set<DataProtectionKey>();
+                var dataProtectionKeys = context.Set<ProtectionKey>();
                 var entity = dataProtectionKeys.SingleOrDefault(k => k.FriendlyName == friendlyName);
                 if (null != entity)
                 {
@@ -44,7 +44,7 @@ namespace DNTFrameworkCore.EntityFramework.DataProtection
                 }
                 else
                 {
-                    dataProtectionKeys.Add(new DataProtectionKey
+                    dataProtectionKeys.Add(new ProtectionKey
                     {
                         FriendlyName = friendlyName,
                         XmlValue = element.ToString()

@@ -1,5 +1,3 @@
-using DNTFrameworkCore.TestWebApp.Application.Catalog;
-using DNTFrameworkCore.TestWebApp.Application.Catalog.Models;
 using DNTFrameworkCore.TestWebApp.Application.Invoices;
 using DNTFrameworkCore.TestWebApp.Application.Invoices.Models;
 using DNTFrameworkCore.TestWebApp.Authorization;

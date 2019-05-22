@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using DNTFrameworkCore.Runtime;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace DNTFrameworkCore.Web.Mvc.TagHelpers.Authorization

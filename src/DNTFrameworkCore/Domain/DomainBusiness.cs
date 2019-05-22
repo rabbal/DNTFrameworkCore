@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DNTFrameworkCore.Domain.Services
 {
-    public abstract class DomainService : IDomainService
+    public abstract class DomainBusiness : IDomainBusiness
     {
         protected static Result Ok() => Result.Ok();
         protected static Result Failed(string message) => Result.Failed(message);

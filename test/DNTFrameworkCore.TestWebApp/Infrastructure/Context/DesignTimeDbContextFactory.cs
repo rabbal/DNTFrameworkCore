@@ -77,6 +77,8 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Context
 
             public IReadOnlyList<string> Roles => throw new NotImplementedException();
 
+            public long? BranchId => null;
+
             public IDisposable Use(long? tenantId, long? userId)
             {
                 throw new NotImplementedException();

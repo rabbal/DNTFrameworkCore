@@ -33,11 +33,21 @@ namespace DNTFrameworkCore.EntityFramework.Context
             DbContextOptions options) : base(options)
         {
             _hookEngine = hookEngine ?? throw new ArgumentNullException(nameof(hookEngine));
-            TenantId = (session ?? throw new ArgumentNullException(nameof(session))).TenantId ?? 0;
+            session = session ?? throw new ArgumentNullException(nameof(session));
+
+            TenantId = session.TenantId ?? 0;
+            BranchId = session.BranchId ?? 0;
         }
 
+        public bool DeleteFilterEnabled { get; set; } = true;
+        public bool TenantFilterEnabled { get; set; } = true;
+        public bool BranchFilterEnabled { get; set; } = true;
+        public long TenantId { get; private set; }
+        public long BranchId { get; private set; }
         public DbTransaction Transaction => Database.CurrentTransaction?.GetDbTransaction();
         public DbConnection Connection => Database.GetDbConnection();
+        public bool HasActiveTransaction => Database.CurrentTransaction != null;
+        public IDbContextTransaction CurrentTransaction => Database.CurrentTransaction;
 
         public IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
@@ -60,9 +70,6 @@ namespace DNTFrameworkCore.EntityFramework.Context
             Connection.ConnectionString = connectionString;
         }
 
-        public bool DeleteFilterEnabled { get; set; } = true;
-        public bool TenantFilterEnabled { get; set; } = true;
-
         public IDisposable UseTenantId(long tenantId)
         {
             var oldTenantId = TenantId;
@@ -70,8 +77,6 @@ namespace DNTFrameworkCore.EntityFramework.Context
 
             return new DisposeAction(() => { TenantId = oldTenantId; });
         }
-
-        public long TenantId { get; private set; }
 
         public void AddRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : class
         {
@@ -88,11 +93,11 @@ namespace DNTFrameworkCore.EntityFramework.Context
             base.RemoveRange(entities);
         }
 
-        public void ApplyChanges(ITrackedEntity root)
+        public void ApplyChanges(IHasTrackingState root)
         {
             ChangeTracker.TrackGraph(root, node =>
             {
-                if (!(node.Entry.Entity is ITrackedEntity haveTrackingState)) return;
+                if (!(node.Entry.Entity is IHasTrackingState haveTrackingState)) return;
 
                 node.Entry.State = EntityState.Detached;
 
@@ -124,7 +129,7 @@ namespace DNTFrameworkCore.EntityFramework.Context
                                 return;
                             }
 
-                            var parent = node.SourceEntry.Entity as ITrackedEntity;
+                            var parent = node.SourceEntry.Entity as IHasTrackingState;
                             if (node.SourceEntry.State == EntityState.Deleted
                                 || parent?.TrackingState == TrackingState.Deleted)
                             {
@@ -161,11 +166,11 @@ namespace DNTFrameworkCore.EntityFramework.Context
             });
         }
 
-        public void AcceptChanges(ITrackedEntity root)
+        public void AcceptChanges(IHasTrackingState root)
         {
             this.TraverseGraph(root, n =>
             {
-                if (!(n.Entry.Entity is ITrackedEntity haveTrackingState)) return;
+                if (!(n.Entry.Entity is IHasTrackingState haveTrackingState)) return;
 
                 if (haveTrackingState.TrackingState != TrackingState.Unchanged)
                     haveTrackingState.TrackingState = TrackingState.Unchanged;
@@ -224,7 +229,7 @@ namespace DNTFrameworkCore.EntityFramework.Context
             return result;
         }
 
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             BeforeSaveChanges();
 
@@ -307,7 +312,8 @@ namespace DNTFrameworkCore.EntityFramework.Context
         private static bool ShouldFilterEntity<TEntity>() where TEntity : class
         {
             return typeof(ISoftDeleteEntity).IsAssignableFrom(typeof(TEntity)) ||
-                   typeof(ITenantEntity).IsAssignableFrom(typeof(TEntity));
+                   typeof(ITenantEntity).IsAssignableFrom(typeof(TEntity)) ||
+                   typeof(IBranchedEntity).IsAssignableFrom(typeof(TEntity));
         }
 
         private Expression<Func<TEntity, bool>> BuildFilterExpression<TEntity>()
@@ -323,14 +329,24 @@ namespace DNTFrameworkCore.EntityFramework.Context
                 expression = deleteFilterExpression;
             }
 
-            if (!typeof(ITenantEntity).IsAssignableFrom(typeof(TEntity))) return expression;
+            if (typeof(ITenantEntity).IsAssignableFrom(typeof(TEntity)))
+            {
+                Expression<Func<TEntity, bool>> tenantFilterExpression = e =>
+                              !TenantFilterEnabled || ((ITenantEntity)e).TenantId == TenantId;
 
-            Expression<Func<TEntity, bool>> tenantFilterExpression = e =>
-                !TenantFilterEnabled || ((ITenantEntity)e).TenantId == TenantId;
+                expression = expression == null
+                    ? tenantFilterExpression
+                    : expression.Combine(tenantFilterExpression);
+            }
+
+            if (!typeof(IBranchedEntity).IsAssignableFrom(typeof(TEntity))) return expression;
+
+            Expression<Func<TEntity, bool>> branchFilterExpression = e =>
+                !BranchFilterEnabled || ((IBranchedEntity)e).BranchId == BranchId;
 
             expression = expression == null
-                ? tenantFilterExpression
-                : expression.Combine(tenantFilterExpression);
+                ? branchFilterExpression
+                : expression.Combine(branchFilterExpression);
 
             return expression;
         }

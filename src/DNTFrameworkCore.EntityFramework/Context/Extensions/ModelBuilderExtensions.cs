@@ -48,32 +48,19 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
 
             foreach (var entityType in builder.Model
                 .GetEntityTypes()
-                .Where(e => typeof(IDeletionTracking).IsAssignableFrom(e.ClrType)))
+                .Where(e => typeof(IHasRowVersion).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
-                    .Property(nameof(IDeletionTracking.DeleterBrowserName))
-                    .HasMaxLength(1024);
-
-                builder.Entity(entityType.ClrType)
-                    .Property(nameof(IDeletionTracking.DeleterIp))
-                    .HasMaxLength(256);
-            }
-
-            foreach (var entityType in builder.Model
-                .GetEntityTypes()
-                .Where(e => typeof(IHaveRowVersion).IsAssignableFrom(e.ClrType)))
-            {
-                builder.Entity(entityType.ClrType)
-                    .Property(nameof(IHaveRowVersion.RowVersion))
+                    .Property(nameof(IHasRowVersion.RowVersion))
                     .IsRowVersion();
             }
 
             foreach (var entityType in builder.Model
                 .GetEntityTypes()
-                .Where(e => typeof(IHaveRowLevelSecurity).IsAssignableFrom(e.ClrType)))
+                .Where(e => typeof(IHasRowLevelSecurity).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
-                    .Property(nameof(IHaveRowLevelSecurity.UserId))
+                    .Property(nameof(IHasRowLevelSecurity.UserId))
                     .Metadata.AfterSaveBehavior = PropertySaveBehavior.Ignore;
             }
 

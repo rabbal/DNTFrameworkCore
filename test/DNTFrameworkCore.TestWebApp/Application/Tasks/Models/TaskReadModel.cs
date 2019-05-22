@@ -3,7 +3,7 @@ using DNTFrameworkCore.TestWebApp.Domain.Tasks;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Tasks.Models
 {
-    public class TaskReadModel : Model
+    public class TaskReadModel : ReadModel
     {
         public string Title { get; set; }
         public string Number { get; set; }

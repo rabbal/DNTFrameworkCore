@@ -1,12 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using DNTFrameworkCore.TestWebApp.Application.Identity;
 using DNTFrameworkCore.TestWebApp.Authentication;
 using DNTFrameworkCore.TestWebApp.Models;
 using DNTFrameworkCore.Web.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.TestWebApp.Controllers
 {

@@ -5,7 +5,7 @@ using DNTFrameworkCore.Runtime;
 
 namespace DNTFrameworkCore.EntityFramework.Context.Internal
 {
-    internal class RowLevelSecurityPreInsertHook : PreInsertHook<IHaveRowLevelSecurity>
+    internal class RowLevelSecurityPreInsertHook : PreInsertHook<IHasRowLevelSecurity>
     {
         private readonly IUserSession _session;
 
@@ -14,7 +14,7 @@ namespace DNTFrameworkCore.EntityFramework.Context.Internal
             _session = session ?? throw new ArgumentNullException(nameof(session));
         }
 
-        protected override void Hook(IHaveRowLevelSecurity entity, HookEntityMetadata metadata)
+        protected override void Hook(IHasRowLevelSecurity entity, HookEntityMetadata metadata)
         {
             if (_session.UserId.HasValue) entity.UserId = _session.UserId.Value;
         }

@@ -1,8 +1,8 @@
 ﻿using DNTFrameworkCore.Domain.Entities;
 
-namespace DNTFrameworkCore.EntityFramework.DataProtection
+namespace DNTFrameworkCore.EntityFramework.Protection
 {
-    public class DataProtectionKey : Entity<long>
+    public class ProtectionKey : Entity<long>
     {
         public string FriendlyName { get; set; }
         public string XmlValue { get; set; }

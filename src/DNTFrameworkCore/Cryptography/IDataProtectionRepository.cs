@@ -4,7 +4,7 @@ using DNTFrameworkCore.Dependency;
 
 namespace DNTFrameworkCore.Cryptography
 {
-    public interface IDataProtectionRepository : ISingletonDependency
+    public interface IProtectionRepository : ISingletonDependency
     {
         /// <summary>Gets all top-level XML elements in the repository.</summary>
         /// <remarks>All top-level elements in the repository.</remarks>

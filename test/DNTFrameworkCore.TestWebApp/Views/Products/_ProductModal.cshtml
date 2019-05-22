@@ -2,7 +2,7 @@
 <div class="modal-header">
    
     <h4 class="modal-title">
-        @if(Model.IsNew)
+        @if(Model.IsNew())
         {
             @:Create New Product
         }
@@ -15,7 +15,7 @@
 <div class="modal-body">
  @Html.ValidationSummary(true,null,new{@class="alert alert-danger"})
 
-<form asp-action="@(Model.IsNew ? "Create" : "Edit")" asp-controller="Products" modal-form="product-modal">
+<form asp-action="@(Model.IsNew() ? "Create" : "Edit")" asp-controller="Products" modal-form="product-modal">
   <input type="hidden" name="save-continue" value="true" />
   <input asp-for="RowVersion" type="hidden"/>
   <input asp-for="Id" type="hidden"/>
@@ -31,7 +31,7 @@
       <div class="col col-md-6">
         <div class="form-group">
             <label asp-for="Number" class="col-form-label text-md-left"></label>
-            <input asp-for="Number" readonly="@(!Model.IsNew)" autocomplete="off" class="form-control" />
+            <input asp-for="Number" readonly="@(!Model.IsNew())" autocomplete="off" class="form-control" />
             <span asp-validation-for="Number" class="text-danger"></span>
         </div>
       </div>
@@ -53,10 +53,10 @@
 
 <div class="modal-footer" id="product-modal-options">
 
-    <button type="button" class="btn btn-light btn-circle" condition="!@Model.IsNew" title="Delete Product">
+    <button type="button" class="btn btn-light btn-circle" condition="!@Model.IsNew()" title="Delete Product">
         <i class="fa fa-trash text-danger"></i>
     </button>
-    <a href="#" class="btn btn-light btn-circle" condition="!@Model.IsNew" title="Refresh Product"
+    <a href="#" class="btn btn-light btn-circle" condition="!@Model.IsNew()" title="Refresh Product"
     modal-reload-link="@Url.Action("Edit","Products",new{id=Model.Id})">
         <i class="fa fa-repeat"></i>
     </a>

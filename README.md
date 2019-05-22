@@ -56,10 +56,10 @@ For more info about templates you can watch [DNTFrameworkCoreTemplate repository
 * CrudService 
 * CrudController
 * DbLogger Provider
-* Auditing
 * DataProtectionKeys DbRepository 
 * Hooks
 * SoftDelete
+* Branching
 * MultiTenancy
 * Tracking mechanism (CreatorUserId,CreationDateTime,LastModifierUserId,...)
 * FluentValidation Integration
@@ -231,6 +231,5 @@ public class BlogsController : CrudController<IBlogService, int, BlogModel>
 
 ## ASP.NET Boilerplate
 A small part of this project like the following sections are taken from [ABP](https://github.com/aspnetboilerplate/aspnetboilerplate)
-- Auditing
 - Validation with refactoring to support functional programming error handling mechanism
 - EntityTracking Interfaces

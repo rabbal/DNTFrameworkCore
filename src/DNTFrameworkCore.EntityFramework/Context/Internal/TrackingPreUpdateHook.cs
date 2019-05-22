@@ -12,7 +12,7 @@ namespace DNTFrameworkCore.EntityFramework.Context.Internal
         private readonly IUserSession _session;
         private readonly IDateTime _dateTime;
 
-        public TrackingPreUpdateHook(IUserSession session,IDateTime dateTime)
+        public TrackingPreUpdateHook(IUserSession session, IDateTime dateTime)
         {
             _session = session ?? throw new ArgumentNullException(nameof(session));
             _dateTime = dateTime ?? throw new ArgumentNullException(nameof(dateTime));
@@ -26,7 +26,7 @@ namespace DNTFrameworkCore.EntityFramework.Context.Internal
             }
 
             if (!(entity is IModificationTracking modificationTrackingEntity)) return;
-            
+
             modificationTrackingEntity.LastModifierUserId = _session.UserId;
             modificationTrackingEntity.LastModifierIp = _session.UserIP;
             modificationTrackingEntity.LastModifierBrowserName = _session.UserBrowserName;

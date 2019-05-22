@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using DNTFrameworkCore.Domain.Entities;
 using DNTFrameworkCore.EntityFramework.Context;
-using DNTFrameworkCore.EntityFramework.Context.Extensions;
 using DNTFrameworkCore.EntityFramework.Context.Hooks;
 using DNTFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;

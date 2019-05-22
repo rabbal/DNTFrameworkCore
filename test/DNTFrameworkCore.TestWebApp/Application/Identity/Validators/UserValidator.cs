@@ -52,7 +52,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity.Validators
 
             RuleFor(m => m.Password).NotEmpty()
                 .WithMessage(localizer["User.Fields.Password.Required"])
-                .When(m => m.IsNew, ApplyConditionTo.CurrentValidator)
+                .When(m => m.IsNew(), ApplyConditionTo.CurrentValidator)
                 .MinimumLength(6)
                 .WithMessage(localizer["User.Fields.Password.MinimumLength"])
                 .MaximumLength(User.MaxPasswordLength)
@@ -60,7 +60,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity.Validators
 
             RuleFor(m => m).Must(model => !CheckDuplicateRoles(model))
                 .WithMessage(localizer["User.Fields.Roles.Unique"])
-                .When(m => m.Roles != null && m.Roles.Any(r => !r.IsDeleted));
+                .When(m => m.Roles != null && m.Roles.Any(r => !r.IsDeleted()));
         }
 
         private bool CheckDuplicateUserName(string userName, long id)
@@ -77,7 +77,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity.Validators
 
         private bool CheckDuplicateRoles(UserModel model)
         {
-            var roles = model.Roles.Where(a => !a.IsDeleted);
+            var roles = model.Roles.Where(a => !a.IsDeleted());
             return roles.GroupBy(r => r.RoleId).Any(r => r.Count() > 1);
         }
     }

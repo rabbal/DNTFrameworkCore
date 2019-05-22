@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using DNTFrameworkCore.Cqrs.Commands;
 using DNTFrameworkCore.Functional;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.Cqrs.Behaviors
 {

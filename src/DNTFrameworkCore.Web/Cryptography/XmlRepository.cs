@@ -8,9 +8,9 @@ namespace DNTFrameworkCore.Web.Cryptography
 {
     internal class XmlRepository : IXmlRepository
     {
-        private readonly IDataProtectionRepository _repository;
+        private readonly IProtectionRepository _repository;
 
-        public XmlRepository(IDataProtectionRepository repository)
+        public XmlRepository(IProtectionRepository repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }

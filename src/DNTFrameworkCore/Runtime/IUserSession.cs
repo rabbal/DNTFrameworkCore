@@ -27,6 +27,12 @@ namespace DNTFrameworkCore.Runtime
         string UserName { get; }
 
         /// <summary>
+        /// Gets current User's BranchId or null.
+        /// It can be null if no user logged in.
+        /// </summary>
+        long? BranchId { get; }
+
+        /// <summary>
         /// Gets current user's Permissions
         /// It can be null if no user logged in.
         /// </summary>

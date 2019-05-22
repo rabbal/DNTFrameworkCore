@@ -22,8 +22,8 @@ namespace DNTFrameworkCore.EntityFramework.Context
         void UpdateRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : class;
         void RemoveRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : class;
 
-        void ApplyChanges(ITrackedEntity root);
-        void AcceptChanges(ITrackedEntity root);
+        void ApplyChanges(IHasTrackingState root);
+        void AcceptChanges(IHasTrackingState root);
 
         int ExecuteSqlCommand(string query);
         int ExecuteSqlCommand(string query, params object[] parameters);
@@ -31,10 +31,12 @@ namespace DNTFrameworkCore.EntityFramework.Context
         Task<int> ExecuteSqlCommandAsync(string query, params object[] parameters);
 
         int SaveChanges();
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken());
 
         DbTransaction Transaction { get; }
         DbConnection Connection { get; }
+        bool HasActiveTransaction { get; }
+        IDbContextTransaction CurrentTransaction { get; }
         IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
         Task<IDbContextTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
         void UseTransaction(DbTransaction transaction);
@@ -42,7 +44,9 @@ namespace DNTFrameworkCore.EntityFramework.Context
 
         bool DeleteFilterEnabled { get; set; }
         bool TenantFilterEnabled { get; set; }
+        bool BranchFilterEnabled { get; set; }
         IDisposable UseTenantId(long tenantId);
         long TenantId { get; }
+        long BranchId { get; }
     }
 }

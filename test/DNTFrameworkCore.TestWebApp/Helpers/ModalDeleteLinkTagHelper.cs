@@ -1,8 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using DNTFrameworkCore.TestWebApp.Models;
+﻿using DNTFrameworkCore.TestWebApp.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace DNTFrameworkCore.TestWebApp.Helpers

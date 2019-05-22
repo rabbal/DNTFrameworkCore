@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DNTFrameworkCore.Domain.Entities;
 
 namespace DNTFrameworkCore.Application.Models
@@ -7,8 +8,9 @@ namespace DNTFrameworkCore.Application.Models
     {
     }
 
-    public abstract class MasterModel<TKey> : Model<TKey>, IHaveRowVersion where TKey : IEquatable<TKey>
+    public abstract class MasterModel<TKey> : ReadModel<TKey>, IHasRowVersion where TKey : IEquatable<TKey>
     {
         public byte[] RowVersion { get; set; }
+        public virtual bool IsNew() => EqualityComparer<TKey>.Default.Equals(Id, default);
     }
 }

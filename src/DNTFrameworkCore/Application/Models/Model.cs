@@ -1,6 +1,6 @@
+using DNTFrameworkCore.Domain.Entities;
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace DNTFrameworkCore.Application.Models
 {
@@ -8,11 +8,13 @@ namespace DNTFrameworkCore.Application.Models
     {
     }
 
-    public abstract class Model<TKey> where TKey : IEquatable<TKey>
+    public abstract class Model<TKey> : IHasTrackingState where TKey : IEquatable<TKey>
     {
         public TKey Id { get; set; }
-
-        //Todo:[JsonIgnore] public Guid TrackingId { get; set; }
-        [JsonIgnore] public virtual bool IsNew => EqualityComparer<TKey>.Default.Equals(Id, default);
+        public TrackingState TrackingState { get; set; }
+        public virtual bool IsNew() => EqualityComparer<TKey>.Default.Equals(Id, default) && TrackingState == TrackingState.Added;
+        public bool IsModified() => !IsNew() && TrackingState == TrackingState.Modified;
+        public bool IsUnchanged() => !IsNew() && TrackingState == TrackingState.Unchanged;
+        public bool IsDeleted() => !IsNew() && TrackingState == TrackingState.Deleted;
     }
 }

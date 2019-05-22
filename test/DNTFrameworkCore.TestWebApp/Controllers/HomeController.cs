@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using DNTFrameworkCore.TestWebApp.Application.Blogging;
-using DNTFrameworkCore.TestWebApp.Application.Blogging.Models;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using DNTFrameworkCore.TestWebApp.Models;
 using Microsoft.AspNetCore.Authorization;

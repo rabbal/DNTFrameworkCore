@@ -21,6 +21,8 @@ namespace DNTFrameworkCore.Runtime
         public long? ImpersonatorUserId => null;
         public long? ImpersonatorTenantId => null;
 
+        public long? BranchId => null;
+
         public IDisposable Use(long? tenantId, long? userId)
         {
             return new DisposeAction(() => { });

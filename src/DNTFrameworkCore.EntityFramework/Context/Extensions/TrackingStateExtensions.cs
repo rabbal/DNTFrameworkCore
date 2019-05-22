@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 namespace DNTFrameworkCore.EntityFramework.Context.Extensions
 {
     /// <summary>
-    /// Extension methods for classes implementing <see cref="ITrackedEntity"/>.
+    /// Extension methods for classes implementing <see cref="IHasTrackingState"/>.
     /// </summary>
     public static class TrackingStateExtensions
     {
         /// <summary>
         /// Convert TrackingState to EntityState.
         /// </summary>
-        /// <param name="state">IHaveTrackingState entity state</param>
+        /// <param name="state">IHasTrackingState entity state</param>
         /// <returns>EF entity state</returns>
         public static EntityState ToEntityState(this TrackingState state)
         {
@@ -38,7 +38,7 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
         /// Convert EntityState to TrackingState.
         /// </summary>
         /// <param name="state">EF entity state</param>
-        /// <returns>IHaveTrackingState entity state</returns>
+        /// <returns>IHasTrackingState entity state</returns>
         public static TrackingState ToTrackingState(this EntityState state)
         {
             switch (state)

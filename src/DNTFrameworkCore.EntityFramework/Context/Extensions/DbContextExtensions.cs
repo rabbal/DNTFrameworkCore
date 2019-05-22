@@ -116,8 +116,8 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
         /// Set entity state to Detached for entities in more than one object graph.
         /// </summary>
         /// <param name="context">Used to query and save changes to a database</param>
-        /// <param name="items">Objects that implement IHaveTrackingState</param>
-        public static void DetachEntities(this DbContext context, IEnumerable<ITrackedEntity> items)
+        /// <param name="items">Objects that implement IHasTrackingState</param>
+        public static void DetachEntities(this DbContext context, IEnumerable<IHasTrackingState> items)
         {
             foreach (var item in items)
                 context.DetachEntities(item);
@@ -127,8 +127,8 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
         /// Set entity state to Detached for entities in an object graph.
         /// </summary>
         /// <param name="context">Used to query and save changes to a database</param>
-        /// <param name="item">Object that implements IHaveTrackingState</param>
-        public static void DetachEntities(this DbContext context, ITrackedEntity item)
+        /// <param name="item">Object that implements IHasTrackingState</param>
+        public static void DetachEntities(this DbContext context, IHasTrackingState item)
         {
             context.TraverseGraph(item, n => n.Entry.State = EntityState.Detached);
         }
@@ -137,8 +137,8 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
         /// Traverse an object graph to populate null reference properties.
         /// </summary>
         /// <param name="context">Used to query and save changes to a database</param>
-        /// <param name="item">Object that implements IHaveTrackingState</param>
-        public static void LoadRelatedEntities(this DbContext context, ITrackedEntity item)
+        /// <param name="item">Object that implements IHasTrackingState</param>
+        public static void LoadRelatedEntities(this DbContext context, IHasTrackingState item)
         {
             context.TraverseGraph(item, n =>
             {
@@ -156,8 +156,8 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
         /// Traverse more than one object graph to populate null reference properties.
         /// </summary>
         /// <param name="context">Used to query and save changes to a database</param>
-        /// <param name="items">Objects that implement IHaveTrackingState</param>
-        public static void LoadRelatedEntities(this DbContext context, IEnumerable<ITrackedEntity> items)
+        /// <param name="items">Objects that implement IHasTrackingState</param>
+        public static void LoadRelatedEntities(this DbContext context, IEnumerable<IHasTrackingState> items)
         {
             foreach (var item in items)
                 context.LoadRelatedEntities(item);
@@ -167,8 +167,8 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
         /// Traverse an object graph asynchronously to populate null reference properties.
         /// </summary>
         /// <param name="context">Used to query and save changes to a database</param>
-        /// <param name="item">Object that implements IHaveTrackingState</param>
-        public static async Task LoadRelatedEntitiesAsync(this DbContext context, ITrackedEntity item)
+        /// <param name="item">Object that implements IHasTrackingState</param>
+        public static async Task LoadRelatedEntitiesAsync(this DbContext context, IHasTrackingState item)
         {
             await context.TraverseGraphAsync(item, async n =>
             {
@@ -186,8 +186,8 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
         /// Traverse more than one object graph asynchronously to populate null reference properties.
         /// </summary>
         /// <param name="context">Used to query and save changes to a database</param>
-        /// <param name="items">Objects that implement IHaveTrackingState</param>
-        public static async Task LoadRelatedEntitiesAsync(this DbContext context, IEnumerable<ITrackedEntity> items)
+        /// <param name="items">Objects that implement IHasTrackingState</param>
+        public static async Task LoadRelatedEntitiesAsync(this DbContext context, IEnumerable<IHasTrackingState> items)
         {
             foreach (var item in items)
                 await context.LoadRelatedEntitiesAsync(item);
@@ -197,7 +197,7 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
         /// Traverse an object graph executing a callback on each node.
         /// </summary>
         /// <param name="context">Used to query and save changes to a database</param>
-        /// <param name="item">Object that implements IHaveTrackingState</param>
+        /// <param name="item">Object that implements IHasTrackingState</param>
         /// <param name="callback">Callback executed on each node in the object graph</param>
         public static void TraverseGraph(this DbContext context, object item,
             Action<EntityEntryGraphNode> callback)
@@ -228,7 +228,7 @@ namespace DNTFrameworkCore.EntityFramework.Context.Extensions
         /// Traverse an object graph asynchronously executing a callback on each node.
         /// </summary>
         /// <param name="context">Used to query and save changes to a database</param>
-        /// <param name="item">Object that implements IHaveTrackingState</param>
+        /// <param name="item">Object that implements IHasTrackingState</param>
         /// <param name="callback">Async callback executed on each node in the object graph</param>
         private static async Task TraverseGraphAsync(this DbContext context, object item,
             Func<EntityEntryGraphNode, Task> callback)

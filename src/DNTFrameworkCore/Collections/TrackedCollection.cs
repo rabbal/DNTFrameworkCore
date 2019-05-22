@@ -8,13 +8,13 @@ namespace DNTFrameworkCore.Collections
     public static class TrackedCollectionExtensions
     {
         public static TrackedCollection<T> AsTrackedCollection<T>(this IEnumerable<T> items)
-            where T : ITrackedEntity
+            where T : IHasTrackingState
         {
             return new TrackedCollection<T>(items);
         }
     }
 
-    public class TrackedCollection<T> : Collection<T> where T : ITrackedEntity
+    public class TrackedCollection<T> : Collection<T> where T : IHasTrackingState
     {
         private readonly IEnumerable<T> _items;
 

@@ -7,7 +7,7 @@ namespace DNTFrameworkCore.Domain.Services
     /// The interface is defined in terms of other elements of the domain model.
     /// The operation is stateless.
     /// </summary>
-    public interface IDomainService : ITransientDependency
+    public interface IDomainBusiness : ITransientDependency
     {
     }
 }

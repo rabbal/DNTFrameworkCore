@@ -1,10 +1,8 @@
 using System;
 using System.Net;
-using System.Text;
 using DNTFrameworkCore.Web.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Newtonsoft.Json;
 
 namespace DNTFrameworkCore.Web.Filters
 {

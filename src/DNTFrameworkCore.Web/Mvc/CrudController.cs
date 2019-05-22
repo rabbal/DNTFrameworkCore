@@ -65,7 +65,7 @@ namespace DNTFrameworkCore.Web.Mvc
         CrudController<TCrudService, TKey, TReadModel, TModel> : CrudControllerBase<TKey, TReadModel, TModel,
             FilteredPagedQueryModel>
         where TCrudService : class, ICrudService<TKey, TReadModel, TModel>
-        where TReadModel : Model<TKey>
+        where TReadModel : ReadModel<TKey>
         where TModel : MasterModel<TKey>, new()
         where TKey : IEquatable<TKey>
     {
@@ -112,7 +112,7 @@ namespace DNTFrameworkCore.Web.Mvc
         CrudController<TCrudService, TKey, TReadModel, TModel, TFilteredPagedQueryModel> :
             CrudControllerBase<TKey, TReadModel, TModel, TFilteredPagedQueryModel>
         where TCrudService : class, ICrudService<TKey, TReadModel, TModel, TFilteredPagedQueryModel>
-        where TReadModel : Model<TKey>
+        where TReadModel : ReadModel<TKey>
         where TModel : MasterModel<TKey>, new()
         where TFilteredPagedQueryModel : class, IFilteredPagedQueryModel, new()
         where TKey : IEquatable<TKey>
@@ -157,7 +157,7 @@ namespace DNTFrameworkCore.Web.Mvc
 
     public abstract class
         CrudControllerBase<TKey, TReadModel, TModel, TFilteredPagedQueryModel> : Controller
-        where TReadModel : Model<TKey>
+        where TReadModel : ReadModel<TKey>
         where TModel : MasterModel<TKey>, new()
         where TFilteredPagedQueryModel : class, IFilteredPagedQueryModel, new()
         where TKey : IEquatable<TKey>

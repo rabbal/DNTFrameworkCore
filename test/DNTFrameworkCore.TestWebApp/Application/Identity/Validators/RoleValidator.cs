@@ -37,7 +37,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity.Validators
 
             RuleFor(m => m).Must(model => !CheckDuplicatePermissions(model))
                 .WithMessage(localizer["Role.Fields.Permissions.Unique"])
-                .When(m => m.Permissions != null && m.Permissions.Any(r => !r.IsDeleted));
+                .When(m => m.Permissions != null && m.Permissions.Any(r => !r.IsDeleted()));
         }
 
         private bool CheckDuplicateName(string name, long id)
@@ -48,7 +48,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity.Validators
 
         private bool CheckDuplicatePermissions(RoleModel model)
         {
-            var permissions = model.Permissions.Where(a => !a.IsDeleted);
+            var permissions = model.Permissions.Where(a => !a.IsDeleted());
             return permissions.GroupBy(r => r.Name).Any(r => r.Count() > 1);
         }
     }

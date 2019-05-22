@@ -1,5 +1,4 @@
 using System.Linq;
-using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.EntityFramework.Application;
 using DNTFrameworkCore.EntityFramework.Context;

@@ -37,7 +37,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
         ICrudService<TKey, TReadModel, TModel>
         where TEntity : Entity<TKey>, IAggregateRoot, new()
         where TModel : MasterModel<TKey>
-        where TReadModel : Model<TKey>
+        where TReadModel : ReadModel<TKey>
         where TKey : IEquatable<TKey>
     {
         protected CrudService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
@@ -50,7 +50,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
         ICrudService<TKey, TReadModel, TModel, TFilteredPagedQueryModel>
         where TEntity : Entity<TKey>, IAggregateRoot, new()
         where TModel : MasterModel<TKey>
-        where TReadModel : Model<TKey>
+        where TReadModel : ReadModel<TKey>
         where TFilteredPagedQueryModel : class, IFilteredPagedQueryModel
         where TKey : IEquatable<TKey>
     {
@@ -98,12 +98,12 @@ namespace DNTFrameworkCore.EntityFramework.Application
         [SkipValidation]
         public async Task<IPagedQueryResult<TModel>> FindPagedListAsync(PagedQueryModel model)
         {
-            var entityResult = await BuildFindQuery().ToPagedQueryResultAsync(model);
+            var pagedQuery = await BuildFindQuery().ToPagedQueryResultAsync(model);
 
             var result = new PagedQueryResult<TModel>
             {
-                Items = MapToModel(entityResult.Items),
-                TotalCount = entityResult.TotalCount
+                Items = MapToModel(pagedQuery.Items),
+                TotalCount = pagedQuery.TotalCount
             };
 
             await AfterFindAsync(result.Items);

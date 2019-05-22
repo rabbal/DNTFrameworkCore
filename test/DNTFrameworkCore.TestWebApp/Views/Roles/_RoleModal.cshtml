@@ -1,11 +1,11 @@
 @model DNTFrameworkCore.TestWebApp.Models.Roles.RoleModalViewModel
 
 <div class="modal-header">
-    <h4 class="modal-title" asp-if="Model.IsNew">Create New Role</h4>
-    <h4 class="modal-title" asp-if="!Model.IsNew">Edit Role</h4>
+    <h4 class="modal-title" asp-if="Model.IsNew()">Create New Role</h4>
+    <h4 class="modal-title" asp-if="!Model.IsNew()">Edit Role</h4>
     <button type="button" class="close" data-dismiss="modal">&times;</button>
 </div>
-<form asp-action="@(Model.IsNew ? "Create" : "Edit")" asp-controller="Roles" asp-modal-form="RoleForm">
+<form asp-action="@(Model.IsNew() ? "Create" : "Edit")" asp-controller="Roles" asp-modal-form="RoleForm">
     <div class="modal-body">
         <input type="hidden" name="save-continue" value="true" />
         <input asp-for="RowVersion" type="hidden"/>
@@ -47,11 +47,11 @@
     </div>
     <div class="modal-footer">
         <a class="btn btn-light btn-circle" asp-modal-delete-link asp-model-id="@Model.Id" asp-modal-toggle="false"
-            asp-controller="Roles" asp-action="Delete" asp-if="!Model.IsNew" asp-permission="@PermissionNames.Roles_Delete"
+            asp-controller="Roles" asp-action="Delete" asp-if="!Model.IsNew()" asp-permission="@PermissionNames.Roles_Delete"
             title="Delete Role">
             <i class="fa fa-trash text-danger"></i>
         </a>
-        <a class="btn btn-light btn-circle" title="Refresh Role" asp-if="!Model.IsNew" asp-modal-link asp-modal-toggle="false"
+        <a class="btn btn-light btn-circle" title="Refresh Role" asp-if="!Model.IsNew()" asp-modal-link asp-modal-toggle="false"
             asp-controller="Roles" asp-action="Edit" asp-route-id="@Model.Id">
             <i class="fa fa-repeat"></i>
         </a>

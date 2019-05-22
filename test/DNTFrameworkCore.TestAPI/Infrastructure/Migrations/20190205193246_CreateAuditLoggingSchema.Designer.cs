@@ -87,7 +87,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                     b.ToTable("Cache","dbo");
                 });
 
-            modelBuilder.Entity("DNTFrameworkCore.EntityFramework.DataProtection.DataProtectionKey", b =>
+            modelBuilder.Entity("DNTFrameworkCore.EntityFramework.Protection.DataProtectionKey", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()

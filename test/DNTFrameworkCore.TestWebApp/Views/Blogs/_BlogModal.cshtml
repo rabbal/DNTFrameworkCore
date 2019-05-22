@@ -1,7 +1,7 @@
 @model DNTFrameworkCore.TestWebApp.Models.BlogViewModel
 <div class="modal-body">
 @Html.ValidationSummary()
-@using (Html.BeginForm(Model.IsNew ? "Create" : "Edit","Blogs",null,FormMethod.Post,true,htmlAttributes:new{data_ajax="true",data_ajax_update = "#main-modal div.modal-content"}))
+@using (Html.BeginForm(Model.IsNew() ? "Create" : "Edit","Blogs",null,FormMethod.Post,true,htmlAttributes:new{data_ajax="true",data_ajax_update = "#main-modal div.modal-content"}))
 {
     @if(Model.RowVersion!=null)
     {

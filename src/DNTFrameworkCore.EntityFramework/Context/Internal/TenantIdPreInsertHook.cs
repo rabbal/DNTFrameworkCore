@@ -5,6 +5,7 @@ using DNTFrameworkCore.Exceptions;
 
 namespace DNTFrameworkCore.EntityFramework.Context.Internal
 {
+
     public class TenantIdPreInsertHook : PreInsertHook<ITenantEntity>
     {
         private readonly IUnitOfWork _uow;
@@ -19,7 +20,7 @@ namespace DNTFrameworkCore.EntityFramework.Context.Internal
             if (!(entity is ITenantEntity tenantEntity)) return;
 
             if (tenantEntity.TenantId != default)
-                throw new FrameworkException("Can not set TenantId to 0 for IMultiTenant entities!");
+                throw new FrameworkException("Can not set TenantId to 0 for ITenantEntity!");
 
             tenantEntity.TenantId = _uow.TenantId;
         }

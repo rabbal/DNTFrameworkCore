@@ -10,6 +10,6 @@ namespace DNTFrameworkCore.EntityFramework.EntityHistory
         public string EntityId { get; set; }
         public string JsonOriginalValue { get; set; }
         public string JsonNewValue { get; set; }
-        public string Action { get; set; }
+        public string Command { get; set; }
     }
 }

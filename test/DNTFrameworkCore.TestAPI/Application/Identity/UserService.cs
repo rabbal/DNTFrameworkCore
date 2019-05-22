@@ -116,10 +116,10 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
             {
                 var model = models[i++];
 
-                if (model.IsNew || !model.IsActive || !model.Password.IsEmpty() ||
-                    model.Roles.Any(a => a.IsNew || a.IsDeleted) ||
-                    model.IgnoredPermissions.Any(p => p.IsDeleted || p.IsNew) ||
-                    model.Permissions.Any(p => p.IsDeleted || p.IsNew))
+                if (model.IsNew() || !model.IsActive || !model.Password.IsEmpty() ||
+                    model.Roles.Any(a => a.IsNew() || a.IsDeleted()) ||
+                    model.IgnoredPermissions.Any(p => p.IsDeleted() || p.IsNew()) ||
+                    model.Permissions.Any(p => p.IsDeleted() || p.IsNew()))
                 {
                     entity.SerialNumber = _manager.NewSerialNumber();
                 }
@@ -137,7 +137,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
             foreach (var entity in entities)
             {
                 var model = models[i++];
-                if (model.IsNew || !model.Password.IsEmpty())
+                if (model.IsNew() || !model.Password.IsEmpty())
                 {
                     entity.PasswordHash = _manager.HashPassword(model.Password);
                 }

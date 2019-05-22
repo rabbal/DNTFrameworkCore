@@ -4,7 +4,7 @@ using DNTFrameworkCore.EntityFramework.Context.Hooks;
 
 namespace DNTFrameworkCore.EntityFramework.Context.Internal
 {
-    internal class RowVersionPreUpdateHook : PreUpdateHook<IHaveRowVersion>
+    internal class RowVersionPreUpdateHook : PreUpdateHook<IHasRowVersion>
     {
         private readonly IUnitOfWork _uow;
 
@@ -13,9 +13,9 @@ namespace DNTFrameworkCore.EntityFramework.Context.Internal
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
         }
 
-        protected override void Hook(IHaveRowVersion entity, HookEntityMetadata metadata)
+        protected override void Hook(IHasRowVersion entity, HookEntityMetadata metadata)
         {
-            _uow.Entry(entity).OriginalValues[nameof(IHaveRowVersion.RowVersion)] = entity.RowVersion;
+            _uow.Entry(entity).OriginalValues[nameof(IHasRowVersion.RowVersion)] = entity.RowVersion;
         }
     }
 }

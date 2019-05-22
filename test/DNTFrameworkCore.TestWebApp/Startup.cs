@@ -25,7 +25,6 @@ namespace DNTFrameworkCore.TestWebApp
             services.AddDNTFramework()
                 .AddModelValidation()
                 .AddFluentModelValidation()
-                .AddAuditing()
                 .AddTransaction();
                 
             services.AddDNTCommonWeb();

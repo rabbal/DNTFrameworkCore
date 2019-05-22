@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using DNTFrameworkCore.Web.Caching;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Antiforgery.Internal;
 using Microsoft.AspNetCore.Http;

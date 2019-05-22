@@ -46,7 +46,6 @@ namespace DNTFrameworkCore.EntityFramework.Context
 
                 var hooks = _provider.GetServices<IPreActionHook>()
                     .Where(x => (x.HookState & entry.PreSaveState) == entry.PreSaveState);
-
                 foreach (var hook in hooks)
                 {
                     var metadata = new HookEntityMetadata(entityEntry.PreSaveState);

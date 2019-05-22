@@ -3,7 +3,7 @@ using DNTFrameworkCore.Application.Models;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Invoices.Models
 {
-    public class InvoiceItemModel : DetailModel<long>
+    public class InvoiceItemModel : Model<long>
     {
         [Required(ErrorMessage = "InvoiceItem.Fields.Quantity.Required")]
         public int Quantity { get; set; }

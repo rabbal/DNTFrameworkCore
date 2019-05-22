@@ -1,5 +1,4 @@
 ﻿using System;
-using DNTFrameworkCore.Auditing;
 using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Caching;
 using DNTFrameworkCore.Cryptography;
@@ -34,24 +33,6 @@ namespace DNTFrameworkCore
             services.AddScoped<IDateTime, Timing.DateTime>();
 
             return new DNTBuilder(services);
-        }
-
-        public static IDNTBuilder AddAuditing(
-            this IDNTBuilder builder,
-            Action<AuditingOptions> setupAction = null)
-        {
-            Guard.ArgumentNotNull(builder, nameof(builder));
-
-            builder.Services.AddScoped<AuditingInterceptor>();
-            builder.Services.AddScoped<IAuditingHelper, AuditingHelper>();
-            builder.Services.AddScoped<IAuditingStore, DefaultAuditingStore>();
-
-            if (setupAction != null)
-            {
-                builder.Services.Configure(setupAction);
-            }
-
-            return builder;
         }
 
         public static IDNTBuilder AddModelValidation(

@@ -1,6 +1,6 @@
 ﻿namespace DNTFrameworkCore.Domain.Entities
 {
-    public interface IAggregateRoot : IEntity, IHaveRowVersion
+    public interface IAggregateRoot : IEntity, IHasRowVersion
     {
     }
 }

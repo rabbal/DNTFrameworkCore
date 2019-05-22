@@ -1,6 +1,6 @@
 ﻿namespace DNTFrameworkCore.Domain.Entities
 {
-    public interface IHaveRowLevelSecurity
+    public interface IHasRowLevelSecurity
     {
         long UserId { get; set; }
     }
