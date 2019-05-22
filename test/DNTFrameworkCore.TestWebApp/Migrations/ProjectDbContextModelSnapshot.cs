@@ -15,54 +15,9 @@ namespace DNTFrameworkCore.TestWebApp.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("DNTFrameworkCore.EntityFramework.Auditing.AuditLog", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Exception");
-
-                    b.Property<DateTimeOffset>("ExecutionDateTime");
-
-                    b.Property<int>("ExecutionDuration");
-
-                    b.Property<string>("ExtensionJson");
-
-                    b.Property<long?>("ImpersonatorTenantId");
-
-                    b.Property<long?>("ImpersonatorUserId");
-
-                    b.Property<string>("MethodName")
-                        .IsRequired()
-                        .HasMaxLength(256);
-
-                    b.Property<string>("Parameters");
-
-                    b.Property<string>("ReturnValue");
-
-                    b.Property<string>("ServiceName")
-                        .IsRequired()
-                        .HasMaxLength(256);
-
-                    b.Property<long?>("TenantId");
-
-                    b.Property<string>("UserBrowserName")
-                        .HasMaxLength(1024);
-
-                    b.Property<long?>("UserId");
-
-                    b.Property<string>("UserIp")
-                        .HasMaxLength(20);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AuditLog","dbo");
-                });
 
             modelBuilder.Entity("DNTFrameworkCore.EntityFramework.Caching.Cache", b =>
                 {
@@ -85,26 +40,6 @@ namespace DNTFrameworkCore.TestWebApp.Migrations
                         .HasName("IX_Cache_ExpiresAtTime");
 
                     b.ToTable("Cache","dbo");
-                });
-
-            modelBuilder.Entity("DNTFrameworkCore.EntityFramework.Protection.DataProtectionKey", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("FriendlyName")
-                        .IsRequired();
-
-                    b.Property<string>("XmlValue");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FriendlyName")
-                        .IsUnique()
-                        .HasName("IX_DataProtectionKey_FriendlyName");
-
-                    b.ToTable("DataProtectionKey","dbo");
                 });
 
             modelBuilder.Entity("DNTFrameworkCore.EntityFramework.Logging.Log", b =>
@@ -150,6 +85,26 @@ namespace DNTFrameworkCore.TestWebApp.Migrations
                         .HasName("IX_Log_LoggerName");
 
                     b.ToTable("Log","dbo");
+                });
+
+            modelBuilder.Entity("DNTFrameworkCore.EntityFramework.Protection.ProtectionKey", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FriendlyName")
+                        .IsRequired();
+
+                    b.Property<string>("XmlValue");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FriendlyName")
+                        .IsUnique()
+                        .HasName("IX_ProtectionKey_FriendlyName");
+
+                    b.ToTable("ProtectionKey","dbo");
                 });
 
             modelBuilder.Entity("DNTFrameworkCore.EntityFramework.SqlServer.Numbering.NumberedEntity", b =>

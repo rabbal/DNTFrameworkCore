@@ -16,8 +16,7 @@ namespace DNTFrameworkCore.Web.EntityFramework
                 var provider = scope.ServiceProvider;
 
                 var logger = provider.GetRequiredService<ILogger<TContext>>();
-                var dbSeeds = provider.GetServices<IDbSeed>();
-
+                var dbSeed = provider.GetService<IDbSeed>();
                 var context = provider.GetRequiredService<TContext>();
 
                 try
@@ -26,10 +25,7 @@ namespace DNTFrameworkCore.Web.EntityFramework
 
                     context.Database.Migrate();
 
-                    foreach (var dbSeed in dbSeeds)
-                    {
-                        dbSeed.Seed();
-                    }
+                    dbSeed?.Seed();
 
                     logger.LogInformation($"Migrated database associated with context {typeof(TContext).Name}");
                 }
