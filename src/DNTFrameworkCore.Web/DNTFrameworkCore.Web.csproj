@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Title>DNTFrameworkCore.Web</Title>
-    <VersionPrefix>1.2.0</VersionPrefix>
+    <VersionPrefix>1.9.0</VersionPrefix>
     <Description>DNTFrameworkCore.Web</Description>
     <Authors>GholamReza Rabbal</Authors>
     <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
