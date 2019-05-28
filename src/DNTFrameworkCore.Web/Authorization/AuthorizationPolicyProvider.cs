@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.Web.Authorization
         {
             if (!policyName.StartsWith(PermissionAuthorizeAttribute.PolicyPrefix, StringComparison.OrdinalIgnoreCase))
             {
-                await base.GetPolicyAsync(policyName);
+                return await base.GetPolicyAsync(policyName);
             }
 
             var policy = _policies.GetOrAdd(policyName, name =>
