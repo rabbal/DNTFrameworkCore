@@ -48,15 +48,15 @@ For more info about templates you can watch [DNTFrameworkCoreTemplate repository
 
 * Automatic Input Validation and Business Validation
 * Automatic Transaction Management
-* Eventing 
+* Eventing
 * Aggregate Update (Master-Detail)
 * Automatic Numbering
 * Functional Programming Error Handling
 * Dynamic Permission Authorization
-* CrudService 
+* CrudService
 * CrudController
 * DbLogger Provider
-* DataProtectionKeys DbRepository 
+* ProtectionKeys DbRepository
 * Hooks
 * SoftDelete
 * Branching
@@ -90,7 +90,10 @@ public class Task : TrackableEntity<int>, IAggregateRoot, INumberedEntity
 ```c#
 public class ProjectDbContext : DbContextCore
 {
-    public ProjectDbContext(DbContextCoreDependency<ProjectDbContext> dependency) : base(dependency)
+    public ProjectDbContext(
+        IHookEngine hookEngine,
+        IUserSession session,
+        DbContextOptions<ProjectDbContext> options) : base(hookEngine,session, options)
     {
     }
 
@@ -168,27 +171,32 @@ public class TaskService : CrudService<Task, int, TaskReadModel, TaskModel, Task
     ITaskService
 {
     private readonly IMapper _mapper;
-
-    public TaskService(CrudServiceDependency dependency, IMapper mapper) : base(dependency)
+    public TaskService(IUnitOfWork uow, IEventBus bus, IMapper mapper) :base(uow, bus)
     {
-        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper);
     }
 
-    protected override IQueryable<TaskReadModel> BuildReadQuery(TaskFilteredPagedQueryModel model)
+    protected override IQueryable<TaskReadModel> BuildReadQueryTaskFilteredPagedQueryModel model)
     {
         return EntitySet.AsNoTracking()
             .WhereIf(model.State.HasValue, t => t.State == model.State)
-        	.ProjectTo<TaskReadModel>(_mapper.ConfigurationProvider);
+            .Select(t => new TaskReadModel
+            {
+                Id = t.Id,
+                Title = t.Title,
+                State = t.State,
+                Number = t.Number
+            });
     }
 
-    protected override Task MapToEntity(TaskModel model)
+    protected override void MapToEntity(TaskModel model, Task task)
     {
-        return _mapper.Map<Task>(model);
+        _mapper.Map(model, task);
     }
 
-    protected override TaskModel MapToModel(Task entity)
+    protected override TaskModel MapToModel(Task task)
     {
-        return _mapper.Map<TaskModel>(entity);
+        return _mapper.Map<TaskModel>(task);
     }
 }
 ```

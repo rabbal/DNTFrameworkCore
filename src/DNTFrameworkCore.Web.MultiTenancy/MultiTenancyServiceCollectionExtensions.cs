@@ -16,7 +16,7 @@ namespace DNTFrameworkCore.Web.MultiTenancy
             Guard.ArgumentNotNull(services, nameof(services));
 
             services.TryAddSingleton(
-                Options.Create(new MultiTenancyConfiguration { Enabled = true, DatabaseStrategy = strategy }));
+                Options.Create(new MultiTenancyOptions { Enabled = true, DatabaseStrategy = strategy }));
 
             services.AddScoped<ITenantResolver, TResolver>();
 

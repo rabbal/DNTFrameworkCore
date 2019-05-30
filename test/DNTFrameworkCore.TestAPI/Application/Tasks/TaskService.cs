@@ -40,14 +40,14 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
                 });
         }
 
-        protected override void MapToEntity(TaskModel model, Task entity)
+        protected override void MapToEntity(TaskModel model, Task task)
         {
-            _mapper.Map(model, entity);
+            _mapper.Map(model, task);
         }
 
-        protected override TaskModel MapToModel(Task entity)
+        protected override TaskModel MapToModel(Task task)
         {
-            return _mapper.Map<TaskModel>(entity);
+            return _mapper.Map<TaskModel>(task);
         }
     }
 }

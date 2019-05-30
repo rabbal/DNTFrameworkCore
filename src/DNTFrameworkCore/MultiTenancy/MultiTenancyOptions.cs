@@ -1,6 +1,6 @@
 ﻿namespace DNTFrameworkCore.MultiTenancy
 {
-    public class MultiTenancyConfiguration
+    public class MultiTenancyOptions
     {
         public bool Enabled { get; set; }
         public MultiTenancyDatabaseStrategy DatabaseStrategy { get; set; }

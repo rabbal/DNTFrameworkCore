@@ -27,7 +27,7 @@ namespace DNTFrameworkCore.EntityFramework
         {
             var tenant = provider.GetService<ITenant>();
             var configuration = provider.GetService<IConfiguration>();
-            var multiTenancy = provider.GetService<IOptions<MultiTenancyConfiguration>>();
+            var multiTenancy = provider.GetService<IOptions<MultiTenancyOptions>>();
 
             var connectionString =
                 configuration.GetConnectionString("DefaultConnection");
