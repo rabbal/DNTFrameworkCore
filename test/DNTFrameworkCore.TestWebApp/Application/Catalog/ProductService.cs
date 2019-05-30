@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using AutoMapper;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.EntityFramework.Application;
@@ -17,8 +19,14 @@ namespace DNTFrameworkCore.TestWebApp.Application.Catalog
 
     public class ProductService : CrudService<Product, long, ProductModel>, IProductService
     {
-        public ProductService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
+        private readonly IMapper _mapper;
+
+        public ProductService(
+            IUnitOfWork uow,
+             IEventBus bus,
+             IMapper mapper) : base(uow, bus)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         protected override IQueryable<ProductModel> BuildReadQuery(FilteredPagedQueryModel model)
@@ -33,30 +41,14 @@ namespace DNTFrameworkCore.TestWebApp.Application.Catalog
             });
         }
 
-        protected override Product MapToEntity(ProductModel model)
+        protected override void MapToEntity(ProductModel model, Product product)
         {
-            var product = Factory<Product>.CreateInstance();
-
-            product.Id = model.Id;
-            product.RowVersion = model.RowVersion;
-            product.Title = model.Title;
-            product.Number = model.Number;
-            product.Price = model.Price;
-
-            return product;
+            _mapper.Map(model, product);
         }
 
-        protected override ProductModel MapToModel(Product entity)
+        protected override ProductModel MapToModel(Product product)
         {
-            var model = Factory<ProductModel>.CreateInstance();
-
-            model.Id = entity.Id;
-            model.RowVersion = entity.RowVersion;
-            model.Title = entity.Title;
-            model.Number = entity.Number;
-            model.Price = entity.Price;
-
-            return model;
+            return _mapper.Map<ProductModel>(product);
         }
     }
 }

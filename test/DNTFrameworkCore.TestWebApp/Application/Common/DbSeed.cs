@@ -17,20 +17,20 @@ namespace DNTFrameworkCore.TestWebApp.Application.Common
     {
         private readonly IUnitOfWork _uow;
         private readonly IOptionsSnapshot<ProjectSetting> _settings;
-        private readonly IPasswordHasher _passwordHasher;
-        private readonly IPermissionService _permissionManager;
+        private readonly IUserPassword _password;
+        private readonly IPermissionService _permission;
         private readonly ILogger<DbSeed> _logger;
 
         public DbSeed(IUnitOfWork uow,
             IOptionsSnapshot<ProjectSetting> settings,
-            IPasswordHasher passwordHasher,
-            IPermissionService permissionManager,
+            IUserPassword password,
+            IPermissionService permission,
             ILogger<DbSeed> logger)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
-            _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
-            _permissionManager = permissionManager ?? throw new ArgumentNullException(nameof(permissionManager));
+            _password = password ?? throw new ArgumentNullException(nameof(password));
+            _permission = permission ?? throw new ArgumentNullException(nameof(permission));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -61,7 +61,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Common
             }
 
             var rolePermissionNames = role.Permissions.Select(a => a.Name).ToList();
-            var allPermissionNames = _permissionManager.ReadList().Select(p => p.Name);
+            var allPermissionNames = _permission.ReadList().Select(p => p.Name);
 
             var newPermissions = allPermissionNames.Except(rolePermissionNames)
                 .Select(permissionName => new RolePermission {Name = permissionName}).ToList();
@@ -85,7 +85,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Common
                     DisplayName = admin.DisplayName,
                     NormalizedDisplayName = admin.DisplayName, //.NormalizePersianTitle(),
                     IsActive = true,
-                    PasswordHash = _passwordHasher.HashPassword(admin.Password),
+                    PasswordHash = _password.HashPassword(admin.Password),
                     SerialNumber = Guid.NewGuid().ToString("N")
                 };
 

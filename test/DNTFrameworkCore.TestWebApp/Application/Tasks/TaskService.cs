@@ -34,9 +34,9 @@ namespace DNTFrameworkCore.TestWebApp.Application.Tasks
                 .ProjectTo<TaskReadModel>(_mapper.ConfigurationProvider);
         }
 
-        protected override Task MapToEntity(TaskModel model)
+        protected override void MapToEntity(TaskModel model, Task task)
         {
-            return _mapper.Map<Task>(model);
+            _mapper.Map(model, task);
         }
 
         protected override TaskModel MapToModel(Task entity)

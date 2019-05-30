@@ -8,6 +8,10 @@ using DNTFrameworkCore.TestWebApp.Domain.Identity;
 using DNTFrameworkCore.TestWebApp.Helpers;
 using Microsoft.EntityFrameworkCore;
 using DNTFrameworkCore.Linq;
+using AutoMapper;
+using System;
+using DNTFrameworkCore.Application.Models;
+
 namespace DNTFrameworkCore.TestWebApp.Application.Identity
 {
     public interface IRoleService : ICrudService<long, RoleReadModel, RoleModel, RoleFilteredPagedQueryModel>
@@ -16,8 +20,14 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
 
     public class RoleService : CrudService<Role, long, RoleReadModel, RoleModel, RoleFilteredPagedQueryModel>, IRoleService
     {
-        public RoleService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
+        private readonly IMapper _mapper;
+
+        public RoleService(
+            IUnitOfWork uow,
+            IEventBus bus,
+            IMapper mapper) : base(uow, bus)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         protected override IQueryable<Role> BuildFindQuery()
@@ -29,50 +39,24 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
         protected override IQueryable<RoleReadModel> BuildReadQuery(RoleFilteredPagedQueryModel model)
         {
             return EntitySet.AsNoTracking()
-            .WhereIf(
-                model.Permissions != null && model.Permissions.Any(),
+              .WhereIf(model.Permissions != null && model.Permissions.Any(),
                 r => r.Permissions.Any(p => model.Permissions.Contains(p.Name)))
-            .Select(r => new RoleReadModel
-            {
-                Id = r.Id,
-                Name = r.Name,
-                Description = r.Description
-            });
+                .Select(r => new RoleReadModel
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    Description = r.Description
+                });
         }
 
-        protected override Role MapToEntity(RoleModel model)
+        protected override void MapToEntity(RoleModel model, Role role)
         {
-            return new Role
-            {
-                Id = model.Id,
-                RowVersion = model.RowVersion,
-                Name = model.Name,
-                NormalizedName = model.Name.NormalizePersianTitle(),
-                Description = model.Description,
-                Permissions = model.Permissions.Select(p => new RolePermission
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    TrackingState = p.TrackingState
-                }).ToList()
-            };
+            _mapper.Map(model, role);
         }
 
         protected override RoleModel MapToModel(Role entity)
         {
-            return new RoleModel
-            {
-                Id = entity.Id,
-                RowVersion = entity.RowVersion,
-                Name = entity.Name,
-                Description = entity.Description,
-                Permissions = entity.Permissions.Select(p => new PermissionModel
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    TrackingState = p.TrackingState
-                }).ToList()
-            };
+            return _mapper.Map<RoleModel>(entity);
         }
     }
 }

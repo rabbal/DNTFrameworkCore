@@ -7,7 +7,8 @@ namespace DNTFrameworkCore.TestWebApp.Application.Blogging.Models
     {
         public BloggingMapProfile()
         {
-            CreateMap<Blog, BlogModel>(MemberList.None).ReverseMap()
+           CreateMap<Blog, BlogModel>(MemberList.None)
+                .ReverseMap()
                 .ForMember(d => d.NormalizedTitle, m => m.MapFrom(s => s.Title.ToUpperInvariant()));
         }
     }

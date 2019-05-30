@@ -155,15 +155,11 @@ namespace DNTFrameworkCore.TestAPI.Authentication
             }
 
             //Todo: Set TenantId claim in MultiTenancy senarios     
-            // claims.Add(new Claim(ConstantClaims.TenantId, user.TenantId.ToString(), ClaimValueTypes.Integer64,
+            // claims.Add(new Claim(DNTClaimTypes.TenantId, user.TenantId.ToString(), ClaimValueTypes.Integer64,
             // _options.Value.Issuer));
 
             //Todo: Set BranchId claim in MultiBranch senarios     
-            // claims.Add(new Claim(ConstantClaims.BranchId, user.BranchId.ToString(), ClaimValueTypes.Integer64,
-            // _options.Value.Issuer));
-
-            //Todo: Set BranchId claim in MultiBranch senarios     
-            // claims.Add(new Claim(ConstantClaims.BranchId, user.BranchId.ToString(), ClaimValueTypes.Integer64,
+            // claims.Add(new Claim(DNTClaimTypes.BranchId, user.BranchId.ToString(), ClaimValueTypes.Integer64,
             // _options.Value.Issuer));
 
             return claims;
