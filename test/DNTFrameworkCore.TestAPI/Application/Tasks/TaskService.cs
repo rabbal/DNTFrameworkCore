@@ -31,12 +31,18 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
         {
             return EntitySet.AsNoTracking()
                 .WhereIf(model.State.HasValue, t => t.State == model.State)
-                .ProjectTo<TaskReadModel>(_mapper.ConfigurationProvider);
+                .Select(t => new TaskReadModel
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    State = t.State,
+                    Number = t.Number
+                });
         }
 
-        protected override Task MapToEntity(TaskModel model)
+        protected override void MapToEntity(TaskModel model, Task entity)
         {
-            return _mapper.Map<Task>(model);
+            _mapper.Map(model, entity);
         }
 
         protected override TaskModel MapToModel(Task entity)

@@ -12,7 +12,7 @@ using DNTFrameworkCore.Transaction.Interception;
 using DNTFrameworkCore.Validation.Interception;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using DNTFrameworkCore.FluentValidation;
 namespace DNTFrameworkCore.TestAPI.Application
 {
     public static class ApplicationRegistry
@@ -23,7 +23,8 @@ namespace DNTFrameworkCore.TestAPI.Application
         {
             services.Configure<ProjectSettings>(configuration.Bind);
 
-            services.AddAutoMapper();
+            services.AddAutoMapper(typeof(ApplicationRegistry));
+            services.AddValidatorsFromAssembly(typeof(ApplicationRegistry).Assembly);
             services.AddDNTNumbering(options =>
             {
                 options.NumberedEntityMap[typeof(Task)] = new NumberedEntityOption

@@ -45,9 +45,8 @@ namespace DNTFrameworkCore.Application.Services
     {
         Task<IPagedQueryResult<TReadModel>> ReadPagedListAsync(TFilteredPagedQueryModel model);
         Task<Maybe<TModel>> FindAsync(TKey id);
-        Task<IReadOnlyList<TModel>> FindAsync(IEnumerable<TKey> ids);
-        Task<IReadOnlyList<TModel>> FindAsync(params TKey[] ids);
-        Task<IReadOnlyList<TModel>> FindAsync();
+        Task<IReadOnlyList<TModel>> FindListAsync(IEnumerable<TKey> ids);
+        Task<IReadOnlyList<TModel>> FindListAsync();
         Task<IPagedQueryResult<TModel>> FindPagedListAsync(PagedQueryModel model);
         Task<bool> ExistsAsync(TKey id);
         Task<Result> CreateAsync(TModel model);

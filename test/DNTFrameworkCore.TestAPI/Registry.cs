@@ -8,7 +8,6 @@ using DNTFrameworkCore.TestAPI.Application.Tasks.Models;
 using DNTFrameworkCore.TestAPI.Authentication;
 using DNTFrameworkCore.Web.Filters;
 using DNTFrameworkCore.Web.ModelBinders;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -74,8 +73,6 @@ namespace DNTFrameworkCore.TestAPI
                             : factory.Create(localizationResource.Name, localizationResource.Location);
                     };
                 })
-                .AddFluentValidation(configuration =>
-                    configuration.RegisterValidatorsFromAssemblyContaining<Program>())
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .ConfigureApiBehaviorOptions(options =>
                 {

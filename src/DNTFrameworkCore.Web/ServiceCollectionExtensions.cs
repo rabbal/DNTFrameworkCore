@@ -25,8 +25,8 @@ namespace DNTFrameworkCore.Web
             services.AddScoped<IPrincipal>(provider =>
                 provider.GetService<IHttpContextAccessor>()?.HttpContext?.User ?? ClaimsPrincipal.Current);
             services.AddSingleton<IProtectionProvider, ProtectionProvider>();
-            services.AddSingleton<IPasswordHasher, PasswordHasher>();
-            services.AddScoped<IAntiForgeryCookieService, AntiForgeryCookieService>();
+            services.AddSingleton<IUserPassword, UserPassword>();
+            services.AddScoped<IAntiforgeryService, AntiforgeryService>();
             services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
             services.AddHostedService<QueuedHostedService>();
 

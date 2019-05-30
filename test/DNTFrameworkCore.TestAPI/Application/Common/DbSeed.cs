@@ -17,19 +17,19 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
     {
         private readonly IUnitOfWork _uow;
         private readonly IOptionsSnapshot<ProjectSettings> _settings;
-        private readonly IPasswordHasher _passwordHasher;
+        private readonly IUserPassword _password;
         private readonly IPermissionService _permissionManager;
         private readonly ILogger<DbSeed> _logger;
 
         public DbSeed(IUnitOfWork uow,
             IOptionsSnapshot<ProjectSettings> settings,
-            IPasswordHasher passwordHasher,
+            IUserPassword password,
             IPermissionService permissionManager,
             ILogger<DbSeed> logger)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
-            _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
+            _password = password ?? throw new ArgumentNullException(nameof(password));
             _permissionManager = permissionManager ?? throw new ArgumentNullException(nameof(permissionManager));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -85,7 +85,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
                     DisplayName = admin.DisplayName,
                     NormalizedDisplayName = admin.DisplayName, //.NormalizePersianTitle(),
                     IsActive = true,
-                    PasswordHash = _passwordHasher.HashPassword(admin.Password),
+                    PasswordHash = _password.HashPassword(admin.Password),
                     SerialNumber = Guid.NewGuid().ToString("N")
                 };
 

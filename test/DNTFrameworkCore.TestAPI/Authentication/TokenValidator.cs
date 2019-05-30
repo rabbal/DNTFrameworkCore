@@ -4,9 +4,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Dependency;
+using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Runtime;
-using DNTFrameworkCore.TestAPI.Application.Identity;
+using DNTFrameworkCore.TestAPI.Domain.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.TestAPI.Authentication
 {
@@ -17,13 +20,15 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
     public class TokenValidator : ITokenValidator
     {
-        private readonly IUserManager _userManager;
-        private readonly ITokenManager _tokenManager;
+        private readonly ITokenManager _token;
+        private readonly IUnitOfWork _uow;
+        private readonly DbSet<User> _users;
 
-        public TokenValidator(IUserManager userManager, ITokenManager tokenManager)
+        public TokenValidator(ITokenManager token, IUnitOfWork uow)
         {
-            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-            _tokenManager = tokenManager ?? throw new ArgumentNullException(nameof(tokenManager));
+            _token = token ?? throw new ArgumentNullException(nameof(token));
+            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _users = uow.Set<User>();
         }
 
         public async Task ValidateAsync(TokenValidatedContext context)
@@ -51,7 +56,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
                 return;
             }
 
-            var user = await _userManager.FindAsync(userId);
+            var user = await FindUserAsync(userId);
             if (!user.HasValue || user.Value.SerialNumber != serialNumberClaim.Value || !user.Value.IsActive)
             {
                 // user has changed his/her password/permissions/roles/stat/IsActive
@@ -61,14 +66,19 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
             if (!(context.SecurityToken is JwtSecurityToken accessToken) ||
                 string.IsNullOrWhiteSpace(accessToken.RawData) ||
-                !await _tokenManager.IsValidTokenAsync(userId, accessToken.RawData))
+                !await _token.IsValidTokenAsync(userId, accessToken.RawData))
             {
                 context.Fail("This token is not in our database.");
                 return;
             }
 
             //TODO: Concurrency Issue when current user edit own account in user management
-            await _userManager.UpdateLastActivityDateAsync(user.Value);
+            //await UpdateLastActivityDateAsync(user.Value);
+        }
+
+        public async Task<Maybe<User>> FindUserAsync(long userId)
+        {
+            return await _users.FindAsync(userId);
         }
     }
 }

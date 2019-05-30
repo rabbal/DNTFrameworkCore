@@ -26,16 +26,16 @@ namespace DNTFrameworkCore.TestAPI.Authentication
     {
         private readonly IUnitOfWork _uow;
         private readonly IOptionsSnapshot<TokenOptions> _options;
-        private readonly ISecurityService _securityService;
+        private readonly ISecurityService _security;
         private readonly DbSet<UserToken> _tokens;
 
         public TokenManager(IUnitOfWork uow,
             IOptionsSnapshot<TokenOptions> options,
-            ISecurityService securityService)
+            ISecurityService security)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _options = options ?? throw new ArgumentNullException(nameof(options));
-            _securityService = securityService ?? throw new ArgumentNullException(nameof(securityService));
+            _security = security ?? throw new ArgumentNullException(nameof(security));
 
             _tokens = _uow.Set<UserToken>();
         }
@@ -136,7 +136,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
         private string ComputeHash(string input)
         {
-            return _securityService.ComputeSha256Hash(input);
+            return _security.ComputeSha256Hash(input);
         }
     }
 }

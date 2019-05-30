@@ -234,7 +234,6 @@ namespace DNTFrameworkCore.Web.API
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Forbidden)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Put([BindRequired] TKey id, TModel model)
         {
             if (!model.Id.Equals(id))
@@ -245,11 +244,6 @@ namespace DNTFrameworkCore.Web.API
             if (!await CheckPermissionAsync(EditPermissionName))
             {
                 return Forbid();
-            }
-
-            if (!await ExistsAsync(id))
-            {
-                return NotFound();
             }
 
             model.Id = id;

@@ -8,33 +8,33 @@ using Microsoft.Extensions.Options;
 
 namespace DNTFrameworkCore.Web.Security
 {
-    public interface IAntiForgeryCookieService
+    public interface IAntiforgeryService
     {
-        void RegenerateAntiForgeryCookies(IEnumerable<Claim> claims);
-        void DeleteAntiForgeryCookies();
+        void RebuildCookies(IEnumerable<Claim> claims);
+        void DeleteCookies();
     }
 
-    public class AntiForgeryCookieService : IAntiForgeryCookieService
+    public class AntiforgeryService : IAntiforgeryService
     {
         private const string XsrfTokenKey = "XSRF-TOKEN";
 
-        private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IHttpContextAccessor _context;
         private readonly IAntiforgery _antiforgery;
-        private readonly IOptions<AntiforgeryOptions> _antiforgeryOptions;
+        private readonly IOptions<AntiforgeryOptions> _options;
 
-        public AntiForgeryCookieService(
-            IHttpContextAccessor contextAccessor,
+        public AntiforgeryService(
+            IHttpContextAccessor context,
             IAntiforgery antiforgery,
-            IOptions<AntiforgeryOptions> antiforgeryOptions)
+            IOptions<AntiforgeryOptions> options)
         {
-            _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
             _antiforgery = antiforgery ?? throw new ArgumentNullException(nameof(antiforgery));
-            _antiforgeryOptions = antiforgeryOptions ?? throw new ArgumentNullException(nameof(antiforgeryOptions));
+            _options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
-        public void RegenerateAntiForgeryCookies(IEnumerable<Claim> claims)
+        public void RebuildCookies(IEnumerable<Claim> claims)
         {
-            var httpContext = _contextAccessor.HttpContext;
+            var httpContext = _context.HttpContext;
             httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme));
             var tokens = _antiforgery.GetAndStoreTokens(httpContext);
             httpContext.Response.Cookies.Append(
@@ -46,10 +46,10 @@ namespace DNTFrameworkCore.Web.Security
                 });
         }
 
-        public void DeleteAntiForgeryCookies()
+        public void DeleteCookies()
         {
-            var cookies = _contextAccessor.HttpContext.Response.Cookies;
-            cookies.Delete(_antiforgeryOptions.Value.Cookie.Name);
+            var cookies = _context.HttpContext.Response.Cookies;
+            cookies.Delete(_options.Value.Cookie.Name);
             cookies.Delete(XsrfTokenKey);
         }
     }

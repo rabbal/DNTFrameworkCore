@@ -12,7 +12,7 @@ namespace DNTFrameworkCore.FluentValidation
         public static IDNTBuilder AddFluentModelValidation(this IDNTBuilder builder)
         {
             builder.Services.AddTransient(typeof(IModelValidator<>), typeof(FluentValidationModelValidator<>));
-            builder.Services.AddSingleton<IValidatorFactory, ServiceProviderValidatorFactory>();
+            builder.Services.AddTransient<IValidatorFactory, ServiceProviderValidatorFactory>();
                             
             return builder;
         }

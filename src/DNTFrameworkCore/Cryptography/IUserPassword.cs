@@ -1,3 +1,5 @@
+﻿using DNTFrameworkCore.Dependency;
+
 namespace DNTFrameworkCore.Cryptography
 {
     /// <summary>
@@ -22,7 +24,7 @@ namespace DNTFrameworkCore.Cryptography
         SuccessRehashNeeded = 2
     }
 
-    public interface IPasswordHasher
+    public interface IUserPassword : ISingletonDependency
     {
         string HashPassword(string password);
         PasswordVerificationResult VerifyHashedPassword(string hashedPassword, string providedPassword);

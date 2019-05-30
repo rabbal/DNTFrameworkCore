@@ -33,5 +33,9 @@ namespace DNTFrameworkCore.TestAPI.Domain.Identity
         public ICollection<UserClaim> Claims { get; set; } = new HashSet<UserClaim>();
 
         public override string ToString() => UserName;
+        public string NewSerialNumber()
+        {
+            return Guid.NewGuid().ToString("N");
+        }
     }
 }

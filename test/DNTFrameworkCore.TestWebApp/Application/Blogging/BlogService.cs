@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.EntityFramework.Application;
@@ -22,10 +23,12 @@ namespace DNTFrameworkCore.TestWebApp.Application.Blogging
 
     public class BlogService : CrudService<Blog, int, BlogModel>, IBlogService
     {
+        private readonly IMapper _mapper;
         private readonly ILogger<BlogService> _logger;
 
-        public BlogService(IUnitOfWork uow, IEventBus bus, ILogger<BlogService> logger) : base(uow, bus)
+        public BlogService(IUnitOfWork uow, IEventBus bus, IMapper mapper, ILogger<BlogService> logger) : base(uow, bus)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -35,27 +38,14 @@ namespace DNTFrameworkCore.TestWebApp.Application.Blogging
             { Id = b.Id, RowVersion = b.RowVersion, Url = b.Url, Title = b.Title });
         }
 
-        protected override Blog MapToEntity(BlogModel model)
+        protected override void MapToEntity(BlogModel model, Blog entity)
         {
-            return new Blog
-            {
-                Id = model.Id,
-                RowVersion = model.RowVersion,
-                Url = model.Url,
-                Title = model.Title,
-                NormalizedTitle = model.Title.ToUpperInvariant() //todo: normalize based on your requirement 
-            };
+            _mapper.Map(model, entity);
         }
 
         protected override BlogModel MapToModel(Blog entity)
         {
-            return new BlogModel
-            {
-                Id = entity.Id,
-                RowVersion = entity.RowVersion,
-                Url = entity.Url,
-                Title = entity.Title
-            };
+            return _mapper.Map<BlogModel>(entity);
         }
 
         protected override Task AfterFindAsync(IReadOnlyList<BlogModel> models)
@@ -114,13 +104,6 @@ namespace DNTFrameworkCore.TestWebApp.Application.Blogging
             _logger.LogInformation(nameof(AfterDeleteAsync));
 
             return Task.FromResult(Ok());
-        }
-
-        protected override Task BeforeSaveAsync(IReadOnlyList<Blog> entities, List<BlogModel> models)
-        {
-            _logger.LogInformation(nameof(BeforeSaveAsync));
-
-            return base.BeforeSaveAsync(entities, models);
         }
     }
 }

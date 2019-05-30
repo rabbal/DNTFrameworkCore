@@ -97,7 +97,7 @@ namespace DNTFrameworkCore.EntityFramework.Context
         {
             ChangeTracker.TrackGraph(root, node =>
             {
-                if (!(node.Entry.Entity is IHasTrackingState haveTrackingState)) return;
+                if (!(node.Entry.Entity is IHasTrackingState hasTrackingState)) return;
 
                 node.Entry.State = EntityState.Detached;
 
@@ -118,7 +118,7 @@ namespace DNTFrameworkCore.EntityFramework.Context
                             }
                             else
                             {
-                                node.Entry.State = haveTrackingState.TrackingState.ToEntityState();
+                                node.Entry.State = hasTrackingState.TrackingState.ToEntityState();
                             }
 
                             return;
@@ -152,7 +152,7 @@ namespace DNTFrameworkCore.EntityFramework.Context
                         case RelationshipType.OneToMany:
                             // If ITrackedEntity is set deleted set entity state to unchanged,
                             // since it may be related to other entities.
-                            if (haveTrackingState.TrackingState == TrackingState.Deleted)
+                            if (hasTrackingState.TrackingState == TrackingState.Deleted)
                             {
                                 node.Entry.State = TrackingState.Unchanged.ToEntityState();
                                 return;
@@ -162,7 +162,7 @@ namespace DNTFrameworkCore.EntityFramework.Context
                     }
                 }
 
-                node.Entry.State = haveTrackingState.TrackingState.ToEntityState();
+                node.Entry.State = hasTrackingState.TrackingState.ToEntityState();
             });
         }
 
@@ -170,10 +170,10 @@ namespace DNTFrameworkCore.EntityFramework.Context
         {
             this.TraverseGraph(root, n =>
             {
-                if (!(n.Entry.Entity is IHasTrackingState haveTrackingState)) return;
+                if (!(n.Entry.Entity is IHasTrackingState hasTrackingState)) return;
 
-                if (haveTrackingState.TrackingState != TrackingState.Unchanged)
-                    haveTrackingState.TrackingState = TrackingState.Unchanged;
+                if (hasTrackingState.TrackingState != TrackingState.Unchanged)
+                    hasTrackingState.TrackingState = TrackingState.Unchanged;
             });
         }
 

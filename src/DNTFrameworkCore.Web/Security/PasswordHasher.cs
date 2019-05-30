@@ -2,12 +2,11 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using DNTFrameworkCore.Cryptography;
-using DNTFrameworkCore.Dependency;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace DNTFrameworkCore.Web.Security
 {
-    public class PasswordHasher : IPasswordHasher, ISingletonDependency
+    public class UserPassword : IUserPassword
     {
         /* =======================
          * HASHED PASSWORD FORMATS
