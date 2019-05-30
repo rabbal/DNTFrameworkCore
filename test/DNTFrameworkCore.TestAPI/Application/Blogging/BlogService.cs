@@ -48,14 +48,14 @@ namespace DNTFrameworkCore.TestAPI.Application.Blogging
                 });
         }
 
-        protected override void MapToEntity(BlogModel model, Blog entity)
+        protected override void MapToEntity(BlogModel model, Blog blog)
         {
-            _mapper.Map(model, entity);
+            _mapper.Map(model, blog);
         }
 
-        protected override BlogModel MapToModel(Blog entity)
+        protected override BlogModel MapToModel(Blog blog)
         {
-            return _mapper.Map<BlogModel>(entity);
+            return _mapper.Map<BlogModel>(blog);
         }
 
         protected override Task AfterFindAsync(IReadOnlyList<BlogModel> models)
