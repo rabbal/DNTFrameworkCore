@@ -53,11 +53,6 @@ namespace DNTFrameworkCore.Web.API
         {
             return Service.DeleteAsync(model);
         }
-
-        protected override Task<bool> ExistsAsync(TKey id)
-        {
-            return Service.ExistsAsync(id);
-        }
     }
 
     [Authorize]
@@ -99,11 +94,6 @@ namespace DNTFrameworkCore.Web.API
         protected override Task<Result> DeleteAsync(TModel model)
         {
             return Service.DeleteAsync(model);
-        }
-
-        protected override Task<bool> ExistsAsync(TKey id)
-        {
-            return Service.ExistsAsync(id);
         }
     }
 
@@ -148,11 +138,6 @@ namespace DNTFrameworkCore.Web.API
         {
             return Service.DeleteAsync(model);
         }
-
-        protected override Task<bool> ExistsAsync(TKey id)
-        {
-            return Service.ExistsAsync(id);
-        }
     }
 
     [ApiController]
@@ -177,7 +162,6 @@ namespace DNTFrameworkCore.Web.API
         protected abstract Task<Result> EditAsync(TModel model);
         protected abstract Task<Result> CreateAsync(TModel model);
         protected abstract Task<Result> DeleteAsync(TModel model);
-        protected abstract Task<bool> ExistsAsync(TKey id);
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]

@@ -55,9 +55,9 @@ namespace DNTFrameworkCore.EntityFramework.Application
         where TFilteredPagedQueryModel : class, IFilteredPagedQueryModel
         where TKey : IEquatable<TKey>
     {
+        protected readonly DbSet<TEntity> EntitySet;
         protected readonly IEventBus EventBus;
         protected readonly IUnitOfWork UnitOfWork;
-        protected readonly DbSet<TEntity> EntitySet;
 
         protected CrudService(IUnitOfWork uow, IEventBus bus)
         {
@@ -71,8 +71,6 @@ namespace DNTFrameworkCore.EntityFramework.Application
         {
             return await BuildReadQuery(model).ToPagedQueryResultAsync(model);
         }
-
-        protected abstract IQueryable<TReadModel> BuildReadQuery(TFilteredPagedQueryModel model);
 
         public async Task<Maybe<TModel>> FindAsync(TKey id)
         {
@@ -95,8 +93,8 @@ namespace DNTFrameworkCore.EntityFramework.Application
         public async Task<IPagedQueryResult<TModel>> FindPagedListAsync(PagedQueryModel model)
         {
             var pagedList = await BuildFindQuery()
-                    .AsNoTracking()
-                    .ToPagedQueryResultAsync(model);
+                .AsNoTracking()
+                .ToPagedQueryResultAsync(model);
 
             var result = new PagedQueryResult<TModel>
             {
@@ -109,36 +107,12 @@ namespace DNTFrameworkCore.EntityFramework.Application
             return result;
         }
 
-        protected async Task<IReadOnlyList<TModel>> FindAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            var entityList = await BuildFindQuery()
-                    .AsNoTracking()
-                    .Where(predicate)
-                    .ToListAsync();
-
-            var modelList = entityList.MapReadOnlyList(MapToModel);
-
-            await AfterFindAsync(modelList);
-
-            return modelList;
-        }
-
-        protected virtual IQueryable<TEntity> BuildFindQuery()
-        {
-            return EntitySet.AsNoTracking();
-        }
-
-        protected virtual Task AfterFindAsync(IReadOnlyList<TModel> models)
-        {
-            return Task.CompletedTask;
-        }
-
         [Transactional]
         public Task<Result> CreateAsync(TModel model)
         {
             Guard.ArgumentNotNull(model, nameof(model));
 
-            return CreateAsync(new[] { model });
+            return CreateAsync(new[] {model});
         }
 
         [Transactional]
@@ -170,27 +144,12 @@ namespace DNTFrameworkCore.EntityFramework.Application
             return result;
         }
 
-        protected virtual Task AfterMappingAsync(IReadOnlyList<TEntity> entities, IReadOnlyList<TModel> models)
-        {
-            return Task.CompletedTask;
-        }
-
-        protected virtual Task<Result> BeforeCreateAsync(IReadOnlyList<TModel> models)
-        {
-            return Task.FromResult(Ok());
-        }
-
-        protected virtual Task<Result> AfterCreateAsync(IReadOnlyList<TModel> models)
-        {
-            return Task.FromResult(Ok());
-        }
-
         [Transactional]
         public Task<Result> EditAsync(TModel model)
         {
             Guard.ArgumentNotNull(model, nameof(model));
 
-            return EditAsync(new[] { model });
+            return EditAsync(new[] {model});
         }
 
         [Transactional]
@@ -228,25 +187,13 @@ namespace DNTFrameworkCore.EntityFramework.Application
             return result;
         }
 
-        protected virtual Task<Result> BeforeEditAsync(
-            IReadOnlyList<ModifiedModel<TModel>> models)
-        {
-            return Task.FromResult(Ok());
-        }
-
-        protected virtual Task<Result> AfterEditAsync(
-            IReadOnlyList<ModifiedModel<TModel>> models)
-        {
-            return Task.FromResult(Ok());
-        }
-
         [Transactional]
         [SkipValidation]
         public Task<Result> DeleteAsync(TModel model)
         {
             Guard.ArgumentNotNull(model, nameof(model));
 
-            return DeleteAsync(new[] { model });
+            return DeleteAsync(new[] {model});
         }
 
         [Transactional]
@@ -279,10 +226,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
         public async Task<Result> DeleteAsync(TKey id)
         {
             var model = await FindAsync(id);
-            if (model.HasValue)
-            {
-                return await DeleteAsync(model.Value);
-            }
+            if (model.HasValue) return await DeleteAsync(model.Value);
 
             return Ok();
         }
@@ -292,12 +236,67 @@ namespace DNTFrameworkCore.EntityFramework.Application
         public async Task<Result> DeleteAsync(IEnumerable<TKey> ids)
         {
             var models = await FindListAsync(ids);
-            if (models.Any())
-            {
-                return await DeleteAsync(models);
-            }
+            if (models.Any()) return await DeleteAsync(models);
 
             return Ok();
+        }
+
+        public Task<bool> ExistsAsync(TKey id)
+        {
+            return EntitySet.AnyAsync(BuildEqualityExpressionForId(id));
+        }
+
+        protected abstract IQueryable<TReadModel> BuildReadQuery(TFilteredPagedQueryModel model);
+
+        protected async Task<IReadOnlyList<TModel>> FindAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            var entityList = await BuildFindQuery()
+                .AsNoTracking()
+                .Where(predicate)
+                .ToListAsync();
+
+            var modelList = entityList.MapReadOnlyList(MapToModel);
+
+            await AfterFindAsync(modelList);
+
+            return modelList;
+        }
+
+        protected virtual IQueryable<TEntity> BuildFindQuery()
+        {
+            return EntitySet.AsNoTracking();
+        }
+
+        protected virtual Task AfterFindAsync(IReadOnlyList<TModel> models)
+        {
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task AfterMappingAsync(IReadOnlyList<TEntity> entities, IReadOnlyList<TModel> models)
+        {
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task<Result> BeforeCreateAsync(IReadOnlyList<TModel> models)
+        {
+            return Task.FromResult(Ok());
+        }
+
+        protected virtual Task<Result> AfterCreateAsync(IReadOnlyList<TModel> models)
+        {
+            return Task.FromResult(Ok());
+        }
+
+        protected virtual Task<Result> BeforeEditAsync(
+            IReadOnlyList<ModifiedModel<TModel>> models)
+        {
+            return Task.FromResult(Ok());
+        }
+
+        protected virtual Task<Result> AfterEditAsync(
+            IReadOnlyList<ModifiedModel<TModel>> models)
+        {
+            return Task.FromResult(Ok());
         }
 
         protected virtual Task<Result> BeforeDeleteAsync(IReadOnlyList<TModel> models)
@@ -310,28 +309,21 @@ namespace DNTFrameworkCore.EntityFramework.Application
             return Task.FromResult(Ok());
         }
 
-        public Task<bool> ExistsAsync(TKey id)
-        {
-            return EntitySet.AnyAsync(BuildEqualityExpressionForId(id));
-        }
-
         protected abstract void MapToEntity(TModel model, TEntity entity);
 
         protected abstract TModel MapToModel(TEntity entity);
 
-        private IReadOnlyList<ModifiedModel<TModel>> BuildModifiedModel(IReadOnlyList<TModel> models, IReadOnlyList<TEntity> entities)
+        private IReadOnlyList<ModifiedModel<TModel>> BuildModifiedModel(IReadOnlyList<TModel> models,
+            IReadOnlyList<TEntity> entities)
         {
-            if (models.Count != entities.Count)
-            {
-                throw new DbConcurrencyException();
-            }
+            if (models.Count != entities.Count) throw new DbConcurrencyException();
 
             var modelList = entities.MapReadOnlyList(MapToModel);
             var modelDictionary = modelList.ToDictionary(e => e.Id);
 
             var result = models.Select(
                 model => new ModifiedModel<TModel>
-                { NewValue = model, OriginalValue = modelDictionary[model.Id] }).ToList();
+                    {NewValue = model, OriginalValue = modelDictionary[model.Id]}).ToList();
 
             return result;
         }
@@ -346,10 +338,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
 
                 var properties = typeof(TModel).GetProperties(BindingFlags.Public | BindingFlags.Instance)
                     .Where(p => p.CanRead && p.CanWrite).ToList();
-                foreach (var property in properties)
-                {
-                    property.SetValue(model, property.GetValue(m));
-                }
+                foreach (var property in properties) property.SetValue(model, property.GetValue(m));
             }
         }
 

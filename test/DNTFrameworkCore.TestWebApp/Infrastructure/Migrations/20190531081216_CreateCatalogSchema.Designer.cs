@@ -7,19 +7,42 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace DNTFrameworkCore.TestWebApp.Migrations
+namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20190321010223_CreateLoggingSchema")]
-    partial class CreateLoggingSchema
+    [Migration("20190531081216_CreateCatalogSchema")]
+    partial class CreateCatalogSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("DNTFrameworkCore.EntityFramework.Caching.Cache", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(449);
+
+                    b.Property<DateTimeOffset?>("AbsoluteExpiration");
+
+                    b.Property<DateTimeOffset>("ExpiresAtTime");
+
+                    b.Property<long?>("SlidingExpirationInSeconds");
+
+                    b.Property<byte[]>("Value")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpiresAtTime")
+                        .HasName("IX_Cache_ExpiresAtTime");
+
+                    b.ToTable("Cache","dbo");
+                });
 
             modelBuilder.Entity("DNTFrameworkCore.EntityFramework.Logging.Log", b =>
                 {
@@ -64,6 +87,53 @@ namespace DNTFrameworkCore.TestWebApp.Migrations
                         .HasName("IX_Log_LoggerName");
 
                     b.ToTable("Log","dbo");
+                });
+
+            modelBuilder.Entity("DNTFrameworkCore.EntityFramework.Protection.ProtectionKey", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FriendlyName")
+                        .IsRequired();
+
+                    b.Property<string>("XmlValue");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FriendlyName")
+                        .IsUnique()
+                        .HasName("IX_ProtectionKey_FriendlyName");
+
+                    b.ToTable("ProtectionKey","dbo");
+                });
+
+            modelBuilder.Entity("DNTFrameworkCore.EntityFramework.SqlServer.Numbering.NumberedEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("EntityName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .IsUnicode(false);
+
+                    b.Property<long>("NextNumber");
+
+                    b.Property<long>("TenantId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EntityName")
+                        .IsUnique()
+                        .HasName("UIX_NumberedEntity_EntityName");
+
+                    b.HasIndex("TenantId")
+                        .HasName("IX_NumberedEntity_TenantId");
+
+                    b.ToTable("NumberedEntity");
                 });
 
             modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Blogging.Blog", b =>
@@ -115,6 +185,55 @@ namespace DNTFrameworkCore.TestWebApp.Migrations
                         .HasName("Blog_NormalizedTitle");
 
                     b.ToTable("Blog");
+                });
+
+            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Catalog.Product", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("CreationDateTime");
+
+                    b.Property<string>("CreatorBrowserName")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("CreatorIp")
+                        .HasMaxLength(256);
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<DateTimeOffset?>("LastModificationDateTime");
+
+                    b.Property<string>("LastModifierBrowserName")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("LastModifierIp")
+                        .HasMaxLength(256);
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Number")
+                        .IsUnique()
+                        .HasName("UIX_Product_Number");
+
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Identity.Permission", b =>

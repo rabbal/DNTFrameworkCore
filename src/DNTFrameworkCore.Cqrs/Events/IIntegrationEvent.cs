@@ -6,6 +6,6 @@ namespace DNTFrameworkCore.Cqrs.Events
     public interface IIntegrationEvent : INotification
     {
         Guid Id { get; }
-        DateTimeOffset CreationDateTime { get; }
+        DateTimeOffset Timestamp { get; }
     }
 }

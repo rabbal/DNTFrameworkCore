@@ -2,17 +2,17 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DNTFrameworkCore.TestWebApp.Migrations
+namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 {
-    public partial class CreateProductSchema : Migration
+    public partial class CreateBloggingSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Product",
+                name: "Blog",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationDateTime = table.Column<DateTimeOffset>(nullable: false),
                     LastModificationDateTime = table.Column<DateTimeOffset>(nullable: true),
@@ -23,26 +23,26 @@ namespace DNTFrameworkCore.TestWebApp.Migrations
                     LastModifierUserId = table.Column<long>(nullable: true),
                     CreatorUserId = table.Column<long>(nullable: true),
                     Title = table.Column<string>(maxLength: 50, nullable: false),
-                    Number = table.Column<string>(maxLength: 50, nullable: false),
-                    Price = table.Column<decimal>(nullable: false),
+                    NormalizedTitle = table.Column<string>(maxLength: 50, nullable: false),
+                    Url = table.Column<string>(maxLength: 50, nullable: false),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Product", x => x.Id);
+                    table.PrimaryKey("PK_Blog", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "UIX_Product_Number",
-                table: "Product",
-                column: "Number",
+                name: "Blog_NormalizedTitle",
+                table: "Blog",
+                column: "NormalizedTitle",
                 unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Product");
+                name: "Blog");
         }
     }
 }

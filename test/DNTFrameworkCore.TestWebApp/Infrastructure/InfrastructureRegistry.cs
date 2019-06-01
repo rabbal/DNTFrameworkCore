@@ -43,8 +43,8 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure
                     {
                         warnings.Throw(RelationalEventId.QueryClientEvaluationWarning);
                         warnings.Throw(CoreEventId.IncludeIgnoredWarning);
-                    })
-                    .UseLoggerFactory(BuildLoggerFactory());
+                    });
+                    //.UseLoggerFactory(BuildLoggerFactory());
             });
             
             services.AddEFSecondLevelCache();

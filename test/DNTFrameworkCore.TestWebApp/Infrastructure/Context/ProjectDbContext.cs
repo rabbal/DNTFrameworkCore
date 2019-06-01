@@ -27,6 +27,10 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyLogConfiguration();
+            modelBuilder.ApplyNumberedEntityConfiguration();
+            modelBuilder.ApplyProtectionKeyConfiguration();
+            modelBuilder.ApplySqlCacheConfiguration();
             modelBuilder.ApplyConfiguration(new BlogConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new UserPermissionConfiguration());
@@ -39,10 +43,6 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Context
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
             modelBuilder.ApplyConfiguration(new InvoiceConfiguration());
             modelBuilder.ApplyConfiguration(new InvoiceItemConfiguration());
-            modelBuilder.ApplyLogConfiguration();
-            modelBuilder.ApplyNumberedEntityConfiguration();
-            modelBuilder.ApplyProtectionKeyConfiguration();
-            modelBuilder.ApplySqlCacheConfiguration();
 
             base.OnModelCreating(modelBuilder);
         }

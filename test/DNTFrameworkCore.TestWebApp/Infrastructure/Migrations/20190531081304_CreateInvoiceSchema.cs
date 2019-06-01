@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DNTFrameworkCore.TestWebApp.Migrations
+namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 {
     public partial class CreateInvoiceSchema : Migration
     {

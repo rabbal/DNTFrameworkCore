@@ -152,7 +152,7 @@ public class TaskValidator : ModelValidator<TaskModel>
 
 Also in most cases, one Model/DTO can be enough for your requirements about Create/Edit/View an entity. However you can create ReadModel like below:
 ```c#
-public class TaskReadModel : MasterModel<int>
+public class TaskReadModel : ReadModel<int>
 {
     public string Title { get; set; }
     public string Number { get; set; }

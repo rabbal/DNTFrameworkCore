@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DNTFrameworkCore.TestWebApp.Migrations
+namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 {
-    public partial class CreateTaskSchema : Migration
+    public partial class CreateIdentitySchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,32 +30,6 @@ namespace DNTFrameworkCore.TestWebApp.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Role", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Task",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreationDateTime = table.Column<DateTimeOffset>(nullable: false),
-                    LastModificationDateTime = table.Column<DateTimeOffset>(nullable: true),
-                    CreatorIp = table.Column<string>(maxLength: 256, nullable: true),
-                    LastModifierIp = table.Column<string>(maxLength: 256, nullable: true),
-                    CreatorBrowserName = table.Column<string>(maxLength: 1024, nullable: true),
-                    LastModifierBrowserName = table.Column<string>(maxLength: 1024, nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    Title = table.Column<string>(maxLength: 256, nullable: false),
-                    NormalizedTitle = table.Column<string>(maxLength: 256, nullable: false),
-                    Number = table.Column<string>(maxLength: 50, nullable: false),
-                    Description = table.Column<string>(maxLength: 1024, nullable: true),
-                    State = table.Column<byte>(nullable: false),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Task", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -227,18 +201,6 @@ namespace DNTFrameworkCore.TestWebApp.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "UIX_Task_NormalizedTitle",
-                table: "Task",
-                column: "NormalizedTitle",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "UIX_Task_Number",
-                table: "Task",
-                column: "Number",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "UIX_User_NormalizedDisplayName",
                 table: "User",
                 column: "NormalizedDisplayName",
@@ -273,9 +235,6 @@ namespace DNTFrameworkCore.TestWebApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "RoleClaim");
-
-            migrationBuilder.DropTable(
-                name: "Task");
 
             migrationBuilder.DropTable(
                 name: "UserClaim");

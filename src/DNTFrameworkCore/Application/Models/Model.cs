@@ -12,7 +12,7 @@ namespace DNTFrameworkCore.Application.Models
     {
         public TKey Id { get; set; }
         public TrackingState TrackingState { get; set; }
-        public virtual bool IsNew() => EqualityComparer<TKey>.Default.Equals(Id, default) && TrackingState == TrackingState.Added;
+        public bool IsNew() => EqualityComparer<TKey>.Default.Equals(Id, default) && TrackingState == TrackingState.Added;
         public bool IsModified() => !IsNew() && TrackingState == TrackingState.Modified;
         public bool IsUnchanged() => !IsNew() && TrackingState == TrackingState.Unchanged;
         public bool IsDeleted() => !IsNew() && TrackingState == TrackingState.Deleted;

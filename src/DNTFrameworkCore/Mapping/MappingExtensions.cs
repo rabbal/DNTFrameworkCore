@@ -21,8 +21,9 @@ namespace DNTFrameworkCore.Mapping
                 throw new ArgumentNullException(nameof(source));
             }
 
-            var destination = new List<TDestination>(source.Count());
-            foreach (var sourceItem in source)
+            var sourceList = source.ToList();
+            var destination = new List<TDestination>(sourceList.Count);
+            foreach (var sourceItem in sourceList)
             {
                 var destinationItem = Factory<TDestination>.CreateInstance();
                 mapper(sourceItem, destinationItem);
@@ -44,8 +45,9 @@ namespace DNTFrameworkCore.Mapping
                 throw new ArgumentNullException(nameof(source));
             }
 
-            var destination = new List<TDestination>(source.Count());
-            foreach (var sourceItem in source)
+            var sourceList = source.ToList();
+            var destination = new List<TDestination>(sourceList.Count);
+            foreach (var sourceItem in sourceList)
             {
                 var destinationItem = mapper(sourceItem);
                 destination.Add(destinationItem);
