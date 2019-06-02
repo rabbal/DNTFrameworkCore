@@ -56,8 +56,8 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
         {
             _mapper.Map(model, user);
             
-            ApplySerialNumber(user, model);
-            ApplyPasswordHash(user, model);
+            MapSerialNumber(user, model);
+            MapPasswordHash(user, model);
         }
 
         protected override UserModel MapToModel(User user)
@@ -65,16 +65,16 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
             return _mapper.Map<UserModel>(user);
         }
 
-        private void ApplySerialNumber(User user, UserModel model)
+        private void MapSerialNumber(User user, UserModel model)
         {
-            if (!model.ShouldApplySerialNumber()) return;
+            if (!model.ShouldMapSerialNumber()) return;
 
             user.SerialNumber = user.NewSerialNumber();
         }
 
-        private void ApplyPasswordHash(User user, UserModel model)
+        private void MapPasswordHash(User user, UserModel model)
         {
-            if (!model.ShouldApplyPasswordHash()) return;
+            if (!model.ShouldMapPasswordHash()) return;
 
             user.PasswordHash = _password.HashPassword(model.Password);
         }

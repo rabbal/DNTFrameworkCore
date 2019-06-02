@@ -7,56 +7,62 @@
 </div>
 <form asp-action="@(Model.IsNew() ? "Create" : "Edit")" asp-controller="Roles" asp-modal-form="RoleForm">
     <div class="modal-body">
-        <input type="hidden" name="save-continue" value="true" />
+        <input type="hidden" name="save-continue" value="true"/>
         <input asp-for="RowVersion" type="hidden"/>
         <input asp-for="Id" type="hidden"/>
         <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">
-              <a class="nav-link  active" href="#information" role="tab" data-toggle="tab" aria-selected="true">Role Information</a>
+                <a class="nav-link  active" href="#information" role="tab" data-toggle="tab" aria-selected="true">Role Information</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#permissions" role="tab" data-toggle="tab">Permissions</a>
+                <a class="nav-link" href="#permissions" role="tab" data-toggle="tab">Permissions</a>
             </li>
         </ul>
 
-    <div class="tab-content">
-      <div role="tabpanel" class="tab-pane active" id="information">
-          <div class="form-group row">
-                <div class="col col-md-8">                      
-                    <label asp-for="Name" class="col-form-label text-md-left"></label>
-                    <input asp-for="Name" autocomplete="off" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-              </div>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="information">
+                <div class="form-group row">
+                    <div class="col col-md-8">
+                        <label asp-for="Name" class="col-form-label text-md-left"></label>
+                        <input asp-for="Name" autocomplete="off" class="form-control"/>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col">
+                        <label asp-for="Description" class="col-form-label text-md-left"></label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="permissions">
+                <ul class="list-group mh-25 pt-1">
+
+                    @foreach (var permission in Model.Permissions)
+                    {
+                        <li class="list-group-item">
+                            <partial name="_Permission" model="permission"/>
+                        </li>
+                    }
+                </ul>
+
+            </div>
         </div>
-        <div class="form-group row">
-              <div class="col">
-                    <label asp-for="Description" class="col-form-label text-md-left"></label>
-                     <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-                    <span asp-validation-for="Description" class="text-danger"></span>
-              </div>
-        </div> 
-      </div>
-      <div role="tabpanel" class="tab-pane fade" id="permissions">
-            @foreach(var permission in Model.Permissions)
-            {
-                <partial name="_Permission" model="permission"/>
-            }
-      </div>
-    </div>
-        
+
     </div>
     <div class="modal-footer">
         <a class="btn btn-light btn-circle" asp-modal-delete-link asp-model-id="@Model.Id" asp-modal-toggle="false"
-            asp-controller="Roles" asp-action="Delete" asp-if="!Model.IsNew()" asp-permission="@PermissionNames.Roles_Delete"
-            title="Delete Role">
+           asp-controller="Roles" asp-action="Delete" asp-if="!Model.IsNew()" asp-permission="@PermissionNames.Roles_Delete"
+           title="Delete Role">
             <i class="fa fa-trash text-danger"></i>
         </a>
         <a class="btn btn-light btn-circle" title="Refresh Role" asp-if="!Model.IsNew()" asp-modal-link asp-modal-toggle="false"
-            asp-controller="Roles" asp-action="Edit" asp-route-id="@Model.Id">
+           asp-controller="Roles" asp-action="Edit" asp-route-id="@Model.Id">
             <i class="fa fa-repeat"></i>
         </a>
         <a class="btn btn-light btn-circle mr-auto" title="New Role" asp-modal-link asp-modal-toggle="false"
-            asp-controller="Roles" asp-action="Create">
+           asp-controller="Roles" asp-action="Create">
             <i class="fa fa-plus"></i>
         </a>
         <button type="button" class="btn btn-light" data-dismiss="modal">

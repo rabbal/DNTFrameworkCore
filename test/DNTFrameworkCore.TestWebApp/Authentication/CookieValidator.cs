@@ -4,7 +4,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using DNTFrameworkCore.EntityFramework.Context;
 using DNTFrameworkCore.Functional;
-using DNTFrameworkCore.TestWebApp.Application.Identity;
 using DNTFrameworkCore.TestWebApp.Domain.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;

@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Application.Services;
@@ -9,10 +7,8 @@ using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.EntityFramework.Application;
 using DNTFrameworkCore.EntityFramework.Context;
 using DNTFrameworkCore.Eventing;
-using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.TestWebApp.Application.Identity.Models;
 using DNTFrameworkCore.TestWebApp.Domain.Identity;
-using DNTFrameworkCore.TestWebApp.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Identity
@@ -60,8 +56,8 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
         {
             _mapper.Map(model, user);
 
-            ApplySerialNumber(user, model);
-            ApplyPasswordHash(user, model);
+            MapSerialNumber(user, model);
+            MapPasswordHash(user, model);
         }
 
         protected override UserModel MapToModel(User user)
@@ -69,16 +65,16 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
             return _mapper.Map<UserModel>(user);
         }
 
-        private void ApplySerialNumber(User user, UserModel model)
+        private void MapSerialNumber(User user, UserModel model)
         {
-            if (!model.ShouldApplySerialNumber()) return;
+            if (!model.ShouldMapSerialNumber()) return;
 
             user.SerialNumber = user.NewSerialNumber();
         }
 
-        private void ApplyPasswordHash(User user, UserModel model)
+        private void MapPasswordHash(User user, UserModel model)
         {
-            if (!model.ShouldApplyPasswordHash()) return;
+            if (!model.ShouldMapPasswordHash()) return;
 
             user.PasswordHash = _password.HashPassword(model.Password);
         }

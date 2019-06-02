@@ -1,10 +1,9 @@
-
 @model DNTFrameworkCore.TestWebApp.Models.Roles.RoleIndexViewModel
 
 @{
     LocalizationResourceLocation = "DNTFrameworkCore.TestWebApp";
-    ViewBag.Title = L("Administration.Views.User.Index.Title");
-    // ViewBag.ActiveMenu = AdministrationMenuNames.UserManagement;
+    ViewData["Title"] = L("Administration.Views.User.Index.Title");
+    // ViewBag["ActiveMenu"] = AdministrationMenuNames.UserManagement;
 }
 
 <div class="row margin-bottom-5">
@@ -22,7 +21,7 @@
             <i class="fa fa-filter"></i>
             Filter
         </a>
-        <select asp-items="Model.Permissions.ToSelectListItem()" class="form-control">
+        <select name="Permissions" multiple="multiple" asp-items="Model.Permissions.ToSelectListItem()" class="form-control col-md-3">
         </select>
         <!-- Split button -->
         <div class="btn-group">
@@ -32,11 +31,21 @@
                 <span class="sr-only">Toggle Dropdown</span>
             </button>
             <ul class="dropdown-menu">
-                <li class="dropdown-item"><a href="#">PDF</a></li>
-                <li class="dropdown-item"><a href="#">Excel</a></li>
-                <li class="dropdown-item"><a href="#">CSV</a></li>
-                <li class="dropdown-item"><a href="#">XML</a></li>
-                <li class="dropdown-item"><a href="#">JSON</a></li>
+                <li class="dropdown-item">
+                    <a href="#">PDF</a>
+                </li>
+                <li class="dropdown-item">
+                    <a href="#">Excel</a>
+                </li>
+                <li class="dropdown-item">
+                    <a href="#">CSV</a>
+                </li>
+                <li class="dropdown-item">
+                    <a href="#">XML</a>
+                </li>
+                <li class="dropdown-item">
+                    <a href="#">JSON</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -48,17 +57,16 @@
     <div class="col-md-12" id="UsersList">
         @foreach (var item in Model.PagedList.Result.Items)
         {
-            <a  class="btn btn-secondary" asp-modal-link
-                asp-controller="Roles" asp-action="Edit" asp-route-id="@item.Id" asp-permission="@PermissionNames.Roles_Edit">
+            <a class="btn btn-secondary" asp-modal-link
+               asp-controller="Roles" asp-action="Edit" asp-route-id="@item.Id" asp-permission="@PermissionNames.Roles_Edit">
                 <i class="fa fa-pencil"></i>
-                @item.Name 
-        </a>
-
+                @item.Name
+            </a>
         }
     </div>
 </div>
 
 @section Scripts{
-<partial name="_ValidationScriptsPartial"></partial>
+    <partial name="_ValidationScriptsPartial"></partial>
 
 }

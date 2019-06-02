@@ -1,7 +1,11 @@
 @model DNTFrameworkCore.TestWebApp.Application.Identity.Models.PermissionModel
 @using (Html.BeginCollectionItem("Permissions"))
 {
-    @Html.HiddenFor(m=>m.Id)
-    @Html.HiddenFor(m=>m.TrackingState)
-    @Html.CheckBox("Name",false)    
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.TrackingState)
+
+    <div class="form-check">
+        @Html.CheckBox("Name", !Model.IsNew(), new {@class = "form-check-input"})
+        @Html.Label("Name", Model.Name, new {@class = "form-check-label"})
+    </div>
 }

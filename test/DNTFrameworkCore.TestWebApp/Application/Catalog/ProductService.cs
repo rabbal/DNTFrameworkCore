@@ -6,7 +6,6 @@ using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.EntityFramework.Application;
 using DNTFrameworkCore.EntityFramework.Context;
 using DNTFrameworkCore.Eventing;
-using DNTFrameworkCore.Mapping;
 using DNTFrameworkCore.TestWebApp.Application.Catalog.Models;
 using DNTFrameworkCore.TestWebApp.Domain.Catalog;
 using Microsoft.EntityFrameworkCore;

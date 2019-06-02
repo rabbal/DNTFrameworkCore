@@ -26,7 +26,7 @@ namespace DNTFrameworkCore.TestWebApp
                 .AddModelValidation()
                 .AddFluentModelValidation()
                 .AddTransaction();
-                
+
             services.AddDNTCommonWeb();
             services.AddInfrastructure(Configuration);
             services.AddApplication(Configuration);
@@ -53,7 +53,7 @@ namespace DNTFrameworkCore.TestWebApp
 
             app.UseDNTFramework();
             app.UseHttpsRedirection();
-             app.UseFileServer(new FileServerOptions
+            app.UseFileServer(new FileServerOptions
             {
                 // Don't expose file system
                 EnableDirectoryBrowsing = false

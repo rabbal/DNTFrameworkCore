@@ -9,7 +9,6 @@ using DNTFrameworkCore.EntityFramework.Context;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Logging;
 using DNTFrameworkCore.Runtime;
-using DNTFrameworkCore.TestWebApp.Application.Identity;
 using DNTFrameworkCore.TestWebApp.Domain.Identity;
 using DNTFrameworkCore.TestWebApp.Resources;
 using Microsoft.AspNetCore.Authentication;

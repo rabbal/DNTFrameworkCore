@@ -53,11 +53,6 @@ namespace DNTFrameworkCore.Web.Mvc
         {
             return Service.DeleteAsync(model);
         }
-
-        protected override Task<bool> ExistsAsync(TKey id)
-        {
-            return Service.ExistsAsync(id);
-        }
     }
 
     [Authorize]
@@ -99,11 +94,6 @@ namespace DNTFrameworkCore.Web.Mvc
         protected override Task<Result> DeleteAsync(TModel model)
         {
             return Service.DeleteAsync(model);
-        }
-
-        protected override Task<bool> ExistsAsync(TKey id)
-        {
-            return Service.ExistsAsync(id);
         }
     }
 
@@ -148,11 +138,6 @@ namespace DNTFrameworkCore.Web.Mvc
         {
             return Service.DeleteAsync(model);
         }
-
-        protected override Task<bool> ExistsAsync(TKey id)
-        {
-            return Service.ExistsAsync(id);
-        }
     }
 
     public abstract class
@@ -179,7 +164,6 @@ namespace DNTFrameworkCore.Web.Mvc
         protected abstract Task<Result> EditAsync(TModel model);
         protected abstract Task<Result> CreateAsync(TModel model);
         protected abstract Task<Result> DeleteAsync(TModel model);
-        protected abstract Task<bool> ExistsAsync(TKey id);
 
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -279,12 +263,8 @@ namespace DNTFrameworkCore.Web.Mvc
             }
 
             var model = await FindAsync(id);
-            if (!model.HasValue)
-            {
-                return NotFound();
-            }
-
-            return RenderView(model.Value);
+            
+            return !model.HasValue ? NotFound() : RenderView(model.Value);
         }
 
         [HttpPost, ValidateAntiForgeryToken, AjaxOnly]

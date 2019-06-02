@@ -5,12 +5,10 @@ using DNTFrameworkCore.EntityFramework.Context;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.TestWebApp.Application.Identity.Models;
 using DNTFrameworkCore.TestWebApp.Domain.Identity;
-using DNTFrameworkCore.TestWebApp.Helpers;
 using Microsoft.EntityFrameworkCore;
 using DNTFrameworkCore.Linq;
 using AutoMapper;
 using System;
-using DNTFrameworkCore.Application.Models;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Identity
 {
@@ -18,7 +16,8 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
     {
     }
 
-    public class RoleService : CrudService<Role, long, RoleReadModel, RoleModel, RoleFilteredPagedQueryModel>, IRoleService
+    public class RoleService : CrudService<Role, long, RoleReadModel, RoleModel, RoleFilteredPagedQueryModel>,
+        IRoleService
     {
         private readonly IMapper _mapper;
 
@@ -39,8 +38,8 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
         protected override IQueryable<RoleReadModel> BuildReadQuery(RoleFilteredPagedQueryModel model)
         {
             return EntitySet.AsNoTracking()
-              .WhereIf(model.Permissions != null && model.Permissions.Any(),
-                r => r.Permissions.Any(p => model.Permissions.Contains(p.Name)))
+                .WhereIf(model.Permissions != null && model.Permissions.Any(),
+                    r => r.Permissions.Any(p => model.Permissions.Contains(p.Name)))
                 .Select(r => new RoleReadModel
                 {
                     Id = r.Id,
@@ -54,9 +53,9 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
             _mapper.Map(model, role);
         }
 
-        protected override RoleModel MapToModel(Role entity)
+        protected override RoleModel MapToModel(Role role)
         {
-            return _mapper.Map<RoleModel>(entity);
+            return _mapper.Map<RoleModel>(role);
         }
     }
 }

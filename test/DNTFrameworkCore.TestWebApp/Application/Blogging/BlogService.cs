@@ -16,15 +16,14 @@ using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Blogging
 {
-
     public interface IBlogService : ICrudService<int, BlogModel>
     {
     }
 
     public class BlogService : CrudService<Blog, int, BlogModel>, IBlogService
     {
-        private readonly IMapper _mapper;
         private readonly ILogger<BlogService> _logger;
+        private readonly IMapper _mapper;
 
         public BlogService(IUnitOfWork uow, IEventBus bus, IMapper mapper, ILogger<BlogService> logger) : base(uow, bus)
         {
@@ -34,8 +33,11 @@ namespace DNTFrameworkCore.TestWebApp.Application.Blogging
 
         protected override IQueryable<BlogModel> BuildReadQuery(FilteredPagedQueryModel model)
         {
-            return EntitySet.AsNoTracking().Select(b => new BlogModel
-            { Id = b.Id, RowVersion = b.RowVersion, Url = b.Url, Title = b.Title });
+            return EntitySet.AsNoTracking()
+                .Select(b => new BlogModel
+                {
+                    Id = b.Id, RowVersion = b.RowVersion, Url = b.Url, Title = b.Title
+                });
         }
 
         protected override void MapToEntity(BlogModel model, Blog entity)
@@ -77,7 +79,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Blogging
         }
 
         protected override Task<Result> BeforeEditAsync(
-            IReadOnlyList<ModifiedModel<BlogModel>> models)
+            IReadOnlyList<ModifiedModel<BlogModel>> models, IReadOnlyList<Blog> blogs)
         {
             _logger.LogInformation(nameof(BeforeEditAsync));
 
@@ -85,7 +87,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Blogging
         }
 
         protected override Task<Result> AfterEditAsync(
-            IReadOnlyList<ModifiedModel<BlogModel>> models)
+            IReadOnlyList<ModifiedModel<BlogModel>> models, IReadOnlyList<Blog> blogs)
         {
             _logger.LogInformation(nameof(AfterEditAsync));
 

@@ -16,7 +16,6 @@ using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.TestAPI.Application.Blogging
 {
-
     public interface IBlogService : ICrudService<int, BlogModel>
     {
     }
@@ -87,7 +86,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Blogging
         }
 
         protected override Task<Result> BeforeEditAsync(
-            IReadOnlyList<ModifiedModel<BlogModel>> models)
+            IReadOnlyList<ModifiedModel<BlogModel>> models, IReadOnlyList<Blog> blogs)
         {
             _logger.LogInformation(nameof(BeforeEditAsync));
 
@@ -95,7 +94,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Blogging
         }
 
         protected override Task<Result> AfterEditAsync(
-            IReadOnlyList<ModifiedModel<BlogModel>> models)
+            IReadOnlyList<ModifiedModel<BlogModel>> models, IReadOnlyList<Blog> blogs)
         {
             _logger.LogInformation(nameof(AfterEditAsync));
 

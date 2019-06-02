@@ -1,7 +1,6 @@
-
 @using DNTFrameworkCore.Application.Models;
 @using DNTFrameworkCore.TestWebApp.Application.Catalog.Models;
-@model PagedListModel<ProductModel,FilteredPagedQueryModel>
+@model PagedListModel<ProductModel, FilteredPagedQueryModel>
 
 @{
     LocalizationResourceLocation = "DNTFrameworkCore.TestWebApp";
@@ -11,11 +10,13 @@
 
 <div class="row margin-bottom-5">
     <div class="col-md-12">
-        
-        <a href="#" class="btn btn-info"
-            modal-link="@Url.Action("Create","Products")" 
-            has-permission="@PermissionNames.Products_Create">
-            
+
+        <a class="btn btn-info"
+           asp-modal-link
+           asp-permission="@PermissionNames.Products_Create"
+           asp-controller="Products"
+           asp-action="Create">
+
             <i class="fa fa-plus"></i>
             New Product
         </a>
@@ -37,11 +38,21 @@
                 <span class="sr-only">Toggle Dropdown</span>
             </button>
             <ul class="dropdown-menu">
-                <li class="dropdown-item"><a href="#">PDF</a></li>
-                <li class="dropdown-item"><a href="#">Excel</a></li>
-                <li class="dropdown-item"><a href="#">CSV</a></li>
-                <li class="dropdown-item"><a href="#">XML</a></li>
-                <li class="dropdown-item"><a href="#">JSON</a></li>
+                <li class="dropdown-item">
+                    <a href="#">PDF</a>
+                </li>
+                <li class="dropdown-item">
+                    <a href="#">Excel</a>
+                </li>
+                <li class="dropdown-item">
+                    <a href="#">CSV</a>
+                </li>
+                <li class="dropdown-item">
+                    <a href="#">XML</a>
+                </li>
+                <li class="dropdown-item">
+                    <a href="#">JSON</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -53,16 +64,15 @@
     <div class="col-md-12" id="UsersList">
         @foreach (var item in Model.Result.Items)
         {
-            <a href="#" class="btn btn-secondary" modal-link="@Url.Action("Edit","Products", new {id=item.Id})" has-permission="@PermissionNames.Products_Edit">
-            <i class="fa fa-pencil"></i>
-            @item.Title 
-        </a>
-
+            <a href="#" class="btn btn-secondary" modal-link="@Url.Action("Edit", "Products", new {id = item.Id})" has-permission="@PermissionNames.Products_Edit">
+                <i class="fa fa-pencil"></i>
+                @item.Title
+            </a>
         }
     </div>
 </div>
 
 @section Scripts{
-<partial name="_ValidationScriptsPartial"></partial>
+    <partial name="_ValidationScriptsPartial"></partial>
 
 }

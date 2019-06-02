@@ -8,7 +8,8 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity.Models
     {
         public IdentityMapProfile()
         {
-            CreateMap<Role, RoleModel>(MemberList.None).ReverseMap()
+            CreateMap<Role, RoleModel>(MemberList.None)
+                .ReverseMap()
                 .ForMember(d => d.NormalizedName, m => m.MapFrom(s => s.Name.ToUpperInvariant()));
 
             CreateMap<User, UserModel>(MemberList.None)

@@ -162,7 +162,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
 
             var modifiedList = BuildModifiedModel(modelList, entityList);
 
-            var result = await BeforeEditAsync(modifiedList);
+            var result = await BeforeEditAsync(modifiedList, entityList);
             if (!result.Succeeded) return result;
 
             MapToEntity(modelList, entityList);
@@ -179,7 +179,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
 
             MapToModel(entityList, modelList);
 
-            result = await AfterEditAsync(modifiedList);
+            result = await AfterEditAsync(modifiedList, entityList);
             if (!result.Succeeded) return result;
 
             result = await EventBus.TriggerEditedEventAsync<TModel, TKey>(modifiedList);
@@ -288,13 +288,13 @@ namespace DNTFrameworkCore.EntityFramework.Application
         }
 
         protected virtual Task<Result> BeforeEditAsync(
-            IReadOnlyList<ModifiedModel<TModel>> models)
+            IReadOnlyList<ModifiedModel<TModel>> models, IReadOnlyList<TEntity> entities)
         {
             return Task.FromResult(Ok());
         }
 
         protected virtual Task<Result> AfterEditAsync(
-            IReadOnlyList<ModifiedModel<TModel>> models)
+            IReadOnlyList<ModifiedModel<TModel>> models, IReadOnlyList<TEntity> entities)
         {
             return Task.FromResult(Ok());
         }
