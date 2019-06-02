@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Authorization;
@@ -13,17 +14,18 @@ using Microsoft.Extensions.Localization;
 
 namespace DNTFrameworkCore.TestWebApp.Controllers
 {
-    public class RolesController : CrudController<IRoleService, long, RoleReadModel, RoleModel, RoleFilteredPagedQueryModel>
+    public class
+        RolesController : CrudController<IRoleService, long, RoleReadModel, RoleModel, RoleFilteredPagedQueryModel>
     {
-        private readonly IPermissionService _permissionService;
+        private readonly IPermissionService _permission;
         private readonly IStringLocalizerFactory _localizerFactory;
 
         public RolesController(
             IRoleService service,
-            IPermissionService permissionService,
+            IPermissionService permission,
             IStringLocalizerFactory localizerFactory) : base(service)
         {
-            _permissionService = permissionService ?? throw new ArgumentNullException(nameof(permissionService));
+            _permission = permission ?? throw new ArgumentNullException(nameof(permission));
             _localizerFactory = localizerFactory ?? throw new ArgumentNullException(nameof(localizerFactory));
         }
 
@@ -33,18 +35,17 @@ namespace DNTFrameworkCore.TestWebApp.Controllers
         protected override string DeletePermissionName => PermissionNames.Roles_Delete;
         protected override string ViewName => "_RoleModal";
 
-        protected override IActionResult RenderIndex(PagedListModel<RoleReadModel, RoleFilteredPagedQueryModel> model)
+        protected override IActionResult RenderIndex(IPagedQueryResult<RoleReadModel> model)
         {
             var indexModel = new RoleIndexViewModel
             {
-                PagedList = model,
-                Permissions = _permissionService
-                    .ReadList()
-                    .Select(p => new LookupItem { Value = p.Name, Text = p.DisplayName.Localize(_localizerFactory) })
-                    .ToList()
+                Items = model.Items,
+                TotalCount = model.TotalCount,
+                Permissions = ReadPermissionList()
             };
+
             return Request.IsAjaxRequest()
-                ? (IActionResult)PartialView(indexModel)
+                ? (IActionResult) PartialView(indexModel)
                 : View(indexModel);
         }
 
@@ -57,9 +58,18 @@ namespace DNTFrameworkCore.TestWebApp.Controllers
                 Name = model.Name,
                 Description = model.Description,
                 Permissions = model.Permissions,
-                //PermissionList=
+                PermissionList = ReadPermissionList()
             };
+            
             return PartialView(ViewName, modalViewModel);
+        }
+
+        private List<LookupItem> ReadPermissionList()
+        {
+            return _permission
+                .ReadList()
+                .Select(p => new LookupItem {Value = p.Name, Text = p.DisplayName.Localize(_localizerFactory)})
+                .ToList();
         }
     }
 }

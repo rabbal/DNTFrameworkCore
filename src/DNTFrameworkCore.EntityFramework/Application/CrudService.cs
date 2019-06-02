@@ -125,7 +125,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
 
             var entityList = modelList.MapReadOnlyList<TModel, TEntity>(MapToEntity);
 
-            await AfterMappingAsync(entityList, modelList);
+            await AfterMappingAsync(modelList, entityList);
 
             result = await EventBus.TriggerCreatingEventAsync<TModel, TKey>(modelList);
             if (!result.Succeeded) return result;
@@ -167,7 +167,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
 
             MapToEntity(modelList, entityList);
 
-            await AfterMappingAsync(entityList, modelList);
+            await AfterMappingAsync(modelList, entityList);
 
             result = await EventBus.TriggerEditingEventAsync<TModel, TKey>(modifiedList);
             if (!result.Succeeded) return result;
@@ -272,7 +272,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
             return Task.CompletedTask;
         }
 
-        protected virtual Task AfterMappingAsync(IReadOnlyList<TEntity> entities, IReadOnlyList<TModel> models)
+        protected virtual Task AfterMappingAsync(IReadOnlyList<TModel> models, IReadOnlyList<TEntity> entities)
         {
             return Task.CompletedTask;
         }

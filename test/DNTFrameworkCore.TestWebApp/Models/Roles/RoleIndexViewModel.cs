@@ -4,9 +4,8 @@ using DNTFrameworkCore.TestWebApp.Application.Identity.Models;
 
 namespace DNTFrameworkCore.TestWebApp.Models.Roles
 {
-    public class RoleIndexViewModel
+    public class RoleIndexViewModel : PagedQueryResult<RoleReadModel>
     {
-        public PagedListModel<RoleReadModel, RoleFilteredPagedQueryModel> PagedList { get; set; }
         public IReadOnlyList<LookupItem> Permissions { get; set; }
     }
 }

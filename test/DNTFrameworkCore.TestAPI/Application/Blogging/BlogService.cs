@@ -64,7 +64,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Blogging
             return Task.CompletedTask;
         }
 
-        protected override Task AfterMappingAsync(IReadOnlyList<Blog> entities, IReadOnlyList<BlogModel> models)
+        protected override Task AfterMappingAsync(IReadOnlyList<BlogModel> models, IReadOnlyList<Blog> blogs)
         {
             _logger.LogInformation(nameof(AfterMappingAsync));
 

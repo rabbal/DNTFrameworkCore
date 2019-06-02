@@ -6,6 +6,7 @@ using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EntityFramework.SqlServer;
 using DNTFrameworkCore.EntityFramework.SqlServer.Numbering;
 using DNTFrameworkCore.Eventing;
+using DNTFrameworkCore.FluentValidation;
 using DNTFrameworkCore.Mapping;
 using DNTFrameworkCore.TestWebApp.Application.Configuration;
 using DNTFrameworkCore.TestWebApp.Domain.Catalog;
@@ -28,6 +29,8 @@ namespace DNTFrameworkCore.TestWebApp.Application
             services.Configure<ProjectSetting>(configuration.Bind);
 
             services.AddAutoMapper(typeof(ApplicationRegistry));
+            services.AddValidatorsFromAssemblyContaining(typeof(ApplicationRegistry));
+            
             services.AddDNTNumbering(options =>
             {
                 options.NumberedEntityMap[typeof(Task)] = new NumberedEntityOption

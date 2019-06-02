@@ -164,14 +164,11 @@ namespace DNTFrameworkCore.Web.API
         protected abstract Task<Result> DeleteAsync(TModel model);
 
         [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
+        [ProducesResponseType((int) HttpStatusCode.Forbidden)]
         public async Task<IActionResult> Get(TFilteredPagedQueryModel query)
         {
-            if (!await CheckPermissionAsync(ViewPermissionName))
-            {
-                return Forbid();
-            }
+            if (!await CheckPermissionAsync(ViewPermissionName)) return Forbid();
 
             var result = await ReadPagedListAsync(query ?? Factory<TFilteredPagedQueryModel>.CreateInstance());
 
@@ -179,92 +176,65 @@ namespace DNTFrameworkCore.Web.API
         }
 
         [HttpGet("{id:long}")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
+        [ProducesResponseType((int) HttpStatusCode.Forbidden)]
         public async Task<ActionResult<TModel>> Get([BindRequired] TKey id)
         {
-            if (!await CheckPermissionAsync(EditPermissionName))
-            {
-                return Forbid();
-            }
+            if (!await CheckPermissionAsync(EditPermissionName)) return Forbid();
 
             var model = await FindAsync(id);
 
-            return model.HasValue ? (ActionResult)Ok(model.Value) : NotFound();
+            return model.HasValue ? (ActionResult) Ok(model.Value) : NotFound();
         }
 
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
+        [ProducesResponseType((int) HttpStatusCode.Created)]
+        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int) HttpStatusCode.Forbidden)]
         public async Task<ActionResult<TModel>> Post(TModel model)
         {
-            if (!await CheckPermissionAsync(CreatePermissionName))
-            {
-                return Forbid();
-            }
+            if (!await CheckPermissionAsync(CreatePermissionName)) return Forbid();
 
             var result = await CreateAsync(model);
-            if (result.Succeeded)
-            {
-                return Created("", model);
-            }
+            if (result.Succeeded) return Created("", model);
 
             ModelState.AddModelError(result);
             return BadRequest(ModelState);
         }
 
         [HttpPut("{id:long}")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
+        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int) HttpStatusCode.Forbidden)]
         public async Task<IActionResult> Put([BindRequired] TKey id, TModel model)
         {
-            if (!model.Id.Equals(id))
-            {
-                return BadRequest();
-            }
+            if (!model.Id.Equals(id)) return BadRequest();
 
-            if (!await CheckPermissionAsync(EditPermissionName))
-            {
-                return Forbid();
-            }
+            if (!await CheckPermissionAsync(EditPermissionName)) return Forbid();
 
             model.Id = id;
 
             var result = await EditAsync(model);
-            if (result.Succeeded)
-            {
-                return NoContent();
-            }
+            if (result.Succeeded) return NoContent();
 
             ModelState.AddModelError(result);
             return BadRequest(ModelState);
         }
 
         [HttpDelete("{id}")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int) HttpStatusCode.Forbidden)]
+        [ProducesResponseType((int) HttpStatusCode.NotFound)]
         public async Task<IActionResult> Delete([BindRequired] TKey id)
         {
-            if (!await CheckPermissionAsync(DeletePermissionName))
-            {
-                return Forbid();
-            }
+            if (!await CheckPermissionAsync(DeletePermissionName)) return Forbid();
 
             var model = await FindAsync(id);
-            if (!model.HasValue)
-            {
-                return NotFound();
-            }
+            if (!model.HasValue) return NotFound();
 
             var result = await DeleteAsync(model.Value);
-            if (result.Succeeded)
-            {
-                return NoContent();
-            }
+            if (result.Succeeded) return NoContent();
 
             ModelState.AddModelError(result);
             return BadRequest(ModelState);

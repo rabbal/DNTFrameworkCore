@@ -8,9 +8,10 @@ namespace DNTFrameworkCore.TestWebApp.Application.Blogging.Models
     [LocalizationResource(Name = "SharedResource", Location = "DNTFrameworkCore.TestWebApp")]
     public class BlogModel : MasterModel, IValidatableObject
     {
-        public string Title { get; set; }
+        [Required] public string Title { get; set; }
 
         [MaxLength(50, ErrorMessage = "Maximum length is 50")]
+        [Required]
         public string Url { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
