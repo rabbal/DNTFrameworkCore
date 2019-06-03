@@ -12,7 +12,7 @@ Extensible Infrastructure for Building High Quality Web Applications Based on AS
 * Reduce the training time of the new developer with low knowledge about OOP and OOD
  
  ![Blog CRUD API](https://github.com/rabbal/DNTFrameworkCore/blob/master/docs/blog-crud-api.JPG)
- ![Blog CRUD MVC](https://github.com/rabbal/DNTFrameworkCore/blob/master/docs/blog-crud-mvc.JPG)
+ ![Blog CRUD MVC](https://github.com/rabbal/DNTFrameworkCore/blob/master/docs/blog-crud-mvc.PNG)
  
  ![Blog CRUD Service](https://github.com/rabbal/DNTFrameworkCore/blob/master/docs/blog-crud-service.JPG)
  
