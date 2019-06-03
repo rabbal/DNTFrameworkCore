@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.TestWebApp.Application.Identity;
@@ -18,14 +19,17 @@ namespace DNTFrameworkCore.TestWebApp.Controllers
         RolesController : CrudController<IRoleService, long, RoleReadModel, RoleModel, RoleFilteredPagedQueryModel>
     {
         private readonly IPermissionService _permission;
+        private readonly IMapper _mapper;
         private readonly IStringLocalizerFactory _localizerFactory;
 
         public RolesController(
             IRoleService service,
             IPermissionService permission,
+            IMapper mapper,
             IStringLocalizerFactory localizerFactory) : base(service)
         {
             _permission = permission ?? throw new ArgumentNullException(nameof(permission));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _localizerFactory = localizerFactory ?? throw new ArgumentNullException(nameof(localizerFactory));
         }
 
@@ -49,19 +53,12 @@ namespace DNTFrameworkCore.TestWebApp.Controllers
                 : View(indexModel);
         }
 
-        protected override IActionResult RenderView(RoleModel model)
+        protected override IActionResult RenderView(RoleModel role)
         {
-            var modalViewModel = new RoleModalViewModel
-            {
-                Id = model.Id,
-                RowVersion = model.RowVersion,
-                Name = model.Name,
-                Description = model.Description,
-                Permissions = model.Permissions,
-                PermissionList = ReadPermissionList()
-            };
-            
-            return PartialView(ViewName, modalViewModel);
+            var model = _mapper.Map<RoleModalViewModel>(role);
+            model.PermissionList = ReadPermissionList();
+
+            return PartialView(ViewName, model);
         }
 
         private List<LookupItem> ReadPermissionList()
