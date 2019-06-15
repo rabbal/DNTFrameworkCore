@@ -20,7 +20,7 @@ namespace DNTFrameworkCore.Tests.Eventing
             var bus = services.BuildServiceProvider().GetRequiredService<IEventBus>();
 
             var result = await bus.TriggerAsync(new SimpleBusinessEvent("TestValue"));
-            result.Succeeded.ShouldBeTrue();
+            result.Failed.ShouldBeFalse();
             SimpleBusinessEventHandler1.HandleCount.ShouldBe(1);
             SimpleBusinessEventHandler2.HandleCount.ShouldBe(1);
         }
@@ -34,7 +34,7 @@ namespace DNTFrameworkCore.Tests.Eventing
             var bus = services.BuildServiceProvider().GetRequiredService<IEventBus>();
 
             var result = await bus.TriggerAsync(new SimpleBusinessEvent("TestValue"));
-            result.Succeeded.ShouldBeFalse();
+            result.Failed.ShouldBeTrue();
             FailedSimpleBusinessEventHandler.HandleCount.ShouldBe(1);
             result.Message.ShouldBe(nameof(FailedSimpleBusinessEventHandler));
         }
@@ -68,7 +68,7 @@ namespace DNTFrameworkCore.Tests.Eventing
             public Task<Result> Handle(SimpleBusinessEvent @event)
             {
                 ++HandleCount;
-                return Task.FromResult(Result.Failed(nameof(FailedSimpleBusinessEventHandler)));
+                return Task.FromResult(Result.Fail(nameof(FailedSimpleBusinessEventHandler)));
             }
         }
 

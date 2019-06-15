@@ -62,14 +62,14 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
         public async Task<SignInResult> SignInAsync(string userName, string password, bool persistent)
         {
             var userMaybe = await FindUserByNameAsync(userName);
-            if (!userMaybe.HasValue) return SignInResult.Failed(_localizer["SignIn.Messages.Failure"]);
+            if (!userMaybe.HasValue) return SignInResult.Fail(_localizer["SignIn.Messages.Failure"]);
 
             var user = userMaybe.Value;
 
             if (_password.VerifyHashedPassword(user.PasswordHash, password) == PasswordVerificationResult.Failed)
-                return SignInResult.Failed(_localizer["SignIn.Messages.Failure"]);
+                return SignInResult.Fail(_localizer["SignIn.Messages.Failure"]);
 
-            if (!user.IsActive) return SignInResult.Failed(_localizer["SignIn.Messages.IsNotActive"]);
+            if (!user.IsActive) return SignInResult.Fail(_localizer["SignIn.Messages.IsNotActive"]);
 
             var userId = user.Id;
 

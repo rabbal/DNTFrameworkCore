@@ -72,7 +72,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
 
         public async Task<Maybe<User>> FindUserAsync(long userId)
         {
-            return await _users.FindAsync(userId);
+            return await _users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == userId);
         }
     }
 }

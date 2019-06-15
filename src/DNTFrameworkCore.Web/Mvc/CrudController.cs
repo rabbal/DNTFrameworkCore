@@ -245,7 +245,7 @@ namespace DNTFrameworkCore.Web.Mvc
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var result = await CreateAsync(model);
-            if (result.Succeeded)
+            if (!result.Failed)
             {
                 ModelState.Clear();
                 return continueEditing ? RenderView(model) : Ok();
@@ -278,7 +278,7 @@ namespace DNTFrameworkCore.Web.Mvc
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var result = await EditAsync(model);
-            if (result.Succeeded)
+            if (!result.Failed)
             {
                 ModelState.Clear();
                 return continueEditing ? RenderView(model) : Ok();
@@ -300,7 +300,7 @@ namespace DNTFrameworkCore.Web.Mvc
             if (!model.HasValue) return NotFound();
 
             var result = await DeleteAsync(model.Value);
-            if (result.Succeeded) return Ok();
+            if (!result.Failed) return Ok();
 
             ModelState.AddModelError(result);
             return BadRequest(ModelState);

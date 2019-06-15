@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -11,9 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Tasks\Commands\" />
-    <Folder Include="Application\Tasks\Handlers\" />
-    <Folder Include="Application\Tasks\Queries\" />
+    <Folder Include="Application\Orders\Commands\" />
+    <Folder Include="Application\Orders\Handlers\" />
+    <Folder Include="Application\Orders\Queries\" />
+    <Folder Include="Controllers" />
     <Folder Include="Infrastructure\" />
     <Folder Include="Authentication\" />
     <Folder Include="Authorization\" />

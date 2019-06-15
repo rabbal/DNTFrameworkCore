@@ -16,7 +16,7 @@ namespace DNTFrameworkCore.Cqrs.Commands
         public abstract Task<Result> Handle(TCommand command, CancellationToken cancellationToken);
 
         protected static Result Ok() => Result.Ok();
-        protected static Result Failed(string message) => Result.Failed(message);
-        protected static Result Failed(string message, IEnumerable<ValidationFailure> failures) => Result.Failed(message, failures);
+        protected static Result Fail(string message) => Result.Fail(message);
+        protected static Result Fail(string message, IEnumerable<ValidationFailure> failures) => Result.Fail(message, failures);
     }
 }

@@ -35,7 +35,7 @@ namespace DNTFrameworkCore.Validation.Interception
             var failures = _validator.Validate(method, invocation.Arguments);
             var result = failures.ToResult();
 
-            if (result.Succeeded)
+            if (!result.Failed)
             {
                 invocation.Proceed();
                 return;

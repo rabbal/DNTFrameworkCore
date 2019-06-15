@@ -8,7 +8,7 @@ namespace DNTFrameworkCore.Functional
         public static Result<T> ToResult<T>(this Maybe<T> maybe, string message)
             where T : class
         {
-            return !maybe.HasValue ? Result.Failed<T>(message) : Result.Ok(maybe.Value);
+            return !maybe.HasValue ? Result.Fail<T>(message) : Result.Ok(maybe.Value);
         }
         
         public static async Task<Result<T>> ToResult<T>(this Task<Maybe<T>> maybeTask, string message)

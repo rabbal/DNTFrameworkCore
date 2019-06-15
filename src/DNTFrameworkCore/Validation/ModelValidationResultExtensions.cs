@@ -13,7 +13,7 @@ namespace DNTFrameworkCore.Validation
 
             var message = string.Join("\n", failures.Where(a => string.IsNullOrEmpty(a.MemberName)));
 
-            var result = Result.Failed(message, failures);
+            var result = Result.Fail(message, failures);
 
             return result;
         }

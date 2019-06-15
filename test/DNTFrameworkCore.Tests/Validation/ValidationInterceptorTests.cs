@@ -34,7 +34,7 @@ namespace DNTFrameworkCore.Tests.Validation
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
 
             var result = service.SyncMethod(new PartyModel());
-            result.Succeeded.ShouldBeFalse();
+            result.Failed.ShouldBeTrue();
             result.Failures.Any(validationResult => validationResult.MemberName == nameof(PartyModel.DisplayName));
         }
 
@@ -57,7 +57,7 @@ namespace DNTFrameworkCore.Tests.Validation
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
 
             var result = await service.AsyncMethod(new PartyModel());
-            result.Succeeded.ShouldBeFalse();
+            result.Failed.ShouldBeTrue();
             result.Failures.Any(validationResult => validationResult.MemberName == nameof(PartyModel.DisplayName));
         }
 

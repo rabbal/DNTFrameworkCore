@@ -36,7 +36,7 @@ namespace DNTFrameworkCore.Eventing
 
                 var result = await (Task<Result>)method.Invoke(handler, new object[] { @event });
 
-                if (!result.Succeeded) return result;
+                if (result.Failed) return result;
             }
 
             return Result.Ok();

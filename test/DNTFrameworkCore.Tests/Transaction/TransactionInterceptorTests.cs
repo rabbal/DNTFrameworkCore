@@ -440,7 +440,7 @@ namespace DNTFrameworkCore.Tests.Transaction
         [Transactional]
         public Result SyncMethodWithFailedResult()
         {
-            return Result.Failed("failure message");
+            return Result.Fail("failure message");
         }
 
         [Transactional]
@@ -452,7 +452,7 @@ namespace DNTFrameworkCore.Tests.Transaction
         [Transactional]
         public Task<Result> AsyncMethodWithFailedResult()
         {
-            return Task.FromResult(Result.Failed("failure message"));
+            return Task.FromResult(Result.Fail("failure message"));
         }
 
         [Transactional]

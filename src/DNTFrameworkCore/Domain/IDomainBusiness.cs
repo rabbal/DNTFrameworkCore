@@ -1,6 +1,6 @@
 ﻿using DNTFrameworkCore.Dependency;
 
-namespace DNTFrameworkCore.Domain.Services
+namespace DNTFrameworkCore.Domain
 {
     /// <summary>
     /// The operation relates to a domain concept that is not a natural part of an Entity or Value Object.

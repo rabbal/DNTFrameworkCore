@@ -106,7 +106,7 @@ namespace DNTFrameworkCore.Transaction.Interception
             try
             {
                 var result = await task.ConfigureAwait(false);
-                if (result is Result returnValue && !returnValue.Succeeded)
+                if (result is Result returnValue && returnValue.Failed)
                 {
                     transaction.Rollback();
                 }
@@ -131,7 +131,7 @@ namespace DNTFrameworkCore.Transaction.Interception
             {
                 invocation.Proceed();
 
-                if (invocation.ReturnValue is Result returnValue && !returnValue.Succeeded)
+                if (invocation.ReturnValue is Result returnValue && returnValue.Failed)
                 {
                     transaction.Rollback();
                 }

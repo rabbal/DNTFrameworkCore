@@ -61,19 +61,19 @@ namespace DNTFrameworkCore.TestAPI.Authentication
             var maybe = await FindUserByNameAsync(userName);
             if (!maybe.HasValue)
             {
-                return SignInResult.Failed(_localizer["SignIn.Messages.Failure"]);
+                return SignInResult.Fail(_localizer["SignIn.Messages.Failure"]);
             }
 
             var user = maybe.Value;
 
             if (_password.VerifyHashedPassword(user.PasswordHash, password) == PasswordVerificationResult.Failed)
             {
-                return SignInResult.Failed(_localizer["SignIn.Messages.Failure"]);
+                return SignInResult.Fail(_localizer["SignIn.Messages.Failure"]);
             }
 
             if (!user.IsActive)
             {
-                return SignInResult.Failed(_localizer["SignIn.Messages.IsNotActive"]);
+                return SignInResult.Fail(_localizer["SignIn.Messages.IsNotActive"]);
             }
 
             var userId = user.Id;

@@ -15,8 +15,8 @@ namespace DNTFrameworkCore.Eventing
     public abstract class BusinessEventHandler<T> : IBusinessEventHandler<T> where T : IBusinessEvent
     {
         public abstract Task<Result> Handle(T @event);
-        protected Result Failed(string message) => Result.Failed(message);
-        protected Result Failed(string message, IEnumerable<ValidationFailure> failures) => Result.Failed(message, failures);
+        protected Result Fail(string message) => Result.Fail(message);
+        protected Result Fail(string message, IEnumerable<ValidationFailure> failures) => Result.Fail(message, failures);
         protected Result Ok() => Result.Ok();
     }
 }

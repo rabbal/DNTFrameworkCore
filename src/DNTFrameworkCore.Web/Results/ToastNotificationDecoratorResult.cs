@@ -1,11 +1,10 @@
-﻿
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DNTFrameworkCore.Web.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DNTFrameworkCore.Web.Mvc.ToastNotification
+namespace DNTFrameworkCore.Web.Results
 {
     public static class ToastNotificationActionResultExtensions
     {

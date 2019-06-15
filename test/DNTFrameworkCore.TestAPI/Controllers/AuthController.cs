@@ -32,7 +32,7 @@ namespace DNTFrameworkCore.TestAPI.Controllers
 
             var result = await _service.SignInAsync(model.UserName, model.Password);
 
-            if (result.Succeeded) return Ok(result.Token);
+            if (!result.Failed) return Ok(result.Token);
 
             ModelState.AddModelError(string.Empty, result.Message);
             return BadRequest(ModelState);

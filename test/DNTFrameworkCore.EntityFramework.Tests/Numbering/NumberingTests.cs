@@ -53,7 +53,7 @@ namespace DNTFrameworkCore.EntityFramework.Tests.Numbering
             //Act
             provider.RunScoped<IUnitOfWork>(uow =>
             {
-                var task = new TestTask {Number = "Task-NewNumber", Id = 1};
+                var task = new TestTask {Number = "Task-NewNumber"};
                 uow.UpdateRange(new[] {task});
                 uow.SaveChanges();
             });
@@ -61,8 +61,8 @@ namespace DNTFrameworkCore.EntityFramework.Tests.Numbering
             //Assert
             provider.RunScoped<IUnitOfWork>(uow =>
             {
-                var task = uow.Set<TestTask>().Find(1);
-                task.Number.ShouldBe("Task-Number");
+                var task = uow.Set<TestTask>().SingleOrDefault(t=>t.Number=="Task-Number");
+                task.ShouldNotBeNull();
             });
         }
 

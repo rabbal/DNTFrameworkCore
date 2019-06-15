@@ -121,14 +121,14 @@ namespace DNTFrameworkCore.EntityFramework.Application
             var modelList = models.ToList();
 
             var result = await BeforeCreateAsync(modelList);
-            if (!result.Succeeded) return result;
+            if (result.Failed) return result;
 
             var entityList = modelList.MapReadOnlyList<TModel, TEntity>(MapToEntity);
 
             await AfterMappingAsync(modelList, entityList);
 
             result = await EventBus.TriggerCreatingEventAsync<TModel, TKey>(modelList);
-            if (!result.Succeeded) return result;
+            if (result.Failed) return result;
 
             UnitOfWork.AddRange(entityList);
             await UnitOfWork.SaveChangesAsync();
@@ -137,7 +137,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
             MapToModel(entityList, modelList);
 
             result = await AfterCreateAsync(modelList);
-            if (!result.Succeeded) return result;
+            if (result.Failed) return result;
 
             result = await EventBus.TriggerCreatedEventAsync<TModel, TKey>(modelList);
 
@@ -163,14 +163,14 @@ namespace DNTFrameworkCore.EntityFramework.Application
             var modifiedList = BuildModifiedModel(modelList, entityList);
 
             var result = await BeforeEditAsync(modifiedList, entityList);
-            if (!result.Succeeded) return result;
+            if (result.Failed) return result;
 
             MapToEntity(modelList, entityList);
 
             await AfterMappingAsync(modelList, entityList);
 
             result = await EventBus.TriggerEditingEventAsync<TModel, TKey>(modifiedList);
-            if (!result.Succeeded) return result;
+            if (result.Failed) return result;
 
             entityList.ForEach(e => e.TrackingState = TrackingState.Modified);
             UnitOfWork.ApplyChanges(entityList);
@@ -180,7 +180,7 @@ namespace DNTFrameworkCore.EntityFramework.Application
             MapToModel(entityList, modelList);
 
             result = await AfterEditAsync(modifiedList, entityList);
-            if (!result.Succeeded) return result;
+            if (result.Failed) return result;
 
             result = await EventBus.TriggerEditedEventAsync<TModel, TKey>(modifiedList);
 
@@ -203,18 +203,18 @@ namespace DNTFrameworkCore.EntityFramework.Application
             var modelList = models.ToList();
 
             var result = await BeforeDeleteAsync(modelList);
-            if (!result.Succeeded) return result;
+            if (result.Failed) return result;
 
             var entityList = modelList.MapReadOnlyList<TModel, TEntity>(MapToEntity);
 
             result = await EventBus.TriggerDeletingEventAsync<TModel, TKey>(modelList);
-            if (!result.Succeeded) return result;
+            if (result.Failed) return result;
 
             UnitOfWork.RemoveRange(entityList);
             await UnitOfWork.SaveChangesAsync();
 
             result = await AfterDeleteAsync(modelList);
-            if (!result.Succeeded) return result;
+            if (result.Failed) return result;
 
             result = await EventBus.TriggerDeletedEventAsync<TModel, TKey>(modelList);
 

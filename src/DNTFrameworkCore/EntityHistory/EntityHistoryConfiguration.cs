@@ -1,4 +1,4 @@
-namespace DefaultNamespace
+namespace DNTFrameworkCore.EntityHistory
 {
     public class EntityHistoryConfiguration
     {

@@ -27,21 +27,19 @@ namespace DNTFrameworkCore.TestWebApp.Controllers
         [HttpPost, ExportModelState]
         public async Task<IActionResult> Login(LoginModel model, string returnUrl = null)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return RedirectToAction(nameof(Login), new {ReturnUrl = returnUrl});
+            
+            var result = await _service.SignInAsync(model.UserName, model.Password);
+            if (!result.Failed)
             {
-                var result = await _service.SignInAsync(model.UserName, model.Password);
-
-                if (result.Succeeded)
+                if (Url.IsLocalUrl(returnUrl))
                 {
-                    if (Url.IsLocalUrl(returnUrl))
-                    {
-                        return Redirect(returnUrl);
-                    }
-                    return RedirectToAction(nameof(HomeController.Index), "Home");
+                    return Redirect(returnUrl);
                 }
-
-                ModelState.AddModelError(string.Empty, result.Message);
+                return RedirectToAction(nameof(HomeController.Index), "Home");
             }
+
+            ModelState.AddModelError(string.Empty, result.Message);
 
             return RedirectToAction(nameof(Login), new { ReturnUrl = returnUrl });
         }

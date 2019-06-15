@@ -29,7 +29,7 @@ namespace DNTFrameworkCore.Web.Extensions
         /// <param name="prefix">An optional prefix. If ommitted, the property names will be the keys. If specified, the prefix will be concatenatd to the property name with a period. Eg "user.Name"</param>
         public static void AddModelError(this ModelStateDictionary modelState, Result result, string prefix = null)
         {
-            if (result.Succeeded) return;
+            if (!result.Failed) return;
 
             foreach (var failure in result.Failures)
             {

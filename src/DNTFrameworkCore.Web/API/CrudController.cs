@@ -196,7 +196,7 @@ namespace DNTFrameworkCore.Web.API
             if (!await CheckPermissionAsync(CreatePermissionName)) return Forbid();
 
             var result = await CreateAsync(model);
-            if (result.Succeeded) return Created("", model);
+            if (!result.Failed) return Created("", model);
 
             ModelState.AddModelError(result);
             return BadRequest(ModelState);
@@ -215,7 +215,7 @@ namespace DNTFrameworkCore.Web.API
             model.Id = id;
 
             var result = await EditAsync(model);
-            if (result.Succeeded) return NoContent();
+            if (!result.Failed) return NoContent();
 
             ModelState.AddModelError(result);
             return BadRequest(ModelState);
@@ -234,7 +234,7 @@ namespace DNTFrameworkCore.Web.API
             if (!model.HasValue) return NotFound();
 
             var result = await DeleteAsync(model.Value);
-            if (result.Succeeded) return NoContent();
+            if (!result.Failed) return NoContent();
 
             ModelState.AddModelError(result);
             return BadRequest(ModelState);
