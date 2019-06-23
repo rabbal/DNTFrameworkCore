@@ -22,13 +22,13 @@ namespace DNTFrameworkCore.TestWebApp.Application.Catalog.Validators
         
         public override IEnumerable<ValidationFailure> Validate(ProductModel model)
         {
-            if (CheckDuplicateNumber(model))
+            if (!IsUniqueNumber(model))
             {
                 yield return new ValidationFailure(nameof(ProductModel.Number), _localizer["Product.Fields.Number.Unique"]);
             }
         }
 
-        private bool CheckDuplicateNumber(ProductModel model)
+        private bool IsUniqueNumber(ProductModel model)
         {
             return _uow.Set<Product>().Any(p => p.Number == model.Number && p.Id != model.Id);
         }

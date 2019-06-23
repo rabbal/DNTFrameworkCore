@@ -3,16 +3,17 @@ using AutoMapper;
 using Castle.DynamicProxy;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.Dependency;
-using DNTFrameworkCore.EntityFramework.SqlServer;
-using DNTFrameworkCore.EntityFramework.SqlServer.Numbering;
+using DNTFrameworkCore.EFCore.SqlServer;
+using DNTFrameworkCore.EFCore.Transaction;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.TestAPI.Application.Configuration;
 using DNTFrameworkCore.TestAPI.Domain.Tasks;
-using DNTFrameworkCore.Transaction.Interception;
 using DNTFrameworkCore.Validation.Interception;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using DNTFrameworkCore.FluentValidation;
+using DNTFrameworkCore.Numbering;
+
 namespace DNTFrameworkCore.TestAPI.Application
 {
     public static class ApplicationRegistry
@@ -25,7 +26,7 @@ namespace DNTFrameworkCore.TestAPI.Application
 
             services.AddAutoMapper(typeof(ApplicationRegistry));
             services.AddValidatorsFromAssembly(typeof(ApplicationRegistry).Assembly);
-            services.AddDNTNumbering(options =>
+            services.AddNumbering(options =>
             {
                 options.NumberedEntityMap[typeof(Task)] = new NumberedEntityOption
                 {

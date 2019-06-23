@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using DNTFrameworkCore.Domain.Entities;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 {
-    public class Product : Entity, IAggregateRoot, INumberedEntity
+    public class Product : TrackableEntity, IHasRowVersion, INumberedEntity
     {
-        public string Title { get; set; }
-        public byte[] RowVersion { get; set; }
+        public ProductTitle Title { get; private set; }
+        public byte[] RowVersion { get; private set; }
         public string Number { get; set; }
 
         public ICollection<ProductPrice> Prices { get; set; }

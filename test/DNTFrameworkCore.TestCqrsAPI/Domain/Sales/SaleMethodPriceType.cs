@@ -1,4 +1,4 @@
-using DNTFrameworkCore.Domain.Entities;
+using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Catalog;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales

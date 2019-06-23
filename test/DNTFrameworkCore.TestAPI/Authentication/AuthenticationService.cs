@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Dependency;
-using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.TestAPI.Domain.Identity;
@@ -26,7 +26,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
     public class AuthenticationService : IAuthenticationService
     {
         private readonly ITokenManager _token;
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _context;
         private readonly IAntiforgeryService _antiforgery;
         private readonly IOptionsSnapshot<TokenOptions> _options;
         private readonly IMessageLocalizer _localizer;
@@ -37,7 +37,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
         public AuthenticationService(
             ITokenManager token,
-            IUnitOfWork uow,
+            IDbContext context,
             IAntiforgeryService antiforgery,
             IOptionsSnapshot<TokenOptions> options,
             IMessageLocalizer localizer,
@@ -45,15 +45,15 @@ namespace DNTFrameworkCore.TestAPI.Authentication
             IUserSession session)
         {
             _token = token ?? throw new ArgumentNullException(nameof(token));
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
             _antiforgery = antiforgery ?? throw new ArgumentNullException(nameof(antiforgery));
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
             _password = password ?? throw new ArgumentNullException(nameof(password));
             _session = session ?? throw new ArgumentNullException(nameof(session));
 
-            _users = _uow.Set<User>();
-            _roles = _uow.Set<Role>();
+            _users = _context.Set<User>();
+            _roles = _context.Set<Role>();
         }
 
         public async Task<SignInResult> SignInAsync(string userName, string password)
@@ -154,11 +154,11 @@ namespace DNTFrameworkCore.TestAPI.Authentication
                     _options.Value.Issuer));
             }
 
-            //Todo: Set TenantId claim in MultiTenancy senarios     
+            //Todo: Set TenantId claim in MultiTenancy scenarios     
             // claims.Add(new Claim(DNTClaimTypes.TenantId, user.TenantId.ToString(), ClaimValueTypes.Integer64,
             // _options.Value.Issuer));
 
-            //Todo: Set BranchId claim in MultiBranch senarios     
+            //Todo: Set BranchId claim in MultiBranch scenarios     
             // claims.Add(new Claim(DNTClaimTypes.BranchId, user.BranchId.ToString(), ClaimValueTypes.Integer64,
             // _options.Value.Issuer));
 

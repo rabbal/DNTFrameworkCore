@@ -1,4 +1,4 @@
-using DNTFrameworkCore.Domain.Entities;
+using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.TestWebApp.Domain.Catalog;
 
 namespace DNTFrameworkCore.TestWebApp.Domain.Invoices

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using DNTFrameworkCore.Domain.Entities;
-using DNTFrameworkCore.Domain.Entities.Tracking;
+using System.ComponentModel.DataAnnotations.Schema;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Identity
 {
-    public class Role : TrackableEntity<long>, IAggregateRoot
+    public class Role : TrackableEntity<long>, ITracking, IHasRowVersion
     {
         public const int MaxNameLength = 50;
         public const int MaxDescriptionLength = 1024;

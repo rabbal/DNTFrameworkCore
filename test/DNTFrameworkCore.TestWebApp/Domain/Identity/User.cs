@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using DNTFrameworkCore.Domain.Entities;
-using DNTFrameworkCore.Domain.Entities.Tracking;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestWebApp.Domain.Identity
 {
-    public class User : TrackableEntity<long>, IPassivableEntity, IAggregateRoot
+    public class User : TrackableEntity<long>, IHasRowVersion
     {
         public const int MaxUserNameLength = 256;
         public const int MaxDisplayNameLength = 50;

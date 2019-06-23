@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Dependency;
-using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.TestAPI.Domain.Identity;
@@ -21,14 +21,14 @@ namespace DNTFrameworkCore.TestAPI.Authentication
     public class TokenValidator : ITokenValidator
     {
         private readonly ITokenManager _token;
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _context;
         private readonly DbSet<User> _users;
 
-        public TokenValidator(ITokenManager token, IUnitOfWork uow)
+        public TokenValidator(ITokenManager token, IDbContext context)
         {
             _token = token ?? throw new ArgumentNullException(nameof(token));
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _users = uow.Set<User>();
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _users = context.Set<User>();
         }
 
         public async Task ValidateAsync(TokenValidatedContext context)
@@ -78,7 +78,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
         public async Task<Maybe<User>> FindUserAsync(long userId)
         {
-            return await _users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == userId);
+            return await _users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
         }
     }
 }

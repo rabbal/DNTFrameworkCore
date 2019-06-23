@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using DNTFrameworkCore.Domain.Entities;
-using DNTFrameworkCore.Domain.Entities.Tracking;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestWebApp.Domain.Invoices
 {
-    public class Invoice : TrackableEntity<long>, IAggregateRoot, INumberedEntity
+    public class Invoice : TrackableEntity<long>, IHasRowVersion, INumberedEntity
     {
         public const int MaxDescriptionLength = 1024;
 

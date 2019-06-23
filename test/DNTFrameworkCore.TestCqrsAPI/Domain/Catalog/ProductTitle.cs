@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DNTFrameworkCore.Domain.Entities;
+using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
@@ -20,15 +20,15 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 
             if (title.Length == 0)
             {
-                return Result.Fail<ProductTitle>("title should not be empty");
+                return Fail<ProductTitle>("title should not be empty");
             }
 
             if (title.Length > 100)
             {
-                return Result.Fail<ProductTitle>("title is too long");
+                return Fail<ProductTitle>("title is too long");
             }
 
-            return Result.Ok(new ProductTitle(title));
+            return Ok(new ProductTitle(title));
         }
 
         protected override IEnumerable<object> EqualityValues

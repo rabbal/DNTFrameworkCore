@@ -1,7 +1,7 @@
-﻿using DNTFrameworkCore.EntityFramework.Logging;
+﻿using DNTFrameworkCore.EFCore.Logging;
 using DNTFrameworkCore.Logging;
 using DNTFrameworkCore.TestAPI.Infrastructure.Context;
-using DNTFrameworkCore.Web.EntityFramework;
+using DNTFrameworkCore.Web.EFCore;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
@@ -27,7 +27,7 @@ namespace DNTFrameworkCore.TestAPI
                 {
                     logging.ClearProviders();
                     logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                    logging.AddEntityFramework<ProjectDbContext>();
+                    logging.AddEFCore<ProjectDbContext>();
                     logging.AddFile();
 
                     if (hostingContext.HostingEnvironment.IsDevelopment())

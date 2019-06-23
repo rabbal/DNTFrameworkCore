@@ -150,11 +150,11 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
             {
                 identity.AddClaim(new Claim(DNTClaimTypes.Permission, permission, ClaimValueTypes.String));
             }
-            //Todo: Set TenantId claim in MultiTenancy senarios     
+            //Todo: Set TenantId claim in MultiTenancy scenarios     
             // claims.Add(new Claim(DNTClaimTypes.TenantId, user.TenantId.ToString(), ClaimValueTypes.Integer64,
             // _options.Value.Issuer));
 
-            //Todo: Set BranchId claim in MultiBranch senarios     
+            //Todo: Set BranchId claim in MultiBranch scenarios     
             // claims.Add(new Claim(DNTClaimTypes.BranchId, user.BranchId.ToString(), ClaimValueTypes.Integer64,
             // _options.Value.Issuer));
 

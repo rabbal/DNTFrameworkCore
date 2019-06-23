@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Dependency;
-using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.TestAPI.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -24,20 +24,20 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
     public class TokenManager : ITokenManager
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _context;
         private readonly IOptionsSnapshot<TokenOptions> _options;
         private readonly ISecurityService _security;
         private readonly DbSet<UserToken> _tokens;
 
-        public TokenManager(IUnitOfWork uow,
+        public TokenManager(IDbContext context,
             IOptionsSnapshot<TokenOptions> options,
             ISecurityService security)
         {
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _security = security ?? throw new ArgumentNullException(nameof(security));
 
-            _tokens = _uow.Set<UserToken>();
+            _tokens = _context.Set<UserToken>();
         }
 
         public async Task<Token> BuildTokenAsync(long userId, IEnumerable<Claim> claims)
@@ -83,7 +83,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
             await DeleteExpiredTokensAsync();
 
-            await _uow.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> IsValidTokenAsync(long userId, string token)
@@ -105,7 +105,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
             _tokens.Add(userToken);
 
-            await _uow.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         private async Task AddUserTokenAsync(long userId, string token)

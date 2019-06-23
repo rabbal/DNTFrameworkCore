@@ -55,7 +55,7 @@ namespace DNTFrameworkCore.Web.Filters
                     case DbUpdateException _:
                         message = "امکان ذخیره‌سازی اطلاعات وجود ندارد؛ دوباره تلاش نمائید.";
                         break;
-                    case DbConcurrencyException _:
+                    case ConcurrencyException _:
                         message = "اطلاعات توسط کاربری دیگر در شبکه تغییر کرده است.";
                         break;
                     default:

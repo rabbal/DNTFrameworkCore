@@ -42,11 +42,11 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Context
 
         private class StubHookEngine : IHookEngine
         {
-            public void ExecutePostActionHooks(IEnumerable<HookedEntityEntry> modifiedEntries)
+            public void RunPostHooks(IEnumerable<HookedEntityEntry> modifiedEntries)
             {
             }
 
-            public void ExecutePreActionHooks(IEnumerable<HookedEntityEntry> modifiedEntries)
+            public void RunPreHooks(IEnumerable<HookedEntityEntry> modifiedEntries)
             {
             }
         }

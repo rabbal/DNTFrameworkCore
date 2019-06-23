@@ -1,20 +1,20 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using DNTFrameworkCore.Domain.Entities;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.Collections
 {
     public static class TrackedCollectionExtensions
     {
         public static TrackedCollection<T> AsTrackedCollection<T>(this IEnumerable<T> items)
-            where T : IHasTrackingState
+            where T : ITrackable
         {
             return new TrackedCollection<T>(items);
         }
     }
 
-    public class TrackedCollection<T> : Collection<T> where T : IHasTrackingState
+    public class TrackedCollection<T> : Collection<T> where T : ITrackable
     {
         private readonly IEnumerable<T> _items;
 

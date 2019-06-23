@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.Tests.Validation
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
-            services.AddDNTFramework()
+            services.AddDNTFrameworkCore()
                 .AddModelValidation();
 
             services.AddScoped<IPartyService, PartyService>();
@@ -44,7 +44,7 @@ namespace DNTFrameworkCore.Tests.Validation
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
-            services.AddDNTFramework()
+            services.AddDNTFrameworkCore()
                 .AddModelValidation();
 
             services.AddScoped<IPartyService, PartyService>();
@@ -67,7 +67,7 @@ namespace DNTFrameworkCore.Tests.Validation
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
-            services.AddDNTFramework()
+            services.AddDNTFrameworkCore()
                 .AddModelValidation();
 
             services.AddScoped<IPartyService, PartyService>();
@@ -90,7 +90,7 @@ namespace DNTFrameworkCore.Tests.Validation
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
-            services.AddDNTFramework()
+            services.AddDNTFrameworkCore()
                 .AddModelValidation();
 
             services.AddScoped<IPartyService, PartyService>();

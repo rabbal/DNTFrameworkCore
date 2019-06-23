@@ -1,6 +1,7 @@
 using System.Linq;
 using DNTFrameworkCore.EntityFramework.Caching;
 using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.EntityFramework.Context.Hooks;
 using DNTFrameworkCore.EntityFramework.Protection;
 using DNTFrameworkCore.EntityFramework.Logging;
 using DNTFrameworkCore.EntityFramework.SqlServer.Numbering;
@@ -47,10 +48,10 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Context
             base.OnModelCreating(modelBuilder);
         }
 
-        protected override void AfterSaveChanges(SaveChangeContext context)
+        protected override void AfterSaveChanges(EntityChangeContext context)
         {
             this.GetService<IEFCacheServiceProvider>()
-                .InvalidateCacheDependencies(context.ChangedEntityNames.ToArray());
+                .InvalidateCacheDependencies(context.EntityNames.ToArray());
         }
     }
 }

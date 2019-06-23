@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using DNTFrameworkCore.Domain.Entities.Tracking;
 using DNTFrameworkCore.Runtime;
 
 namespace DNTFrameworkCore.TestWebApp.Domain.Identity

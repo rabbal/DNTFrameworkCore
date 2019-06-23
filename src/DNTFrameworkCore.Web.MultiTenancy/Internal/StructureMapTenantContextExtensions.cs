@@ -1,4 +1,4 @@
-﻿using DNTFrameworkCore.GuardToolkit;
+﻿using System;
 using DNTFrameworkCore.MultiTenancy;
 using StructureMap;
 
@@ -6,11 +6,11 @@ namespace DNTFrameworkCore.Web.MultiTenancy.Internal
 {
     internal static class StructureMapTenantContextExtensions
     {
-        private const string TenantContainerKey = "DNTFramework.MultiTenancy.TenantContainer";
+        private const string TenantContainerKey = "TENANT_CONTAINER";
 
         public static IContainer GetTenantContainer(this TenantContext tenantContext)
         {
-            Guard.ArgumentNotNull(tenantContext, nameof(tenantContext));
+            if (tenantContext == null) throw new ArgumentNullException(nameof(tenantContext));
 
             if (tenantContext.Properties.TryGetValue(TenantContainerKey, out var tenantContainer))
             {
@@ -22,8 +22,8 @@ namespace DNTFrameworkCore.Web.MultiTenancy.Internal
 
         public static void SetTenantContainer(this TenantContext tenantContext, IContainer tenantContainer)
         {
-            Guard.ArgumentNotNull(tenantContext, nameof(tenantContext));
-            Guard.ArgumentNotNull(tenantContainer, nameof(tenantContainer));
+            if (tenantContext == null) throw new ArgumentNullException(nameof(tenantContext));
+            if (tenantContainer == null) throw new ArgumentNullException(nameof(tenantContainer));
 
             tenantContext.Properties[TenantContainerKey] = tenantContainer;
         }

@@ -9,19 +9,21 @@ namespace DNTFrameworkCore.FluentValidation
 {
     public static class Extensions
     {
-        public static IDNTBuilder AddFluentModelValidation(this IDNTBuilder builder)
+        public static IServiceCollection AddFluentModelValidation(this IServiceCollection services)
         {
-            builder.Services.AddTransient(typeof(IModelValidator<>), typeof(FluentValidationModelValidator<>));
-            builder.Services.AddTransient<IValidatorFactory, ServiceProviderValidatorFactory>();
-                            
-            return builder;
+            if (services == null) throw new ArgumentNullException(nameof(services));
+            
+            services.AddTransient(typeof(IModelValidator<>), typeof(FluentValidationModelValidator<>));
+            services.AddTransient<IValidatorFactory, ServiceProviderValidatorFactory>();
+
+            return services;
         }
 
         /// <summary>
         /// Adds all validators in specified assemblies
         /// </summary>
         /// <param name="services">The collection of services</param>
-        /// <param name="assembly">The assemblies to scan</param>
+        /// <param name="assemblies"></param>
         /// <param name="lifetime">The lifetime of the validators. The default is transient</param>
         /// <returns></returns>
         public static IServiceCollection AddValidatorsFromAssemblies(this IServiceCollection services,

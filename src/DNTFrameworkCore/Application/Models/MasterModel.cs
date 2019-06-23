@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DNTFrameworkCore.Domain.Entities;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.Application.Models
 {

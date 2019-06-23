@@ -2,14 +2,12 @@
 using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Caching;
 using DNTFrameworkCore.Cryptography;
+using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.Eventing;
-using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.MultiTenancy;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.Threading.BackgroundTasks;
 using DNTFrameworkCore.Timing;
-using DNTFrameworkCore.Transaction;
-using DNTFrameworkCore.Transaction.Interception;
 using DNTFrameworkCore.Validation;
 using DNTFrameworkCore.Validation.Interception;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +16,11 @@ namespace DNTFrameworkCore
 {
     public static class ServiceCollectionExtensions
     {
-        public static IDNTBuilder AddDNTFramework(this IServiceCollection services)
+        // ReSharper disable once InconsistentNaming
+        public static IServiceCollection AddDNTFrameworkCore(this IServiceCollection services)
         {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+
             services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
             services.AddScoped<ITenant>(provider => new TenantWrapper(null));
             services.AddTransient<PermissionDependencyContext>();
@@ -31,45 +32,29 @@ namespace DNTFrameworkCore
             services.AddMemoryCache();
             services.AddSingleton<ICacheService, MemoryCacheService>();
             services.AddScoped<IDateTime, Timing.DateTime>();
+            services.AddTransient(typeof(Lazy<>), typeof(LazyFactory<>));
 
-            return new DNTBuilder(services);
+            return services;
         }
 
-        public static IDNTBuilder AddModelValidation(
-            this IDNTBuilder builder,
+        public static IServiceCollection AddModelValidation(
+            this IServiceCollection services,
             Action<ValidationOptions> setupAction = null)
         {
-            Guard.ArgumentNotNull(builder, nameof(builder));
+            if (services == null) throw new ArgumentNullException(nameof(services));
 
-            builder.Services.AddTransient<ValidationInterceptor>();
-            builder.Services.AddTransient<MethodInvocationValidator>();
-            builder.Services.AddTransient<IMethodParameterValidator, DataAnnotationMethodParameterValidator>();
-            builder.Services.AddTransient<IMethodParameterValidator, ValidatableObjectMethodParameterValidator>();
-            builder.Services.AddTransient<IMethodParameterValidator, ModelValidationMethodParameterValidator>();
-
-            if (setupAction != null)
-            {
-                builder.Services.Configure(setupAction);
-            }
-
-            return builder;
-        }
-
-        public static IDNTBuilder AddTransaction(
-            this IDNTBuilder builder,
-            Action<TransactionOptions> setupAction = null)
-        {
-            Guard.ArgumentNotNull(builder, nameof(builder));
-
-            builder.Services.AddTransient<TransactionInterceptor>();
-            builder.Services.AddScoped<ITransactionProvider>(provider => NullTransactionProvider.Instance);
+            services.AddTransient<ValidationInterceptor>();
+            services.AddTransient<MethodInvocationValidator>();
+            services.AddTransient<IMethodParameterValidator, DataAnnotationMethodParameterValidator>();
+            services.AddTransient<IMethodParameterValidator, ValidatableObjectMethodParameterValidator>();
+            services.AddTransient<IMethodParameterValidator, ModelValidationMethodParameterValidator>();
 
             if (setupAction != null)
             {
-                builder.Services.Configure(setupAction);
+                services.Configure(setupAction);
             }
 
-            return builder;
+            return services;
         }
     }
 }

@@ -6,12 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="8.1.0" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.0" />
+    <PackageReference Include="AutoMapper" Version="8.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
     <PackageReference Include="CacheManager.Microsoft.Extensions.Caching.Memory" Version="1.2.0" />
     <PackageReference Include="CacheManager.Serialization.Json" Version="1.2.0" />
-    <PackageReference Include="DNTPersianUtils.Core" Version="3.2.1" />
-    <PackageReference Include="EFSecondLevelCache.Core" Version="2.3.0" />
+    <PackageReference Include="DNTPersianUtils.Core" Version="3.3.0" />
+    <PackageReference Include="EFSecondLevelCache.Core" Version="2.4.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Scrutor" Version="3.0.2" />
@@ -20,16 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DNTFrameworkCore.EntityFramework.SqlServer\DNTFrameworkCore.EntityFramework.SqlServer.csproj" />
-    <ProjectReference Include="..\..\src\DNTFrameworkCore.EntityFramework\DNTFrameworkCore.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\src\DNTFrameworkCore.EFCore.SqlServer\DNTFrameworkCore.EFCore.SqlServer.csproj" />
+    <ProjectReference Include="..\..\src\DNTFrameworkCore.EFCore\DNTFrameworkCore.EFCore.csproj" />
     <ProjectReference Include="..\..\src\DNTFrameworkCore.FluentValidation\DNTFrameworkCore.FluentValidation.csproj" />
-    <ProjectReference Include="..\..\src\DNTFrameworkCore.Web.EntityFramework\DNTFrameworkCore.Web.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\src\DNTFrameworkCore.Web.EFCore\DNTFrameworkCore.Web.EFCore.csproj" />
     <ProjectReference Include="..\..\src\DNTFrameworkCore.Web\DNTFrameworkCore.Web.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Application\Catalog" />
-    <Folder Include="Application\Identity\Handlers" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,5 +42,5 @@
   <ItemGroup>
     <Content Remove="Logs\**" />
   </ItemGroup>
-
+  
 </Project>

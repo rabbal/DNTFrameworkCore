@@ -1,8 +1,8 @@
-using DNTFrameworkCore.Domain.Entities.Tracking;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Identity
 {
-    public class UserRole : CreationTrackingEntity
+    public class UserRole : TrackableEntity, ICreationTracking
     {
         public long UserId { get; set; }
         public User User { get; set; }

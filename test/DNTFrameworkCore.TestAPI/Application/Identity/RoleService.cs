@@ -3,8 +3,8 @@ using System.Linq;
 using AutoMapper;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Application.Services;
-using DNTFrameworkCore.EntityFramework.Application;
-using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.EFCore.Application;
+using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.TestAPI.Application.Identity.Models;
 using DNTFrameworkCore.TestAPI.Domain.Identity;
@@ -21,9 +21,9 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
         private readonly IMapper _mapper;
 
         public RoleService(
-            IUnitOfWork uow,
+            IDbContext context,
             IEventBus bus,
-            IMapper mapper) : base(uow, bus)
+            IMapper mapper) : base(context, bus)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }

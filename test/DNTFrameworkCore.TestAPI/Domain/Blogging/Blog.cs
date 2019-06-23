@@ -1,9 +1,9 @@
-using DNTFrameworkCore.Domain.Entities;
-using DNTFrameworkCore.Domain.Entities.Tracking;
+using System.ComponentModel.DataAnnotations.Schema;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Blogging
 {
-    public class Blog : TrackableEntity, IAggregateRoot
+    public class Blog : TrackableEntity, IHasRowVersion
     {
         public const int MaxTitleLength = 50;
         public const int MaxUrlLength = 50;

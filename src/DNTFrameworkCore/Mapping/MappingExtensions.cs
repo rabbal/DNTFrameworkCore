@@ -1,6 +1,4 @@
-﻿using DNTFrameworkCore.Domain.Entities;
-using DNTFrameworkCore.Mapping;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 

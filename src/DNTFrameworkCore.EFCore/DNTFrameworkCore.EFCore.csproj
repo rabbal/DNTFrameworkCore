@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Title>DNTFrameworkCore.EntityFramework</Title>
+        <VersionPrefix>2.1.0</VersionPrefix>
+        <Description>DNTFrameworkCore.EntityFramework</Description>
+        <Authors>GholamReza Rabbal</Authors>
+        <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/rabbal/DNTFrameworkCore/blob/master/LICENSE.md</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/rabbal/DNTFrameworkCore</RepositoryUrl>
+        <PackageTags>.NET Core; ASP.NET Core; EFCore; Multitenancy; Validation; Transaction; Framework; Design; Logging; SOLID; Event-Driven; Domain</PackageTags>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <AssemblyName>DNTFrameworkCore.EFCore</AssemblyName>
+        <RootNamespace>DNTFrameworkCore.EFCore</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.4" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\DNTFrameworkCore\DNTFrameworkCore.csproj" />
+    </ItemGroup>
+</Project>

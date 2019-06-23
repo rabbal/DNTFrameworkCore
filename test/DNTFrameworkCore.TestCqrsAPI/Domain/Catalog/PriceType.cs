@@ -1,8 +1,8 @@
-using DNTFrameworkCore.Domain.Entities;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 {
-    public class PriceType : Entity, IAggregateRoot
+    public class PriceType : TrackableEntity, IHasRowVersion
     {
         public string Title { get; set; }
         public byte[] RowVersion { get; set; }

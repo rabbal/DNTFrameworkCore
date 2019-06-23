@@ -1,8 +1,8 @@
-using DNTFrameworkCore.Domain.Entities;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 {
-    public class ProductPrice : Entity
+    public class ProductPrice : TrackableEntity
     {
         public decimal Price { get; set; }
         

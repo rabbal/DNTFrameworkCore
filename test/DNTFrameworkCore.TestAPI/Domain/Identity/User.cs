@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using DNTFrameworkCore.Domain.Entities;
-using DNTFrameworkCore.Domain.Entities.Tracking;
+using System.ComponentModel.DataAnnotations.Schema;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Identity
 {
-    public class User : TrackableEntity<long>, IPassivableEntity, IAggregateRoot
+    public class User : TrackableEntity<long>, IHasRowVersion, ITracking
     {
         public const int MaxUserNameLength = 256;
         public const int MaxDisplayNameLength = 50;
@@ -33,6 +33,7 @@ namespace DNTFrameworkCore.TestAPI.Domain.Identity
         public ICollection<UserClaim> Claims { get; set; } = new HashSet<UserClaim>();
 
         public override string ToString() => UserName;
+
         public string NewSerialNumber()
         {
             return Guid.NewGuid().ToString("N");

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using DNTFrameworkCore.Linq;
 
 namespace DNTFrameworkCore.Extensions
 {
@@ -19,23 +20,6 @@ namespace DNTFrameworkCore.Extensions
             return Expression.Lambda<Func<T, bool>>(
                 Expression.AndAlso(left ?? throw new InvalidOperationException(nameof(left)),
                     right ?? throw new InvalidOperationException(nameof(right))), parameter);
-        }
-
-        private class ReplaceExpressionVisitor : ExpressionVisitor
-        {
-            private readonly Expression _newValue;
-            private readonly Expression _oldValue;
-
-            public ReplaceExpressionVisitor(Expression oldValue, Expression newValue)
-            {
-                _oldValue = oldValue;
-                _newValue = newValue;
-            }
-
-            public override Expression Visit(Expression node)
-            {
-                return node == _oldValue ? _newValue : base.Visit(node);
-            }
         }
     }
 }

@@ -51,11 +51,11 @@ namespace DNTFrameworkCore.Validation.Interception
             }
         }
 
-        private void InterceptAsync(IInvocation invocation, Result result)
+        private static void InterceptAsync(IInvocation invocation, Result result)
         {
             if (invocation.Method.ReturnType == typeof(Task))
             {
-                ThrowBusinessRuleValidationException(result);
+                ThrowValidationException(result);
             }
             else //Task<TResult>
             {
@@ -66,12 +66,12 @@ namespace DNTFrameworkCore.Validation.Interception
                 }
                 else
                 {
-                    ThrowBusinessRuleValidationException(result);
+                    ThrowValidationException(result);
                 }
             }
         }
 
-        private void InterceptSync(IInvocation invocation, Result result)
+        private static void InterceptSync(IInvocation invocation, Result result)
         {
             if (invocation.Method.ReturnType == typeof(Result))
             {
@@ -79,11 +79,11 @@ namespace DNTFrameworkCore.Validation.Interception
             }
             else
             {
-                ThrowBusinessRuleValidationException(result);
+                ThrowValidationException(result);
             }
         }
 
-        private void ThrowBusinessRuleValidationException(Result result)
+        private static void ThrowValidationException(Result result)
         {
             throw new ValidationException(result.Message);
         }

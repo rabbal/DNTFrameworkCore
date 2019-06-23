@@ -10,7 +10,7 @@ namespace DNTFrameworkCore.Tests
         {
             var services = new ServiceCollection();
             
-            services.AddDNTFramework();
+            services.AddDNTFrameworkCore();
 
             configure?.Invoke(services);
 

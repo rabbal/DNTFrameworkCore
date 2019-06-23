@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Functional;
-using Newtonsoft.Json;
 
 namespace DNTFrameworkCore.Application.Events
 {

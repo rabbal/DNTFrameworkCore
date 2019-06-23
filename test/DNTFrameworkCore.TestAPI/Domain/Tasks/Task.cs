@@ -1,9 +1,9 @@
-using DNTFrameworkCore.Domain.Entities;
-using DNTFrameworkCore.Domain.Entities.Tracking;
+using System.ComponentModel.DataAnnotations.Schema;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Tasks
 {
-    public class Task : TrackableEntity, IAggregateRoot, INumberedEntity
+    public class Task : TrackableEntity, ITracking, IHasRowVersion, INumberedEntity
     {
         public const int MaxTitleLength = 256;
         public const int MaxDescriptionLength = 1024;

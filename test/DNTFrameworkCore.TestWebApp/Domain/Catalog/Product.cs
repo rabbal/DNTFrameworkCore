@@ -1,9 +1,8 @@
-using DNTFrameworkCore.Domain.Entities;
-using DNTFrameworkCore.Domain.Entities.Tracking;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestWebApp.Domain.Catalog
 {
-    public class Product : TrackableEntity<long>, IAggregateRoot, INumberedEntity
+    public class Product : Entity, IHasRowVersion, INumberedEntity
     {
         public const int MaxTitleLength = 50;
         

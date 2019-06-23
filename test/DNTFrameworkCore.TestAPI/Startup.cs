@@ -1,9 +1,7 @@
-﻿using DNTFrameworkCore.EntityFramework;
-using DNTFrameworkCore.FluentValidation;
+﻿using DNTFrameworkCore.FluentValidation;
 using DNTFrameworkCore.TestAPI.Application;
 using DNTFrameworkCore.TestAPI.Hubs;
 using DNTFrameworkCore.TestAPI.Infrastructure;
-using DNTFrameworkCore.TestAPI.Infrastructure.Context;
 using DNTFrameworkCore.TestAPI.Resources;
 using DNTFrameworkCore.Web;
 using Microsoft.AspNetCore.Builder;
@@ -29,17 +27,11 @@ namespace DNTFrameworkCore.TestAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDNTFramework()
+            services.AddDNTFrameworkCore()
                 .AddModelValidation()
                 .AddFluentModelValidation()
-                .AddTransaction(options =>
-                {
-                    // options.Timeout=TimeSpan.FromMinutes(3);
-                    //options.IsolationLevel=IsolationLevel.ReadCommitted;
-                });
-
-            services.AddDNTProtectionRepository<ProjectDbContext>();
-            services.AddDNTCommonWeb().AddDNTDataProtection();
+                .AddDNTCommonWeb()
+                .AddDNTDataProtection();
 
             services.AddInfrastructure(Configuration);
             services.AddApplication(Configuration);
@@ -99,10 +91,7 @@ namespace DNTFrameworkCore.TestAPI
             app.UseMvc();
             app.UseSignalR(routes => { routes.MapHub<NotificationHub>("/api/notificationhub"); });
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
         }
     }
 }

@@ -22,7 +22,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
-            services.AddDNTFramework();
+            services.AddDNTFrameworkCore();
 
             var transactionMock = new Mock<ITransaction>();
             transactionMock.Setup(transaction => transaction.Commit());
@@ -43,7 +43,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             services.Decorate<IPartyService>((target, provider) =>
                 (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
                     target,
-                    provider.GetService<TransactionInterceptor>()));
+                    provider.GetService<TransactionInterceptorBase>()));
 
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
 
@@ -61,7 +61,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
-            services.AddDNTFramework();
+            services.AddDNTFrameworkCore();
 
             var transactionMock = new Mock<ITransaction>();
             transactionMock.Setup(transaction => transaction.Commit());
@@ -84,7 +84,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             services.Decorate<IPartyService>((target, provider) =>
                 (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
                     target,
-                    provider.GetService<TransactionInterceptor>()));
+                    provider.GetService<TransactionInterceptorBase>()));
 
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
 
@@ -102,7 +102,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
-            services.AddDNTFramework();
+            services.AddDNTFrameworkCore();
 
             var transactionMock = new Mock<ITransaction>();
             transactionMock.Setup(transaction => transaction.Commit());
@@ -125,7 +125,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             services.Decorate<IPartyService>((target, provider) =>
                 (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
                     target,
-                    provider.GetService<TransactionInterceptor>()));
+                    provider.GetService<TransactionInterceptorBase>()));
 
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
 
@@ -141,7 +141,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
-            services.AddDNTFramework();
+            services.AddDNTFrameworkCore();
 
             var transactionMock = new Mock<ITransaction>();
             transactionMock.Setup(transaction => transaction.Commit());
@@ -164,7 +164,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             services.Decorate<IPartyService>((target, provider) =>
                 (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
                     target,
-                    provider.GetService<TransactionInterceptor>()));
+                    provider.GetService<TransactionInterceptorBase>()));
 
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
 
@@ -180,7 +180,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
-            services.AddDNTFramework();
+            services.AddDNTFrameworkCore();
 
             var transactionMock = new Mock<ITransaction>();
             transactionMock.Setup(transaction => transaction.Commit());
@@ -203,7 +203,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             services.Decorate<IPartyService>((target, provider) =>
                 (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
                     target,
-                    provider.GetService<TransactionInterceptor>()));
+                    provider.GetService<TransactionInterceptorBase>()));
 
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
 
@@ -219,7 +219,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
-            services.AddDNTFramework();
+            services.AddDNTFrameworkCore();
 
             var transactionMock = new Mock<ITransaction>();
             transactionMock.Setup(transaction => transaction.Commit());
@@ -242,7 +242,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             services.Decorate<IPartyService>((target, provider) =>
                 (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
                     target,
-                    provider.GetService<TransactionInterceptor>()));
+                    provider.GetService<TransactionInterceptorBase>()));
 
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
 
@@ -258,7 +258,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
-            services.AddDNTFramework();
+            services.AddDNTFrameworkCore();
 
             var transactionMock = new Mock<ITransaction>();
             transactionMock.Setup(transaction => transaction.Commit());
@@ -281,7 +281,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             services.Decorate<IPartyService>((target, provider) =>
                 (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
                     target,
-                    provider.GetService<TransactionInterceptor>()));
+                    provider.GetService<TransactionInterceptorBase>()));
 
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
 
@@ -297,7 +297,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
-            services.AddDNTFramework();
+            services.AddDNTFrameworkCore();
 
             var transactionMock = new Mock<ITransaction>();
             transactionMock.Setup(transaction => transaction.Commit());
@@ -320,7 +320,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             services.Decorate<IPartyService>((target, provider) =>
                 (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
                     target,
-                    provider.GetService<TransactionInterceptor>()));
+                    provider.GetService<TransactionInterceptorBase>()));
 
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
 
@@ -336,7 +336,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
-            services.AddDNTFramework();
+            services.AddDNTFrameworkCore();
 
             var transactionMock = new Mock<ITransaction>();
             transactionMock.Setup(transaction => transaction.Commit());
@@ -359,7 +359,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             services.Decorate<IPartyService>((target, provider) =>
                 (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
                     target,
-                    provider.GetService<TransactionInterceptor>()));
+                    provider.GetService<TransactionInterceptorBase>()));
 
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
 
@@ -376,7 +376,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
-            services.AddDNTFramework();
+            services.AddDNTFrameworkCore();
 
             var transactionMock = new Mock<ITransaction>();
             transactionMock.Setup(transaction => transaction.Commit());
@@ -399,7 +399,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             services.Decorate<IPartyService>((target, provider) =>
                 (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
                     target,
-                    provider.GetService<TransactionInterceptor>()));
+                    provider.GetService<TransactionInterceptorBase>()));
 
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
             Assert.ThrowsAsync<Exception>(async () => { await service.TaskAsyncMethodWithException(); },

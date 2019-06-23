@@ -1,5 +1,3 @@
-using DNTFrameworkCore.Domain.Entities.Tracking;
-
 namespace DNTFrameworkCore.TestWebApp.Domain.Identity
 {
     public class UserRole : CreationTrackingEntity

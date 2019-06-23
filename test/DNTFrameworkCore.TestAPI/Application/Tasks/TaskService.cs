@@ -1,10 +1,9 @@
 using System;
 using System.Linq;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using DNTFrameworkCore.Application.Services;
-using DNTFrameworkCore.EntityFramework.Application;
-using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.EFCore.Application;
+using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Linq;
 using DNTFrameworkCore.TestAPI.Application.Tasks.Models;
@@ -22,7 +21,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
     {
         private readonly IMapper _mapper;
 
-        public TaskService(IUnitOfWork uow, IEventBus bus, IMapper mapper) : base(uow, bus)
+        public TaskService(IDbContext context, IEventBus bus, IMapper mapper) : base(context, bus)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }

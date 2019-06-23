@@ -20,7 +20,6 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Castle.Core" Version="4.4.0" />
-        <PackageReference Include="DNTPersianUtils.Core" Version="3.2.1" />
         <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
@@ -31,11 +30,33 @@
         <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
         <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
         <PackageReference Include="System.Data.Common" Version="4.3.0" />
+        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.16" />
     </ItemGroup>
     <ItemGroup>
         <Content Include="README.md">
             <Pack>true</Pack>
             <PackagePath>README.md</PackagePath>
         </Content>
+    </ItemGroup>
+    <ItemGroup>
+      <_UnmanagedRegistrationCache Remove="obj\DNTFrameworkCore.csproj.UnmanagedRegistration.cache" />
+    </ItemGroup>
+    <ItemGroup>
+      <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\DNTFrameworkCore.csproj.ResolveComReference.cache" />
+    </ItemGroup>
+    <ItemGroup>
+      <IntermediateAssembly Remove="obj\Debug\netstandard2.0\DNTFrameworkCore.dll" />
+    </ItemGroup>
+    <ItemGroup>
+      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netstandard2.0\DNTFrameworkCore.pdb" />
+    </ItemGroup>
+    <ItemGroup>
+      <_DeploymentManifestEntryPoint Remove="obj\Debug\netstandard2.0\DNTFrameworkCore.dll" />
+    </ItemGroup>
+    <ItemGroup>
+      <ApplicationManifest Remove="obj\Debug\netstandard2.0\Native.DNTFrameworkCore.manifest" />
+    </ItemGroup>
+    <ItemGroup>
+      <DeployManifest Remove="obj\Debug\netstandard2.0\DNTFrameworkCore.application" />
     </ItemGroup>
 </Project>

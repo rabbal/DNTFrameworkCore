@@ -1,14 +1,14 @@
 using System;
-using DNTFrameworkCore.Domain.Entities.Tracking;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Identity
 {
-    public class UserToken : CreationTrackingEntity
+    public class UserToken : Entity, ICreationTracking
     {
         public const int MaxAccessTokenHashLength = 256;
         public const int MaxRefreshTokenIdHashLength = 256;
         public const int MaxRefreshTokenIdHashSourceLength = 256;
-        
+
         public string TokenHash { get; set; }
         public DateTimeOffset TokenExpirationDateTime { get; set; }
 

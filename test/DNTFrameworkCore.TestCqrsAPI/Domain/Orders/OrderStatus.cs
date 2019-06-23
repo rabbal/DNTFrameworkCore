@@ -1,4 +1,4 @@
-﻿using DNTFrameworkCore.Domain.Entities;
+﻿using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
 {

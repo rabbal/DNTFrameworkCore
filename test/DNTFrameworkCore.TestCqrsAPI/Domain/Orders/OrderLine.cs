@@ -1,4 +1,5 @@
-using DNTFrameworkCore.Domain.Entities;
+using System;
+using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders

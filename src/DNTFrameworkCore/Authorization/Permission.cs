@@ -54,7 +54,6 @@ namespace DNTFrameworkCore.Authorization
         /// <param name="displayName">Display name of the permission</param>
         /// <param name="description">A brief description for this permission</param>
         /// <param name="multiTenancySides">Which side can use this permission</param>
-        /// <param name="featureDependency">Depended feature(s) of this permission</param>
         public Permission(
             string name,
             ILocalizableString displayName = null,

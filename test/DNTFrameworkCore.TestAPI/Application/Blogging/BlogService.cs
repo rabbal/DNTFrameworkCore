@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Application.Services;
-using DNTFrameworkCore.EntityFramework.Application;
-using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.EFCore.Application;
+using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestAPI.Application.Blogging.Models;
@@ -26,10 +26,10 @@ namespace DNTFrameworkCore.TestAPI.Application.Blogging
         private readonly ILogger<BlogService> _logger;
 
         public BlogService(
-            IUnitOfWork uow,
+            IDbContext context,
             IEventBus bus,
             IMapper mapper,
-            ILogger<BlogService> logger) : base(uow, bus)
+            ILogger<BlogService> logger) : base(context, bus)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));

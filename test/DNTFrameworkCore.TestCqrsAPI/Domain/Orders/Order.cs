@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using DNTFrameworkCore.Domain.Entities;
+using System.Linq;
+using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Sales;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
 {
-    public class Order : Entity<long>, IAggregateRoot
+    public class Order : AggregateRoot<long>
     {
         private int _statusId;
         public OrderStatus Status { get; private set; }
@@ -17,7 +18,6 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
         public DateTimeOffset DateTime { get; private set; }
         private List<OrderLine> _lines;
         public IReadOnlyCollection<OrderLine> Lines => _lines.AsReadOnly();
-
         private List<OrderNote> _notes;
         public IReadOnlyCollection<OrderNote> Notes => _notes.AsReadOnly();
 
@@ -31,7 +31,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
         {
             Guard.ArgumentNotNull(customerId, nameof(customerId));
             Guard.ArgumentNotNull(address, nameof(address));
-            
+
             var order = new Order
             {
                 _statusId = OrderStatus.Pending.Id,
@@ -46,6 +46,10 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
         public Result AddOrderLine(int productId, Price unitPrice, int quantity = 1, decimal discount = 0)
         {
             //todo: business rules
+            if (_lines.Any(line => line.ProductId == productId))
+            {
+                
+            }
             return OrderLine.Create(productId, unitPrice, quantity, discount)
                 .OnSuccess(line => _lines.Add(line));
         }

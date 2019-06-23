@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using DNTFrameworkCore.Domain.Entities;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales
 {
-    public class SaleMethod : Entity, IAggregateRoot
+    public class SaleMethod : Entity, IHasRowVersion
     {
         public string Title { get; set; }
         public SaleMethodNature Nature { get; set; }
