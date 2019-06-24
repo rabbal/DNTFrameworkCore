@@ -1,6 +1,5 @@
 ﻿using DNTFrameworkCore.Domain;
 using Microsoft.EntityFrameworkCore;
-
 namespace DNTFrameworkCore.EFCore.Context.Extensions
 {
     /// <summary>

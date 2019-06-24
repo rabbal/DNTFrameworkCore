@@ -1,7 +1,5 @@
 using System;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using DNTFrameworkCore.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -11,46 +9,21 @@ namespace DNTFrameworkCore.EFCore.Context
     // ReSharper disable once InconsistentNaming
     public static class EFCore
     {
-        private static readonly MethodInfo QueryFiltersMethodInfo =
-            typeof(DbContextCore).GetMethod(nameof(ConfigureQueryFilters),
-                BindingFlags.Static | BindingFlags.NonPublic);
-
-        public static readonly Func<object, string> CreatorBrowserName =
-            entity => EF.Property<string>(entity, nameof(CreatorBrowserName));
-
-        public static readonly Func<object, string> CreatorIp =
-            entity => EF.Property<string>(entity, nameof(CreatorIp));
-
-        public static readonly Func<object, DateTimeOffset> CreationDateTime =
-            entity => EF.Property<DateTimeOffset>(entity, nameof(CreationDateTime));
-
-        public static readonly Func<object, long?> CreatorUserId =
-            entity => EF.Property<long?>(entity, nameof(CreatorUserId));
-
-        public static readonly Func<object, DateTimeOffset?> ModificationDateTime =
-            entity => EF.Property<DateTimeOffset?>(entity, nameof(ModificationDateTime));
-
-        public static readonly Func<object, string> ModifierIp =
-            entity => EF.Property<string>(entity, nameof(ModifierIp));
-
-        public static readonly Func<object, string> ModifierBrowserName =
-            entity => EF.Property<string>(entity, nameof(ModifierBrowserName));
-
-        public static readonly Func<object, long?> ModifierUserId =
-            entity => EF.Property<long?>(entity, nameof(ModifierUserId));
-
-        public static readonly Func<object, long> UserId =
-            entity => EF.Property<long>(entity, nameof(UserId));
-
-        public static readonly Func<object, long> TenantId =
-            entity => EF.Property<long>(entity, nameof(TenantId));
-
-        public static readonly Func<object, bool> IsDeleted =
-            entity => EF.Property<bool>(entity, nameof(IsDeleted));
-
-        public static readonly Func<object, byte[]> RowVersion =
-            entity => EF.Property<byte[]>(entity, nameof(RowVersion));
-
+        public const string CreatorBrowserName = nameof(CreatorBrowserName);
+        public const string CreatorIp = nameof(CreatorIp);
+        public const string CreationDateTime = nameof(CreationDateTime);
+        public const string CreatorUserId = nameof(CreatorUserId);
+        
+        public const string ModifierBrowserName = nameof(ModifierBrowserName);
+        public const string ModifierIp = nameof(ModifierIp);
+        public const string ModificationDateTime = nameof(ModificationDateTime);
+        public const string ModifierUserId = nameof(ModifierUserId);
+        
+        public const string UserId = nameof(UserId);
+        public const string TenantId = nameof(TenantId);
+        public const string IsDeleted = nameof(IsDeleted);
+        public const string RowVersion = nameof(RowVersion);
+        
         public static void AddTracking(this ModelBuilder builder)
         {
             var types = builder.Model.GetEntityTypes().ToList();
@@ -58,35 +31,35 @@ namespace DNTFrameworkCore.EFCore.Context
             foreach (var entityType in types.Where(e => typeof(ICreationTracking).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
-                    .Property<DateTimeOffset>(nameof(CreationDateTime))
+                    .Property<DateTimeOffset>(CreationDateTime)
                     .Metadata.AfterSaveBehavior = PropertySaveBehavior.Ignore;
 
                 builder.Entity(entityType.ClrType)
-                    .Property<string>(nameof(CreatorBrowserName)).HasMaxLength(1024)
+                    .Property<string>(CreatorBrowserName).HasMaxLength(1024)
                     .Metadata.AfterSaveBehavior = PropertySaveBehavior.Ignore;
 
                 builder.Entity(entityType.ClrType)
-                    .Property<string>(nameof(CreatorIp)).HasMaxLength(256)
+                    .Property<string>(CreatorIp).HasMaxLength(256)
                     .Metadata.AfterSaveBehavior = PropertySaveBehavior.Ignore;
 
                 builder.Entity(entityType.ClrType)
-                    .Property<long?>(nameof(CreatorUserId))
+                    .Property<long?>(CreatorUserId)
                     .Metadata.AfterSaveBehavior = PropertySaveBehavior.Ignore;
             }
 
             foreach (var entityType in types.Where(e => typeof(IModificationTracking).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
-                    .Property<DateTimeOffset?>(nameof(ModificationDateTime));
+                    .Property<DateTimeOffset?>(ModificationDateTime);
 
                 builder.Entity(entityType.ClrType)
-                    .Property<string>(nameof(ModifierBrowserName)).HasMaxLength(1024);
+                    .Property<string>(ModifierBrowserName).HasMaxLength(1024);
 
                 builder.Entity(entityType.ClrType)
-                    .Property<string>(nameof(ModifierIp)).HasMaxLength(256);
+                    .Property<string>(ModifierIp).HasMaxLength(256);
 
                 builder.Entity(entityType.ClrType)
-                    .Property<long?>(nameof(ModifierUserId));
+                    .Property<long?>(ModifierUserId);
             }
         }
 
@@ -97,12 +70,12 @@ namespace DNTFrameworkCore.EFCore.Context
             foreach (var entityType in types.Where(e => typeof(ITenantEntity).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
-                    .Property<long>(nameof(TenantId)).Metadata
+                    .Property<long>(TenantId).Metadata
                     .AfterSaveBehavior = PropertySaveBehavior.Ignore;
 
                 builder.Entity(entityType.ClrType)
-                    .HasIndex(nameof(TenantId))
-                    .HasName($"IX_{entityType.ClrType.Name}_{nameof(TenantId)}");
+                    .HasIndex(TenantId)
+                    .HasName($"IX_{entityType.ClrType.Name}_{TenantId}");
             }
         }
 
@@ -113,7 +86,7 @@ namespace DNTFrameworkCore.EFCore.Context
             foreach (var entityType in types.Where(e => typeof(ISoftDeleteEntity).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
-                    .Property<bool>(nameof(IsDeleted));
+                    .Property<bool>(IsDeleted);
             }
         }
 
@@ -124,7 +97,7 @@ namespace DNTFrameworkCore.EFCore.Context
             foreach (var entityType in types.Where(e => typeof(IHasRowLevelSecurity).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
-                    .Property<long>(nameof(UserId))
+                    .Property<long>(UserId)
                     .Metadata.AfterSaveBehavior = PropertySaveBehavior.Ignore;
             }
         }
@@ -136,7 +109,7 @@ namespace DNTFrameworkCore.EFCore.Context
             foreach (var entityType in types.Where(e => typeof(IHasRowVersion).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
-                    .Property(nameof(RowVersion))
+                    .Property(RowVersion)
                     .IsRowVersion();
             }
         }
@@ -154,9 +127,9 @@ namespace DNTFrameworkCore.EFCore.Context
                 if (typeof(ITenantEntity).IsAssignableFrom(entityType.ClrType))
                 {
                     builder.Entity(entityType.ClrType)
-                        .HasIndex(nameof(INumberedEntity.Number), nameof(TenantId))
+                        .HasIndex(nameof(INumberedEntity.Number), TenantId)
                         .HasName(
-                            $"UIX_{entityType.ClrType.Name}_{nameof(TenantId)}_{nameof(INumberedEntity.Number)}")
+                            $"UIX_{entityType.ClrType.Name}_{TenantId}_{nameof(INumberedEntity.Number)}")
                         .IsUnique();
                 }
                 else
@@ -167,77 +140,6 @@ namespace DNTFrameworkCore.EFCore.Context
                         .IsUnique();
                 }
             }
-        }
-
-        public static void ApplyQueryFilters(this ModelBuilder modelBuilder, long tenantId, long userId)
-        {
-            var types = modelBuilder.Model.GetEntityTypes();
-            foreach (var entityType in types)
-            {
-                QueryFiltersMethodInfo
-                    .MakeGenericMethod(entityType.ClrType)
-                    .Invoke(null, new object[] {modelBuilder, entityType});
-            }
-        }
-
-        private static void ConfigureQueryFilters<TEntity>(ModelBuilder modelBuilder, IMutableEntityType entityType)
-            where TEntity : class
-        {
-            if (entityType.BaseType != null || !ShouldFilterEntity<TEntity>()) return;
-
-            var filterExpression = BuildFilterExpression<TEntity>();
-            if (filterExpression == null) return;
-
-            if (entityType.IsQueryType)
-            {
-                modelBuilder.Query<TEntity>().HasQueryFilter(filterExpression);
-            }
-            else
-            {
-                modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
-            }
-        }
-
-        private static bool ShouldFilterEntity<TEntity>() where TEntity : class
-        {
-            return typeof(ISoftDeleteEntity).IsAssignableFrom(typeof(TEntity)) ||
-                   typeof(ITenantEntity).IsAssignableFrom(typeof(TEntity)) ||
-                   typeof(IHasRowLevelSecurity).IsAssignableFrom(typeof(TEntity));
-        }
-
-        private static Expression<Func<TEntity, bool>> BuildFilterExpression<TEntity>()
-            where TEntity : class
-        {
-            Expression<Func<TEntity, bool>> expression = null;
-//
-//            if (typeof(ISoftDeleteEntity).IsAssignableFrom(typeof(TEntity)))
-//            {
-//                Expression<Func<TEntity, bool>> deleteFilterExpression = e =>
-//                    !DeleteFilterEnabled || !EF.Property<bool>(e, "IsDeleted");
-//
-//                expression = deleteFilterExpression;
-//            }
-//
-//            if (typeof(ITenantEntity).IsAssignableFrom(typeof(TEntity)))
-//            {
-//                Expression<Func<TEntity, bool>> tenantFilterExpression = e =>
-//                    !TenantFilterEnabled || EF.Property<long>(e, "TenantId") == _tenantId;
-//
-//                expression = expression == null
-//                    ? tenantFilterExpression
-//                    : expression.Combine(tenantFilterExpression);
-//            }
-//
-//            if (!typeof(IHasRowLevelSecurity).IsAssignableFrom(typeof(TEntity))) return expression;
-//
-//            Expression<Func<TEntity, bool>> branchFilterExpression = e =>
-//                !RowLevelSecurityEnabled || EF.Property<long>(e, "UserId") == _userId;
-//
-//            expression = expression == null
-//                ? branchFilterExpression
-//                : expression.Combine(branchFilterExpression);
-//
-            return expression;
         }
     }
 }

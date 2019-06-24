@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.EFCore.Context.Extensions;
 using DNTFrameworkCore.EFCore.Context.Hooks;
 using DNTFrameworkCore.Exceptions;
+using DNTFrameworkCore.Extensions;
+using DNTFrameworkCore.Runtime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 using DbUpdateException = Microsoft.EntityFrameworkCore.DbUpdateException;
 
@@ -16,10 +22,22 @@ namespace DNTFrameworkCore.EFCore.Context
     public abstract class DbContextCore : DbContext, IDbContext
     {
         private readonly IHookEngine _hookEngine;
+        private readonly IUserSession _session;
 
-        protected DbContextCore(IHookEngine hookEngine, DbContextOptions options) : base(options)
+        private static readonly MethodInfo FilterEntityMethodInfo =
+            typeof(DbContextCore).GetMethod(nameof(FilterEntity),
+                BindingFlags.Instance | BindingFlags.NonPublic);
+
+        private readonly long _userId;
+        private readonly long _tenantId;
+
+        protected DbContextCore(IHookEngine hookEngine, IUserSession session, DbContextOptions options) : base(options)
         {
             _hookEngine = hookEngine ?? throw new ArgumentNullException(nameof(hookEngine));
+            _session = session ?? throw new ArgumentNullException(nameof(session));
+
+            _tenantId = _session.TenantId ?? 0;
+            _userId = _session.UserId ?? 0;
         }
 
         public DbConnection Connection => Database.GetDbConnection();
@@ -197,6 +215,79 @@ namespace DNTFrameworkCore.EFCore.Context
             builder.AddRowVersion();
             builder.AddRowLevelSecurity();
             builder.AddNumberedEntity();
+            
+            ApplyFilters(builder);
+        }
+
+        private static void ApplyFilters(ModelBuilder modelBuilder)
+        {
+            var types = modelBuilder.Model.GetEntityTypes();
+            foreach (var entityType in types)
+            {
+                FilterEntityMethodInfo
+                    .MakeGenericMethod(entityType.ClrType)
+                    .Invoke(null, new object[] {modelBuilder, entityType});
+            }
+        }
+
+        private void FilterEntity<TEntity>(ModelBuilder modelBuilder, IMutableEntityType entityType)
+            where TEntity : class
+        {
+            if (entityType.BaseType != null || !ShouldFilterEntity<TEntity>()) return;
+
+            var filterExpression = BuildFilterExpression<TEntity>();
+            if (filterExpression == null) return;
+
+            if (entityType.IsQueryType)
+            {
+                modelBuilder.Query<TEntity>().HasQueryFilter(filterExpression);
+            }
+            else
+            {
+                modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
+            }
+        }
+
+        private static bool ShouldFilterEntity<TEntity>() where TEntity : class
+        {
+            return typeof(ISoftDeleteEntity).IsAssignableFrom(typeof(TEntity)) ||
+                   typeof(ITenantEntity).IsAssignableFrom(typeof(TEntity)) ||
+                   typeof(IHasRowLevelSecurity).IsAssignableFrom(typeof(TEntity));
+        }
+
+        private Expression<Func<TEntity, bool>> BuildFilterExpression<TEntity>()
+            where TEntity : class
+        {
+            Expression<Func<TEntity, bool>> expression = null;
+
+            if (typeof(ISoftDeleteEntity).IsAssignableFrom(typeof(TEntity)))
+            {
+                Expression<Func<TEntity, bool>> deleteFilterExpression = e =>
+                    !DeleteFilterEnabled || !EF.Property<bool>(e, EFCore.IsDeleted);
+
+                expression = deleteFilterExpression;
+            }
+
+            if (typeof(ITenantEntity).IsAssignableFrom(typeof(TEntity)))
+            {
+                Expression<Func<TEntity, bool>> tenantFilterExpression = e =>
+                    !TenantFilterEnabled || EF.Property<long>(e, EFCore.TenantId) == _tenantId;
+
+                expression = expression == null
+                    ? tenantFilterExpression
+                    : expression.Combine(tenantFilterExpression);
+            }
+
+            if (!typeof(IHasRowLevelSecurity).IsAssignableFrom(typeof(TEntity))) return expression;
+
+            Expression<Func<TEntity, bool>> rlsFilterExpression = e =>
+                !RowLevelSecurityEnabled || EF.Property<long>(e, EFCore.UserId) == _userId;
+
+            expression = expression == null
+                ? rlsFilterExpression
+                : expression.Combine(rlsFilterExpression);
+
+            return expression;
         }
     }
 }

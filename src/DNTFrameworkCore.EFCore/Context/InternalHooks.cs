@@ -21,10 +21,10 @@ namespace DNTFrameworkCore.EFCore.Context
 
         protected override void Hook(ICreationTracking entity, HookEntityMetadata metadata)
         {
-            metadata.Entry.Property(nameof(EFCore.CreationDateTime)).CurrentValue = _dateTime.UtcNow;
-            metadata.Entry.Property(nameof(EFCore.CreatorBrowserName)).CurrentValue = _session.UserBrowserName;
-            metadata.Entry.Property(nameof(EFCore.CreatorIp)).CurrentValue = _session.UserIP;
-            metadata.Entry.Property(nameof(EFCore.CreatorUserId)).CurrentValue = _session.UserId;
+            metadata.Entry.Property(EFCore.CreationDateTime).CurrentValue = _dateTime.UtcNow;
+            metadata.Entry.Property(EFCore.CreatorBrowserName).CurrentValue = _session.UserBrowserName;
+            metadata.Entry.Property(EFCore.CreatorIp).CurrentValue = _session.UserIP;
+            metadata.Entry.Property(EFCore.CreatorUserId).CurrentValue = _session.UserId;
         }
     }
 
@@ -41,10 +41,10 @@ namespace DNTFrameworkCore.EFCore.Context
 
         protected override void Hook(IModificationTracking entity, HookEntityMetadata metadata)
         {
-            metadata.Entry.Property(nameof(EFCore.ModificationDateTime)).CurrentValue = _dateTime.UtcNow;
-            metadata.Entry.Property(nameof(EFCore.ModifierBrowserName)).CurrentValue = _session.UserBrowserName;
-            metadata.Entry.Property(nameof(EFCore.ModifierIp)).CurrentValue = _session.UserIP;
-            metadata.Entry.Property(nameof(EFCore.ModifierUserId)).CurrentValue = _session.UserId;
+            metadata.Entry.Property(EFCore.ModificationDateTime).CurrentValue = _dateTime.UtcNow;
+            metadata.Entry.Property(EFCore.ModifierBrowserName).CurrentValue = _session.UserBrowserName;
+            metadata.Entry.Property(EFCore.ModifierIp).CurrentValue = _session.UserIP;
+            metadata.Entry.Property(EFCore.ModifierUserId).CurrentValue = _session.UserId;
         }
     }
 
@@ -61,7 +61,7 @@ namespace DNTFrameworkCore.EFCore.Context
         {
             if (!_tenant.HasValue) return;
 
-            metadata.Entry.Property(nameof(EFCore.TenantId)).CurrentValue = _tenant.Value.Id;
+            metadata.Entry.Property(EFCore.TenantId).CurrentValue = _tenant.Value.Id;
         }
     }
 
@@ -76,7 +76,7 @@ namespace DNTFrameworkCore.EFCore.Context
 
         protected override void Hook(IHasRowLevelSecurity entity, HookEntityMetadata metadata)
         {
-            metadata.Entry.Property(nameof(EFCore.UserId)).CurrentValue = _session.UserId;
+            metadata.Entry.Property(EFCore.UserId).CurrentValue = _session.UserId;
         }
     }
 
@@ -85,7 +85,7 @@ namespace DNTFrameworkCore.EFCore.Context
         protected override void Hook(ISoftDeleteEntity entity, HookEntityMetadata metadata)
         {
             metadata.Entry.State = EntityState.Modified;
-            metadata.Entry.Property(nameof(EFCore.IsDeleted)).CurrentValue = true;
+            metadata.Entry.Property(EFCore.IsDeleted).CurrentValue = true;
         }
     }
 
@@ -93,8 +93,8 @@ namespace DNTFrameworkCore.EFCore.Context
     {
         protected override void Hook(IHasRowVersion entity, HookEntityMetadata metadata)
         {
-            metadata.Entry.Property(nameof(EFCore.RowVersion)).OriginalValue =
-                metadata.Entry.Property(nameof(EFCore.RowVersion)).CurrentValue;
+            metadata.Entry.Property(EFCore.RowVersion).OriginalValue =
+                metadata.Entry.Property(EFCore.RowVersion).CurrentValue;
         }
     }
 }

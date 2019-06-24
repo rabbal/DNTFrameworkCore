@@ -75,7 +75,5 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
 
             return Result.Ok();
         }
-
-        public byte[] RowVersion { get; set; }
     }
 }

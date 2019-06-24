@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace DNTFrameworkCore.Domain
 {
-    public interface IAggregateRoot : IEntity
+    public interface IAggregateRoot : IEntity, IHasRowVersion
     {
-        IReadOnlyCollection<IDomainEvent> Events  { get; }
+        IReadOnlyCollection<IDomainEvent> Events { get; }
         void ClearEvents();
     }
-    
+
     public abstract class AggregateRoot<TKey> : Entity<TKey>, IAggregateRoot
         where TKey : IEquatable<TKey>
     {
         private readonly List<IDomainEvent> _events = new List<IDomainEvent>();
-        public IReadOnlyCollection<IDomainEvent> Events  => _events.AsReadOnly();
+        public IReadOnlyCollection<IDomainEvent> Events => _events.AsReadOnly();
 
         protected virtual void AddDomainEvent(IDomainEvent newEvent)
         {
@@ -23,6 +23,6 @@ namespace DNTFrameworkCore.Domain
         public virtual void ClearEvents()
         {
             _events.Clear();
-        } 
+        }
     }
 }
