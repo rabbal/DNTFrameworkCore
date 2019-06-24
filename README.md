@@ -1,7 +1,7 @@
 # DNTFrameworkCore 
-[![Build status](https://rabbal.visualstudio.com/DNTFrameworkCore/_apis/build/status/DNTFrameworkCore-Master-CI)](https://rabbal.visualstudio.com/DNTFrameworkCore/_build/latest?definitionId=3)
 
-## What is DNTFrameworkCore?
+
+### What is DNTFrameworkCore?
 
 `DNTFrameworkCore` is a Lightweight and 
 Extensible Infrastructure for Building High Quality Web Applications Based on ASP.NET Core and has the following goals:
@@ -11,10 +11,67 @@ Extensible Infrastructure for Building High Quality Web Applications Based on AS
 * Less bug and stop bug propagation 
 * Reduce the training time of the new developer with low knowledge about OOP and OOD
  
- ![Blog CRUD API](https://github.com/rabbal/DNTFrameworkCore/blob/master/docs/blog-crud-api.JPG)
- ![Blog CRUD MVC](https://github.com/rabbal/DNTFrameworkCore/blob/master/docs/blog-crud-mvc.PNG)
+Application Service
+```csharp
+public interface IBlogService : ICrudService<int, BlogModel>
+{
+}
+
+public class BlogService : CrudService<Blog, int, BlogModel>, IBlogService
+{
+    private readonly IMapper _mapper;
+
+    public BlogService(
+        IUnitOfWork uow,
+        IEventBus bus,
+        IMapper mapper) : base(uow, bus)
+    {
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+    }
+
+    protected override IQueryable<BlogModel> BuildReadQuery(FilteredPagedQueryModel model)
+    {
+        return EntitySet.AsNoTracking()
+            .Select(b => new BlogModel { Id = b.Id, Url = b.Url, Title = b.Title });
+    }
+
+    protected override void MapToEntity(BlogModel model, Blog blog) => _mapper.Map(model, blog);
+
+    protected override BlogModel MapToModel(Blog blog) => _mapper.Map<BlogModel>(blog);
+}
+ ``` 
  
- ![Blog CRUD Service](https://github.com/rabbal/DNTFrameworkCore/blob/master/docs/blog-crud-service.JPG)
+ASP.NET Core WebAPI
+```csharp
+[Route("api/[controller]")]
+public class BlogsController : CrudController<IBlogService, int, BlogModel>
+{
+    public BlogsController(IBlogService service) : base(service)
+    {
+    }
+
+    protected override string CreatePermissionName => PermissionNames.Blogs_Create;
+    protected override string EditPermissionName => PermissionNames.Blogs_Edit;
+    protected override string ViewPermissionName => PermissionNames.Blogs_View;
+    protected override string DeletePermissionName => PermissionNames.Blogs_Delete;
+}
+ ```
+ 
+ ASP.NET Core MVC
+ ```csharp
+public class BlogsController : CrudController<IBlogService, int, BlogModel>
+{
+    public BlogsController(IBlogService service) : base(service)
+    {
+    }
+
+    protected override string CreatePermissionName => PermissionNames.Blogs_Create;
+    protected override string EditPermissionName => PermissionNames.Blogs_Edit;
+    protected override string ViewPermissionName => PermissionNames.Blogs_View;
+    protected override string DeletePermissionName => PermissionNames.Blogs_Delete;
+    protected override string ViewName => "_BlogModal";
+}
+ ```
  
  ![Role Modal MVC](https://github.com/rabbal/DNTFrameworkCore/blob/master/docs/role-modal-edit.JPG)
 ## Installation
@@ -22,10 +79,10 @@ Extensible Infrastructure for Building High Quality Web Applications Based on AS
 To create your first project based on DNTFrameworkCore you can install the following packages:
 ```
 PM> Install-Package DNTFrameworkCore
-PM> Install-Package DNTFrameworkCore.EntityFramework
-PM> Install-Package DNTFrameworkCore.EntityFramework.SqlServer
+PM> Install-Package DNTFrameworkCore.EFCore
+PM> Install-Package DNTFrameworkCore.EFCore.SqlServer
 PM> Install-Package DNTFrameworkCore.Web
-PM> Install-Package DNTFrameworkCore.Web.EntityFramework
+PM> Install-Package DNTFrameworkCore.Web.EFCore
 PM> Install-Package DNTFrameworkCore.FluentValidation
 PM> Install-Package DNTFrameworkCore.Web.MultiTenancy
 ```
@@ -61,9 +118,8 @@ For more info about templates you can watch [DNTFrameworkCoreTemplate repository
 * ProtectionKeys DbRepository
 * Hooks
 * SoftDelete
-* Branching
 * MultiTenancy
-* Tracking mechanism (CreatorUserId,CreationDateTime,LastModifierUserId,...)
+* Tracking mechanism (ICreationTracking, IModificationTracking)
 * FluentValidation Integration
 * BackgroundTaskQueue
 * CQRS (coming soon)
@@ -74,7 +130,7 @@ For more info about templates you can watch [DNTFrameworkCoreTemplate repository
 
 **Create Entity**
 ```c#
-public class Task : TrackableEntity<int>, IAggregateRoot, INumberedEntity
+public class Task : TrackableEntity<int>, IAggregateRoot, INumberedEntity, ICreationTracking, IModificationTracking
 {
     public const int MaxTitleLength = 256;
     public const int MaxDescriptionLength = 1024;
@@ -203,7 +259,7 @@ public class TaskService : CrudService<Task, int, TaskReadModel, TaskModel, Task
 }
 ```
 
-In DNTFrameworkCore.EntityFramework [there is no dependency to AutoMapper](https://cezarypiatek.github.io/post/why-i-dont-use-automapper/) or other mapper libraries, then you can do mapping between Entity and Model manually by implementing MapToModel and MapToEntity abstract methods.
+In DNTFrameworkCore.EFCore [there is no dependency to AutoMapper](https://cezarypiatek.github.io/post/why-i-dont-use-automapper/) or other mapper libraries, then you can do mapping between Entity and Model manually by implementing MapToModel and MapToEntity abstract methods.
 
 **Implement API Controller**
 ```c#
@@ -242,4 +298,3 @@ public class BlogsController : CrudController<IBlogService, int, BlogModel>
 ## ASP.NET Boilerplate
 A small part of this project like the following sections are taken from [ABP](https://github.com/aspnetboilerplate/aspnetboilerplate)
 - Validation with refactoring to support functional programming error handling mechanism
-- EntityTracking Interfaces
