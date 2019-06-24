@@ -28,7 +28,7 @@ namespace DNTFrameworkCore.EFCore
 
             if (multiTenancy.Value.Enabled &&
                 multiTenancy.Value.DatabaseStrategy != MultiTenancyDatabaseStrategy.SingleDatabase &&
-                tenant.Value != null)
+                tenant.HasValue)
             {
                 connectionString = tenant.Value.ConnectionString;
             }
@@ -42,11 +42,11 @@ namespace DNTFrameworkCore.EFCore
         // ReSharper disable once InconsistentNaming
         public static void AddEFCore<TDbContext>(this IServiceCollection services,
             Action<TransactionOptions> setupAction = null)
-            where TDbContext : DbContext, IDbContext
+            where TDbContext : DbContext, IUnitOfWork
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped(provider => (IDbContext) provider.GetRequiredService(typeof(TDbContext)));
+            services.AddScoped(provider => (IUnitOfWork) provider.GetRequiredService(typeof(TDbContext)));
             services.AddTransient<TransactionInterceptor>();
             if (setupAction != null)
             {

@@ -1,5 +1,5 @@
 using System;
-using DNTFrameworkCore.EFCore.Context;
+using DNTFrameworkCore.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +16,7 @@ namespace DNTFrameworkCore.Web.EFCore
                 var provider = scope.ServiceProvider;
 
                 var logger = provider.GetRequiredService<ILogger<TContext>>();
-                var dbSeed = provider.GetService<IDbContextSeed>();
+                var dbSeed = provider.GetService<IDbSeed>();
                 var context = provider.GetRequiredService<TContext>();
 
                 try

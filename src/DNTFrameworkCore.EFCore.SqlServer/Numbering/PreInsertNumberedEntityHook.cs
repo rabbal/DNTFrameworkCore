@@ -13,13 +13,13 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
 {
     internal class PreInsertNumberedEntityHook : PreInsertHook<INumberedEntity>
     {
-        private readonly IDbContext _context;
+        private readonly IUnitOfWork _uow;
         private readonly IOptions<NumberingOptions> _options;
         private readonly ITenant _tenant;
 
-        public PreInsertNumberedEntityHook(IDbContext context, IOptions<NumberingOptions> options, ITenant tenant)
+        public PreInsertNumberedEntityHook(IUnitOfWork uow, IOptions<NumberingOptions> options, ITenant tenant)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _tenant = tenant ?? throw new ArgumentNullException(nameof(tenant));
         }
@@ -38,25 +38,25 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
                 retry = exists;
             } while (retry);
 
-            _context.Entry(entity).Property(nameof(INumberedEntity.Number)).CurrentValue = nextNumber;
+            _uow.Entry(entity).Property(nameof(INumberedEntity.Number)).CurrentValue = nextNumber;
         }
 
 
         private bool CheckDuplicateNumber(INumberedEntity entity, string nextNumber)
         {
-            using (var command = _context.Connection.CreateCommand())
+            using (var command = _uow.Connection.CreateCommand())
             {
                 command.CommandText = $@"SELECT
                     (CASE
                 WHEN EXISTS(
                     SELECT NULL AS [EMPTY]
-                        FROM [{_context.Entry(entity).Metadata.Relational().TableName}] AS [t0]
+                        FROM [{_uow.Entry(entity).Metadata.Relational().TableName}] AS [t0]
                         WHERE [t0].[Number] = '{nextNumber}' 
                 ) THEN 1
                 ELSE 0
                 END) [Value]";
 
-                command.Transaction = _context.Transaction.GetDbTransaction();
+                command.Transaction = _uow.Transaction.GetDbTransaction();
 
                 var result = command.ExecuteScalar();
 
@@ -77,24 +77,24 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
 
             var option = _options.Value.NumberedEntityMap[entityType];
 
-            _context.AcquireDistributedLock(lockKey);
+            _uow.AcquireDistributedLock(lockKey);
 
             var nextNumber = option.Start.ToString();
 
-            var numberedEntity = _context.Set<NumberedEntity>().AsNoTracking()
+            var numberedEntity = _uow.Set<NumberedEntity>().AsNoTracking()
                 .FirstOrDefault(a => a.EntityName == entityName);
             if (numberedEntity == null)
             {
                 if (_tenant.HasValue)
                 {
-                    _context.ExecuteSqlCommand(
+                    _uow.ExecuteSqlCommand(
                         "INSERT INTO [dbo].[NumberedEntity]([EntityName], [NextNumber], [TenantId]) VALUES(@p0,@p1,@p2)",
                         entityName,
                         option.Start + option.IncrementBy, _tenant.Value.Id);
                 }
                 else
                 {
-                    _context.ExecuteSqlCommand(
+                    _uow.ExecuteSqlCommand(
                         "INSERT INTO [dbo].[NumberedEntity]([EntityName], [NextNumber]) VALUES(@p0,@p1)",
                         entityName,
                         option.Start + option.IncrementBy);
@@ -103,7 +103,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             else
             {
                 nextNumber = numberedEntity.NextNumber.ToString();
-                _context.ExecuteSqlCommand(
+                _uow.ExecuteSqlCommand(
                     "UPDATE [dbo].[NumberedEntity] SET [NextNumber] = @p0 WHERE [Id] = @p1 ",
                     numberedEntity.NextNumber + option.IncrementBy, numberedEntity.Id);
             }

@@ -11,9 +11,9 @@ namespace DNTFrameworkCore.Cqrs.EFCore.Queries
         where TKey : IEquatable<TKey>
         where TEntity : Entity<TKey>
     {
-        private readonly IDbContext _context;
+        private readonly IUnitOfWork _context;
 
-        public FindByIdQueryHandler(IDbContext context)
+        public FindByIdQueryHandler(IUnitOfWork context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }

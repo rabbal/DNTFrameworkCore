@@ -3,8 +3,8 @@ using System.Linq;
 using AutoMapper;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Application.Services;
-using DNTFrameworkCore.EntityFramework.Application;
-using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.EFCore.Application;
+using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.TestWebApp.Application.Invoices.Models;
 using DNTFrameworkCore.TestWebApp.Domain.Invoices;
@@ -15,6 +15,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Invoices
     public interface IInvoiceService : ICrudService<long, InvoiceReadModel, InvoiceModel>
     {
     }
+
     public class InvoiceService : CrudService<Invoice, long, InvoiceReadModel, InvoiceModel>, IInvoiceService
     {
         private readonly IMapper _mapper;
@@ -38,7 +39,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Invoices
             {
                 Id = i.Id,
                 Number = i.Number,
-                CreationDateTime = i.CreationDateTime
+                CreationDateTime = EF.Property<DateTimeOffset>(i, EFCore.Context.EFCore.CreationDateTime)
             });
         }
 

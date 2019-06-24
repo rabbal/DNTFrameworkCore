@@ -19,10 +19,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\DNTFrameworkCore.Cqrs\DNTFrameworkCore.Cqrs.csproj" />
-    <ProjectReference Include="..\..\src\DNTFrameworkCore.EntityFramework.SqlServer\DNTFrameworkCore.EntityFramework.SqlServer.csproj" />
-    <ProjectReference Include="..\..\src\DNTFrameworkCore.EntityFramework\DNTFrameworkCore.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\src\DNTFrameworkCore.EFCore.SqlServer\DNTFrameworkCore.EFCore.SqlServer.csproj" />
+    <ProjectReference Include="..\..\src\DNTFrameworkCore.EFCore\DNTFrameworkCore.EFCore.csproj" />
     <ProjectReference Include="..\..\src\DNTFrameworkCore.FluentValidation\DNTFrameworkCore.FluentValidation.csproj" />
-    <ProjectReference Include="..\..\src\DNTFrameworkCore.Web.EntityFramework\DNTFrameworkCore.Web.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\src\DNTFrameworkCore.Web.EFCore\DNTFrameworkCore.Web.EFCore.csproj" />
     <ProjectReference Include="..\..\src\DNTFrameworkCore.Web\DNTFrameworkCore.Web.csproj" />
   </ItemGroup>
 

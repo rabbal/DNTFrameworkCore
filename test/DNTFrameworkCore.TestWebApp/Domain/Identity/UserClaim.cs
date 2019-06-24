@@ -1,8 +1,9 @@
 using System.Security.Claims;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestWebApp.Domain.Identity
 {
-    public class UserClaim : ModificationTrackingEntity
+    public class UserClaim : TrackableEntity, IModificationTracking
     {
         public const int MaxClaimTypeLength = 256;
 

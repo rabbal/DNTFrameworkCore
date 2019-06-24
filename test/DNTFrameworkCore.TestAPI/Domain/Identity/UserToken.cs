@@ -3,7 +3,7 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Identity
 {
-    public class UserToken : Entity, ICreationTracking
+    public class UserToken : Entity
     {
         public const int MaxAccessTokenHashLength = 256;
         public const int MaxRefreshTokenIdHashLength = 256;

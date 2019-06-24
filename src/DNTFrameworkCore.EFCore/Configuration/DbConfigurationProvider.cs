@@ -22,7 +22,7 @@ namespace DNTFrameworkCore.EFCore.Configuration
         {
             using (var scope = _serviceProvider.CreateScope())
             {
-                var context = scope.ServiceProvider.GetRequiredService<IDbContext>();
+                var context = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
                 Data?.Clear();
                 Data = context.Set<ConfigurationValue>()

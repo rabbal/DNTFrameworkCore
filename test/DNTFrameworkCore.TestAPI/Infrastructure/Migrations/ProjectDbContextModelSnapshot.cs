@@ -135,6 +135,26 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTimeOffset>("CreationDateTime");
+
+                    b.Property<string>("CreatorBrowserName")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("CreatorIp")
+                        .HasMaxLength(256);
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<DateTimeOffset?>("ModificationDateTime");
+
+                    b.Property<string>("ModifierBrowserName")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("ModifierIp")
+                        .HasMaxLength(256);
+
+                    b.Property<long?>("ModifierUserId");
+
                     b.Property<string>("NormalizedTitle")
                         .IsRequired()
                         .HasMaxLength(50);
@@ -415,16 +435,6 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("CreationDateTime");
-
-                    b.Property<string>("CreatorBrowserName")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("CreatorIp")
-                        .HasMaxLength(256);
-
-                    b.Property<long?>("CreatorUserId");
 
                     b.Property<DateTimeOffset>("TokenExpirationDateTime");
 

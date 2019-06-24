@@ -23,10 +23,10 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
         private readonly IUserPassword _password;
 
         public UserService(
-            IDbContext context,
+            IUnitOfWork uow,
             IEventBus bus,
             IUserPassword password,
-            IMapper mapper) : base(context, bus)
+            IMapper mapper) : base(uow, bus)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _password = password ?? throw new ArgumentNullException(nameof(password));

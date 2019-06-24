@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
+namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
 {
     public partial class CreateBloggingSchema : Migration
     {
@@ -14,18 +14,18 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreationDateTime = table.Column<DateTimeOffset>(nullable: false),
-                    LastModificationDateTime = table.Column<DateTimeOffset>(nullable: true),
-                    CreatorIp = table.Column<string>(maxLength: 256, nullable: true),
-                    LastModifierIp = table.Column<string>(maxLength: 256, nullable: true),
-                    CreatorBrowserName = table.Column<string>(maxLength: 1024, nullable: true),
-                    LastModifierBrowserName = table.Column<string>(maxLength: 1024, nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    CreatorUserId = table.Column<long>(nullable: true),
                     Title = table.Column<string>(maxLength: 50, nullable: false),
                     NormalizedTitle = table.Column<string>(maxLength: 50, nullable: false),
                     Url = table.Column<string>(maxLength: 50, nullable: false),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    CreationDateTime = table.Column<DateTimeOffset>(nullable: false),
+                    CreatorBrowserName = table.Column<string>(maxLength: 1024, nullable: true),
+                    CreatorIp = table.Column<string>(maxLength: 256, nullable: true),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    ModificationDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    ModifierBrowserName = table.Column<string>(maxLength: 1024, nullable: true),
+                    ModifierIp = table.Column<string>(maxLength: 256, nullable: true),
+                    ModifierUserId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
                 {

@@ -5,7 +5,7 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Identity
 {
-    public class User : TrackableEntity<long>, IHasRowVersion, ITracking
+    public class User : TrackableEntity<long>, IHasRowVersion, ICreationTracking, IModificationTracking
     {
         public const int MaxUserNameLength = 256;
         public const int MaxDisplayNameLength = 50;

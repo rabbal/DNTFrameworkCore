@@ -55,7 +55,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Context
         {
             public bool IsAuthenticated => throw new NotImplementedException();
 
-            public long? UserId => throw new NotImplementedException();
+            public long? UserId => null;
 
             public string UserName => throw new NotImplementedException();
 

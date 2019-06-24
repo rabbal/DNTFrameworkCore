@@ -1,5 +1,5 @@
 ﻿using DNTFrameworkCore.TestWebApp.Infrastructure.Context;
-using DNTFrameworkCore.Web.EntityFramework;
+using DNTFrameworkCore.Web.EFCore;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 

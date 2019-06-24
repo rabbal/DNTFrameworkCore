@@ -1,6 +1,6 @@
 using System;
 using CacheManager.Core;
-using DNTFrameworkCore.EntityFramework;
+using DNTFrameworkCore.EFCore;
 using DNTFrameworkCore.TestWebApp.Infrastructure.Context;
 using EFSecondLevelCache.Core;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +26,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration
         )
         {
-            services.AddDNTUnitOfWork<ProjectDbContext>();
+            services.AddEFCore<ProjectDbContext>();
             services.AddDbContext<ProjectDbContext>(builder =>
             {
                 builder.EnableSensitiveDataLogging();

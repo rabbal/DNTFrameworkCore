@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.TestWebApp.Application.Catalog.Models;
 using DNTFrameworkCore.TestWebApp.Domain.Catalog;
 using DNTFrameworkCore.TestWebApp.Resources;

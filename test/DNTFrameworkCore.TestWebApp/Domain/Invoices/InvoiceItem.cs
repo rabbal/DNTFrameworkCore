@@ -3,7 +3,7 @@ using DNTFrameworkCore.TestWebApp.Domain.Catalog;
 
 namespace DNTFrameworkCore.TestWebApp.Domain.Invoices
 {
-    public class InvoiceItem : Entity<long>
+    public class InvoiceItem : TrackableEntity<long>
     {
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }

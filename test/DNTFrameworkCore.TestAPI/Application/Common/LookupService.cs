@@ -17,16 +17,16 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
 
     public class LookupService : ILookupService
     {
-        private readonly IDbContext _context;
+        private readonly IUnitOfWork _uow;
 
-        public LookupService(IDbContext context)
+        public LookupService(IUnitOfWork uow)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
         }
 
         public async Task<IReadOnlyList<LookupItem<long>>> ReadRolesAsync()
         {
-            var roles = await _context.Set<Role>().AsNoTracking().Select(role => new LookupItem<long>
+            var roles = await _uow.Set<Role>().AsNoTracking().Select(role => new LookupItem<long>
             {
                 Text = role.Name,
                 Value = role.Id

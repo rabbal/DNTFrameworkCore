@@ -29,7 +29,7 @@ namespace DNTFrameworkCore.EFCore.Application
         where TModel : MasterModel<TKey>
         where TKey : IEquatable<TKey>
     {
-        protected CrudService(IDbContext context, IEventBus bus) : base(context, bus)
+        protected CrudService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
         {
         }
     }
@@ -42,7 +42,7 @@ namespace DNTFrameworkCore.EFCore.Application
         where TReadModel : ReadModel<TKey>
         where TKey : IEquatable<TKey>
     {
-        protected CrudService(IDbContext context, IEventBus bus) : base(context, bus)
+        protected CrudService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
         {
         }
     }
@@ -58,13 +58,13 @@ namespace DNTFrameworkCore.EFCore.Application
     {
         protected readonly DbSet<TEntity> EntitySet;
         protected readonly IEventBus EventBus;
-        protected readonly IDbContext DbContext;
+        protected readonly IUnitOfWork UnitOfWork;
 
-        protected CrudService(IDbContext context, IEventBus bus)
+        protected CrudService(IUnitOfWork uow, IEventBus bus)
         {
-            DbContext = context ?? throw new ArgumentNullException(nameof(context));
+            UnitOfWork = uow ?? throw new ArgumentNullException(nameof(uow));
             EventBus = bus ?? throw new ArgumentNullException(nameof(bus));
-            EntitySet = DbContext.Set<TEntity>();
+            EntitySet = UnitOfWork.Set<TEntity>();
         }
 
         [SkipValidation]
@@ -132,8 +132,8 @@ namespace DNTFrameworkCore.EFCore.Application
             if (result.Failed) return result;
 
             EntitySet.AddRange(entityList);
-            await DbContext.SaveChangesAsync();
-            DbContext.AcceptChanges(entityList);
+            await UnitOfWork.SaveChangesAsync();
+            UnitOfWork.AcceptChanges(entityList);
 
             MapToModel(entityList, modelList);
 
@@ -174,9 +174,9 @@ namespace DNTFrameworkCore.EFCore.Application
             if (result.Failed) return result;
 
             entityList.ForEach(e => e.TrackingState = TrackingState.Modified);
-            DbContext.ApplyChanges(entityList);
-            await DbContext.SaveChangesAsync();
-            DbContext.AcceptChanges(entityList);
+            UnitOfWork.ApplyChanges(entityList);
+            await UnitOfWork.SaveChangesAsync();
+            UnitOfWork.AcceptChanges(entityList);
 
             MapToModel(entityList, modelList);
 
@@ -212,7 +212,7 @@ namespace DNTFrameworkCore.EFCore.Application
             if (result.Failed) return result;
 
             EntitySet.RemoveRange(entityList);
-            await DbContext.SaveChangesAsync();
+            await UnitOfWork.SaveChangesAsync();
 
             result = await AfterDeleteAsync(modelList);
             if (result.Failed) return result;

@@ -182,11 +182,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     TokenHash = table.Column<string>(maxLength: 256, nullable: false),
                     TokenExpirationDateTime = table.Column<DateTimeOffset>(nullable: false),
-                    UserId = table.Column<long>(nullable: false),
-                    CreationDateTime = table.Column<DateTimeOffset>(nullable: false),
-                    CreatorBrowserName = table.Column<string>(maxLength: 1024, nullable: true),
-                    CreatorIp = table.Column<string>(maxLength: 256, nullable: true),
-                    CreatorUserId = table.Column<long>(nullable: true)
+                    UserId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {

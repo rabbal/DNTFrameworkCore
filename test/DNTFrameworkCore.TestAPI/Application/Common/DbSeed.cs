@@ -3,6 +3,7 @@ using System.Linq;
 using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Collections;
 using DNTFrameworkCore.Cryptography;
+using DNTFrameworkCore.Data;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.TestAPI.Application.Configuration;
 using DNTFrameworkCore.TestAPI.Domain.Identity;
@@ -12,21 +13,21 @@ using Microsoft.Extensions.Options;
 
 namespace DNTFrameworkCore.TestAPI.Application.Common
 {
-    public class DbContextSeed : IDbContextSeed
+    public class DbSeed : IDbSeed
     {
-        private readonly IDbContext _context;
+        private readonly IUnitOfWork _uow;
         private readonly IOptionsSnapshot<ProjectSettings> _settings;
         private readonly IUserPassword _password;
         private readonly IPermissionService _permissionManager;
-        private readonly ILogger<DbContextSeed> _logger;
+        private readonly ILogger<DbSeed> _logger;
 
-        public DbContextSeed(IDbContext context,
+        public DbSeed(IUnitOfWork uow,
             IOptionsSnapshot<ProjectSettings> settings,
             IUserPassword password,
             IPermissionService permissionManager,
-            ILogger<DbContextSeed> logger)
+            ILogger<DbSeed> logger)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
             _password = password ?? throw new ArgumentNullException(nameof(password));
             _permissionManager = permissionManager ?? throw new ArgumentNullException(nameof(permissionManager));
@@ -40,7 +41,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
 
         private void SeedIdentity()
         {
-            var role = _context.Set<Role>()
+            var role = _uow.Set<Role>()
                 .Include(r => r.Permissions)
                 .FirstOrDefault(r => r.Name == RoleNames.Administrators);
             if (role == null)
@@ -52,7 +53,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
                     Description =
                         "حذف گروه کاربری پیش فرض «مدیران سیستم» باعث ایجاد اختلال در کارکرد صحیح سیستم خواهد شد.",
                 };
-                _context.Set<Role>().Add(role);
+                _uow.Set<Role>().Add(role);
             }
             else
             {
@@ -71,7 +72,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
 
             var admin = _settings.Value.UserSeed;
 
-            var user = _context.Set<User>()
+            var user = _uow.Set<User>()
                 .Include(u => u.Permissions)
                 .Include(u => u.Roles)
                 .FirstOrDefault(u => u.NormalizedUserName == admin.UserName.ToUpperInvariant());
@@ -88,7 +89,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
                     SerialNumber = Guid.NewGuid().ToString("N")
                 };
 
-                _context.Set<User>().Add(user);
+                _uow.Set<User>().Add(user);
             }
             else
             {
@@ -97,7 +98,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
 
             if (user.Roles.All(ur => ur.RoleId != role.Id))
             {
-                _context.Set<UserRole>().Add(new UserRole {Role = role, User = user});
+                _uow.Set<UserRole>().Add(new UserRole {Role = role, User = user});
             }
             else
             {
@@ -106,7 +107,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
 
             user.Permissions.Clear();
 
-            _context.SaveChanges();
+            _uow.SaveChanges();
         }
     }
 }

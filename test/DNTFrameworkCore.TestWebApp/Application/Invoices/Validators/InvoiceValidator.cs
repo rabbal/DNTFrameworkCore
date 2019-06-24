@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.TestWebApp.Application.Invoices.Models;
 using DNTFrameworkCore.TestWebApp.Domain.Invoices;
 using DNTFrameworkCore.TestWebApp.Resources;
@@ -11,11 +11,11 @@ namespace DNTFrameworkCore.TestWebApp.Application.Invoices.Validators
 {
     public class InvoiceValidator : ModelValidator<InvoiceModel>
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IUnitOfWork _context;
         private readonly IMessageLocalizer _localizer;
-        public InvoiceValidator(IUnitOfWork uow, IMessageLocalizer localizer)
+        public InvoiceValidator(IUnitOfWork context, IMessageLocalizer localizer)
         {
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
             _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
         }
         public override IEnumerable<ValidationFailure> Validate(InvoiceModel model)
@@ -28,7 +28,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Invoices.Validators
 
         private bool CheckDuplicateNumber(InvoiceModel model)
         {
-            return _uow.Set<Invoice>().Any(p => p.Number == model.Number && p.Id != model.Id);
+            return _context.Set<Invoice>().Any(p => p.Number == model.Number && p.Id != model.Id);
         }
     }
 }

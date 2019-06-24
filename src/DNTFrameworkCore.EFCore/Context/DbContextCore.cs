@@ -19,7 +19,7 @@ using DbUpdateException = Microsoft.EntityFrameworkCore.DbUpdateException;
 
 namespace DNTFrameworkCore.EFCore.Context
 {
-    public abstract class DbContextCore : DbContext, IDbContext
+    public abstract class DbContextCore : DbContext, IUnitOfWork
     {
         private readonly IHookEngine _hookEngine;
         private readonly IUserSession _session;
@@ -219,14 +219,14 @@ namespace DNTFrameworkCore.EFCore.Context
             ApplyFilters(builder);
         }
 
-        private static void ApplyFilters(ModelBuilder modelBuilder)
+        private void ApplyFilters(ModelBuilder modelBuilder)
         {
             var types = modelBuilder.Model.GetEntityTypes();
             foreach (var entityType in types)
             {
                 FilterEntityMethodInfo
                     .MakeGenericMethod(entityType.ClrType)
-                    .Invoke(null, new object[] {modelBuilder, entityType});
+                    .Invoke(this, new object[] {modelBuilder, entityType});
             }
         }
 

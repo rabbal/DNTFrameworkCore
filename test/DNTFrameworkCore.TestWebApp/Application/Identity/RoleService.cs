@@ -1,7 +1,5 @@
 using System.Linq;
 using DNTFrameworkCore.Application.Services;
-using DNTFrameworkCore.EntityFramework.Application;
-using DNTFrameworkCore.EntityFramework.Context;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.TestWebApp.Application.Identity.Models;
 using DNTFrameworkCore.TestWebApp.Domain.Identity;
@@ -9,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using DNTFrameworkCore.Linq;
 using AutoMapper;
 using System;
+using DNTFrameworkCore.EFCore.Application;
+using DNTFrameworkCore.EFCore.Context;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Identity
 {

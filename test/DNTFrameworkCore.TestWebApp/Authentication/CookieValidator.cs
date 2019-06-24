@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestWebApp.Domain.Identity;
 using Microsoft.AspNetCore.Authentication;

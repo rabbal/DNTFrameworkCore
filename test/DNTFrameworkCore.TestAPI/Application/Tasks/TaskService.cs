@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
     {
         private readonly IMapper _mapper;
 
-        public TaskService(IDbContext context, IEventBus bus, IMapper mapper) : base(context, bus)
+        public TaskService(IUnitOfWork uow, IEventBus bus, IMapper mapper) : base(uow, bus)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }

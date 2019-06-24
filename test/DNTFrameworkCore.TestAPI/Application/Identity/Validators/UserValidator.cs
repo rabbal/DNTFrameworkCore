@@ -12,11 +12,11 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity.Validators
 {
     public class UserValidator : FluentModelValidator<UserModel>
     {
-        private readonly IDbContext _context;
+        private readonly IUnitOfWork _uow;
 
-        public UserValidator(IDbContext context, IMessageLocalizer localizer)
+        public UserValidator(IUnitOfWork uow, IMessageLocalizer localizer)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
 
             RuleFor(m => m.DisplayName).NotEmpty()
                 .WithMessage(localizer["User.Fields.DisplayName.Required"])
@@ -66,13 +66,13 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity.Validators
         private bool CheckDuplicateUserName(string userName, long id)
         {
             var normalizedUserName = userName.ToUpperInvariant();
-            return _context.Set<User>().Any(u => u.NormalizedUserName == normalizedUserName && u.Id != id);
+            return _uow.Set<User>().Any(u => u.NormalizedUserName == normalizedUserName && u.Id != id);
         }
 
         private bool CheckDuplicateDisplayName(string displayName, long id)
         {
             var normalizedDisplayName = displayName.NormalizePersianTitle();
-            return _context.Set<User>().Any(u => u.NormalizedDisplayName == normalizedDisplayName && u.Id != id);
+            return _uow.Set<User>().Any(u => u.NormalizedDisplayName == normalizedDisplayName && u.Id != id);
         }
 
         private bool CheckDuplicateRoles(UserModel model)

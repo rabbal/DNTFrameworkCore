@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Dependency;
-using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Logging;
 using DNTFrameworkCore.Runtime;
@@ -29,7 +29,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IMessageLocalizer _localizer;
-        private readonly IHttpContextAccessor _context;
+        private readonly IHttpContextAccessor _httpContext;
         private readonly IConfiguration _configuration;
         private readonly IUserSession _session;
         private readonly ILogger<AuthenticationService> _logger;
@@ -40,7 +40,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
 
         public AuthenticationService(
             IMessageLocalizer localizer,
-            IHttpContextAccessor context,
+            IHttpContextAccessor httpContext,
             IUserSession session,
             ILogger<AuthenticationService> logger,
             IConfiguration configuration,
@@ -49,7 +49,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
         {
             _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _httpContext = httpContext ?? throw new ArgumentNullException(nameof(httpContext));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _session = session ?? throw new ArgumentNullException(nameof(session));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -77,7 +77,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
 
             var loginCookieExpirationDays = _configuration.GetValue<int>("LoginCookieExpirationDays", defaultValue: 30);
 
-            await _context.HttpContext.SignInAsync(
+            await _httpContext.HttpContext.SignInAsync(
                CookieAuthenticationDefaults.AuthenticationScheme,
                claims,
                new AuthenticationProperties
@@ -105,7 +105,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
                 // await UpdateSerialNumberAsync(_session.UserId.Value);
                 _logger.LogInformation(LoggingEvents.LOGOUT, $"{_session.UserName} logged out.");
             }
-            await _context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await _httpContext.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
 
         private async Task<ClaimsPrincipal> BuildClaimsAsync(long userId)

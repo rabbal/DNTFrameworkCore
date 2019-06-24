@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Dependency;
-using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.TestWebApp.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 

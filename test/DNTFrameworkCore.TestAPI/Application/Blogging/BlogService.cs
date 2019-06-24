@@ -26,10 +26,10 @@ namespace DNTFrameworkCore.TestAPI.Application.Blogging
         private readonly ILogger<BlogService> _logger;
 
         public BlogService(
-            IDbContext context,
+            IUnitOfWork uow,
             IEventBus bus,
             IMapper mapper,
-            ILogger<BlogService> logger) : base(context, bus)
+            ILogger<BlogService> logger) : base(uow, bus)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));

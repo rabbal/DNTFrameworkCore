@@ -40,7 +40,9 @@ namespace DNTFrameworkCore.Web.Runtime
 
         public long? TenantId => UserId.HasValue
             ? _context?.HttpContext?.User?.Identity.GetTenantId()
-            : _tenant.Value?.Id;
+            : _tenant.HasValue
+                ? _tenant.Value.Id
+                : (long?) null;
 
         public MultiTenancySides MultiTenancySide => TenantId.HasValue
             ? MultiTenancySides.Tenant

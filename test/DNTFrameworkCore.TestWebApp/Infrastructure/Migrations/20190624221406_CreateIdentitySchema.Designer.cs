@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20190531081216_CreateCatalogSchema")]
-    partial class CreateCatalogSchema
+    [Migration("20190624221406_CreateIdentitySchema")]
+    partial class CreateIdentitySchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("DNTFrameworkCore.EntityFramework.Caching.Cache", b =>
+            modelBuilder.Entity("DNTFrameworkCore.Caching.Cache", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -44,7 +44,27 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.ToTable("Cache","dbo");
                 });
 
-            modelBuilder.Entity("DNTFrameworkCore.EntityFramework.Logging.Log", b =>
+            modelBuilder.Entity("DNTFrameworkCore.Cryptography.ProtectionKey", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FriendlyName")
+                        .IsRequired();
+
+                    b.Property<string>("XmlValue");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FriendlyName")
+                        .IsUnique()
+                        .HasName("IX_ProtectionKey_FriendlyName");
+
+                    b.ToTable("ProtectionKey","dbo");
+                });
+
+            modelBuilder.Entity("DNTFrameworkCore.Logging.Log", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -89,27 +109,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.ToTable("Log","dbo");
                 });
 
-            modelBuilder.Entity("DNTFrameworkCore.EntityFramework.Protection.ProtectionKey", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("FriendlyName")
-                        .IsRequired();
-
-                    b.Property<string>("XmlValue");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FriendlyName")
-                        .IsUnique()
-                        .HasName("IX_ProtectionKey_FriendlyName");
-
-                    b.ToTable("ProtectionKey","dbo");
-                });
-
-            modelBuilder.Entity("DNTFrameworkCore.EntityFramework.SqlServer.Numbering.NumberedEntity", b =>
+            modelBuilder.Entity("DNTFrameworkCore.Numbering.NumberedEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -122,16 +122,11 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 
                     b.Property<long>("NextNumber");
 
-                    b.Property<long>("TenantId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("EntityName")
                         .IsUnique()
                         .HasName("UIX_NumberedEntity_EntityName");
-
-                    b.HasIndex("TenantId")
-                        .HasName("IX_NumberedEntity_TenantId");
 
                     b.ToTable("NumberedEntity");
                 });
@@ -152,15 +147,15 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 
                     b.Property<long?>("CreatorUserId");
 
-                    b.Property<DateTimeOffset?>("LastModificationDateTime");
+                    b.Property<DateTimeOffset?>("ModificationDateTime");
 
-                    b.Property<string>("LastModifierBrowserName")
+                    b.Property<string>("ModifierBrowserName")
                         .HasMaxLength(1024);
 
-                    b.Property<string>("LastModifierIp")
+                    b.Property<string>("ModifierIp")
                         .HasMaxLength(256);
 
-                    b.Property<long?>("LastModifierUserId");
+                    b.Property<long?>("ModifierUserId");
 
                     b.Property<string>("NormalizedTitle")
                         .IsRequired()
@@ -187,55 +182,6 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.ToTable("Blog");
                 });
 
-            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Catalog.Product", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("CreationDateTime");
-
-                    b.Property<string>("CreatorBrowserName")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("CreatorIp")
-                        .HasMaxLength(256);
-
-                    b.Property<long?>("CreatorUserId");
-
-                    b.Property<DateTimeOffset?>("LastModificationDateTime");
-
-                    b.Property<string>("LastModifierBrowserName")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("LastModifierIp")
-                        .HasMaxLength(256);
-
-                    b.Property<long?>("LastModifierUserId");
-
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<decimal>("Price");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Number")
-                        .IsUnique()
-                        .HasName("UIX_Product_Number");
-
-                    b.ToTable("Product");
-                });
-
             modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Identity.Permission", b =>
                 {
                     b.Property<int>("Id")
@@ -248,15 +194,15 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 
                     b.Property<bool>("IsGranted");
 
-                    b.Property<DateTimeOffset?>("LastModificationDateTime");
+                    b.Property<DateTimeOffset?>("ModificationDateTime");
 
-                    b.Property<string>("LastModifierBrowserName")
+                    b.Property<string>("ModifierBrowserName")
                         .HasMaxLength(1024);
 
-                    b.Property<string>("LastModifierIp")
+                    b.Property<string>("ModifierIp")
                         .HasMaxLength(256);
 
-                    b.Property<long?>("LastModifierUserId");
+                    b.Property<long?>("ModifierUserId");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -291,15 +237,15 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(1024);
 
-                    b.Property<DateTimeOffset?>("LastModificationDateTime");
+                    b.Property<DateTimeOffset?>("ModificationDateTime");
 
-                    b.Property<string>("LastModifierBrowserName")
+                    b.Property<string>("ModifierBrowserName")
                         .HasMaxLength(1024);
 
-                    b.Property<string>("LastModifierIp")
+                    b.Property<string>("ModifierIp")
                         .HasMaxLength(256);
 
-                    b.Property<long?>("LastModifierUserId");
+                    b.Property<long?>("ModifierUserId");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -335,15 +281,15 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.Property<string>("ClaimValue")
                         .IsRequired();
 
-                    b.Property<DateTimeOffset?>("LastModificationDateTime");
+                    b.Property<DateTimeOffset?>("ModificationDateTime");
 
-                    b.Property<string>("LastModifierBrowserName")
+                    b.Property<string>("ModifierBrowserName")
                         .HasMaxLength(1024);
 
-                    b.Property<string>("LastModifierIp")
+                    b.Property<string>("ModifierIp")
                         .HasMaxLength(256);
 
-                    b.Property<long?>("LastModifierUserId");
+                    b.Property<long?>("ModifierUserId");
 
                     b.Property<long>("RoleId");
 
@@ -378,15 +324,15 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 
                     b.Property<DateTimeOffset?>("LastLoggedInDateTime");
 
-                    b.Property<DateTimeOffset?>("LastModificationDateTime");
+                    b.Property<DateTimeOffset?>("ModificationDateTime");
 
-                    b.Property<string>("LastModifierBrowserName")
+                    b.Property<string>("ModifierBrowserName")
                         .HasMaxLength(1024);
 
-                    b.Property<string>("LastModifierIp")
+                    b.Property<string>("ModifierIp")
                         .HasMaxLength(256);
 
-                    b.Property<long?>("LastModifierUserId");
+                    b.Property<long?>("ModifierUserId");
 
                     b.Property<string>("NormalizedDisplayName")
                         .IsRequired()
@@ -438,15 +384,15 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.Property<string>("ClaimValue")
                         .IsRequired();
 
-                    b.Property<DateTimeOffset?>("LastModificationDateTime");
+                    b.Property<DateTimeOffset?>("ModificationDateTime");
 
-                    b.Property<string>("LastModifierBrowserName")
+                    b.Property<string>("ModifierBrowserName")
                         .HasMaxLength(1024);
 
-                    b.Property<string>("LastModifierIp")
+                    b.Property<string>("ModifierIp")
                         .HasMaxLength(256);
 
-                    b.Property<long?>("LastModifierUserId");
+                    b.Property<long?>("ModifierUserId");
 
                     b.Property<long>("UserId");
 
@@ -484,66 +430,6 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRole");
-                });
-
-            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Tasks.Task", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("CreationDateTime");
-
-                    b.Property<string>("CreatorBrowserName")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("CreatorIp")
-                        .HasMaxLength(256);
-
-                    b.Property<long?>("CreatorUserId");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1024);
-
-                    b.Property<DateTimeOffset?>("LastModificationDateTime");
-
-                    b.Property<string>("LastModifierBrowserName")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("LastModifierIp")
-                        .HasMaxLength(256);
-
-                    b.Property<long?>("LastModifierUserId");
-
-                    b.Property<string>("NormalizedTitle")
-                        .IsRequired()
-                        .HasMaxLength(256);
-
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
-                    b.Property<byte>("State");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedTitle")
-                        .IsUnique()
-                        .HasName("UIX_Task_NormalizedTitle");
-
-                    b.HasIndex("Number")
-                        .IsUnique()
-                        .HasName("UIX_Task_Number");
-
-                    b.ToTable("Task");
                 });
 
             modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Identity.RolePermission", b =>

@@ -4,7 +4,7 @@ using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Collections;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Data;
-using DNTFrameworkCore.EntityFramework.Context;
+using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.TestWebApp.Application.Configuration;
 using DNTFrameworkCore.TestWebApp.Domain.Identity;
 using Microsoft.EntityFrameworkCore;

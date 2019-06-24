@@ -12,11 +12,11 @@ namespace DNTFrameworkCore.EFCore.Transaction
 {
     public class TransactionInterceptor : IInterceptor
     {
-        private readonly IDbContext _context;
+        private readonly IUnitOfWork _uow;
 
-        public TransactionInterceptor(IDbContext context)
+        public TransactionInterceptor(IUnitOfWork uow)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
         }
 
         public void Intercept(IInvocation invocation)
@@ -34,7 +34,7 @@ namespace DNTFrameworkCore.EFCore.Transaction
             var attribute = FindTransactionalAttribute(method);
 
             //If there is a running transaction, just run the method
-            if (!attribute.HasValue || _context.HasActiveTransaction)
+            if (!attribute.HasValue || _uow.HasActiveTransaction)
             {
                 invocation.Proceed();
                 return;
@@ -59,7 +59,7 @@ namespace DNTFrameworkCore.EFCore.Transaction
 
         private void InterceptAsync(IInvocation invocation, TransactionalAttribute attribute)
         {
-            _context.BeginTransaction(attribute.IsolationLevel);
+            _uow.BeginTransaction(attribute.IsolationLevel);
 
             try
             {
@@ -67,68 +67,68 @@ namespace DNTFrameworkCore.EFCore.Transaction
             }
             catch (Exception)
             {
-                _context.RollbackTransaction();
+                _uow.RollbackTransaction();
                 throw;
             }
 
             if (invocation.Method.ReturnType == typeof(Task))
-                invocation.ReturnValue = InterceptAsync((Task) invocation.ReturnValue, _context);
+                invocation.ReturnValue = InterceptAsync((Task) invocation.ReturnValue, _uow);
             else //Task<TResult>
                 invocation.ReturnValue = typeof(TransactionInterceptor)
                     .GetMethod(nameof(InterceptWitResultAsync),
                         BindingFlags.NonPublic | BindingFlags.Static)
                     ?.MakeGenericMethod(invocation.Method.ReturnType.GenericTypeArguments[0])
-                    .Invoke(null, new[] {invocation.ReturnValue, _context});
+                    .Invoke(null, new[] {invocation.ReturnValue, _uow});
         }
 
-        private static async Task InterceptAsync(Task task, IDbContext context)
+        private static async Task InterceptAsync(Task task, IUnitOfWork uow)
         {
             try
             {
                 await task.ConfigureAwait(false);
-                context.CommitTransaction();
+                uow.CommitTransaction();
             }
             catch (Exception)
             {
-                context.RollbackTransaction();
+                uow.RollbackTransaction();
                 throw;
             }
         }
 
-        private static async Task<T> InterceptWitResultAsync<T>(Task<T> task, IDbContext context)
+        private static async Task<T> InterceptWitResultAsync<T>(Task<T> task, IUnitOfWork uow)
         {
             try
             {
                 var result = await task.ConfigureAwait(false);
                 if (result is Result returnValue && returnValue.Failed)
-                    context.RollbackTransaction();
+                    uow.RollbackTransaction();
                 else
-                    context.CommitTransaction();
+                    uow.CommitTransaction();
 
                 return result;
             }
             catch (Exception)
             {
-                context.RollbackTransaction();
+                uow.RollbackTransaction();
                 throw;
             }
         }
 
         private void InterceptSync(IInvocation invocation, TransactionalAttribute attribute)
         {
-            _context.BeginTransaction(attribute.IsolationLevel);
+            _uow.BeginTransaction(attribute.IsolationLevel);
             try
             {
                 invocation.Proceed();
 
                 if (invocation.ReturnValue is Result returnValue && returnValue.Failed)
-                    _context.RollbackTransaction();
+                    _uow.RollbackTransaction();
                 else
-                    _context.CommitTransaction();
+                    _uow.CommitTransaction();
             }
             catch (Exception)
             {
-                _context.RollbackTransaction();
+                _uow.RollbackTransaction();
                 throw;
             }
         }

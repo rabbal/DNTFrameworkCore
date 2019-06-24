@@ -3,7 +3,8 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestWebApp.Domain.Invoices
 {
-    public class Invoice : TrackableEntity<long>, IHasRowVersion, INumberedEntity
+    public class Invoice : TrackableEntity<long>, IHasRowVersion, ICreationTracking, IModificationTracking,
+        INumberedEntity
     {
         public const int MaxDescriptionLength = 1024;
 

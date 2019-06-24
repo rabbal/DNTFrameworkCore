@@ -21,9 +21,9 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
         private readonly IMapper _mapper;
 
         public RoleService(
-            IDbContext context,
+            IUnitOfWork uow,
             IEventBus bus,
-            IMapper mapper) : base(context, bus)
+            IMapper mapper) : base(uow, bus)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
