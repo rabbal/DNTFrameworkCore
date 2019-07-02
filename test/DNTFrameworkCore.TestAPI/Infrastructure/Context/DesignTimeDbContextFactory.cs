@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Claims;
 using DNTFrameworkCore.EFCore.Context.Hooks;
 using DNTFrameworkCore.MultiTenancy;
 using DNTFrameworkCore.Runtime;
@@ -59,6 +60,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Context
 
             public string UserName => throw new NotImplementedException();
 
+            public IReadOnlyList<Claim> Claims => throw new NotImplementedException();
             public string UserDisplayName => throw new NotImplementedException();
 
             public string UserBrowserName => throw new NotImplementedException();
@@ -73,6 +75,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Context
 
             public long? ImpersonatorTenantId => throw new NotImplementedException();
 
+            public string BranchNumber => throw new NotImplementedException();
             public IReadOnlyList<string> Permissions => throw new NotImplementedException();
 
             public IReadOnlyList<string> Roles => throw new NotImplementedException();

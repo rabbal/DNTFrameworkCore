@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.MultiTenancy;
 
@@ -31,6 +32,12 @@ namespace DNTFrameworkCore.Runtime
         /// It can be null if no user logged in.
         /// </summary>
         long? BranchId { get; }
+        
+        /// <summary>
+        /// Gets current User's BranchNumber or null.
+        /// It can be null if no user logged in.
+        /// </summary>
+        string BranchNumber { get; }
 
         /// <summary>
         /// Gets current user's Permissions
@@ -43,6 +50,12 @@ namespace DNTFrameworkCore.Runtime
         /// It can be null if no user logged in.
         /// </summary>
         IReadOnlyList<string> Roles { get; }
+
+        /// <summary>
+        /// Gets current user's Claims
+        /// It can be null if no user logged in.
+        /// </summary>
+        IReadOnlyList<Claim> Claims { get; }
 
         /// <summary>
         /// Gets current UserDisplayName or null.
@@ -85,14 +98,6 @@ namespace DNTFrameworkCore.Runtime
         /// This is filled if a user with <see cref="ImpersonatorUserId"/> performing actions behalf of the <see cref="UserId"/>.
         /// </summary>
         long? ImpersonatorTenantId { get; }
-
-        /// <summary>
-        /// Used to change <see cref="TenantId"/> and <see cref="UserId"/> for a limited scope.
-        /// </summary>
-        /// <param name="tenantId"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        IDisposable Use(long? tenantId, long? userId);
 
         bool IsInRole(string role);
         bool IsGranted(string permission);

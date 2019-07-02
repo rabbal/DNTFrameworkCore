@@ -1,5 +1,5 @@
-﻿using DNTFrameworkCore.Caching;
-using DNTFrameworkCore.GuardToolkit;
+﻿using System;
+using DNTFrameworkCore.Caching;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,7 +9,7 @@ namespace DNTFrameworkCore.EFCore.Caching
     {
         public static void ApplySqlCacheConfiguration(this ModelBuilder builder)
         {
-            Guard.ArgumentNotNull(builder, nameof(builder));
+            if (builder == null) throw new ArgumentNullException(nameof(builder));
 
             builder.ApplyConfiguration(new CacheConfiguration());
         }

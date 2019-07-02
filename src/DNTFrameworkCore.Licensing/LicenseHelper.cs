@@ -10,7 +10,7 @@ namespace DNTFrameworkCore.Licensing
 {
     public static class LicenseHelper
     {
-        public static string CreateLicense<T>(string licensePrivateKey, T licenseData) where T : class
+        public static string BuildLicense<T>(string licensePrivateKey, T licenseData) where T : class
         {
             using (var provider = RSA.Create())
             {
@@ -30,17 +30,14 @@ namespace DNTFrameworkCore.Licensing
             }
         }
 
-        /// <summary>
-        /// generate keys pair separately as string.
-        /// Item1 Contains PublicKey and Item2 Contains PrivateKey
-        /// </summary>
-        public static Tuple<string, string> CreateRsaKeys(int dwKeySize = 1024)
+        public static (string PublicKey, string PrivateKey) CreateRsaKeys(int dwKeySize = 1024)
         {
             using (var provider = new RSACryptoServiceProvider(dwKeySize))
             {
-                return new Tuple<string, string>(provider.ToXml(false), provider.ToXml(true));
+                return (provider.ToXml(false), provider.ToXml(true));
             }
         }
+
         public static T ReadLicense<T>(string licensePublicKey, string xmlFileContent) where T : class
         {
             var doc = new XmlDocument();
@@ -50,11 +47,11 @@ namespace DNTFrameworkCore.Licensing
             {
                 provider.FromXml(licensePublicKey);
 
-                var nsmgr = new XmlNamespaceManager(doc.NameTable);
-                nsmgr.AddNamespace("sig", "http://www.w3.org/2000/09/xmldsig#");
+                var manager = new XmlNamespaceManager(doc.NameTable);
+                manager.AddNamespace("sig", "http://www.w3.org/2000/09/xmldsig#");
 
                 var xml = new SignedXml(doc);
-                var signatureNode = (XmlElement)doc.SelectSingleNode("//sig:Signature", nsmgr);
+                var signatureNode = (XmlElement) doc.SelectSingleNode("//sig:Signature", manager);
                 if (signatureNode == null)
                     throw new InvalidOperationException("This license file is not signed.");
 
@@ -69,7 +66,7 @@ namespace DNTFrameworkCore.Licensing
                 using (var reader = new XmlNodeReader(ourXml.OwnerDocument.DocumentElement))
                 {
                     var xmlSerializer = new XmlSerializer(typeof(T));
-                    return (T)xmlSerializer.Deserialize(reader);
+                    return (T) xmlSerializer.Deserialize(reader);
                 }
             }
         }
@@ -85,7 +82,8 @@ namespace DNTFrameworkCore.Licensing
             var sb = new StringBuilder();
             using (var writer = new StringWriter(sb))
             {
-                var ns = new XmlSerializerNamespaces(); ns.Add("", "");
+                var ns = new XmlSerializerNamespaces();
+                ns.Add("", "");
                 serializer.Serialize(writer, licenseData, ns);
                 var doc = new XmlDocument();
                 doc.LoadXml(sb.ToString());
@@ -95,8 +93,8 @@ namespace DNTFrameworkCore.Licensing
 
         private static XmlElement GetXmlDigitalSignature(XmlDocument xmlDocument, AsymmetricAlgorithm key)
         {
-            var xml = new SignedXml(xmlDocument) { SigningKey = key };
-            var reference = new Reference { Uri = "" };
+            var xml = new SignedXml(xmlDocument) {SigningKey = key};
+            var reference = new Reference {Uri = ""};
             reference.AddTransform(new XmlDsigEnvelopedSignatureTransform());
             xml.AddReference(reference);
             xml.ComputeSignature();
@@ -107,7 +105,7 @@ namespace DNTFrameworkCore.Licensing
         {
             using (var ms = new MemoryStream())
             {
-                var settings = new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 };
+                var settings = new XmlWriterSettings {Indent = true, Encoding = Encoding.UTF8};
                 var xmlWriter = XmlWriter.Create(ms, settings);
                 xmlDocument.Save(xmlWriter);
                 ms.Position = 0;

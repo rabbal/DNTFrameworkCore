@@ -23,11 +23,11 @@ namespace DNTFrameworkCore.Domain
         public override int GetHashCode()
         {
             return EqualityValues
-                .Aggregate(1, (current, obj) =>
+                .Aggregate(17, (current, next) =>
                 {
                     unchecked
                     {
-                        return current * 23 + (obj?.GetHashCode() ?? 0);
+                        return current * 23 + (next?.GetHashCode() ?? 0);
                     }
                 });
         }

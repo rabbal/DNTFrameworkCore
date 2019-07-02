@@ -1,15 +1,15 @@
-﻿using DNTFrameworkCore.GuardToolkit;
+﻿using System;
 using DNTFrameworkCore.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DNTFrameworkCore.EFCore.Logging
 {
-     public static class ModelBuilderExtensions
+    public static class ModelBuilderExtensions
     {
         public static void ApplyLogConfiguration(this ModelBuilder builder)
         {
-            Guard.ArgumentNotNull(builder, nameof(builder));
+            if (builder == null) throw new ArgumentNullException(nameof(builder));
 
             builder.ApplyConfiguration(new LogConfiguration());
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
@@ -84,7 +85,7 @@ namespace DNTFrameworkCore.TestAPI
             services.AddAntiforgery(x => x.HeaderName = "X-XSRF-TOKEN");
             services.AddSignalR();
 
-             services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
                 {
@@ -95,11 +96,12 @@ namespace DNTFrameworkCore.TestAPI
                     {
                         Email = "gholamrezarabbal@gmail.com",
                         Name = "GholamReza Rabbal",
-                        Url = "https://www.dotnettips.info/user/%D8%BA%D9%84%D8%A7%D9%85%D8%B1%D8%B6%D8%A7%20%D8%B1%D8%A8%D8%A7%D9%84"
+                        Url =
+                            "https://www.dotnettips.info/user/%D8%BA%D9%84%D8%A7%D9%85%D8%B1%D8%B6%D8%A7%20%D8%B1%D8%A8%D8%A7%D9%84"
                     }
                 });
 
-                 c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
                 {
                     In = "header",
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
@@ -107,15 +109,14 @@ namespace DNTFrameworkCore.TestAPI
                     Type = "apiKey"
                 });
 
-                 c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
                 {
                     {"Bearer", new string[] { }},
                     {"oauth2", new string[] { }}
                 });
 
-                 c.EnableAnnotations();
-
-             });
+                c.EnableAnnotations();
+            });
         }
 
         public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
@@ -174,19 +175,19 @@ namespace DNTFrameworkCore.TestAPI
                             logger.LogError("Authentication failed.", context.Exception);
                             return Task.CompletedTask;
                         },
-                        OnTokenValidated = context =>
+                        OnTokenValidated = async context =>
                         {
-                            var tokenValidatorService = context.HttpContext.RequestServices
-                                .GetRequiredService<ITokenValidator>();
-                            return tokenValidatorService.ValidateAsync(context);
+                            var validator = context.HttpContext.RequestServices.GetRequiredService<ITokenValidator>();
+                            await validator.ValidateAsync(context);
+                            
+                            context.Principal.AddIdentity(new ClaimsIdentity());
                         },
                         OnMessageReceived = context =>
                         {
                             var accessToken = context.Request.Query["access_token"];
 
                             var path = context.HttpContext.Request.Path;
-                            if (!string.IsNullOrEmpty(accessToken) &&
-                                path.StartsWithSegments("/notificationhub"))
+                            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/notificationhub"))
                             {
                                 context.Token = accessToken;
                             }

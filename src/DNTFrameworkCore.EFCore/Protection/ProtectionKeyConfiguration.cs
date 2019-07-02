@@ -1,4 +1,5 @@
-﻿using DNTFrameworkCore.Cryptography;
+﻿using System;
+using DNTFrameworkCore.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,6 +9,8 @@ namespace DNTFrameworkCore.EFCore.Protection
     {
         public static void ApplyProtectionKeyConfiguration(this ModelBuilder builder)
         {
+            if (builder == null) throw new ArgumentNullException(nameof(builder));
+
             builder.ApplyConfiguration(new ProtectionKeyConfiguration());
         }
     }

@@ -12,8 +12,8 @@ namespace DNTFrameworkCore.TestWebApp.Domain.Invoices
         public static InvoiceStatus Complete = new InvoiceStatus(3, nameof(Complete));
         public static InvoiceStatus Cancelled = new InvoiceStatus(4, nameof(Cancelled));
 
-        private InvoiceStatus(int id, string name)
-            : base(id, name)
+        private InvoiceStatus(int value, string name)
+            : base(value, name)
         {
         }
     }

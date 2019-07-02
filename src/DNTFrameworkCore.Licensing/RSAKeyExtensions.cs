@@ -4,6 +4,7 @@ using System.Xml;
 
 namespace DNTFrameworkCore.Licensing
 {
+    // ReSharper disable once InconsistentNaming
     internal static class RSAKeyExtensions
     {
         //#region JSON
@@ -55,25 +56,57 @@ namespace DNTFrameworkCore.Licensing
 
         public static void FromXml(this RSA rsa, string xmlString)
         {
-            RSAParameters parameters = new RSAParameters();
+            var parameters = new RSAParameters();
 
-            XmlDocument xmlDoc = new XmlDocument();
+            var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlString);
 
-            if (xmlDoc.DocumentElement.Name.Equals("RSAKeyValue"))
+            if (xmlDoc.DocumentElement != null && xmlDoc.DocumentElement.Name.Equals("RSAKeyValue"))
             {
                 foreach (XmlNode node in xmlDoc.DocumentElement.ChildNodes)
                 {
                     switch (node.Name)
                     {
-                        case "Modulus": parameters.Modulus = (string.IsNullOrEmpty(node.InnerText) ? null : Convert.FromBase64String(node.InnerText)); break;
-                        case "Exponent": parameters.Exponent = (string.IsNullOrEmpty(node.InnerText) ? null : Convert.FromBase64String(node.InnerText)); break;
-                        case "P": parameters.P = (string.IsNullOrEmpty(node.InnerText) ? null : Convert.FromBase64String(node.InnerText)); break;
-                        case "Q": parameters.Q = (string.IsNullOrEmpty(node.InnerText) ? null : Convert.FromBase64String(node.InnerText)); break;
-                        case "DP": parameters.DP = (string.IsNullOrEmpty(node.InnerText) ? null : Convert.FromBase64String(node.InnerText)); break;
-                        case "DQ": parameters.DQ = (string.IsNullOrEmpty(node.InnerText) ? null : Convert.FromBase64String(node.InnerText)); break;
-                        case "InverseQ": parameters.InverseQ = (string.IsNullOrEmpty(node.InnerText) ? null : Convert.FromBase64String(node.InnerText)); break;
-                        case "D": parameters.D = (string.IsNullOrEmpty(node.InnerText) ? null : Convert.FromBase64String(node.InnerText)); break;
+                        case "Modulus":
+                            parameters.Modulus = (string.IsNullOrEmpty(node.InnerText)
+                                ? null
+                                : Convert.FromBase64String(node.InnerText));
+                            break;
+                        case "Exponent":
+                            parameters.Exponent = (string.IsNullOrEmpty(node.InnerText)
+                                ? null
+                                : Convert.FromBase64String(node.InnerText));
+                            break;
+                        case "P":
+                            parameters.P = (string.IsNullOrEmpty(node.InnerText)
+                                ? null
+                                : Convert.FromBase64String(node.InnerText));
+                            break;
+                        case "Q":
+                            parameters.Q = (string.IsNullOrEmpty(node.InnerText)
+                                ? null
+                                : Convert.FromBase64String(node.InnerText));
+                            break;
+                        case "DP":
+                            parameters.DP = (string.IsNullOrEmpty(node.InnerText)
+                                ? null
+                                : Convert.FromBase64String(node.InnerText));
+                            break;
+                        case "DQ":
+                            parameters.DQ = (string.IsNullOrEmpty(node.InnerText)
+                                ? null
+                                : Convert.FromBase64String(node.InnerText));
+                            break;
+                        case "InverseQ":
+                            parameters.InverseQ = (string.IsNullOrEmpty(node.InnerText)
+                                ? null
+                                : Convert.FromBase64String(node.InnerText));
+                            break;
+                        case "D":
+                            parameters.D = (string.IsNullOrEmpty(node.InnerText)
+                                ? null
+                                : Convert.FromBase64String(node.InnerText));
+                            break;
                     }
                 }
             }
@@ -87,17 +120,10 @@ namespace DNTFrameworkCore.Licensing
 
         public static string ToXml(this RSA rsa, bool includePrivateParameters)
         {
-            RSAParameters parameters = rsa.ExportParameters(includePrivateParameters);
+            var parameters = rsa.ExportParameters(includePrivateParameters);
 
-            return string.Format("<RSAKeyValue><Modulus>{0}</Modulus><Exponent>{1}</Exponent><P>{2}</P><Q>{3}</Q><DP>{4}</DP><DQ>{5}</DQ><InverseQ>{6}</InverseQ><D>{7}</D></RSAKeyValue>",
-                  parameters.Modulus != null ? Convert.ToBase64String(parameters.Modulus) : null,
-                  parameters.Exponent != null ? Convert.ToBase64String(parameters.Exponent) : null,
-                  parameters.P != null ? Convert.ToBase64String(parameters.P) : null,
-                  parameters.Q != null ? Convert.ToBase64String(parameters.Q) : null,
-                  parameters.DP != null ? Convert.ToBase64String(parameters.DP) : null,
-                  parameters.DQ != null ? Convert.ToBase64String(parameters.DQ) : null,
-                  parameters.InverseQ != null ? Convert.ToBase64String(parameters.InverseQ) : null,
-                  parameters.D != null ? Convert.ToBase64String(parameters.D) : null);
+            return
+                $"<RSAKeyValue><Modulus>{(parameters.Modulus != null ? Convert.ToBase64String(parameters.Modulus) : null)}</Modulus><Exponent>{(parameters.Exponent != null ? Convert.ToBase64String(parameters.Exponent) : null)}</Exponent><P>{(parameters.P != null ? Convert.ToBase64String(parameters.P) : null)}</P><Q>{(parameters.Q != null ? Convert.ToBase64String(parameters.Q) : null)}</Q><DP>{(parameters.DP != null ? Convert.ToBase64String(parameters.DP) : null)}</DP><DQ>{(parameters.DQ != null ? Convert.ToBase64String(parameters.DQ) : null)}</DQ><InverseQ>{(parameters.InverseQ != null ? Convert.ToBase64String(parameters.InverseQ) : null)}</InverseQ><D>{(parameters.D != null ? Convert.ToBase64String(parameters.D) : null)}</D></RSAKeyValue>";
         }
 
         #endregion

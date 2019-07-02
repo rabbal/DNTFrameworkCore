@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Application.Models;
@@ -53,6 +54,12 @@ namespace DNTFrameworkCore.Web.API
         {
             return Service.DeleteAsync(model);
         }
+
+        protected override async Task<Result> DeleteAsync(IEnumerable<TKey> ids)
+        {
+            var models = await Service.FindListAsync(ids);
+            return await Service.DeleteAsync(models);
+        }
     }
 
     [Authorize]
@@ -94,6 +101,12 @@ namespace DNTFrameworkCore.Web.API
         protected override Task<Result> DeleteAsync(TModel model)
         {
             return Service.DeleteAsync(model);
+        }
+
+        protected override async Task<Result> DeleteAsync(IEnumerable<TKey> ids)
+        {
+            var models = await Service.FindListAsync(ids);
+            return await Service.DeleteAsync(models);
         }
     }
 
@@ -138,6 +151,12 @@ namespace DNTFrameworkCore.Web.API
         {
             return Service.DeleteAsync(model);
         }
+
+        protected override async Task<Result> DeleteAsync(IEnumerable<TKey> ids)
+        {
+            var models = await Service.FindListAsync(ids);
+            return await Service.DeleteAsync(models);
+        }
     }
 
     [ApiController]
@@ -162,6 +181,7 @@ namespace DNTFrameworkCore.Web.API
         protected abstract Task<Result> EditAsync(TModel model);
         protected abstract Task<Result> CreateAsync(TModel model);
         protected abstract Task<Result> DeleteAsync(TModel model);
+        protected abstract Task<Result> DeleteAsync(IEnumerable<TKey> ids);
 
         [HttpGet]
         [ProducesResponseType((int) HttpStatusCode.OK)]
@@ -175,9 +195,10 @@ namespace DNTFrameworkCore.Web.API
             return Ok(result);
         }
 
-        [HttpGet("{id:long}")]
+        [HttpGet("{id}")]
         [ProducesResponseType((int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.Forbidden)]
+        [ProducesResponseType((int) HttpStatusCode.NotFound)]
         public async Task<ActionResult<TModel>> Get([BindRequired] TKey id)
         {
             if (!await CheckPermissionAsync(EditPermissionName)) return Forbid();
@@ -202,8 +223,8 @@ namespace DNTFrameworkCore.Web.API
             return BadRequest(ModelState);
         }
 
-        [HttpPut("{id:long}")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [HttpPut("{id}")]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.BadRequest)]
         [ProducesResponseType((int) HttpStatusCode.Forbidden)]
         public async Task<IActionResult> Put([BindRequired] TKey id, TModel model)
@@ -215,7 +236,7 @@ namespace DNTFrameworkCore.Web.API
             model.Id = id;
 
             var result = await EditAsync(model);
-            if (!result.Failed) return NoContent();
+            if (!result.Failed) return Ok(model);
 
             ModelState.AddModelError(result);
             return BadRequest(ModelState);
@@ -239,6 +260,28 @@ namespace DNTFrameworkCore.Web.API
             ModelState.AddModelError(result);
             return BadRequest(ModelState);
         }
+
+        [HttpPost("[action]")]
+        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int) HttpStatusCode.Forbidden)]
+        public async Task<IActionResult> Delete(IEnumerable<TKey> ids)
+        {
+            if (!await CheckPermissionAsync(DeletePermissionName))
+            {
+                return Forbid();
+            }
+
+            var result = await DeleteAsync(ids);
+
+            if (!result.Failed)
+            {
+                return NoContent();
+            }
+
+            ModelState.AddModelError(result);
+            return BadRequest(ModelState);
+        }
+
 
         private async Task<bool> CheckPermissionAsync(string permissionName)
         {

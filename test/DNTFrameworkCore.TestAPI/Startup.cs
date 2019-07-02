@@ -38,6 +38,13 @@ namespace DNTFrameworkCore.TestAPI
             services.AddResources();
             services.AddWebAPI();
             services.AddJwtAuthentication(Configuration);
+            
+            services.AddDistributedSqlServerCache(options =>
+            {
+                options.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
+                options.SchemaName = "dbo";
+                options.TableName = "Cache";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

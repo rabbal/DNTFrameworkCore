@@ -23,7 +23,8 @@ namespace DNTFrameworkCore.Domain
         {
             if (IsTransient()) return base.GetHashCode();
 
-            if (!_hashCode.HasValue) _hashCode = Id.GetHashCode() ^ 31; // XOR for random distribution
+            if (!_hashCode.HasValue)
+                _hashCode = (GetRealType().ToString() + Id).GetHashCode() ^ 31; // XOR for random distribution
 
             return _hashCode.Value;
         }
@@ -72,16 +73,35 @@ namespace DNTFrameworkCore.Domain
         {
             return GetType();
         }
-        protected static Result Ok() => Result.Ok();
-        protected static Result Fail(string message) => Result.Fail(message);
 
-        protected static Result Fail(string message, IEnumerable<ValidationFailure> failures) =>
-            Result.Fail(message, failures);
+        protected static Result Ok()
+        {
+            return Result.Ok();
+        }
 
-        protected static Result<T> Ok<T>(T value) => Result.Ok(value);
-        protected static Result<T> Fail<T>(string message) => Result.Fail<T>(message);
+        protected static Result Fail(string message)
+        {
+            return Result.Fail(message);
+        }
 
-        protected static Result<T> Fail<T>(string message, IEnumerable<ValidationFailure> failures) =>
-            Result.Fail<T>(message, failures);
+        protected static Result Fail(string message, IEnumerable<ValidationFailure> failures)
+        {
+            return Result.Fail(message, failures);
+        }
+
+        protected static Result<T> Ok<T>(T value)
+        {
+            return Result.Ok(value);
+        }
+
+        protected static Result<T> Fail<T>(string message)
+        {
+            return Result.Fail<T>(message);
+        }
+
+        protected static Result<T> Fail<T>(string message, IEnumerable<ValidationFailure> failures)
+        {
+            return Result.Fail<T>(message, failures);
+        }
     }
 }

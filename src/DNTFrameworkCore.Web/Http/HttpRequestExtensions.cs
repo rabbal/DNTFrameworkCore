@@ -153,14 +153,14 @@ namespace DNTFrameworkCore.Web.Http
             return new Uri(GetRawUrl(httpContext));
         }
 
-        /// <summary>
-        /// Gets the current HttpContext.Request's IUrlHelper.
-        /// </summary>
-        public static IUrlHelper GetUrlHelper(this HttpContext httpContext)
-        {
-            var urlHelper = httpContext.RequestServices.GetService<IUrlHelper>();
-            return urlHelper ?? throw new NullReferenceException(nameof(urlHelper));
-        }
+//        /// <summary>
+//        /// Gets the current HttpContext.Request's IUrlHelper.
+//        /// </summary>
+//        public static IUrlHelper GetUrlHelper(this HttpContext httpContext)
+//        {
+//            var urlHelper = httpContext.RequestServices.GetService<IUrlHelper>();
+//            return urlHelper ?? throw new NullReferenceException(nameof(urlHelper));
+//        }
 
         private static void RequestSanityCheck(this HttpContext httpContext)
         {

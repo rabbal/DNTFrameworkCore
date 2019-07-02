@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace DNTFrameworkCore.Web.Security
 {
-    public class UserPassword : IUserPassword
+    public sealed class UserPassword : IUserPassword
     {
         /* =======================
          * HASHED PASSWORD FORMATS
@@ -23,7 +23,7 @@ namespace DNTFrameworkCore.Web.Security
 
         private readonly RandomNumberGenerator _rand = RandomNumberGenerator.Create();
 
-        public virtual string HashPassword(string password)
+        public string HashPassword(string password)
         {
             if (password == null)
             {
@@ -58,7 +58,7 @@ namespace DNTFrameworkCore.Web.Security
                    | buffer[offset + 3];
         }
 
-        public virtual PasswordVerificationResult VerifyHashedPassword(string hashedPassword, string providedPassword)
+        public PasswordVerificationResult VerifyHashedPassword(string hashedPassword, string providedPassword)
         {
             if (hashedPassword == null)
             {

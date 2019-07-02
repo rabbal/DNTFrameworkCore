@@ -8,26 +8,25 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.EFCore.Configuration
 {
-    //Under development
-    public class DbConfigurationProvider : ConfigurationProvider
+    // ReSharper disable once InconsistentNaming
+    public class EFConfigurationProvider : ConfigurationProvider
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceProvider _provider;
 
-        public DbConfigurationProvider(IServiceProvider serviceProvider)
+        public EFConfigurationProvider(IServiceProvider provider)
         {
-            _serviceProvider = serviceProvider;
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
         public override void Load()
         {
-            using (var scope = _serviceProvider.CreateScope())
+            using (var scope = _provider.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-
+                
                 Data?.Clear();
                 Data = context.Set<ConfigurationValue>()
                     .AsNoTracking()
-                    .ToList()
                     .ToDictionary(c => c.Key, c => c.Value);
             }
         }

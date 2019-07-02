@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
-using DNTFrameworkCore.GuardToolkit;
+using DNTFrameworkCore.TestCqrsAPI.Domain.Parties;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Sales;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
 {
     public class Order : AggregateRoot<long>
     {
-        private int _statusId;
         public OrderStatus Status { get; private set; }
         public SaleMethod SaleMethod { get; private set; }
-        public CustomerId CustomerId { get; private set; }
+        public Customer Customer { get; private set; }
         public Address ShippingAddress { get; private set; }
         public DateTimeOffset DateTime { get; private set; }
         private List<OrderLine> _lines;
@@ -21,23 +20,28 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
         private List<OrderNote> _notes;
         public IReadOnlyCollection<OrderNote> Notes => _notes.AsReadOnly();
 
+        private List<OrderHistory> _histories;
+        public IReadOnlyCollection<OrderHistory> Histories => _histories.AsReadOnly();
+
         private Order()
         {
             _lines = new List<OrderLine>();
             _notes = new List<OrderNote>();
         }
 
-        public static Result<Order> Create(CustomerId customerId, Address address)
+        public static Result<Order> Create(SaleMethod saleMethod, Customer customer, Address address)
         {
-            Guard.ArgumentNotNull(customerId, nameof(customerId));
-            Guard.ArgumentNotNull(address, nameof(address));
+            if (saleMethod == null) throw new ArgumentNullException(nameof(saleMethod));
+            if (customer == null) throw new ArgumentNullException(nameof(customer));
+            if (address == null) throw new ArgumentNullException(nameof(address));
 
             var order = new Order
             {
-                _statusId = OrderStatus.Pending.Id,
+                Status = OrderStatus.Pending,
                 DateTime = DateTimeOffset.UtcNow,
-                CustomerId = customerId,
-                ShippingAddress = address
+                Customer = customer,
+                ShippingAddress = address,
+                SaleMethod = saleMethod
             };
 
             return Result.Ok(order);
@@ -48,8 +52,8 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
             //todo: business rules
             if (_lines.Any(line => line.ProductId == productId))
             {
-                
             }
+
             return OrderLine.Create(productId, unitPrice, quantity, discount)
                 .OnSuccess(line => _lines.Add(line));
         }
@@ -60,20 +64,60 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
                 .OnSuccess(note => _notes.Add(note));
         }
 
-        public Result Cancel()
+        public Result Prepare()
         {
-            //todo: business rules
-            _statusId = OrderStatus.Cancelled.Id;
+            if (!Equals(Status, OrderStatus.Pending))
+            {
+                return Fail(
+                    $"Is not possible to change the order status from {Status.Name} to {OrderStatus.Preparation.Name}.");
+            }
 
-            return Result.Ok();
+            Status = OrderStatus.Preparation;
+
+            return Ok();
         }
 
-        public Result Complete()
+        public Result Cancel()
         {
-            //todo: business rules
-            _statusId = OrderStatus.Complete.Id;
+            if (Equals(Status, OrderStatus.Pending))
+            {
+                return Fail(
+                    $"Is not possible to change the order status from {Status.Name} to {OrderStatus.Cancelled.Name}.");
+            }
 
-            return Result.Ok();
+            //todo: business rules
+            Status = OrderStatus.Cancelled;
+
+            return Ok();
+        }
+
+        public Result Clear()
+        {
+            
+            if (!Equals(Status, OrderStatus.Paid) && !Equals(Status, OrderStatus.Shipped))
+            {
+                return Fail(
+                    $"Is not possible to change the order status from {Status.Name} to {OrderStatus.Completed.Name}.");
+            }
+
+            //todo: business rules
+            Status = OrderStatus.Completed;
+
+            return Ok();
+        }
+
+        public Result Ship()
+        {
+            if (!SaleMethod.Nature.ShipmentEnabled || !Equals(Status, OrderStatus.Paid))
+            {
+                return Fail(
+                    $"Is not possible to change the order status from {Status.Name} to {OrderStatus.Shipped.Name}.");
+            }
+
+            //todo: business rules
+            Status = OrderStatus.Shipped;
+
+            return Ok();
         }
     }
 }

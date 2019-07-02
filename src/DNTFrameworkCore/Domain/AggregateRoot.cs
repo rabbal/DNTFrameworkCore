@@ -3,10 +3,14 @@ using System.Collections.Generic;
 
 namespace DNTFrameworkCore.Domain
 {
-    public interface IAggregateRoot : IEntity, IHasRowVersion
+    public interface IAggregateRoot : IEntity
     {
         IReadOnlyCollection<IDomainEvent> Events { get; }
         void ClearEvents();
+    }
+
+    public abstract class AggregateRoot : AggregateRoot<int>
+    {
     }
 
     public abstract class AggregateRoot<TKey> : Entity<TKey>, IAggregateRoot

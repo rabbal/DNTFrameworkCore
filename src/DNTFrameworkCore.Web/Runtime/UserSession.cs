@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using DNTFrameworkCore.Extensions;
+using DNTFrameworkCore.Helpers;
 using DNTFrameworkCore.MultiTenancy;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.Web.Http;
@@ -22,24 +24,26 @@ namespace DNTFrameworkCore.Web.Runtime
             _tenant = tenant ?? throw new ArgumentNullException(nameof(tenant));
         }
 
-        public IReadOnlyList<string> Permissions => _context?.HttpContext?.User?.Identity.GetPermissions();
+        public string BranchNumber => _context?.HttpContext?.User?.Identity.FindBranchNumber();
+        public IReadOnlyList<string> Permissions => _context?.HttpContext?.User?.Identity.FindPermissions();
 
-        public IReadOnlyList<string> Roles => _context?.HttpContext?.User?.Identity.GetRoles();
+        public IReadOnlyList<string> Roles => _context?.HttpContext?.User?.Identity.FindRoles();
+        public IReadOnlyList<Claim> Claims => _context?.HttpContext?.User?.Claims?.ToList();
 
-        public string UserDisplayName => _context?.HttpContext?.User?.Identity.GetUserDisplayName();
+        public string UserDisplayName => _context?.HttpContext?.User?.Identity.FindUserDisplayName();
 
         public string UserBrowserName => _context.HttpContext?.GetUserAgent();
 
         public string UserIP => _context.HttpContext?.GetIp();
 
-        public long? UserId => _context?.HttpContext?.User?.Identity.GetUserId();
+        public long? UserId => _context?.HttpContext?.User?.Identity.FindUserId();
 
         public string UserName => _context?.HttpContext?.User?.Identity.Name;
 
-        public long? BranchId => _context?.HttpContext?.User?.Identity.GetBranchId();
+        public long? BranchId => _context?.HttpContext?.User?.Identity.FindBranchId();
 
         public long? TenantId => UserId.HasValue
-            ? _context?.HttpContext?.User?.Identity.GetTenantId()
+            ? _context?.HttpContext?.User?.Identity.FindTenantId()
             : _tenant.HasValue
                 ? _tenant.Value.Id
                 : (long?) null;
@@ -48,16 +52,11 @@ namespace DNTFrameworkCore.Web.Runtime
             ? MultiTenancySides.Tenant
             : MultiTenancySides.Host;
 
-        public long? ImpersonatorUserId => _context?.HttpContext?.User?.Identity.GetImpersonatorTenantId();
+        public long? ImpersonatorUserId => _context?.HttpContext?.User?.Identity.FindImpersonatorTenantId();
 
-        public long? ImpersonatorTenantId => _context?.HttpContext?.User?.Identity.GetImpersonatorUserId();
+        public long? ImpersonatorTenantId => _context?.HttpContext?.User?.Identity.FindImpersonatorUserId();
 
         public bool IsAuthenticated => _context?.HttpContext?.User?.Identity.IsAuthenticated ?? false;
-
-        public IDisposable Use(long? tenantId, long? userId)
-        {
-            throw new NotImplementedException();
-        }
 
         public bool IsInRole(string role)
         {

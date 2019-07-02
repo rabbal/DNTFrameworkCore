@@ -20,7 +20,7 @@ namespace DNTFrameworkCore.Localization
 
             try
             {
-                CultureInfo.GetCultureInfo(cultureName);
+                var cultureInfo = CultureInfo.GetCultureInfo(cultureName);
                 return true;
             }
             catch (CultureNotFoundException)

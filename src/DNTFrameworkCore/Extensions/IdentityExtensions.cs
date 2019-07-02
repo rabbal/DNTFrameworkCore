@@ -12,7 +12,7 @@ namespace DNTFrameworkCore.Extensions
 {
     public static class IdentityExtensions
     {
-        public static T GetUserId<T>(this IIdentity identity) where T : IConvertible
+        public static T FindUserId<T>(this IIdentity identity) where T : IConvertible
         {
             var id = identity?.FindUserClaimValue(DNTClaimTypes.UserId);
 
@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.Extensions
             return default;
         }
 
-        public static long? GetUserId(this IIdentity identity)
+        public static long? FindUserId(this IIdentity identity)
         {
             var id = identity?.FindUserClaimValue(DNTClaimTypes.UserId);
 
@@ -31,8 +31,13 @@ namespace DNTFrameworkCore.Extensions
 
             return userId;
         }
+        
+        public static string FindBranchNumber(this IIdentity identity)
+        {
+            return identity?.FindUserClaimValue(DNTClaimTypes.BranchNumber);
+        }
 
-        public static long? GetBranchId(this IIdentity identity)
+        public static long? FindBranchId(this IIdentity identity)
         {
             var branchClaim = identity?.FindUserClaimValue(DNTClaimTypes.BranchId);
 
@@ -40,7 +45,7 @@ namespace DNTFrameworkCore.Extensions
 
             return !long.TryParse(branchClaim, out var branchId) ? default : branchId;
         }
-        public static long? GetTenantId(this IIdentity identity)
+        public static long? FindTenantId(this IIdentity identity)
         {
             var tenantClaim = identity?.FindUserClaimValue(DNTClaimTypes.TenantId);
 
@@ -49,7 +54,7 @@ namespace DNTFrameworkCore.Extensions
             return !long.TryParse(tenantClaim, out var tenantId) ? default : tenantId;
         }
 
-        public static long? GetImpersonatorTenantId(this IIdentity identity)
+        public static long? FindImpersonatorTenantId(this IIdentity identity)
         {
             var tenantClaim = identity?.FindUserClaimValue(DNTClaimTypes.ImpersonatorTenantId);
 
@@ -58,7 +63,7 @@ namespace DNTFrameworkCore.Extensions
             return !long.TryParse(tenantClaim, out var tenantId) ? default : tenantId;
         }
 
-        public static long? GetImpersonatorUserId(this IIdentity identity)
+        public static long? FindImpersonatorUserId(this IIdentity identity)
         {
             var tenantClaim = identity?.FindUserClaimValue(DNTClaimTypes.ImpersonatorUserId);
 
@@ -67,7 +72,7 @@ namespace DNTFrameworkCore.Extensions
             return !long.TryParse(tenantClaim, out var tenantId) ? default : tenantId;
         }
 
-        public static IReadOnlyList<string> GetPermissions(this IIdentity identity)
+        public static IReadOnlyList<string> FindPermissions(this IIdentity identity)
         {
             Guard.ArgumentNotNull(identity, nameof(identity));
 
@@ -80,7 +85,7 @@ namespace DNTFrameworkCore.Extensions
             return permissionClaims.Select(a => a.Value).ToImmutableList();
         }
 
-        public static IReadOnlyList<string> GetRoles(this IIdentity identity)
+        public static IReadOnlyList<string> FindRoles(this IIdentity identity)
         {
             Guard.ArgumentNotNull(identity, nameof(identity));
 
@@ -103,28 +108,28 @@ namespace DNTFrameworkCore.Extensions
             return (identity as ClaimsIdentity)?.FindFirstValue(claimType);
         }
 
-        public static string GetUserFirstName(this IIdentity identity)
+        public static string FindUserFirstName(this IIdentity identity)
         {
             return identity?.FindUserClaimValue(DNTClaimTypes.GivenName);
         }
 
-        public static string GetUserLastName(this IIdentity identity)
+        public static string FindUserLastName(this IIdentity identity)
         {
             return identity?.FindUserClaimValue(DNTClaimTypes.Surname);
         }
 
-        public static string GetUserFullName(this IIdentity identity)
+        public static string FindUserFullName(this IIdentity identity)
         {
-            return $"{GetUserFirstName(identity)} {GetUserLastName(identity)}";
+            return $"{FindUserFirstName(identity)} {FindUserLastName(identity)}";
         }
 
-        public static string GetUserDisplayName(this IIdentity identity)
+        public static string FindUserDisplayName(this IIdentity identity)
         {
-            var fullName = GetUserFullName(identity);
-            return string.IsNullOrWhiteSpace(fullName) ? GetUserName(identity) : fullName;
+            var fullName = FindUserFullName(identity);
+            return string.IsNullOrWhiteSpace(fullName) ? FindUserName(identity) : fullName;
         }
 
-        public static string GetUserName(this IIdentity identity)
+        public static string FindUserName(this IIdentity identity)
         {
             return identity?.FindUserClaimValue(DNTClaimTypes.UserName);
         }

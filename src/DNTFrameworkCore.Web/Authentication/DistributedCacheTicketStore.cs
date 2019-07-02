@@ -23,7 +23,7 @@ namespace DNTFrameworkCore.Web.Authentication
 
         public async Task<string> StoreAsync(AuthenticationTicket ticket)
         {
-            var key = $"{KeyPrefix}{Guid.NewGuid().ToString("N")}";
+            var key = $"{KeyPrefix}{Guid.NewGuid():N}";
             await RenewAsync(key, ticket);
             return key;
         }

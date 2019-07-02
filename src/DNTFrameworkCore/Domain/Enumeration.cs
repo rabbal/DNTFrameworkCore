@@ -7,16 +7,20 @@ namespace DNTFrameworkCore.Domain
 {
     public abstract class Enumeration : IComparable
     {
-        public int Id { get; private set; }
+        public int Value { get; private set; }
         public string Name { get; private set; }
 
-        protected Enumeration(int id, string name)
+        protected Enumeration()
         {
-            Id = id;
+        }
+
+        protected Enumeration(int value, string name)
+        {
+            Value = value;
             Name = name;
         }
 
-        public override string ToString() => "${Name} ({Id})";
+        public override string ToString() => Name;
 
         public static IEnumerable<T> List<T>() where T : Enumeration
         {
@@ -27,13 +31,12 @@ namespace DNTFrameworkCore.Domain
 
         public override bool Equals(object obj)
         {
-            if (!(obj is Enumeration other))
-                return false;
+            if (!(obj is Enumeration otherValue)) return false;
 
-            return GetRealType() == other.GetRealType() && Id.Equals(other.Id);
+            return GetRealType() == otherValue.GetRealType() && Value.Equals(otherValue.Value);
         }
 
-        public override int GetHashCode() => Id.GetHashCode();
+        public override int GetHashCode() => (GetRealType().ToString() + Value).GetHashCode();
 
         protected virtual Type GetRealType()
         {
@@ -42,13 +45,13 @@ namespace DNTFrameworkCore.Domain
 
         public static int AbsoluteDifference(Enumeration firstValue, Enumeration secondValue)
         {
-            var absoluteDifference = Math.Abs(firstValue.Id - secondValue.Id);
+            var absoluteDifference = Math.Abs(firstValue.Value - secondValue.Value);
             return absoluteDifference;
         }
 
         public static T FromValue<T>(int value) where T : Enumeration
         {
-            var matchingItem = Parse<T, int>(value, "value", item => item.Id == value);
+            var matchingItem = Parse<T, int>(value, "value", item => item.Value == value);
             return matchingItem;
         }
 
@@ -68,6 +71,6 @@ namespace DNTFrameworkCore.Domain
             return matchingItem;
         }
 
-        public int CompareTo(object other) => Id.CompareTo(((Enumeration) other).Id);
+        public int CompareTo(object other) => Value.CompareTo(((Enumeration) other).Value);
     }
 }

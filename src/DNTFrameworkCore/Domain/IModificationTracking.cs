@@ -3,8 +3,4 @@
     public interface IModificationTracking
     {
     }
-
-    public interface ICreationTracking
-    {
-    }
 }

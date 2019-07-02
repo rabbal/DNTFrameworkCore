@@ -8,6 +8,9 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity.Models
     {
         public IdentityMapProfile()
         {
+            //Required for ModifiedProperties collection of TrackableEntity and Model
+            AllowNullCollections = true;
+            
             CreateMap<Role, RoleModel>(MemberList.None)
                 .ReverseMap()
                 .ForMember(d => d.NormalizedName, m => m.MapFrom(s => s.Name.ToUpperInvariant()));

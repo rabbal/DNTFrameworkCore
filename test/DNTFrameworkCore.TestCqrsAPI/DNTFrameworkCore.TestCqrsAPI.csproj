@@ -14,7 +14,10 @@
     <Folder Include="Application\Orders\Commands\" />
     <Folder Include="Application\Orders\Handlers\" />
     <Folder Include="Application\Orders\Queries\" />
+    <Folder Include="Application\Sales\Queries" />
+    <Folder Include="Application\Sales\Rules" />
     <Folder Include="Controllers" />
+    <Folder Include="Domain\Sales\Handlers" />
     <Folder Include="Infrastructure\" />
     <Folder Include="Authentication\" />
     <Folder Include="Authorization\" />
@@ -22,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\DNTFrameworkCore.Cqrs\DNTFrameworkCore.Cqrs.csproj" />
     <ProjectReference Include="..\..\src\DNTFrameworkCore\DNTFrameworkCore.csproj" />
   </ItemGroup>
 

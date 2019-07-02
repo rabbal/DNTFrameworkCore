@@ -3,7 +3,7 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestWebApp.Domain.Identity
 {
-    public class Role : TrackableEntity<long>,IHasRowVersion, ICreationTracking, IModificationTracking
+    public class Role : TrackableEntity<long>, IHasRowVersion, ICreationTracking, IModificationTracking
     {
         public const int MaxNameLength = 50;
         public const int MaxDescriptionLength = 1024;
