@@ -1,6 +1,7 @@
 using System;
 using DNTFrameworkCore.Configuration;
 using DNTFrameworkCore.Cryptography;
+using DNTFrameworkCore.EFCore.Configuration;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Context.Hooks;
 using DNTFrameworkCore.EFCore.Protection;
@@ -54,7 +55,7 @@ namespace DNTFrameworkCore.EFCore
                 services.Configure(setupAction);
             }
 
-            services.AddScoped<IConfigurationValueService, IConfigurationValueService>();
+            services.AddScoped<IConfigurationValueService, ConfigurationValueService>();
 
             services.AddSingleton<IProtectionRepository, ProtectionRepository<TDbContext>>();
             services.AddScoped<IHookEngine, HookEngine>();
