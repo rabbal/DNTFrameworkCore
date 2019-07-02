@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Title>DNTFrameworkCore</Title>
-        <VersionPrefix>3.0.0</VersionPrefix>
+        <VersionPrefix>3.1.0</VersionPrefix>
         <Description>DNTFrameworkCore is a Lightweight and Extensible Infrastructure for Building Web Applications</Description>
         <Authors>GholamReza Rabbal</Authors>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
@@ -37,26 +37,5 @@
             <Pack>true</Pack>
             <PackagePath>README.md</PackagePath>
         </Content>
-    </ItemGroup>
-    <ItemGroup>
-      <_UnmanagedRegistrationCache Remove="obj\DNTFrameworkCore.csproj.UnmanagedRegistration.cache" />
-    </ItemGroup>
-    <ItemGroup>
-      <_ResolveComReferenceCache Remove="obj\Debug\netstandard2.0\DNTFrameworkCore.csproj.ResolveComReference.cache" />
-    </ItemGroup>
-    <ItemGroup>
-      <IntermediateAssembly Remove="obj\Debug\netstandard2.0\DNTFrameworkCore.dll" />
-    </ItemGroup>
-    <ItemGroup>
-      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netstandard2.0\DNTFrameworkCore.pdb" />
-    </ItemGroup>
-    <ItemGroup>
-      <_DeploymentManifestEntryPoint Remove="obj\Debug\netstandard2.0\DNTFrameworkCore.dll" />
-    </ItemGroup>
-    <ItemGroup>
-      <ApplicationManifest Remove="obj\Debug\netstandard2.0\Native.DNTFrameworkCore.manifest" />
-    </ItemGroup>
-    <ItemGroup>
-      <DeployManifest Remove="obj\Debug\netstandard2.0\DNTFrameworkCore.application" />
     </ItemGroup>
 </Project>
