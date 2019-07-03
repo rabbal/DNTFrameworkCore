@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Title>DNTFrameworkCore</Title>
-        <VersionPrefix>3.1.0</VersionPrefix>
+        <VersionPrefix>3.2.1</VersionPrefix>
         <Description>DNTFrameworkCore is a Lightweight and Extensible Infrastructure for Building Web Applications</Description>
         <Authors>GholamReza Rabbal</Authors>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>

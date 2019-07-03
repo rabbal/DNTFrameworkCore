@@ -43,7 +43,14 @@ namespace DNTFrameworkCore.Web.Filters
                      details.Contains("FK_"))
             {
                 context.ModelState.AddModelError(string.Empty,
-                    "به دلیل وجود اطلاعات وابسته، امکان حذف وجود ندارد.");
+                    "به دلیل وجود اطلاعات وابسته، امکان حذف وجود ندارد");
+                context.Result = new BadRequestObjectResult(context.ModelState);
+                context.HttpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
+            }
+            else if (context.Exception is ConcurrencyException)
+            {
+                context.ModelState.AddModelError(string.Empty,
+                    "اطلاعات توسط کاربری دیگر در شبکه تغییر کرده است");
                 context.Result = new BadRequestObjectResult(context.ModelState);
                 context.HttpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
             }
@@ -53,10 +60,7 @@ namespace DNTFrameworkCore.Web.Filters
                 switch (context.Exception)
                 {
                     case DbUpdateException _:
-                        message = "امکان ذخیره‌سازی اطلاعات وجود ندارد؛ دوباره تلاش نمائید.";
-                        break;
-                    case ConcurrencyException _:
-                        message = "اطلاعات توسط کاربری دیگر در شبکه تغییر کرده است.";
+                        message = "امکان ذخیره‌سازی اطلاعات وجود ندارد؛ دوباره تلاش نمائید";
                         break;
                     default:
                         message = "متأسفانه مشکلی در فرآیند انجام درخواست شما پیش آمده است!";
