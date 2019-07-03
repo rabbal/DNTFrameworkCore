@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Title>DNTFrameworkCore.Licensing</Title>
-    <VersionPrefix>3.2.1</VersionPrefix>
+    <VersionPrefix>3.2.3</VersionPrefix>
     <Description>DNTFrameworkCore.Licensing</Description>
     <Authors>GholamReza Rabbal</Authors>
     <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
