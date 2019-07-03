@@ -31,26 +31,7 @@ namespace DNTFrameworkCore.TestWebApp.Application
             services.AddAutoMapper(typeof(ApplicationRegistry));
             services.AddValidatorsFromAssemblyContaining(typeof(ApplicationRegistry));
             
-            services.AddNumbering(options =>
-            {
-                options.NumberedEntityMap[typeof(Task)] = new NumberedEntityOption
-                {
-                    Start = 100,
-                    Prefix = "Task_",
-                    IncrementBy = 5
-                };
-                options.NumberedEntityMap[typeof(Product)] = new NumberedEntityOption
-                {
-                    Start = 1,
-                    Prefix = "P_",
-                    IncrementBy = 1
-                };
-                options.NumberedEntityMap[typeof(Invoice)] = new NumberedEntityOption
-                {
-                    Start = 1,
-                    IncrementBy = 5
-                };
-            });
+            services.AddNumbering();
 
             services.Scan(scan => scan
                 .FromCallingAssembly()

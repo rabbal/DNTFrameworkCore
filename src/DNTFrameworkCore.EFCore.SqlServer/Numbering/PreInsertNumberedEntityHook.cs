@@ -9,20 +9,17 @@ using DNTFrameworkCore.Numbering;
 using DNTFrameworkCore.ReflectionToolkit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.Options;
 
 namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
 {
     internal class PreInsertNumberedEntityHook : PreInsertHook<INumberedEntity>
     {
         private readonly IUnitOfWork _uow;
-        private readonly IOptions<NumberingOptions> _options;
         private readonly ITenant _tenant;
 
-        public PreInsertNumberedEntityHook(IUnitOfWork uow, IOptions<NumberingOptions> options, ITenant tenant)
+        public PreInsertNumberedEntityHook(IUnitOfWork uow, ITenant tenant)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
             _tenant = tenant ?? throw new ArgumentNullException(nameof(tenant));
         }
 
@@ -41,11 +38,12 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
 
             _uow.Entry(entity).Property(nameof(INumberedEntity.Number)).CurrentValue = nextNumber;
         }
-        
+
         //Todo: Refactor and Improve ResetField Scenarios 
         private bool IsUniqueNumber(INumberedEntity entity, string nextNumber)
         {
-            var option = _options.Value.NumberedEntityMap[entity.GetType()];
+            var option = FindOption(entity.GetType());
+
             var resetClause = string.Empty;
             if (!string.IsNullOrEmpty(option.ResetFieldName))
             {
@@ -81,7 +79,8 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
         private string BuildNumber(INumberedEntity entity)
         {
             var entityType = entity.GetType();
-            var option = _options.Value.NumberedEntityMap[entityType];
+
+            var option = FindOption(entityType);
 
             var entityName = $"{entityType.FullName}";
 
@@ -138,6 +137,16 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
                 nextNumber = option.Prefix + nextNumber;
 
             return nextNumber;
+        }
+
+        private static NumberedEntityOptionAttribute FindOption(Type entityType)
+        {
+            var maybe = entityType.FindNumberingOption();
+            if (!maybe.HasValue)
+                throw new InvalidOperationException("INumberedEntity should be decorated with NumberedEntityOptionAttribute");
+
+            var option = maybe.Value;
+            return option;
         }
     }
 }

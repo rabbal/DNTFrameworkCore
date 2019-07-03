@@ -1,6 +1,8 @@
+using System;
+
 namespace DNTFrameworkCore.Numbering
 {
-    public class NumberedEntityOption
+    public class NumberedEntityOptionAttribute : Attribute
     {
         public string Prefix { get; set; }
         public int Start { get; set; } = 1;

@@ -4,10 +4,51 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class V2019_07_03_1301 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "dbo");
+
+            migrationBuilder.CreateTable(
+                name: "Blog",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Title = table.Column<string>(maxLength: 50, nullable: false),
+                    NormalizedTitle = table.Column<string>(maxLength: 50, nullable: false),
+                    Url = table.Column<string>(maxLength: 50, nullable: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    CreationDateTime = table.Column<DateTimeOffset>(nullable: false),
+                    CreatorBrowserName = table.Column<string>(maxLength: 1024, nullable: true),
+                    CreatorIp = table.Column<string>(maxLength: 256, nullable: true),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    ModificationDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    ModifierBrowserName = table.Column<string>(maxLength: 1024, nullable: true),
+                    ModifierIp = table.Column<string>(maxLength: 256, nullable: true),
+                    ModifierUserId = table.Column<long>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Blog", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NumberedEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    EntityName = table.Column<string>(unicode: false, maxLength: 256, nullable: false),
+                    NextNumber = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NumberedEntity", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Role",
                 columns: table => new
@@ -30,6 +71,33 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Role", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Task",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Title = table.Column<string>(maxLength: 256, nullable: false),
+                    NormalizedTitle = table.Column<string>(maxLength: 256, nullable: false),
+                    Number = table.Column<string>(maxLength: 50, nullable: false),
+                    Description = table.Column<string>(maxLength: 1024, nullable: true),
+                    State = table.Column<byte>(nullable: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    CreationDateTime = table.Column<DateTimeOffset>(nullable: false),
+                    CreatorBrowserName = table.Column<string>(maxLength: 1024, nullable: true),
+                    CreatorIp = table.Column<string>(maxLength: 256, nullable: true),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    ModificationDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    ModifierBrowserName = table.Column<string>(maxLength: 1024, nullable: true),
+                    ModifierIp = table.Column<string>(maxLength: 256, nullable: true),
+                    ModifierUserId = table.Column<long>(nullable: true),
+                    TenantId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Task", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,6 +127,59 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cache",
+                schema: "dbo",
+                columns: table => new
+                {
+                    Id = table.Column<string>(maxLength: 449, nullable: false),
+                    Value = table.Column<byte[]>(nullable: false),
+                    ExpiresAtTime = table.Column<DateTimeOffset>(nullable: false),
+                    SlidingExpirationInSeconds = table.Column<long>(nullable: true),
+                    AbsoluteExpiration = table.Column<DateTimeOffset>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cache", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Log",
+                schema: "dbo",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Message = table.Column<string>(nullable: false),
+                    Level = table.Column<string>(maxLength: 50, nullable: false),
+                    Timestamp = table.Column<DateTimeOffset>(nullable: false),
+                    LoggerName = table.Column<string>(maxLength: 256, nullable: false),
+                    UserBrowserName = table.Column<string>(maxLength: 1024, nullable: true),
+                    UserIP = table.Column<string>(maxLength: 256, nullable: true),
+                    UserId = table.Column<long>(nullable: true),
+                    UserName = table.Column<string>(maxLength: 50, nullable: true),
+                    UserDisplayName = table.Column<string>(maxLength: 50, nullable: true),
+                    EventId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Log", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProtectionKey",
+                schema: "dbo",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    FriendlyName = table.Column<string>(nullable: false),
+                    XmlValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProtectionKey", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -196,6 +317,18 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "Blog_NormalizedTitle",
+                table: "Blog",
+                column: "NormalizedTitle",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "UIX_NumberedEntity_EntityName",
+                table: "NumberedEntity",
+                column: "EntityName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Permission_Discriminator",
                 table: "Permission",
                 column: "Discriminator");
@@ -220,6 +353,23 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                 name: "IX_RoleClaim_RoleId",
                 table: "RoleClaim",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "UIX_Task_NormalizedTitle",
+                table: "Task",
+                column: "NormalizedTitle",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Task_TenantId",
+                table: "Task",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "UIX_Task_TenantId_Title_Number",
+                table: "Task",
+                columns: new[] { "Number", "TenantId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "UIX_User_NormalizedDisplayName",
@@ -257,15 +407,49 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                 name: "IX_UserToken_UserId",
                 table: "UserToken",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cache_ExpiresAtTime",
+                schema: "dbo",
+                table: "Cache",
+                column: "ExpiresAtTime");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Log_Level",
+                schema: "dbo",
+                table: "Log",
+                column: "Level");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Log_LoggerName",
+                schema: "dbo",
+                table: "Log",
+                column: "LoggerName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProtectionKey_FriendlyName",
+                schema: "dbo",
+                table: "ProtectionKey",
+                column: "FriendlyName",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Blog");
+
+            migrationBuilder.DropTable(
+                name: "NumberedEntity");
+
+            migrationBuilder.DropTable(
                 name: "Permission");
 
             migrationBuilder.DropTable(
                 name: "RoleClaim");
+
+            migrationBuilder.DropTable(
+                name: "Task");
 
             migrationBuilder.DropTable(
                 name: "UserClaim");
@@ -275,6 +459,18 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserToken");
+
+            migrationBuilder.DropTable(
+                name: "Cache",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "Log",
+                schema: "dbo");
+
+            migrationBuilder.DropTable(
+                name: "ProtectionKey",
+                schema: "dbo");
 
             migrationBuilder.DropTable(
                 name: "Role");

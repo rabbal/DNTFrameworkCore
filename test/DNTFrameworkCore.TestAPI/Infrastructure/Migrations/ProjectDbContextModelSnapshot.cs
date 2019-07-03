@@ -497,6 +497,8 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
 
                     b.Property<byte>("State");
 
+                    b.Property<long>("TenantId");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(256);
@@ -507,9 +509,12 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                         .IsUnique()
                         .HasName("UIX_Task_NormalizedTitle");
 
-                    b.HasIndex("Number")
+                    b.HasIndex("TenantId")
+                        .HasName("IX_Task_TenantId");
+
+                    b.HasIndex("Number", "TenantId")
                         .IsUnique()
-                        .HasName("UIX_Task_Number");
+                        .HasName("UIX_Task_TenantId_Title_Number");
 
                     b.ToTable("Task");
                 });

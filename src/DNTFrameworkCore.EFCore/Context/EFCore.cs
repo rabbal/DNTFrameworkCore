@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using DNTFrameworkCore.Domain;
+using DNTFrameworkCore.Numbering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -13,17 +14,17 @@ namespace DNTFrameworkCore.EFCore.Context
         public const string CreatorIp = nameof(CreatorIp);
         public const string CreationDateTime = nameof(CreationDateTime);
         public const string CreatorUserId = nameof(CreatorUserId);
-        
+
         public const string ModifierBrowserName = nameof(ModifierBrowserName);
         public const string ModifierIp = nameof(ModifierIp);
         public const string ModificationDateTime = nameof(ModificationDateTime);
         public const string ModifierUserId = nameof(ModifierUserId);
-        
+
         public const string UserId = nameof(UserId);
         public const string TenantId = nameof(TenantId);
         public const string IsDeleted = nameof(IsDeleted);
         public const string RowVersion = nameof(RowVersion);
-        
+
         public static void AddTracking(this ModelBuilder builder)
         {
             var types = builder.Model.GetEntityTypes().ToList();
@@ -124,21 +125,35 @@ namespace DNTFrameworkCore.EFCore.Context
                     .Property(nameof(INumberedEntity.Number)).IsRequired().HasMaxLength(50).Metadata
                     .AfterSaveBehavior = PropertySaveBehavior.Ignore;
 
+                var maybe = entityType.ClrType.FindNumberingOption();
+                if (!maybe.HasValue)
+                    throw new InvalidOperationException(
+                        "INumberedEntity should be decorated with NumberedEntityOptionAttribute");
+
+                var option = maybe.Value;
+
+                var indexName = $"UIX_{entityType.ClrType.Name}_";
+                var parameters = new[] {nameof(INumberedEntity.Number)};
+
                 if (typeof(ITenantEntity).IsAssignableFrom(entityType.ClrType))
                 {
-                    builder.Entity(entityType.ClrType)
-                        .HasIndex(nameof(INumberedEntity.Number), TenantId)
-                        .HasName(
-                            $"UIX_{entityType.ClrType.Name}_{TenantId}_{nameof(INumberedEntity.Number)}")
-                        .IsUnique();
+                    indexName += $"{TenantId}_";
+                    parameters = new[] {nameof(INumberedEntity.Number), TenantId};
+                }
+
+                if (!string.IsNullOrEmpty(option.ResetFieldName))
+                {
+                    indexName += $"{option.ResetFieldName}_{nameof(INumberedEntity.Number)}";
                 }
                 else
                 {
-                    builder.Entity(entityType.ClrType)
-                        .HasIndex(nameof(INumberedEntity.Number))
-                        .HasName($"UIX_{entityType.ClrType.Name}_{nameof(INumberedEntity.Number)}")
-                        .IsUnique();
+                    indexName += nameof(INumberedEntity.Number);
                 }
+
+                builder.Entity(entityType.ClrType)
+                    .HasIndex(parameters)
+                    .HasName(indexName)
+                    .IsUnique();
             }
         }
     }

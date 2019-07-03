@@ -42,5 +42,9 @@
   <ItemGroup>
     <Content Remove="Logs\**" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Infrastructure\Migrations" />
+  </ItemGroup>
   
 </Project>
