@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20190703083157_V2019_07_03_1301")]
-    partial class V2019_07_03_1301
+    [Migration("20190704125651_V2019_07_04_1726")]
+    partial class V2019_07_04_1726
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -462,6 +462,8 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<long>("BranchId");
+
                     b.Property<DateTimeOffset>("CreationDateTime");
 
                     b.Property<string>("CreatorBrowserName")
@@ -499,8 +501,6 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
 
                     b.Property<byte>("State");
 
-                    b.Property<long>("TenantId");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(256);
@@ -511,12 +511,8 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                         .IsUnique()
                         .HasName("UIX_Task_NormalizedTitle");
 
-                    b.HasIndex("TenantId")
-                        .HasName("IX_Task_TenantId");
-
-                    b.HasIndex("Number", "TenantId")
-                        .IsUnique()
-                        .HasName("UIX_Task_TenantId_Title_Number");
+                    b.HasIndex("Number", "BranchId")
+                        .HasName("UIX_Task_Number_BranchId");
 
                     b.ToTable("Task");
                 });

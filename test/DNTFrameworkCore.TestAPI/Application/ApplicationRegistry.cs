@@ -26,7 +26,14 @@ namespace DNTFrameworkCore.TestAPI.Application
 
             services.AddAutoMapper(typeof(ApplicationRegistry));
             services.AddValidatorsFromAssembly(typeof(ApplicationRegistry).Assembly);
-            services.AddNumbering();
+            services.AddNumbering(options =>
+            {
+                options.NumberedEntityMap[typeof(Task)] = new NumberedEntityOption
+                {
+                    Prefix = "Task",
+                    FieldNames = new[] {nameof(Task.BranchId)}
+                };
+            });
             services.Scan(scan => scan
                 .FromCallingAssembly()
                 .AddClasses(classes => classes.AssignableTo<ISingletonDependency>())

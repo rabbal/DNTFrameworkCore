@@ -214,7 +214,6 @@ namespace DNTFrameworkCore.EFCore.Context
             builder.AddSoftDeleteEntity();
             builder.AddRowVersion();
             builder.AddRowLevelSecurity();
-            builder.AddNumberedEntity();
             
             ApplyFilters(builder);
         }

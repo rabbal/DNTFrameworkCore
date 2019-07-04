@@ -30,8 +30,14 @@ namespace DNTFrameworkCore.TestWebApp.Application
 
             services.AddAutoMapper(typeof(ApplicationRegistry));
             services.AddValidatorsFromAssemblyContaining(typeof(ApplicationRegistry));
-            
-            services.AddNumbering();
+
+            services.AddNumbering(options =>
+            {
+                options.NumberedEntityMap[typeof(Task)] = new NumberedEntityOption
+                {
+                    Prefix = "Task"
+                };
+            });
 
             services.Scan(scan => scan
                 .FromCallingAssembly()

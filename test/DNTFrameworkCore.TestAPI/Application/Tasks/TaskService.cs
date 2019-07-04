@@ -42,6 +42,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
         protected override void MapToEntity(TaskModel model, Task task)
         {
             _mapper.Map(model, task);
+            task.BranchId = 3;
         }
 
         protected override TaskModel MapToModel(Task task)

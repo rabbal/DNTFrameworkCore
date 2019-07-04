@@ -8,10 +8,10 @@ using DNTFrameworkCore.EFCore.SqlServer.Numbering;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.TestAPI.Infrastructure.Mappings.Blogging;
 using DNTFrameworkCore.TestAPI.Infrastructure.Mappings.Identity;
+using DNTFrameworkCore.TestAPI.Infrastructure.Mappings.Tasks;
 using EFSecondLevelCache.Core.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using RFrameworkCore.TestWebApp.Data.Mappings.Tasks;
 
 namespace DNTFrameworkCore.TestAPI.Infrastructure.Context
 {

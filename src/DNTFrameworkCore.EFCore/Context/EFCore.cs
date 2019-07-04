@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Numbering;
@@ -112,48 +113,6 @@ namespace DNTFrameworkCore.EFCore.Context
                 builder.Entity(entityType.ClrType)
                     .Property(RowVersion)
                     .IsRowVersion();
-            }
-        }
-
-        public static void AddNumberedEntity(this ModelBuilder builder)
-        {
-            var types = builder.Model.GetEntityTypes().ToList();
-
-            foreach (var entityType in types.Where(e => typeof(INumberedEntity).IsAssignableFrom(e.ClrType)))
-            {
-                builder.Entity(entityType.ClrType)
-                    .Property(nameof(INumberedEntity.Number)).IsRequired().HasMaxLength(50).Metadata
-                    .AfterSaveBehavior = PropertySaveBehavior.Ignore;
-
-                var maybe = entityType.ClrType.FindNumberingOption();
-                if (!maybe.HasValue)
-                    throw new InvalidOperationException(
-                        "INumberedEntity should be decorated with NumberedEntityOptionAttribute");
-
-                var option = maybe.Value;
-
-                var indexName = $"UIX_{entityType.ClrType.Name}_";
-                var parameters = new[] {nameof(INumberedEntity.Number)};
-
-                if (typeof(ITenantEntity).IsAssignableFrom(entityType.ClrType))
-                {
-                    indexName += $"{TenantId}_";
-                    parameters = new[] {nameof(INumberedEntity.Number), TenantId};
-                }
-
-                if (!string.IsNullOrEmpty(option.ResetFieldName))
-                {
-                    indexName += $"{option.ResetFieldName}_{nameof(INumberedEntity.Number)}";
-                }
-                else
-                {
-                    indexName += nameof(INumberedEntity.Number);
-                }
-
-                builder.Entity(entityType.ClrType)
-                    .HasIndex(parameters)
-                    .HasName(indexName)
-                    .IsUnique();
             }
         }
     }

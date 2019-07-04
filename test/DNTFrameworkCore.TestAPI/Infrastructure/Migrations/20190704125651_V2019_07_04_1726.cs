@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
 {
-    public partial class V2019_07_03_1301 : Migration
+    public partial class V2019_07_04_1726 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -85,6 +85,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                     Description = table.Column<string>(maxLength: 1024, nullable: true),
                     State = table.Column<byte>(nullable: false),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    BranchId = table.Column<long>(nullable: false),
                     CreationDateTime = table.Column<DateTimeOffset>(nullable: false),
                     CreatorBrowserName = table.Column<string>(maxLength: 1024, nullable: true),
                     CreatorIp = table.Column<string>(maxLength: 256, nullable: true),
@@ -92,8 +93,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                     ModificationDateTime = table.Column<DateTimeOffset>(nullable: true),
                     ModifierBrowserName = table.Column<string>(maxLength: 1024, nullable: true),
                     ModifierIp = table.Column<string>(maxLength: 256, nullable: true),
-                    ModifierUserId = table.Column<long>(nullable: true),
-                    TenantId = table.Column<long>(nullable: false)
+                    ModifierUserId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -361,15 +361,9 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Task_TenantId",
+                name: "UIX_Task_Number_BranchId",
                 table: "Task",
-                column: "TenantId");
-
-            migrationBuilder.CreateIndex(
-                name: "UIX_Task_TenantId_Title_Number",
-                table: "Task",
-                columns: new[] { "Number", "TenantId" },
-                unique: true);
+                columns: new[] { "Number", "BranchId" });
 
             migrationBuilder.CreateIndex(
                 name: "UIX_User_NormalizedDisplayName",
