@@ -48,7 +48,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             using (var command = _uow.Connection.CreateCommand())
             {
                 var parameterNames = option.FieldNames.Aggregate(string.Empty,
-                    (current, fieldName) => current + $"AND [t0].[{fieldName}] = @{fieldName}");
+                    (current, fieldName) => current + $"AND [t0].[{fieldName}] = @{fieldName} ");
 
                 var tableName = _uow.Entry(entity).Metadata.Relational().TableName;
                 command.CommandText = $@"SELECT
