@@ -206,9 +206,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 
                     b.Property<long?>("ModifierUserId");
 
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasMaxLength(50);
+                    b.Property<string>("Number");
 
                     b.Property<decimal>("Price");
 
@@ -221,10 +219,6 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                         .HasMaxLength(50);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Number")
-                        .IsUnique()
-                        .HasName("UIX_Product_Number");
 
                     b.ToTable("Product");
                 });
@@ -492,9 +486,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(256);
 
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasMaxLength(50);
+                    b.Property<string>("Number");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -511,10 +503,6 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.HasIndex("NormalizedTitle")
                         .IsUnique()
                         .HasName("UIX_Task_NormalizedTitle");
-
-                    b.HasIndex("Number")
-                        .IsUnique()
-                        .HasName("UIX_Task_Number");
 
                     b.ToTable("Task");
                 });

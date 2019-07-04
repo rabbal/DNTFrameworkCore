@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20190624221406_CreateIdentitySchema")]
-    partial class CreateIdentitySchema
+    [Migration("20190704130721_V2019_07_04_1737")]
+    partial class V2019_07_04_1737
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -180,6 +180,49 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                         .HasName("Blog_NormalizedTitle");
 
                     b.ToTable("Blog");
+                });
+
+            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Catalog.Product", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("CreationDateTime");
+
+                    b.Property<string>("CreatorBrowserName")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("CreatorIp")
+                        .HasMaxLength(256);
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<DateTimeOffset?>("ModificationDateTime");
+
+                    b.Property<string>("ModifierBrowserName")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("ModifierIp")
+                        .HasMaxLength(256);
+
+                    b.Property<long?>("ModifierUserId");
+
+                    b.Property<string>("Number");
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Identity.Permission", b =>
@@ -430,6 +473,40 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRole");
+                });
+
+            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Tasks.Task", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("NormalizedTitle")
+                        .IsRequired()
+                        .HasMaxLength(256);
+
+                    b.Property<string>("Number");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<byte>("State");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedTitle")
+                        .IsUnique()
+                        .HasName("UIX_Task_NormalizedTitle");
+
+                    b.ToTable("Task");
                 });
 
             modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Identity.RolePermission", b =>
