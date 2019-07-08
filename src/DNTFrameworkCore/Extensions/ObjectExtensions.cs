@@ -11,21 +11,33 @@ namespace DNTFrameworkCore.Extensions
         {
             return @object.GetType().GetGenericTypeName();
         }
+
         /// <summary>
-        /// Converts given object to a value type using <see cref="Convert.ChangeType(object,System.TypeCode)"/> method.
+        /// Converts given object to a value or enum type using <see cref="Convert.ChangeType(object,TypeCode)"/> or <see cref="Enum.Parse(Type,string)"/> method.
         /// </summary>
-        /// <param name="obj">Object to be converted</param>
+        /// <param name="value">Object to be converted</param>
         /// <typeparam name="T">Type of the target object</typeparam>
         /// <returns>Converted object</returns>
-        public static T To<T>(this object obj)
+        public static T To<T>(this object value)
             where T : struct
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+
             if (typeof(T) == typeof(Guid))
             {
-                return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(obj.ToString());
+                return (T) TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(value.ToString());
             }
 
-            return (T)Convert.ChangeType(obj, typeof(T), CultureInfo.InvariantCulture);
+            if (!typeof(T).IsEnum) return (T) Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);
+
+            if (Enum.IsDefined(typeof(T), value))
+            {
+                return (T) Enum.Parse(typeof(T), value.ToString());
+            }
+            else
+            {
+                throw new ArgumentException($"Enum type undefined '{value}'.");
+            }
         }
 
         /// <summary>

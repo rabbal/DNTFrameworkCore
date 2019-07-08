@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace DNTFrameworkCore.Extensions
 {
@@ -15,6 +16,12 @@ namespace DNTFrameworkCore.Extensions
         public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
         {
             return dictionary.TryGetValue(key, out var obj) ? obj : default(TValue);
+        }
+
+        public static IReadOnlyDictionary<TKey, TValue> AsReadOnly<TKey, TValue>(
+            this IDictionary<TKey, TValue> dictionary)
+        {
+            return new ReadOnlyDictionary<TKey, TValue>(dictionary);
         }
     }
 }
