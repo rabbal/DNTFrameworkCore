@@ -32,8 +32,6 @@ namespace DNTFrameworkCore.Licensing
         public DateTime CreationTime { get; private set; }
         public string SerialNumber { get; private set; }
         public bool Signed { get; private set; }
-
-
         public IReadOnlyCollection<LicenseFeature> Features => _features.AsReadOnly();
         public IReadOnlyDictionary<string, string> Attributes => _attributes.AsReadOnly();
 
