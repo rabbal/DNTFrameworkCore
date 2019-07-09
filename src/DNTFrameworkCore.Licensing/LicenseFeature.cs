@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using DNTFrameworkCore.Domain;
-using DNTFrameworkCore.Functional;
 
 namespace DNTFrameworkCore.Licensing
 {

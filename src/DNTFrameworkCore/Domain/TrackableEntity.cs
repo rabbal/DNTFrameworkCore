@@ -13,6 +13,4 @@ namespace DNTFrameworkCore.Domain
         [NotMapped] public TrackingState TrackingState { get; set; }
         [NotMapped] public ICollection<string> ModifiedProperties { get; set; }
     }
-
-   
 }

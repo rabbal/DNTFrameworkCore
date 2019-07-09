@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
@@ -11,6 +12,9 @@ namespace DNTFrameworkCore.Licensing
     {
         public static void SignXml(this XmlDocument document, string privateKey)
         {
+            if (document == null) throw new ArgumentNullException(nameof(document));
+            if (string.IsNullOrWhiteSpace(privateKey)) throw new ArgumentNullException(nameof(privateKey));
+            
             using (var provider = RSA.Create())
             {
                 provider.FromXml(privateKey);
@@ -28,6 +32,8 @@ namespace DNTFrameworkCore.Licensing
 
         public static XmlDocument ToXmlDocument<T>(this T value) where T : class
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+
             var serializer = new XmlSerializer(value.GetType());
             var sb = new StringBuilder();
             using (var writer = new StringWriter(sb))
@@ -40,9 +46,11 @@ namespace DNTFrameworkCore.Licensing
                 return doc;
             }
         }
-        
+
         public static string ToXmlString(this XmlDocument document)
         {
+            if (document == null) throw new ArgumentNullException(nameof(document));
+
             using (var ms = new MemoryStream())
             {
                 var settings = new XmlWriterSettings {Indent = true, Encoding = Encoding.UTF8};

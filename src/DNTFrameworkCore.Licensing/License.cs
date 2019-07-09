@@ -17,7 +17,6 @@ namespace DNTFrameworkCore.Licensing
         private readonly Dictionary<string, string> _attributes;
         private readonly List<LicenseFeature> _features;
         private XmlDocument _document;
-        private bool _signed;
 
         private License()
         {
@@ -32,6 +31,8 @@ namespace DNTFrameworkCore.Licensing
         public string CustomerName { get; private set; }
         public DateTime CreationTime { get; private set; }
         public string SerialNumber { get; private set; }
+        public bool Signed { get; private set; }
+
 
         public IReadOnlyCollection<LicenseFeature> Features => _features.AsReadOnly();
         public IReadOnlyDictionary<string, string> Attributes => _attributes.AsReadOnly();
@@ -73,15 +74,22 @@ namespace DNTFrameworkCore.Licensing
                 switch (reader.Name)
                 {
                     case "Feature":
+                    {
                         var feature = LicenseFeature.New(reader.GetAttribute(nameof(LicenseFeature.Name)),
                             reader.GetAttribute(nameof(LicenseFeature.DisplayName)),
                             reader.GetAttribute(nameof(LicenseFeature.Value)),
                             reader.GetAttribute(nameof(LicenseFeature.Description)));
-                        AddFeature(feature);
+                        var result = AddFeature(feature);
+                        if (result.Failed) throw new InvalidOperationException(result.Message);
                         break;
+                    }
+
                     case "Attribute":
-                        AddAttribute(reader.GetAttribute("Name"), reader.Value);
+                    {
+                        var result = AddAttribute(reader.GetAttribute("Name"), reader.Value);
+                        if (result.Failed) throw new InvalidOperationException(result.Message);
                         break;
+                    }
                 }
             }
         }
@@ -111,9 +119,7 @@ namespace DNTFrameworkCore.Licensing
                     writer.WriteAttributeString(nameof(LicenseFeature.DisplayName), feature.DisplayName);
 
                     if (!string.IsNullOrWhiteSpace(feature.Description))
-                    {
                         writer.WriteElementString(nameof(LicenseFeature.Description), feature.Description);
-                    }
 
                     writer.WriteEndElement();
                 }
@@ -130,7 +136,7 @@ namespace DNTFrameworkCore.Licensing
                 writer.WriteStartElement("Attribute");
 
                 writer.WriteAttributeString("Name", attribute.Key);
-                writer.WriteString(attribute.Key);
+                writer.WriteString(attribute.Value);
 
                 writer.WriteEndElement();
             }
@@ -164,7 +170,7 @@ namespace DNTFrameworkCore.Licensing
         {
             if (feature == null) throw new ArgumentNullException(nameof(feature));
 
-            if (_signed) Result.Fail("This license already is signed. It is impossible to add new feature.");
+            if (Signed) throw new InvalidOperationException("This license already is signed.");
 
             if (_features.Contains(feature)) return Result.Fail($"A feature with name {feature.Name} already exists.");
 
@@ -178,7 +184,7 @@ namespace DNTFrameworkCore.Licensing
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
             if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException(nameof(value));
 
-            if (_signed) return Result.Fail("This license already is signed. It is impossible to add new attribute.");
+            if (Signed) throw new InvalidOperationException("This license already is signed.");
 
             if (_attributes.ContainsKey(name)) return Result.Fail($"An attribute with name {name} already exists.");
 
@@ -187,35 +193,34 @@ namespace DNTFrameworkCore.Licensing
             return Result.Ok();
         }
 
-        public Result ExpireAt(ExpirationTime time)
+        public void ExpireAt(ExpirationTime time)
         {
             if (time == null) throw new ArgumentNullException(nameof(time));
+            if (time.Expired) throw new ArgumentNullException(nameof(time), "ExpirationTime should not be expired.");
 
-            if (_signed) return Result.Fail("This license already is signed. It is impossible to set expirationTime.");
-
-            if (time.Expired) return Result.Fail("ExpirationTime should not be expired.");
+            if (Signed)
+                throw new InvalidOperationException(
+                    "This license already is signed. It is impossible to set expirationTime.");
 
             ExpirationTime = time;
-
-            return Result.Ok();
         }
 
-        public static Result<License> FromXmlFile(string licensePublicKey, string xmlFilePath)
+        public static License FromFile(string licensePublicKey, string path)
         {
             if (string.IsNullOrWhiteSpace(licensePublicKey)) throw new ArgumentNullException(nameof(licensePublicKey));
-            if (string.IsNullOrWhiteSpace(xmlFilePath)) throw new ArgumentNullException(nameof(xmlFilePath));
+            if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
 
-            var content = File.ReadAllText(xmlFilePath);
-            return FromXmlString(licensePublicKey, content);
+            var content = File.ReadAllText(path);
+            return FromString(licensePublicKey, content);
         }
 
-        public static Result<License> FromXmlString(string licensePublicKey, string xmlFileContent)
+        public static License FromString(string licensePublicKey, string content)
         {
-            if (string.IsNullOrWhiteSpace(xmlFileContent)) throw new ArgumentNullException(nameof(xmlFileContent));
+            if (string.IsNullOrWhiteSpace(content)) throw new ArgumentNullException(nameof(content));
             if (string.IsNullOrWhiteSpace(licensePublicKey)) throw new ArgumentNullException(nameof(licensePublicKey));
 
             var doc = new XmlDocument();
-            doc.LoadXml(xmlFileContent);
+            doc.LoadXml(content);
 
             using (var provider = RSA.Create())
             {
@@ -227,15 +232,15 @@ namespace DNTFrameworkCore.Licensing
                 var xml = new SignedXml(doc);
                 var signatureNode = (XmlElement) doc.SelectSingleNode("//sig:Signature", manager);
                 if (signatureNode == null)
-                    return Result.Fail<License>("This license file is not signed.");
+                    throw new InvalidOperationException("This license file is not signed.");
 
                 xml.LoadXml(signatureNode);
                 if (!xml.CheckSignature(provider))
-                    return Result.Fail<License>("This license file is invalid.");
+                    throw new InvalidOperationException("This license file is invalid.");
 
                 var ourXml = xml.GetXml();
                 if (ourXml.OwnerDocument?.DocumentElement == null)
-                    return Result.Fail<License>("This license file is corrupted.");
+                    throw new InvalidOperationException("This license file is corrupted.");
 
                 using (var reader = new XmlNodeReader(ourXml.OwnerDocument.DocumentElement))
                 {
@@ -243,32 +248,30 @@ namespace DNTFrameworkCore.Licensing
                     var license = (License) xmlSerializer.Deserialize(reader);
 
                     license._document = doc;
-                    license._signed = true;
+                    license.Signed = true;
 
-                    return Result.Ok(license);
+                    return license;
                 }
             }
         }
 
-        public Result Sign(string licensePrivateKey)
+        public void Sign(string licensePrivateKey)
         {
             if (string.IsNullOrWhiteSpace(licensePrivateKey))
                 throw new ArgumentNullException(nameof(licensePrivateKey));
 
-            if (_signed) return Result.Fail("This license already is signed.");
+            if (Signed) throw new InvalidOperationException("This license already is signed.");
 
             _document = this.ToXmlDocument();
             _document.SignXml(licensePrivateKey);
-            _signed = true;
-
-            return Result.Ok();
+            Signed = true;
         }
 
         public Result Verify(ILicensedProduct licensedProduct)
         {
             if (licensedProduct == null) throw new ArgumentNullException(nameof(licensedProduct));
 
-            if (!_signed) return Result.Fail("This license already is not signed.");
+            if (!Signed) throw new InvalidOperationException("This license already is not signed.");
 
             if (ExpirationTime.Expired) return Result.Fail("This license is expired.");
 
@@ -281,29 +284,22 @@ namespace DNTFrameworkCore.Licensing
             return Result.Ok();
         }
 
-        public Result WriteToXmlFile(string xmlFilePath)
+        public void WriteToFile(string path)
         {
-            if (string.IsNullOrWhiteSpace(xmlFilePath)) throw new ArgumentNullException(nameof(xmlFilePath));
+            if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
 
-            var result = ToXmlString();
-            if (result.Failed) return result;
+            if (!Signed) throw new InvalidOperationException("This license already is not signed.");
 
-            File.WriteAllText(xmlFilePath, result.Value);
+            var content = ToString();
 
-            return Result.Ok();
-        }
-
-        public Result<string> ToXmlString()
-        {
-            if (!_signed) return Result.Fail<string>("This license already is not signed.");
-
-            var xml = _document.ToXmlString();
-            return Result.Ok(xml);
+            File.WriteAllText(path, content);
         }
 
         public override string ToString()
         {
-            return $"License: {Id}";
+            if (!Signed) throw new InvalidOperationException("This license already is not signed.");
+
+            return _document.ToXmlString();
         }
     }
 }
