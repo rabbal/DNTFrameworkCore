@@ -173,6 +173,9 @@ namespace DNTFrameworkCore.Licensing.Tests
             var license = License.New("DNTFrameworkCore", "1.1.1-beta", "GitHub",
                 "4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9");
 
+            license.AddAttribute("AttributeName1", "AttributeValue1");
+            license.AddFeature(LicenseFeature.New("Feature1", "Feature1DisplayName", 100.ToString()));
+            
             license.Signed.ShouldBeFalse();
 
             license.Sign(LicensingKeys.PrivateKey);
@@ -180,6 +183,8 @@ namespace DNTFrameworkCore.Licensing.Tests
             var licenseText = license.ToString();
             licenseText.ShouldContain("Signature");
             licenseText.ShouldContain("SerialNumber=\"4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9\"");
+            licenseText.ShouldContain("Name=\"AttributeName1\"");
+            licenseText.ShouldContain("Name=\"Feature1\"");
         }
 
         [Test]
@@ -203,7 +208,9 @@ namespace DNTFrameworkCore.Licensing.Tests
 
             var license = License.FromString(LicensingKeys.PublicKey, content);
 
-            license.Id.ShouldBe(Guid.Parse("f4067c3b-3e56-472f-9576-341d73501666"));
+            license.Id.ShouldBe(Guid.Parse("aac859ee-0f27-465e-ae00-7d7ae3e32948"));
+
+            license.ExpirationTime.ShouldBe(ExpirationTime.Infinite);
         }
 
         [Test]
@@ -213,7 +220,7 @@ namespace DNTFrameworkCore.Licensing.Tests
 
             var license = License.FromString(LicensingKeys.PublicKey, content);
 
-            license.Id.ShouldBe(Guid.Parse("f4067c3b-3e56-472f-9576-341d73501666"));
+            license.Id.ShouldBe(Guid.Parse("aac859ee-0f27-465e-ae00-7d7ae3e32948"));
 
             var result =
                 license.Verify(new LicensedProduct("1.1.1-beta",
@@ -238,7 +245,7 @@ namespace DNTFrameworkCore.Licensing.Tests
 
             var license = License.FromString(LicensingKeys.PublicKey, content);
 
-            license.Id.ShouldBe(Guid.Parse("f4067c3b-3e56-472f-9576-341d73501666"));
+            license.Id.ShouldBe(Guid.Parse("aac859ee-0f27-465e-ae00-7d7ae3e32948"));
 
             var result =
                 license.Verify(new LicensedProduct("1.1.2-beta",
@@ -254,7 +261,7 @@ namespace DNTFrameworkCore.Licensing.Tests
 
             var license = License.FromString(LicensingKeys.PublicKey, content);
 
-            license.Id.ShouldBe(Guid.Parse("f4067c3b-3e56-472f-9576-341d73501666"));
+            license.Id.ShouldBe(Guid.Parse("aac859ee-0f27-465e-ae00-7d7ae3e32948"));
 
             var result =
                 license.Verify(new LicensedProduct("1.1.1-beta",

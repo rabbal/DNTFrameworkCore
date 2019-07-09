@@ -84,7 +84,10 @@ namespace DNTFrameworkCore.Licensing
 
                     case "Attribute":
                     {
-                        var result = AddAttribute(reader.GetAttribute("Name"), reader.Value);
+                        var name = reader.GetAttribute("Name");
+                        reader.Read();
+                        var value = reader.Value;
+                        var result = AddAttribute(name, value);
                         if (result.Failed) throw new InvalidOperationException(result.Message);
                         break;
                     }
@@ -101,7 +104,7 @@ namespace DNTFrameworkCore.Licensing
             writer.WriteAttributeString(nameof(ProductVersion), ProductVersion);
             writer.WriteAttributeString(nameof(CustomerName), CustomerName);
             writer.WriteAttributeString(nameof(SerialNumber), SerialNumber);
-            writer.WriteAttributeString(nameof(CreationTime), CreationTime.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAttributeString(nameof(CreationTime), CreationTime.ToString("s", CultureInfo.InvariantCulture));
             writer.WriteAttributeString(nameof(ExpirationTime), ExpirationTime.ToString());
 
             if (_features.Count > 0)
@@ -153,7 +156,7 @@ namespace DNTFrameworkCore.Licensing
             var license = new License
             {
                 Id = Guid.NewGuid(),
-                CreationTime = DateTime.UtcNow,
+                CreationTime = DateTime.UtcNow.Date,
                 ProductName = productName,
                 ProductVersion = productVersion,
                 CustomerName = customerName,
@@ -196,9 +199,7 @@ namespace DNTFrameworkCore.Licensing
             if (time == null) throw new ArgumentNullException(nameof(time));
             if (time.Expired) throw new ArgumentNullException(nameof(time), "ExpirationTime should not be expired.");
 
-            if (Signed)
-                throw new InvalidOperationException(
-                    "This license already is signed. It is impossible to set expirationTime.");
+            if (Signed) throw new InvalidOperationException("This license already is signed.");
 
             ExpirationTime = time;
         }

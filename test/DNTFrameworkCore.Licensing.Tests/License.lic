@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<License Id="f4067c3b-3e56-472f-9576-341d73501666" ProductName="DNTFrameworkCore" ProductVersion="1.1.1-beta" CustomerName="GitHub" SerialNumber="4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9" CreationTime="07/08/2019 15:16:17" ExpirationTime="Infinite">
+<License Id="aac859ee-0f27-465e-ae00-7d7ae3e32948" ProductName="DNTFrameworkCore" ProductVersion="1.1.1-beta" CustomerName="GitHub" SerialNumber="4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9" CreationTime="2019-07-09T00:00:00" ExpirationTime="Infinite">
+    <Features>
+        <Feature Name="Feature1" Value="100" DisplayName="Feature1DisplayName" />
+    </Features>
+    <Attributes>
+        <Attribute Name="AttributeName1">AttributeValue1</Attribute>
+    </Attributes>
     <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
         <SignedInfo>
             <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
@@ -9,9 +15,9 @@
                     <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
                 </Transforms>
                 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-                <DigestValue>PQdeiHSfASSpV3QA/eDsORekGIcRneKVNsTSpV8jiPA=</DigestValue>
+                <DigestValue>LiNr7Q44+hiGlOOsw3HFRSw8whBxyKuR8okVz7uTwTc=</DigestValue>
             </Reference>
         </SignedInfo>
-        <SignatureValue>hAO+CqpT7J77/0M6wY4TpgQChQcq7rPOJgQ/u134ze5lhk0U7jXs+7MzZQcTBSj5Tp60WidSq0vKghucTLO6MSI7SE9+0Wp9BfjVIwStvCMYzCo997CpHieknb2dC64r0t862Nzi5FeHX2HlgkYBezk+QXWJ4PcNfHcNxjp8oxg=</SignatureValue>
+        <SignatureValue>M66GE8mQH+9SgKZU39+1BVZGjzIlww7iXYvL58ofkULQ0d3g+tqrdXpCz/K8RbmwVrrpzpzMQoox7PanGK15zoIUkTqPcR7PYo/PHWf5JZyhaSdRtDslIGSO0m0RNQomTZyNSuebEUrIKrgAjOu7HBITcQACYrqY07je/4XgPb8=</SignatureValue>
     </Signature>
 </License>
