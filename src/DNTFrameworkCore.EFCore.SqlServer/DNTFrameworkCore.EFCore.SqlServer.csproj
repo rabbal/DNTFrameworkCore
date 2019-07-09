@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <Title>DNTFrameworkCore.EntityFramework.SqlServer</Title>
-        <VersionPrefix>3.3.1</VersionPrefix>
+        <VersionPrefix>3.4.0</VersionPrefix>
         <Description>DNTFrameworkCore.EntityFramework.SqlServer</Description>
         <Authors>GholamReza Rabbal</Authors>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
