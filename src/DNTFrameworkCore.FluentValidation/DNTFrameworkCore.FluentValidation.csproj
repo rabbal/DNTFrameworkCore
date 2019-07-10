@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Title>DNTFrameworkCore.FluentValidation</Title>
-    <VersionPrefix>3.4.1</VersionPrefix>
+    <VersionPrefix>3.5.0</VersionPrefix>
     <Description>DNTFrameworkCore.FluentValidation</Description>
     <Authors>GholamReza Rabbal</Authors>
     <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
