@@ -20,8 +20,7 @@ namespace DNTFrameworkCore.Licensing
             {
                 if (!string.IsNullOrEmpty(_value)) return _value;
 
-                var serialNumber = "CPU >> " + CpuId() + "\nBIOS >> " +
-                                   BiosId() + "\nBASE >> " + MotherboardId();
+                var serialNumber = $"CPU >> {CpuId()} \nBIOS >> {BiosId()} \nBASE >> {MotherboardId()}";
 
                 _value = ComputeHash(serialNumber);
 
@@ -36,7 +35,6 @@ namespace DNTFrameworkCore.Licensing
                 var bt = Encoding.ASCII.GetBytes(s);
                 return ToHexString(md5.ComputeHash(bt));
             }
-
         }
 
         private static string ToHexString(IReadOnlyList<byte> bytes)
