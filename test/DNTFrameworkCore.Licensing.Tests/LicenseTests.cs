@@ -175,7 +175,7 @@ namespace DNTFrameworkCore.Licensing.Tests
 
             license.AddAttribute("AttributeName1", "AttributeValue1");
             license.AddFeature(LicenseFeature.New("Feature1", "Feature1DisplayName", 100.ToString()));
-            
+
             license.Signed.ShouldBeFalse();
 
             license.Sign(LicensingKeys.PrivateKey);
@@ -224,7 +224,7 @@ namespace DNTFrameworkCore.Licensing.Tests
 
             var result =
                 license.Verify(new LicensedProduct("1.1.1-beta",
-                    "4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9"));
+                    "4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9", "DNTFrameworkCore"));
             result.Failed.ShouldBeFalse();
         }
 
@@ -249,7 +249,7 @@ namespace DNTFrameworkCore.Licensing.Tests
 
             var result =
                 license.Verify(new LicensedProduct("1.1.2-beta",
-                    "4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9"));
+                    "4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9", "DNTFrameworkCore"));
             result.Failed.ShouldBeTrue();
             result.Message.ShouldBe("This license is not for this product.");
         }
@@ -265,9 +265,25 @@ namespace DNTFrameworkCore.Licensing.Tests
 
             var result =
                 license.Verify(new LicensedProduct("1.1.1-beta",
-                    "4876-8DB5-EE85-69D3-FE52-8CF7-395D"));
+                    "4876-8DB5-EE85-69D3-FE52-8CF7-395D", "DNTFrameworkCore"));
             result.Failed.ShouldBeTrue();
             result.Message.ShouldBe("This license is not for this machine.");
+        }
+        
+        [Test]
+        public void Should_Not_Verify_With_Invalid_ProductName()
+        {
+            var content = ReadLicense("DNTFrameworkCore.Licensing.Tests.License.lic");
+
+            var license = License.FromString(LicensingKeys.PublicKey, content);
+
+            license.Id.ShouldBe(Guid.Parse("aac859ee-0f27-465e-ae00-7d7ae3e32948"));
+
+            var result =
+                license.Verify(new LicensedProduct("1.1.1-beta",
+                    "4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9", "InvalidProductName"));
+            result.Failed.ShouldBeTrue();
+            result.Message.ShouldBe("This license is not for this product.");
         }
 
         private static string ReadLicense(string filename)

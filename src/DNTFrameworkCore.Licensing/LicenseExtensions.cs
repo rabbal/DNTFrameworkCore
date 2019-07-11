@@ -27,6 +27,11 @@ namespace DNTFrameworkCore.Licensing
 
         public static T FeatureValue<T>(this License license, string featureName) where T : struct
         {
+            return license.FeatureValue(featureName).To<T>();
+        }
+
+        public static string FeatureValue(this License license, string featureName)
+        {
             if (license == null) throw new ArgumentNullException(nameof(license));
             if (featureName == null) throw new ArgumentNullException(nameof(featureName));
 
@@ -35,10 +40,10 @@ namespace DNTFrameworkCore.Licensing
                 throw new InvalidOperationException(
                     $"There is not any feature with name:{featureName} in this license.");
 
-            return feature.To<T>();
+            return feature.Value;
         }
 
-        public static T AttributeValue<T>(this License license, string attributeName) where T : struct
+        public static string AttributeValue(this License license, string attributeName)
         {
             if (license == null) throw new ArgumentNullException(nameof(license));
             if (attributeName == null) throw new ArgumentNullException(nameof(attributeName));
@@ -47,7 +52,12 @@ namespace DNTFrameworkCore.Licensing
                 throw new InvalidOperationException(
                     $"There is not any attribute with name:{attributeName} in this license.");
 
-            return value.To<T>();
+            return value;
+        }
+
+        public static T AttributeValue<T>(this License license, string attributeName) where T : struct
+        {
+            return license.AttributeValue(attributeName).To<T>();
         }
     }
 }

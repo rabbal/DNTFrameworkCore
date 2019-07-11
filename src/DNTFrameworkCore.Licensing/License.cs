@@ -12,7 +12,7 @@ using DNTFrameworkCore.Functional;
 
 namespace DNTFrameworkCore.Licensing
 {
-    public class License : IXmlSerializable
+    public sealed class License : IXmlSerializable
     {
         private readonly Dictionary<string, string> _attributes;
         private readonly List<LicenseFeature> _features;
@@ -274,6 +274,9 @@ namespace DNTFrameworkCore.Licensing
 
             if (ExpirationTime.Expired) return Result.Fail("This license is expired.");
 
+            if (!ProductName.Equals(licensedProduct.ProductName, StringComparison.Ordinal))
+                return Result.Fail("This license is not for this product.");
+            
             if (!ProductVersion.Equals(licensedProduct.ProductVersion, StringComparison.Ordinal))
                 return Result.Fail("This license is not for this product.");
 
