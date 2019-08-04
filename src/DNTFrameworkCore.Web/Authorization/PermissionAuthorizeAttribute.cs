@@ -13,7 +13,7 @@ namespace DNTFrameworkCore.Web.Authorization
         /// <param name="permissions">A list of permissions to authorize</param>
         public PermissionAuthorizeAttribute(params string[] permissions)
         {
-            Policy = $"{string.Join(PermissionConstant.PolicyNameSplitSymbol, permissions)}";
+            Policy = $"{PermissionConstant.PolicyPrefix}{string.Join(PermissionConstant.PolicyNameSplitSymbol, permissions)}";
         }
     }
 }
