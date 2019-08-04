@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Title>DNTFrameworkCore.EntityFramework</Title>
-        <VersionPrefix>3.5.4</VersionPrefix>
+        <VersionPrefix>3.6.0</VersionPrefix>
         <Description>DNTFrameworkCore.EntityFramework</Description>
         <Authors>GholamReza Rabbal</Authors>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
