@@ -118,11 +118,10 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
 
             var user = maybe.Value;
 
-            identity.AddClaim(new Claim(DNTClaimTypes.UserId, user.Id.ToString(), ClaimValueTypes.Integer64));
-            identity.AddClaim(new Claim(DNTClaimTypes.UserName, user.UserName, ClaimValueTypes.String));
-            identity.AddClaim(new Claim(DNTClaimTypes.DisplayName, user.DisplayName, ClaimValueTypes.String));
-            identity.AddClaim(new Claim(DNTClaimTypes.SerialNumber, user.SerialNumber, ClaimValueTypes.String));
-            identity.AddClaim(new Claim(DNTClaimTypes.UserData, user.Id.ToString(), ClaimValueTypes.String));
+            identity.AddClaim(new Claim(UserClaimTypes.UserId, user.Id.ToString(), ClaimValueTypes.Integer64));
+            identity.AddClaim(new Claim(UserClaimTypes.UserName, user.UserName, ClaimValueTypes.String));
+            identity.AddClaim(new Claim(UserClaimTypes.DisplayName, user.DisplayName, ClaimValueTypes.String));
+            identity.AddClaim(new Claim(UserClaimTypes.SerialNumber, user.SerialNumber, ClaimValueTypes.String));
 
             foreach (var claim in user.Claims)
             {
@@ -132,7 +131,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
             var roles = await FindUserRolesIncludeClaimsAsync(user.Id);
             foreach (var role in roles)
             {
-                identity.AddClaim(new Claim(DNTClaimTypes.Role, role.Name, ClaimValueTypes.String));
+                identity.AddClaim(new Claim(UserClaimTypes.Role, role.Name, ClaimValueTypes.String));
             }
 
             var roleClaims = roles.SelectMany(a => a.Claims);
@@ -148,7 +147,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
             var permissions = rolePermissions.Union(grantedPermissions).Except(deniedPermissions);
             foreach (var permission in permissions)
             {
-                identity.AddClaim(new Claim(DNTClaimTypes.Permission, permission, ClaimValueTypes.String));
+                identity.AddClaim(new Claim(UserClaimTypes.Permission, permission, ClaimValueTypes.String));
             }
             //Todo: Set TenantId claim in MultiTenancy scenarios     
             // claims.Add(new Claim(DNTClaimTypes.TenantId, user.TenantId.ToString(), ClaimValueTypes.Integer64,

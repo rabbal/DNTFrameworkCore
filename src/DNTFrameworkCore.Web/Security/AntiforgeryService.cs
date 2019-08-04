@@ -10,13 +10,13 @@ namespace DNTFrameworkCore.Web.Security
 {
     public interface IAntiforgeryService
     {
-        void RebuildCookies(IEnumerable<Claim> claims);
-        void DeleteCookies();
+        void AddTokenToResponse(IEnumerable<Claim> claims);
+        void RemoveTokenFromResponse();
     }
 
     public class AntiforgeryService : IAntiforgeryService
     {
-        private const string XsrfTokenKey = "XSRF-TOKEN";
+        private const string XsrfToken = "XSRF-TOKEN";
 
         private readonly IHttpContextAccessor _context;
         private readonly IAntiforgery _antiforgery;
@@ -32,13 +32,13 @@ namespace DNTFrameworkCore.Web.Security
             _options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
-        public void RebuildCookies(IEnumerable<Claim> claims)
+        public void AddTokenToResponse(IEnumerable<Claim> claims)
         {
             var httpContext = _context.HttpContext;
             httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme));
             var tokens = _antiforgery.GetAndStoreTokens(httpContext);
             httpContext.Response.Cookies.Append(
-                XsrfTokenKey,
+                XsrfToken,
                 tokens.RequestToken,
                 new CookieOptions
                 {
@@ -46,11 +46,11 @@ namespace DNTFrameworkCore.Web.Security
                 });
         }
 
-        public void DeleteCookies()
+        public void RemoveTokenFromResponse()
         {
             var cookies = _context.HttpContext.Response.Cookies;
             cookies.Delete(_options.Value.Cookie.Name);
-            cookies.Delete(XsrfTokenKey);
+            cookies.Delete(XsrfToken);
         }
     }
 }

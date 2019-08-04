@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using DNTFrameworkCore.Extensions;
-using DNTFrameworkCore.Helpers;
 using DNTFrameworkCore.MultiTenancy;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.Web.Http;
@@ -25,9 +24,8 @@ namespace DNTFrameworkCore.Web.Runtime
         }
 
         public string BranchNumber => _context?.HttpContext?.User?.Identity.FindBranchNumber();
-        public IReadOnlyList<string> Permissions => _context?.HttpContext?.User?.Identity.FindPermissions();
-
-        public IReadOnlyList<string> Roles => _context?.HttpContext?.User?.Identity.FindRoles();
+        public IReadOnlyList<string> Permissions => _context?.HttpContext?.User?.FindPermissions();
+        public IReadOnlyList<string> Roles => _context?.HttpContext?.User?.FindRoles();
         public IReadOnlyList<Claim> Claims => _context?.HttpContext?.User?.Claims?.ToList();
 
         public string UserDisplayName => _context?.HttpContext?.User?.Identity.FindUserDisplayName();
@@ -60,12 +58,16 @@ namespace DNTFrameworkCore.Web.Runtime
 
         public bool IsInRole(string role)
         {
-            return Roles.Any(roleName => roleName == role);
+            if (!IsAuthenticated) throw new InvalidOperationException("This operation need user authenticated");
+
+            return _context.HttpContext.User.IsInRole(role);
         }
 
         public bool IsGranted(string permission)
         {
-            return Permissions.Any(permissionName => permissionName == permission);
+            if (!IsAuthenticated) throw new InvalidOperationException("This operation need user authenticated");
+
+            return _context.HttpContext.User.HasPermission(permission);
         }
     }
 }

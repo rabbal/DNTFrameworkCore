@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EFCore.Context;
@@ -80,7 +81,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
             var claims = await BuildClaimsAsync(userId);
             var token = await _token.BuildTokenAsync(userId, claims);
-            _antiforgery.RebuildCookies(claims);
+            _antiforgery.AddTokenToResponse(claims);
 
             return SignInResult.Ok(token);
         }
@@ -93,7 +94,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
         {
             await _token.RevokeTokensAsync(_session.UserId);
 
-            _antiforgery.DeleteCookies();
+            _antiforgery.RemoveTokenFromResponse();
         }
 
         private async Task<IList<Claim>> BuildClaimsAsync(long userId)
@@ -111,15 +112,13 @@ namespace DNTFrameworkCore.TestAPI.Authentication
                     _options.Value.Issuer),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
                     ClaimValueTypes.Integer64, _options.Value.Issuer),
-                new Claim(DNTClaimTypes.UserId, user.Id.ToString(), ClaimValueTypes.Integer64,
+                new Claim(UserClaimTypes.UserId, user.Id.ToString(), ClaimValueTypes.Integer64,
                     _options.Value.Issuer),
-                new Claim(DNTClaimTypes.UserName, user.UserName, ClaimValueTypes.String,
+                new Claim(UserClaimTypes.UserName, user.UserName, ClaimValueTypes.String,
                     _options.Value.Issuer),
-                new Claim(DNTClaimTypes.DisplayName, user.DisplayName, ClaimValueTypes.String,
+                new Claim(UserClaimTypes.DisplayName, user.DisplayName, ClaimValueTypes.String,
                     _options.Value.Issuer),
-                new Claim(DNTClaimTypes.SerialNumber, user.SerialNumber, ClaimValueTypes.String,
-                    _options.Value.Issuer),
-                new Claim(DNTClaimTypes.UserData, user.Id.ToString(), ClaimValueTypes.String,
+                new Claim(UserClaimTypes.SerialNumber, user.SerialNumber, ClaimValueTypes.String,
                     _options.Value.Issuer)
             };
 
@@ -132,7 +131,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
             var roles = await FindUserRolesIncludeClaimsAsync(user.Id);
             foreach (var role in roles)
             {
-                claims.Add(new Claim(DNTClaimTypes.Role, role.Name, ClaimValueTypes.String,
+                claims.Add(new Claim(UserClaimTypes.Role, role.Name, ClaimValueTypes.String,
                     _options.Value.Issuer));
             }
 
@@ -150,9 +149,14 @@ namespace DNTFrameworkCore.TestAPI.Authentication
             var permissions = rolePermissions.Union(grantedPermissions).Except(deniedPermissions);
             foreach (var permission in permissions)
             {
-                claims.Add(new Claim(DNTClaimTypes.Permission, permission, ClaimValueTypes.String,
+                claims.Add(new Claim(UserClaimTypes.Permission, permission, ClaimValueTypes.String,
                     _options.Value.Issuer));
             }
+
+            //recommended approach to minimize size of  token/cookie
+            claims.Add(new Claim(UserClaimTypes.PackedPermission,
+                new[] {"48", "65", "6C", "6C", "6F", "20", "57", "6F", "72", "6C", "64", "21"}
+                    .PackPermissionsToString()));
 
             //Todo: Set TenantId claim in MultiTenancy scenarios     
             // claims.Add(new Claim(DNTClaimTypes.TenantId, user.TenantId.ToString(), ClaimValueTypes.Integer64,
@@ -176,9 +180,9 @@ namespace DNTFrameworkCore.TestAPI.Authentication
         private async Task<IList<Role>> FindUserRolesIncludeClaimsAsync(long userId)
         {
             var query = from role in _roles
-                        from userRoles in role.Users
-                        where userRoles.UserId == userId
-                        select role;
+                from userRoles in role.Users
+                where userRoles.UserId == userId
+                select role;
 
             return await query
                 .AsNoTracking()

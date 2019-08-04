@@ -1,18 +1,19 @@
+using System;
+using DNTFrameworkCore.Authorization;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DNTFrameworkCore.Web.Authorization
 {
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class PermissionAuthorizeAttribute : AuthorizeAttribute
     {
-        internal const string PolicyPrefix = "PERMISSION:";
-
         /// <summary>
         /// Creates a new instance of <see cref="AuthorizeAttribute"/> class.
         /// </summary>
         /// <param name="permissions">A list of permissions to authorize</param>
         public PermissionAuthorizeAttribute(params string[] permissions)
         {
-            Policy = $"{PolicyPrefix}{string.Join(",", permissions)}";
-        } 
+            Policy = $"{string.Join(PermissionConstant.PolicyNameSplitSymbol, permissions)}";
+        }
     }
 }

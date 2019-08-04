@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Application.Services;
+using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Mapping;
 using DNTFrameworkCore.Web.Authorization;
@@ -290,7 +291,7 @@ namespace DNTFrameworkCore.Web.API
 
         private static string BuildPolicyName(string permission)
         {
-            return PermissionAuthorizeAttribute.PolicyPrefix + permission;
+            return PermissionConstant.PolicyPrefix + permission;
         }
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Helpers;
-using DNTFrameworkCore.Runtime;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
@@ -19,17 +19,17 @@ namespace DNTFrameworkCore.Web.Authorization
 
         public override async Task<AuthorizationPolicy> GetPolicyAsync(string policyName)
         {
-            if (!policyName.StartsWith(PermissionAuthorizeAttribute.PolicyPrefix, StringComparison.OrdinalIgnoreCase))
+            if (!policyName.StartsWith(PermissionConstant.PolicyPrefix, StringComparison.OrdinalIgnoreCase))
             {
                 return await base.GetPolicyAsync(policyName);
             }
 
             var policy = _policies.GetOrAdd(policyName, name =>
             {
-                var permissionNames = policyName.Substring(PermissionAuthorizeAttribute.PolicyPrefix.Length).Split(',');
+                var permissions = policyName.ExtractPermissionsFromPolicyName();
 
                 return new AuthorizationPolicyBuilder()
-                    .RequireClaim(DNTClaimTypes.Permission, permissionNames)
+                    .AddRequirements(new PermissionAuthorizationRequirement(permissions))
                     .Build();
             });
 

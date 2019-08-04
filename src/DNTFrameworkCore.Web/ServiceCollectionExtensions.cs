@@ -28,6 +28,7 @@ namespace DNTFrameworkCore.Web
             services.AddSingleton<IUserPassword, UserPassword>();
             services.AddScoped<IAntiforgeryService, AntiforgeryService>();
             services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
+            //services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationRequirement>();
             services.AddHostedService<QueuedHostedService>();
 
             return services;

@@ -24,7 +24,7 @@ namespace DNTFrameworkCore.TestAPI.Domain.Identity
 
         public Claim ToClaim()
         {
-            return new Claim(DNTClaimTypes.Permission, Name);
+            return new Claim(UserClaimTypes.Permission, Name);
         }
 
         public void InitializeFromClaim(Claim other)

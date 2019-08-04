@@ -80,7 +80,7 @@ namespace DNTFrameworkCore.Functional
 
         public override string ToString()
         {
-            return Failed
+            return !Failed
                 ? "Ok"
                 : $"Failed : {Message}";
         }
