@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Title>DNTFrameworkCore.Web.MultiTenancy</Title>
-    <VersionPrefix>3.6.1</VersionPrefix>
+    <VersionPrefix>3.7.0</VersionPrefix>
     <Description>DNTFrameworkCore.Web.MultiTenancy</Description>
     <Authors>GholamReza Rabbal</Authors>
     <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
