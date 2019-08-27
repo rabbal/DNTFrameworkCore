@@ -36,7 +36,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             string number;
             do
             {
-                number = BuildNumber(entity, option);
+                number = NewNumber(entity, option);
                 retry = !IsUniqueNumber(entity, number, option);
             } while (retry);
 
@@ -97,7 +97,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             }
         }
 
-        private string BuildNumber(INumberedEntity entity, NumberedEntityOption option)
+        private string NewNumber(INumberedEntity entity, NumberedEntityOption option)
         {
             var key = BuildEntityKey(entity, option);
 

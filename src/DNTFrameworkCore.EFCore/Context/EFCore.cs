@@ -111,7 +111,7 @@ namespace DNTFrameworkCore.EFCore.Context
             foreach (var entityType in types.Where(e => typeof(IHasRowVersion).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
-                    .Property(RowVersion)
+                    .Property<byte[]>(RowVersion)
                     .IsRowVersion();
             }
         }

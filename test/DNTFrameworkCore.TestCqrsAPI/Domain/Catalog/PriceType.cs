@@ -1,10 +1,32 @@
+using System;
 using DNTFrameworkCore.Domain;
+using DNTFrameworkCore.Functional;
+using DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Events;
+using DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Policies;
+using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 {
-    public class PriceType : TrackableEntity, IHasRowVersion
+    public class PriceType : AggregateRoot, IHasRowVersion
     {
-        public string Title { get; set; }
-        public byte[] RowVersion { get; set; }
+        private PriceType(Title title)
+        {
+            Title = title;
+        }
+
+        public static Result<PriceType> New(Title title, IPriceTypePolicy policy)
+        {
+            if (title == null) throw new ArgumentNullException(nameof(title));
+            if (policy == null) throw new ArgumentNullException(nameof(policy));
+
+            var priceType = new PriceType(title);
+            if (!policy.IsUnique(priceType)) return Fail<PriceType>("product title must be unique");
+                
+            priceType.AddDomainEvent(new PriceTypeCreated(priceType));
+            
+            return Ok(priceType);
+        }
+
+        public Title Title { get; private set; }
     }
 }

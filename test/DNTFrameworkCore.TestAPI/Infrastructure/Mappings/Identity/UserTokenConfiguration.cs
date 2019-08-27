@@ -8,9 +8,9 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Mappings.Identity
     {
         public void Configure(EntityTypeBuilder<UserToken> builder)
         {
-            builder.Property(a => a.TokenHash).HasMaxLength(UserToken.MaxAccessTokenHashLength).IsRequired();
+            builder.Property(a => a.TokenHash).HasMaxLength(UserToken.MaxTokenHashLength).IsRequired();
 
-            builder.HasIndex(a => a.TokenHash).HasName("IX_UserToken_AccessTokenHash");
+            builder.HasIndex(a => a.TokenHash).HasName("IX_UserToken_TokenHash");
             
             builder.ToTable(nameof(UserToken));
         }

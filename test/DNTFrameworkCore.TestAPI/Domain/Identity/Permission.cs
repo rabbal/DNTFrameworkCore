@@ -21,15 +21,5 @@ namespace DNTFrameworkCore.TestAPI.Domain.Identity
         /// Indicate This Permission Is Granted With Role/User or Not
         /// </summary>
         public bool IsGranted { get; set; } = true;
-
-        public Claim ToClaim()
-        {
-            return new Claim(UserClaimTypes.Permission, Name);
-        }
-
-        public void InitializeFromClaim(Claim other)
-        {
-            Name = other?.Value;
-        }
     }
 }

@@ -6,34 +6,29 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel
 {
     public class Title : ValueObject
     {
-        public string Value { get; }
+        private Title()
+        {
+        }
 
-        private Title() { }
         private Title(string value)
         {
             Value = value;
         }
 
-        public static Result<Title> Create(string title)
-        {
-            title = title ?? string.Empty;
-
-            if (title.Length == 0)
-            {
-                return Fail<Title>("title should not be empty");
-            }
-
-            if (title.Length > 100)
-            {
-                return Fail<Title>("title is too long");
-            }
-
-            return Ok(new Title(title));
-        }
+        public string Value { get; }
 
         protected override IEnumerable<object> EqualityValues
         {
             get { yield return Value; }
+        }
+
+        public static Result<Title> New(string title)
+        {
+            title = title ?? string.Empty;
+
+            if (title.Length == 0) return Fail<Title>("title should not be empty");
+
+            return title.Length > 100 ? Fail<Title>("title is too long") : Ok(new Title(title));
         }
 
         public static implicit operator string(Title title)
@@ -43,7 +38,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel
 
         public static explicit operator Title(string title)
         {
-            return Create(title).Value;
+            return New(title).Value;
         }
     }
 }

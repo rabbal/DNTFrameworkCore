@@ -29,6 +29,7 @@ namespace DNTFrameworkCore.Web.Authorization
                 var permissions = policyName.ExtractPermissionsFromPolicyName();
 
                 return new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
                     .AddRequirements(new PermissionAuthorizationRequirement(permissions))
                     .Build();
             });

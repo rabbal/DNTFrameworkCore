@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Sales.Handlers
 
         public override async Task<Result> Handle(CreateSaleMethod command, CancellationToken cancellationToken)
         {
-            var title = Title.Create(command.Title);
+            var title = Title.New(command.Title);
             if (title.Failed) return Fail(title.Message, title.Failures);
 
             var saleMethod = SaleMethod.Create(title.Value, SaleNature.FastFood);

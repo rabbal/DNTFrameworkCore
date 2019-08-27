@@ -12,16 +12,5 @@ namespace DNTFrameworkCore.TestAPI.Domain.Identity
 
         public User User { get; set; }
         public long UserId { get; set; }
-
-        public Claim ToClaim()
-        {
-            return new Claim(ClaimType, ClaimValue);
-        }
-
-        public void InitializeFromClaim(Claim claim)
-        {
-            ClaimType = claim.Type;
-            ClaimValue = claim.Value;
-        }
     }
 }

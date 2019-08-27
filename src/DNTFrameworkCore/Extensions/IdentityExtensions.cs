@@ -1,12 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Globalization;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
-using DNTFrameworkCore.Authorization;
-using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.Runtime;
 
 namespace DNTFrameworkCore.Extensions

@@ -5,6 +5,7 @@ using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Parties;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Sales;
+using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
 {

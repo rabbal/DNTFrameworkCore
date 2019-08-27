@@ -7,7 +7,8 @@ namespace DNTFrameworkCore.Timing
         DateTimeOffset UtcNow { get; }
         DateTimeOffset Now { get; }
     }
-    public class DateTime : IDateTime
+
+    internal class DateTime : IDateTime
     {
         public DateTimeOffset UtcNow => DateTimeOffset.UtcNow;
         public DateTimeOffset Now => DateTimeOffset.Now;

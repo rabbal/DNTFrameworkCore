@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Functional;
+using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.TestWebApp.Domain.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -38,7 +39,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
                 return;
             }
 
-            var serialNumberClaim = claimsIdentity.FindFirst(ClaimTypes.SerialNumber);
+            var serialNumberClaim = claimsIdentity.FindFirst(UserClaimTypes.SerialNumber);
             if (serialNumberClaim == null)
             {
                 // this is not our issued cookie
@@ -46,7 +47,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
                 return;
             }
 
-            var userIdString = claimsIdentity.FindFirst(ClaimTypes.UserData).Value;
+            var userIdString = claimsIdentity.FindFirst(UserClaimTypes.UserId).Value;
             if (!long.TryParse(userIdString, out var userId))
             {
                 // this is not our issued cookie
@@ -60,8 +61,6 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
                 // user has changed his/her password/permissions/roles/stat/IsActive
                 await HandleUnauthorizedRequest(context);
             }
-
-            // await UpdateLastActivityDateAsync(user.Value);
         }
 
         private Task HandleUnauthorizedRequest(CookieValidatePrincipalContext context)

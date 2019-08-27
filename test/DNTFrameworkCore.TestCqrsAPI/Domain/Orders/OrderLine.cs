@@ -1,6 +1,7 @@
 using System;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
+using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
 {
@@ -28,7 +29,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
                 Discount = discount,
             };
 
-            var price = Price.Create(unitPrice.Value * quantity, unitPrice.Currency);
+            var price = Price.New(unitPrice.Value * quantity, unitPrice.Currency);
             if (price.Failed) return Result.Fail<OrderLine>(price.Message, price.Failures);
 
             line.Price = price.Value;

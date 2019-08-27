@@ -18,6 +18,7 @@ namespace DNTFrameworkCore.Domain
     {
         private int? _hashCode;
         public virtual TKey Id { get; protected set; }
+        protected virtual object This => this;
 
         public override int GetHashCode()
         {
@@ -71,7 +72,7 @@ namespace DNTFrameworkCore.Domain
 
         protected virtual Type GetRealType()
         {
-            return GetType();
+            return This.GetType();
         }
 
         protected static Result Ok()

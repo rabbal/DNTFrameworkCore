@@ -9,6 +9,7 @@ namespace DNTFrameworkCore.Domain
     {
         public int Value { get; private set; }
         public string Name { get; private set; }
+        public virtual object This => this;
 
         protected Enumeration()
         {
@@ -40,7 +41,7 @@ namespace DNTFrameworkCore.Domain
 
         protected virtual Type GetRealType()
         {
-            return GetType();
+            return This.GetType();
         }
 
         public static int AbsoluteDifference(Enumeration firstValue, Enumeration secondValue)
