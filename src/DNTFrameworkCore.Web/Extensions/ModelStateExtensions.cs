@@ -31,17 +31,24 @@ namespace DNTFrameworkCore.Web.Extensions
         {
             if (!result.Failed) return;
 
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                modelState.AddModelError(prefix ?? string.Empty, result.Message);
+            }
+
             foreach (var failure in result.Failures)
             {
-                var key = string.IsNullOrEmpty(prefix) || string.IsNullOrEmpty(failure.MemberName) ? failure.MemberName : prefix + "." + failure.MemberName;
+                var key = string.IsNullOrEmpty(prefix) || string.IsNullOrEmpty(failure.MemberName)
+                    ? failure.MemberName
+                    : prefix + "." + failure.MemberName;
                 if (!modelState.ContainsKey(key) ||
                     modelState[key].Errors.All(i => i.ErrorMessage != failure.Message))
                 {
                     modelState.AddModelError(key, failure.Message);
                 }
             }
-
         }
+
         public static string ExportErrors(this ModelStateDictionary modelState, bool useHtmlNewLine = false)
         {
             var builder = new StringBuilder();
@@ -61,7 +68,8 @@ namespace DNTFrameworkCore.Web.Extensions
         }
 
 
-        public static void ExportModelStateToTempData(this ModelStateDictionary modelState, Controller controller, string key)
+        public static void ExportModelStateToTempData(this ModelStateDictionary modelState, Controller controller,
+            string key)
         {
             if (controller != null && modelState != null)
             {

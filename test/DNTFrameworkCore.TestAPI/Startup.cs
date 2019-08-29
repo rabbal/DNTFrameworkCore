@@ -92,7 +92,6 @@ namespace DNTFrameworkCore.TestAPI
                 app.UseHsts();
             }
 
-            app.UseDNTFramework();
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();

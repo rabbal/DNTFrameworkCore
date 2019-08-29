@@ -10,5 +10,10 @@ namespace DNTFrameworkCore.Validation
 
         public string MemberName { get; }
         public string Message { get; }
+
+        public override string ToString()
+        {
+            return $"{MemberName}: {Message}";
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace DNTFrameworkCore.Web.Authentication
     /// </summary>
     public class DistributedCacheTicketStore : ITicketStore
     {
-        private const string KeyPrefix = "AuthTicketStore-";
+        private const string KeyPrefix = "TicketStore-";
         private readonly IDistributedCache _cache;
         private readonly IDataSerializer<AuthenticationTicket> _ticketSerializer = TicketSerializer.Default;
 

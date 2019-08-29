@@ -1,6 +1,4 @@
 using System;
-using DNTFrameworkCore.Dependency;
-using DNTFrameworkCore.Infrastructure;
 using DNTFrameworkCore.Web.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -9,23 +7,12 @@ namespace DNTFrameworkCore.Web
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseDNTFramework(this IApplicationBuilder app)
+        public static IApplicationBuilder UseSpaRouting(this IApplicationBuilder builder)
         {
-            IoC.ApplicationServices = app.ApplicationServices;
-
-            Bootstrapper.RunOnStartup(app.ApplicationServices);
-
-            app.UseMiddleware<FrameworkMiddleware>();
-
-            return app;
+            return builder.UseMiddleware<SpaRoutingMiddleware>();
         }
 
-        public static IApplicationBuilder UseAngularPushStateRouting(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<AngularPushStateRoutingMiddleware>();
-        }
-        
-         /// <summary>
+        /// <summary>
         /// Executes the specified action if the specified <paramref name="condition"/> is <c>true</c> which can be
         /// used to conditionally add to the request execution pipeline.
         /// </summary>

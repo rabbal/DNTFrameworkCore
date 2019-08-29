@@ -18,6 +18,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Blogging.Models
             if (Title == "BlogTitle")
             {
                 yield return new ValidationResult("IValidatableObject Message", new[] {nameof(Title)});
+                yield return new ValidationResult("IValidatableObject Message");
             }
         }
     }

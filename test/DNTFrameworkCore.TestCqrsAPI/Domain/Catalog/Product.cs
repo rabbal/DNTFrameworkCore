@@ -40,18 +40,18 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
             return Ok(product);
         }
 
-        public Result AddPrice(PriceType priceType, Price price)
+        public Result<ProductPrice> AddPrice(PriceType priceType, Price price)
         {
             if (priceType == null) throw new ArgumentNullException(nameof(priceType));
             if (price == null) throw new ArgumentNullException(nameof(price));
 
             if (_prices.Exists(p => p.PriceType == priceType))
-                return Fail($"one price with priceType:{priceType.Title} already exists");
+                return Fail<ProductPrice>($"one price with priceType:{priceType.Title} already exists");
 
             var productPrice = new ProductPrice(this, priceType, price);
             _prices.Add(productPrice);
 
-            return Ok();
+            return Ok(productPrice);
         }
 
         public Result ChangeDefaultPrice(ProductPrice price)

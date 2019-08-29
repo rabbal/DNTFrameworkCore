@@ -14,7 +14,7 @@ namespace DNTFrameworkCore.Web.Authentication
     /// </summary>
     public class MemoryCacheTicketStore : ITicketStore
     {
-        private const string KeyPrefix = "AuthTicketStore-";
+        private const string KeyPrefix = "TicketStore-";
         private readonly IMemoryCache _cache;
 
         public MemoryCacheTicketStore(IMemoryCache cache)

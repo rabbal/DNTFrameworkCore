@@ -49,7 +49,6 @@ namespace DNTFrameworkCore.TestWebApp
 
             app.UseAuthentication();
 
-            app.UseDNTFramework();
             app.UseHttpsRedirection();
             app.UseFileServer(new FileServerOptions
             {

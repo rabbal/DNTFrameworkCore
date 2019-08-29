@@ -20,4 +20,7 @@
     <ItemGroup>
         <ProjectReference Include="..\DNTFrameworkCore\DNTFrameworkCore.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Context\Converters\Encryption" />
+    </ItemGroup>
 </Project>

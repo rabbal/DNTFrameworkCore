@@ -6,16 +6,10 @@ namespace DNTFrameworkCore.Validation
 {
     public static class ModelValidationResultExtensions
     {
-        public static Result ToResult(this IEnumerable<ValidationFailure> results)
+        public static Result ToResult(this IEnumerable<ValidationFailure> failures)
         {
-            var failures = results as ValidationFailure[] ?? results.ToArray();
-            if (!failures.Any()) return Result.Ok();
-
-            var message = string.Join("\n", failures.Where(a => string.IsNullOrEmpty(a.MemberName)));
-
-            var result = Result.Fail(message, failures);
-
-            return result;
+            failures = failures as ValidationFailure[] ?? failures.ToArray();
+            return !failures.Any() ? Result.Ok() : Result.Fail(string.Empty, failures);
         }
     }
 }

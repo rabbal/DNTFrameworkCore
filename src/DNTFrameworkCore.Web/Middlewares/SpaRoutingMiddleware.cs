@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace DNTFrameworkCore.Web.Middlewares
 {
-    public class AngularPushStateRoutingMiddleware
+    public sealed class SpaRoutingMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public AngularPushStateRoutingMiddleware(RequestDelegate next)
+        public SpaRoutingMiddleware(RequestDelegate next)
         {
             _next = next;
         }
