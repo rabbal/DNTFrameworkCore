@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Blogging
@@ -10,6 +9,6 @@ namespace DNTFrameworkCore.TestAPI.Domain.Blogging
         public string Title { get; set; }
         public string NormalizedTitle { get; set; }
         public string Url { get; set; }
-        public byte[] RowVersion { get; set; }
+        public byte[] Version { get; set; }
     }
 }

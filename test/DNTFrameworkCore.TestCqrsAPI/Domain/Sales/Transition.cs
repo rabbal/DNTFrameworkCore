@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DNTFrameworkCore.Domain;
-using DNTFrameworkCore.TestCqrsAPI.Domain.Orders;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales
 {

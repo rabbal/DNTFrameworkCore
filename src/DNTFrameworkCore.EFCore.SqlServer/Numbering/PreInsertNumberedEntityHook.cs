@@ -5,7 +5,6 @@ using System.Linq;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Context.Hooks;
-using DNTFrameworkCore.MultiTenancy;
 using DNTFrameworkCore.Numbering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -15,18 +14,14 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
 {
     internal class PreInsertNumberedEntityHook : PreInsertHook<INumberedEntity>
     {
-        private readonly IUnitOfWork _uow;
-        private readonly ITenant _tenant;
         private readonly IOptions<NumberingOptions> _options;
 
-        public PreInsertNumberedEntityHook(IUnitOfWork uow, ITenant tenant, IOptions<NumberingOptions> options)
+        public PreInsertNumberedEntityHook(IOptions<NumberingOptions> options)
         {
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _tenant = tenant ?? throw new ArgumentNullException(nameof(tenant));
             _options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
-        protected override void Hook(INumberedEntity entity, HookEntityMetadata metadata)
+        protected override void Hook(INumberedEntity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
             if (!string.IsNullOrEmpty(entity.Number)) return;
 
@@ -36,21 +31,21 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             string number;
             do
             {
-                number = NewNumber(entity, option);
-                retry = !IsUniqueNumber(entity, number, option);
+                number = NewNumber(entity, option, uow);
+                retry = !IsUniqueNumber(entity, number, option, uow);
             } while (retry);
 
-            _uow.Entry(entity).Property(nameof(INumberedEntity.Number)).CurrentValue = number;
+            uow.Entry(entity).Property(nameof(INumberedEntity.Number)).CurrentValue = number;
         }
 
-        private bool IsUniqueNumber(INumberedEntity entity, string number, NumberedEntityOption option)
+        private bool IsUniqueNumber(INumberedEntity entity, string number, NumberedEntityOption option, IUnitOfWork uow)
         {
-            using (var command = _uow.Connection.CreateCommand())
+            using (var command = uow.Connection.CreateCommand())
             {
                 var parameterNames = option.FieldNames.Aggregate(string.Empty,
                     (current, fieldName) => current + $"AND [t0].[{fieldName}] = @{fieldName} ");
 
-                var tableName = _uow.Entry(entity).Metadata.Relational().TableName;
+                var tableName = uow.Entry(entity).Metadata.Relational().TableName;
                 command.CommandText = $@"SELECT
                     (CASE
                 WHEN EXISTS(
@@ -71,7 +66,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
                 {
                     var p = command.CreateParameter();
 
-                    var value = _uow.Entry(entity).Property(fieldName).CurrentValue;
+                    var value = uow.Entry(entity).Property(fieldName).CurrentValue;
                     switch (value)
                     {
                         case DateTimeOffset dateTimeOffset:
@@ -89,7 +84,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
                     command.Parameters.Add(p);
                 }
 
-                command.Transaction = _uow.Transaction.GetDbTransaction();
+                command.Transaction = uow.Transaction.GetDbTransaction();
 
                 var result = command.ExecuteScalar();
 
@@ -97,18 +92,18 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             }
         }
 
-        private string NewNumber(INumberedEntity entity, NumberedEntityOption option)
+        private string NewNumber(INumberedEntity entity, NumberedEntityOption option, IUnitOfWork uow)
         {
-            var key = BuildEntityKey(entity, option);
+            var key = BuildEntityKey(entity, option, uow);
 
-            _uow.AcquireDistributedLock(key);
+            uow.AcquireDistributedLock(key);
 
             var number = option.Start.ToString();
 
-            var numberedEntity = _uow.Set<NumberedEntity>().AsNoTracking().FirstOrDefault(a => a.EntityName == key);
+            var numberedEntity = uow.Set<NumberedEntity>().AsNoTracking().FirstOrDefault(a => a.EntityName == key);
             if (numberedEntity == null)
             {
-                _uow.ExecuteSqlCommand(
+                uow.ExecuteSqlCommand(
                     "INSERT INTO [dbo].[NumberedEntity]([EntityName], [NextNumber]) VALUES(@p0,@p1)",
                     key,
                     option.Start + option.IncrementBy);
@@ -116,7 +111,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             else
             {
                 number = numberedEntity.NextNumber.ToString();
-                _uow.ExecuteSqlCommand(
+                uow.ExecuteSqlCommand(
                     "UPDATE [dbo].[NumberedEntity] SET [NextNumber] = @p0 WHERE [Id] = @p1 ",
                     numberedEntity.NextNumber + option.IncrementBy, numberedEntity.Id);
             }
@@ -127,7 +122,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             return number;
         }
 
-        private string BuildEntityKey(INumberedEntity entity, NumberedEntityOption option)
+        private string BuildEntityKey(INumberedEntity entity, NumberedEntityOption option, IUnitOfWork uow)
         {
             var type = entity.GetType();
 
@@ -135,7 +130,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
 
             foreach (var fieldName in option.FieldNames)
             {
-                var value = _uow.Entry(entity).Property(fieldName).CurrentValue;
+                var value = uow.Entry(entity).Property(fieldName).CurrentValue;
                 switch (value)
                 {
                     case DateTimeOffset dateTimeOffset:
@@ -147,11 +142,6 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
                 }
 
                 key += $"_{fieldName}_{value}";
-            }
-
-            if (typeof(ITenantEntity).IsAssignableFrom(type))
-            {
-                key = $"Tenant_{_tenant.Value.Name}_{key}";
             }
 
             return key;

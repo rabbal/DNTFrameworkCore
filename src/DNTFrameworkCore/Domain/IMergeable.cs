@@ -4,6 +4,6 @@ namespace DNTFrameworkCore.Domain
 {
     public interface IMergeable
     {
-        Guid TrackerId { get; set; }
+        Guid TrackerId { get; }
     }
 }

@@ -8,13 +8,13 @@ namespace DNTFrameworkCore.EFCore.SqlServer
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddNumbering(this IServiceCollection services, Action<NumberingOptions> setupAction)
+        public static void WithNumberingHook(this EFCoreBuilder builder, Action<NumberingOptions> options)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
-            if (setupAction == null) throw new ArgumentNullException(nameof(setupAction));
+            if (builder == null) throw new ArgumentNullException(nameof(builder));
+            if (options == null) throw new ArgumentNullException(nameof(options));
 
-            services.Configure(setupAction);
-            services.AddTransient<IPreActionHook, PreInsertNumberedEntityHook>();
+            builder.Services.Configure(options);
+            builder.Services.AddTransient<IHook, PreInsertNumberedEntityHook>();
         }
     }
 }

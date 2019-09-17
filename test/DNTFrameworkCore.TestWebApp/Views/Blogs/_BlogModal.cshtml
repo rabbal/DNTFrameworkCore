@@ -8,7 +8,7 @@
 <form asp-action="@(Model.IsNew() ? "Create" : "Edit")" asp-controller="Blogs" asp-modal-form="BlogForm">
     <div class="modal-body">
         <input type="hidden" name="save-continue" value="true"/>
-        <input asp-for="RowVersion" type="hidden"/>
+        <input asp-for="Version" type="hidden"/>
         <input asp-for="Id" type="hidden"/>
         <div class="form-group row">
             <div class="col col-md-8">

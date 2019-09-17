@@ -1,5 +1,4 @@
 using DNTFrameworkCore.Domain;
-using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales.Events
 {

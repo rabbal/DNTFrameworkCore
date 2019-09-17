@@ -10,8 +10,9 @@ namespace DNTFrameworkCore.Runtime
         public const string Role = ClaimTypes.Role;
         public const string DisplayName = nameof(DisplayName);
         public const string BranchId = nameof(BranchId);
-        public const string BranchNumber = nameof(BranchNumber);
+        public const string BranchName = nameof(BranchName);
         public const string TenantId = nameof(TenantId);
+        public const string TenantName = nameof(TenantName);
         public const string Permission = nameof(Permission);
         public const string PackedPermission = nameof(PackedPermission);
         public const string ImpersonatorUserId = nameof(ImpersonatorUserId);

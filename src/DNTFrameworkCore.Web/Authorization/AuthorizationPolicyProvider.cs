@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Authorization;
-using DNTFrameworkCore.Helpers;
+using DNTFrameworkCore.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 

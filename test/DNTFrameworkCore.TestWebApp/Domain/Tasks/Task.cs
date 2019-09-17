@@ -12,6 +12,6 @@ namespace DNTFrameworkCore.TestWebApp.Domain.Tasks
         public string Number { get; set; }
         public string Description { get; set; }
         public TaskState State { get; set; } = TaskState.Todo;
-        public byte[] RowVersion { get; set; }
+        public byte[] Version { get; set; }
     }
 }

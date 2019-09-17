@@ -1,4 +1,3 @@
-using System;
 using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Tasks
@@ -13,7 +12,7 @@ namespace DNTFrameworkCore.TestAPI.Domain.Tasks
         public string Number { get; set; }
         public string Description { get; set; }
         public TaskState State { get; set; } = TaskState.Todo;
-        public byte[] RowVersion { get; set; }
+        public byte[] Version { get; set; }
         public long BranchId { get; set; }
     }
 }

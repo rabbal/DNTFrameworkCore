@@ -1,19 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq.Expressions;
-using System.Reflection;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.EFCore.Context.Extensions;
 using DNTFrameworkCore.EFCore.Context.Hooks;
 using DNTFrameworkCore.Exceptions;
-using DNTFrameworkCore.Extensions;
-using DNTFrameworkCore.Runtime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 using DbUpdateException = Microsoft.EntityFrameworkCore.DbUpdateException;
 
@@ -21,25 +17,12 @@ namespace DNTFrameworkCore.EFCore.Context
 {
     public abstract class DbContextCore : DbContext, IUnitOfWork
     {
-        private readonly IHookEngine _hookEngine;
-        private readonly IUserSession _session;
+        private readonly IEnumerable<IHook> _hooks;
 
-        private static readonly MethodInfo FilterEntityMethodInfo =
-            typeof(DbContextCore).GetMethod(nameof(FilterEntity),
-                BindingFlags.Instance | BindingFlags.NonPublic);
-
-        private readonly long _userId;
-        private readonly long _tenantId;
-
-        protected DbContextCore(IHookEngine hookEngine, IUserSession session, DbContextOptions options) : base(options)
+        protected DbContextCore(DbContextOptions options, IEnumerable<IHook> hooks) : base(options)
         {
-            _hookEngine = hookEngine ?? throw new ArgumentNullException(nameof(hookEngine));
-            _session = session ?? throw new ArgumentNullException(nameof(session));
-
-            _tenantId = _session.TenantId ?? 0;
-            _userId = _session.UserId ?? 0;
+            _hooks = hooks ?? throw new ArgumentNullException(nameof(hooks));
         }
-
         public DbConnection Connection => Database.GetDbConnection();
         public bool HasActiveTransaction => Transaction != null;
         public IDbContextTransaction Transaction { get; private set; }
@@ -98,10 +81,6 @@ namespace DNTFrameworkCore.EFCore.Context
             }
         }
 
-        public bool DeleteFilterEnabled { get; set; } = true;
-        public bool TenantFilterEnabled { get; set; } = true;
-        public bool RowLevelSecurityEnabled { get; set; } = true;
-
         public void UseTransaction(DbTransaction transaction)
         {
             Database.UseTransaction(transaction);
@@ -129,23 +108,21 @@ namespace DNTFrameworkCore.EFCore.Context
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            ChangeTracker.DetectChanges();
-
             int result;
             try
             {
-                var names = this.FindChangedEntityNames();
-                var entries = this.FindChangedEntries();
+                var entryList = this.FindChangedEntries();
+                var names = entryList.FindEntityNames();
 
-                _hookEngine.RunPreHooks(entries);
+                ExecuteHooks<IPreActionHook>(entryList);
 
                 ChangeTracker.AutoDetectChangesEnabled = false;
                 result = await base.SaveChangesAsync(true, cancellationToken);
                 ChangeTracker.AutoDetectChangesEnabled = true;
 
-                _hookEngine.RunPostHooks(entries);
+                ExecuteHooks<IPostActionHook>(entryList);
 
-                AfterSaveChanges(new EntityChangeContext(names));
+                AfterSaveChanges(new EntityChangeContext(names, entryList));
             }
             catch (DbUpdateConcurrencyException e)
             {
@@ -161,23 +138,21 @@ namespace DNTFrameworkCore.EFCore.Context
 
         public override int SaveChanges()
         {
-            ChangeTracker.DetectChanges();
-
             int result;
             try
             {
-                var names = this.FindChangedEntityNames();
                 var entryList = this.FindChangedEntries();
+                var names = entryList.FindEntityNames();
 
-                _hookEngine.RunPreHooks(entryList);
+                ExecuteHooks<IPreActionHook>(entryList);
 
                 ChangeTracker.AutoDetectChangesEnabled = false;
                 result = base.SaveChanges(true);
                 ChangeTracker.AutoDetectChangesEnabled = true;
 
-                _hookEngine.RunPostHooks(entryList);
+                ExecuteHooks<IPostActionHook>(entryList);
 
-                AfterSaveChanges(new EntityChangeContext(names));
+                AfterSaveChanges(new EntityChangeContext(names, entryList));
             }
             catch (DbUpdateConcurrencyException e)
             {
@@ -205,88 +180,17 @@ namespace DNTFrameworkCore.EFCore.Context
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected virtual void ExecuteHooks<THook>(IEnumerable<EntityEntry> entryList) where THook : IHook
         {
-            base.OnModelCreating(builder);
-
-            builder.AddTracking();
-            builder.AddTenantEntity();
-            builder.AddSoftDeleteEntity();
-            builder.AddRowVersion();
-            builder.AddRowLevelSecurity();
-            
-            ApplyFilters(builder);
-        }
-
-        private void ApplyFilters(ModelBuilder modelBuilder)
-        {
-            var types = modelBuilder.Model.GetEntityTypes();
-            foreach (var entityType in types)
+            foreach (var entry in entryList)
             {
-                FilterEntityMethodInfo
-                    .MakeGenericMethod(entityType.ClrType)
-                    .Invoke(this, new object[] {modelBuilder, entityType});
+                var hooks = _hooks.OfType<THook>().Where(x => x.HookState == entry.State);
+                foreach (var hook in hooks)
+                {
+                    var metadata = new HookEntityMetadata(entry);
+                    hook.Hook(entry.Entity, metadata, this);
+                }
             }
-        }
-
-        private void FilterEntity<TEntity>(ModelBuilder modelBuilder, IMutableEntityType entityType)
-            where TEntity : class
-        {
-            if (entityType.BaseType != null || !ShouldFilterEntity<TEntity>()) return;
-
-            var filterExpression = BuildFilterExpression<TEntity>();
-            if (filterExpression == null) return;
-
-            if (entityType.IsQueryType)
-            {
-                modelBuilder.Query<TEntity>().HasQueryFilter(filterExpression);
-            }
-            else
-            {
-                modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
-            }
-        }
-
-        private static bool ShouldFilterEntity<TEntity>() where TEntity : class
-        {
-            return typeof(ISoftDeleteEntity).IsAssignableFrom(typeof(TEntity)) ||
-                   typeof(ITenantEntity).IsAssignableFrom(typeof(TEntity)) ||
-                   typeof(IHasRowLevelSecurity).IsAssignableFrom(typeof(TEntity));
-        }
-
-        private Expression<Func<TEntity, bool>> BuildFilterExpression<TEntity>()
-            where TEntity : class
-        {
-            Expression<Func<TEntity, bool>> expression = null;
-
-            if (typeof(ISoftDeleteEntity).IsAssignableFrom(typeof(TEntity)))
-            {
-                Expression<Func<TEntity, bool>> deleteFilterExpression = e =>
-                    !DeleteFilterEnabled || !EF.Property<bool>(e, EFCore.IsDeleted);
-
-                expression = deleteFilterExpression;
-            }
-
-            if (typeof(ITenantEntity).IsAssignableFrom(typeof(TEntity)))
-            {
-                Expression<Func<TEntity, bool>> tenantFilterExpression = e =>
-                    !TenantFilterEnabled || EF.Property<long>(e, EFCore.TenantId) == _tenantId;
-
-                expression = expression == null
-                    ? tenantFilterExpression
-                    : expression.Combine(tenantFilterExpression);
-            }
-
-            if (!typeof(IHasRowLevelSecurity).IsAssignableFrom(typeof(TEntity))) return expression;
-
-            Expression<Func<TEntity, bool>> rlsFilterExpression = e =>
-                !RowLevelSecurityEnabled || EF.Property<long>(e, EFCore.UserId) == _userId;
-
-            expression = expression == null
-                ? rlsFilterExpression
-                : expression.Combine(rlsFilterExpression);
-
-            return expression;
         }
     }
 }

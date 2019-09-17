@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.Security.Claims;
 using System.Security.Principal;
 using DNTFrameworkCore.Runtime;
@@ -8,70 +7,60 @@ namespace DNTFrameworkCore.Extensions
 {
     public static class IdentityExtensions
     {
-        public static T FindUserId<T>(this IIdentity identity) where T : IConvertible
+        public static T FindUserId<T>(this IIdentity identity) where T : IEquatable<T>
         {
-            var id = identity?.FindUserClaimValue(UserClaimTypes.UserId);
-
-            if (id != null) return (T) Convert.ChangeType(id, typeof(T), CultureInfo.InvariantCulture);
-
-            return default;
+            return identity.FindUserId().FromString<T>();
         }
 
-        public static long? FindUserId(this IIdentity identity)
+        public static T FindTenantId<T>(this IIdentity identity) where T : IEquatable<T>
         {
-            var id = identity?.FindUserClaimValue(UserClaimTypes.UserId);
-
-            if (id.IsEmpty()) return null;
-
-            if (!long.TryParse(id, out var userId)) return null;
-
-            return userId;
+            return identity.FindTenantId().FromString<T>();
         }
 
-        public static string FindBranchNumber(this IIdentity identity)
+        public static T FindBranchId<T>(this IIdentity identity) where T : IEquatable<T>
         {
-            return identity?.FindUserClaimValue(UserClaimTypes.BranchNumber);
+            return identity.FindBranchId().FromString<T>();
         }
 
-        public static long? FindBranchId(this IIdentity identity)
+        public static string FindUserId(this IIdentity identity)
         {
-            var branchClaim = identity?.FindUserClaimValue(UserClaimTypes.BranchId);
-
-            if (branchClaim.IsEmpty()) return default;
-
-            return !long.TryParse(branchClaim, out var branchId) ? default : branchId;
+            var value = identity.FindUserClaimValue(UserClaimTypes.UserId);
+            return value;
         }
 
-        public static long? FindTenantId(this IIdentity identity)
+        public static string FindBranchName(this IIdentity identity)
         {
-            var tenantClaim = identity?.FindUserClaimValue(UserClaimTypes.TenantId);
-
-            if (tenantClaim.IsEmpty()) return default;
-
-            return !long.TryParse(tenantClaim, out var tenantId) ? default : tenantId;
+            return identity.FindUserClaimValue(UserClaimTypes.BranchName);
         }
 
-        public static long? FindImpersonatorTenantId(this IIdentity identity)
+        public static string FindBranchId(this IIdentity identity)
         {
-            var tenantClaim = identity?.FindUserClaimValue(UserClaimTypes.ImpersonatorTenantId);
-
-            if (tenantClaim.IsEmpty()) return default;
-
-            return !long.TryParse(tenantClaim, out var tenantId) ? default : tenantId;
+            return identity?.FindUserClaimValue(UserClaimTypes.BranchId);
         }
 
-        public static long? FindImpersonatorUserId(this IIdentity identity)
+        public static string FindTenantId(this IIdentity identity)
         {
-            var tenantClaim = identity?.FindUserClaimValue(UserClaimTypes.ImpersonatorUserId);
-
-            if (tenantClaim.IsEmpty()) return default;
-
-            return !long.TryParse(tenantClaim, out var tenantId) ? default : tenantId;
+            return identity.FindUserClaimValue(UserClaimTypes.TenantId);
         }
         
+        public static string FindTenantName(this IIdentity identity)
+        {
+            return identity.FindUserClaimValue(UserClaimTypes.TenantName);
+        }
+
+        public static string FindImpersonatorTenantId(this IIdentity identity)
+        {
+            return identity.FindUserClaimValue(UserClaimTypes.ImpersonatorTenantId);
+        }
+
+        public static string FindImpersonatorUserId(this IIdentity identity)
+        {
+            return identity.FindUserClaimValue(UserClaimTypes.ImpersonatorUserId);
+        }
+
         public static string FindFirstValue(this ClaimsIdentity identity, string claimType)
         {
-            return identity?.FindFirst(claimType)?.Value;
+            return identity.FindFirst(claimType)?.Value;
         }
 
         public static string FindUserClaimValue(this IIdentity identity, string claimType)
@@ -81,13 +70,13 @@ namespace DNTFrameworkCore.Extensions
 
         public static string FindUserDisplayName(this IIdentity identity)
         {
-            var displayName = identity?.FindUserClaimValue(UserClaimTypes.UserName);
+            var displayName = identity.FindUserClaimValue(UserClaimTypes.UserName);
             return string.IsNullOrWhiteSpace(displayName) ? FindUserName(identity) : displayName;
         }
 
         public static string FindUserName(this IIdentity identity)
         {
-            return identity?.FindUserClaimValue(UserClaimTypes.UserName);
+            return identity.FindUserClaimValue(UserClaimTypes.UserName);
         }
     }
 }

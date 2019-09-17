@@ -11,7 +11,7 @@ namespace DNTFrameworkCore.TestWebApp.Domain.Identity
         public string Name { get; set; }
         public string NormalizedName { get; set; }
         public string Description { get; set; }
-        public byte[] RowVersion { get; set; }
+        public byte[] Version { get; set; }
 
         public ICollection<UserRole> Users { get; set; } = new HashSet<UserRole>();
         public ICollection<RolePermission> Permissions { get; set; } = new HashSet<RolePermission>();

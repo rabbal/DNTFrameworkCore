@@ -1,0 +1,46 @@
+using System.Linq;
+using System.Threading.Tasks;
+using DNTFrameworkCore.Tenancy;
+using Microsoft.Extensions.Options;
+
+namespace DNTFrameworkCore.TestTenancy.Tenancy
+{
+    /// <summary>
+    /// In memory store for testing
+    /// </summary>
+    public class InMemoryTenantStore : ITenantStore
+    {
+        private readonly IOptions<TenantOptions> _options;
+
+        public InMemoryTenantStore(IOptions<TenantOptions> options)
+        {
+            _options = options;
+        }
+
+        /// <summary>
+        /// Get a tenant for a given tenantName
+        /// </summary>
+        /// <param name="tenantName"></param>
+        /// <returns></returns>
+        public Task<Tenant> FindTenantAsync(string tenantName)
+        {
+            var option = _options.Value.Tenants.FirstOrDefault(t => t.Hostnames.Contains(tenantName));
+
+            if (option == null) return null;
+
+            var tenant = new Tenant
+            {
+                Id = option.Id,
+                Name = option.Name,
+                ConnectionString = "", //Todo
+                TimeZoneId = "", //Todo
+                ThemeName = "Material", //Todo
+                LanguageName = "fa-IR"
+            };
+
+            tenant.Properties["PropertyName"] = "PropertyValue";
+
+            return Task.FromResult(tenant);
+        }
+    }
+}

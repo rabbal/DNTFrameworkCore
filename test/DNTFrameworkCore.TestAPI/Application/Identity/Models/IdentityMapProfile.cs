@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using DNTFrameworkCore.TestAPI.Domain.Identity;
 using DNTFrameworkCore.TestAPI.Helpers;
-using DNTFrameworkCore.Cryptography;
-using System;
 
 namespace DNTFrameworkCore.TestAPI.Application.Identity.Models
 {

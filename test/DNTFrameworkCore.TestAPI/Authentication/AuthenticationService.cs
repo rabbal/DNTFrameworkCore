@@ -8,6 +8,7 @@ using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EFCore.Context;
+using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.TestAPI.Domain.Identity;
@@ -31,7 +32,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
         private readonly IAntiforgeryService _antiforgery;
         private readonly IOptionsSnapshot<TokenOptions> _options;
         private readonly IMessageLocalizer _localizer;
-        private readonly IUserPassword _password;
+        private readonly IUserPasswordHashAlgorithm _password;
         private readonly IUserSession _session;
         private readonly DbSet<User> _users;
         private readonly DbSet<Role> _roles;
@@ -42,7 +43,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
             IAntiforgeryService antiforgery,
             IOptionsSnapshot<TokenOptions> options,
             IMessageLocalizer localizer,
-            IUserPassword password,
+            IUserPasswordHashAlgorithm password,
             IUserSession session)
         {
             _token = token ?? throw new ArgumentNullException(nameof(token));
@@ -92,7 +93,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
         /// </summary>
         public async Task SignOutAsync()
         {
-            await _token.RevokeTokensAsync(_session.UserId);
+            await _token.RevokeTokensAsync(_session.UserId.FromString<long>());
 
             _antiforgery.RemoveTokenFromResponse();
         }

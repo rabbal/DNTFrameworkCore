@@ -30,8 +30,5 @@ namespace DNTFrameworkCore.EFCore.Context
         Task<IDbContextTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
         void CommitTransaction();
         void RollbackTransaction();
-        bool DeleteFilterEnabled { get; set; }
-        bool TenantFilterEnabled { get; set; }
-        bool RowLevelSecurityEnabled { get; set; }
     }
 }

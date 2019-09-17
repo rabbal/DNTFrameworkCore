@@ -10,7 +10,7 @@ namespace DNTFrameworkCore.TestWebApp.Domain.Invoices
 
         public string Number { get; set; }
         public string Description { get; set; }
-        public byte[] RowVersion { get; set; }
+        public byte[] Version { get; set; }
 
         public ICollection<InvoiceItem> Items { get; set; } = new HashSet<InvoiceItem>();
     }

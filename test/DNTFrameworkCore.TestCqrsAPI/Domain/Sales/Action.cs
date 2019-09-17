@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales

@@ -10,11 +10,11 @@ namespace DNTFrameworkCore.Logging
 {
     public abstract class BatchingLoggerProvider : ILoggerProvider
     {
-        private readonly IList<LogMessage> _currentBatch = new List<LogMessage>();
+        private readonly IList<LogMessage> _batch = new List<LogMessage>();
         private readonly TimeSpan _interval;
         private readonly int? _queueSize;
         private readonly int? _batchSize;
-        private BlockingCollection<LogMessage> _messageQueue;
+        private BlockingCollection<LogMessage> _queue;
         private Task _outputTask;
         private CancellationTokenSource _cancellationTokenSource;
         private readonly IServiceProvider _provider;
@@ -52,24 +52,24 @@ namespace DNTFrameworkCore.Logging
             {
                 var limit = _batchSize ?? int.MaxValue;
 
-                while (limit > 0 && _messageQueue.TryTake(out var message))
+                while (limit > 0 && _queue.TryTake(out var message))
                 {
-                    _currentBatch.Add(message);
+                    _batch.Add(message);
                     limit--;
                 }
 
-                if (_currentBatch.Count > 0)
+                if (_batch.Count > 0)
                 {
                     try
                     {
-                        await WriteMessagesAsync(_currentBatch, _cancellationTokenSource.Token);
+                        await WriteMessagesAsync(_batch, _cancellationTokenSource.Token);
                     }
                     catch
                     {
                         // ignored
                     }
 
-                    _currentBatch.Clear();
+                    _batch.Clear();
                 }
 
                 await IntervalAsync(_interval, _cancellationTokenSource.Token);
@@ -83,11 +83,11 @@ namespace DNTFrameworkCore.Logging
 
         internal void AddMessage(LogMessage message)
         {
-            if (!_messageQueue.IsAddingCompleted)
+            if (!_queue.IsAddingCompleted)
             {
                 try
                 {
-                    _messageQueue.Add(message, _cancellationTokenSource.Token);
+                    _queue.Add(message, _cancellationTokenSource.Token);
                 }
                 catch
                 {
@@ -98,7 +98,7 @@ namespace DNTFrameworkCore.Logging
 
         private void Start()
         {
-            _messageQueue = !_queueSize.HasValue
+            _queue = !_queueSize.HasValue
                 ? new BlockingCollection<LogMessage>(new ConcurrentQueue<LogMessage>())
                 : new BlockingCollection<LogMessage>(new ConcurrentQueue<LogMessage>(), _queueSize.Value);
 
@@ -112,7 +112,7 @@ namespace DNTFrameworkCore.Logging
         private void Stop()
         {
             _cancellationTokenSource.Cancel();
-            _messageQueue.CompleteAdding();
+            _queue.CompleteAdding();
 
             try
             {

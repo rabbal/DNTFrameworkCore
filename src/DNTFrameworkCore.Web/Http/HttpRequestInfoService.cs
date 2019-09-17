@@ -157,7 +157,7 @@ namespace DNTFrameworkCore.Web.Http
         /// </summary>
         public string GetIP(bool tryUseXForwardHeader = true)
         {
-            return _httpContextAccessor.HttpContext.GetIp(tryUseXForwardHeader);
+            return _httpContextAccessor.HttpContext.FindUserIP(tryUseXForwardHeader);
         }
 
         /// <summary>

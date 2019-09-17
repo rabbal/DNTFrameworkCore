@@ -1,12 +1,13 @@
 using System;
 using System.Text;
-using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.Runtime;
+using DNTFrameworkCore.Tenancy;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.Logging
 {
-        public class BatchingLogger : ILogger
+    public class BatchingLogger : ILogger
     {
         private readonly BatchingLoggerProvider _loggerProvider;
         private readonly string _loggerName;
@@ -60,8 +61,11 @@ namespace DNTFrameworkCore.Logging
             }
 
             var message = builder.ToString();
-            _provider.RunScoped<IUserSession>(session =>
+            using (var scope = _provider.CreateScope())
             {
+                var user = scope.ServiceProvider.GetService<IUserSession>();
+                var tenant = scope.ServiceProvider.GetService<ITenantSession>();
+
                 _loggerProvider.AddMessage(new LogMessage
                 {
                     Timestamp = timestamp,
@@ -69,13 +73,17 @@ namespace DNTFrameworkCore.Logging
                     LoggerName = _loggerName,
                     Level = logLevel,
                     EventId = eventId,
-                    UserBrowserName = session.UserBrowserName,
-                    UserIP = session.UserIP,
-                    UserId = session.UserId,
-                    UserName = session.UserName,
-                    UserDisplayName = session.UserDisplayName
+                    UserBrowserName = user?.UserBrowserName,
+                    UserIP = user?.UserIP,
+                    UserId = user?.UserId,
+                    UserName = user?.UserName,
+                    UserDisplayName = user?.UserDisplayName,
+                    TenantId = tenant?.TenantId,
+                    TenantName = tenant?.TenantName,
+                    ImpersonatorUserId = user?.ImpersonatorUserId,
+                    ImpersonatorTenantId = tenant?.ImpersonatorTenantId
                 });
-            });
+            }
         }
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception,

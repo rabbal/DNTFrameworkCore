@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.EFCore.Context
 {
-    //Under Development
+    //Under development for DDD purpose just as internal repositories
     public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
         where TKey : IEquatable<TKey>
         where TEntity : AggregateRoot<TKey>

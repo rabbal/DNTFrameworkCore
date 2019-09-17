@@ -1,6 +1,4 @@
-using System.Security.Claims;
 using DNTFrameworkCore.Domain;
-using DNTFrameworkCore.Runtime;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Identity
 {

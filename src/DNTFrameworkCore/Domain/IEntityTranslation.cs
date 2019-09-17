@@ -4,13 +4,13 @@ namespace DNTFrameworkCore.Domain
 {
     public interface IEntityTranslation
     {
-        string Language { get; set; }
+        string Language { get; }
     }
 
-    public interface IEntityTranslation<TEntity, TKey> : IEntityTranslation
+    public interface IEntityTranslation<out TEntity, out TKey> : IEntityTranslation
         where TKey : IEquatable<TKey>
     {
-        TEntity Entity { get; set; }
-        TKey EntityId { get; set; }
+        TEntity Entity { get; }
+        TKey EntityId { get; }
     }
 }

@@ -10,7 +10,7 @@ namespace DNTFrameworkCore.Application.Models
 
     public abstract class MasterModel<TKey> : ReadModel<TKey>, IHasRowVersion where TKey : IEquatable<TKey>
     {
-        public byte[] RowVersion { get; set; }
+        public byte[] Version { get; set; }
         public virtual bool IsNew() => EqualityComparer<TKey>.Default.Equals(Id, default);
     }
 }

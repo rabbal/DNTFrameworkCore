@@ -9,6 +9,6 @@ namespace DNTFrameworkCore.TestWebApp.Domain.Blogging
         public string Title { get; set; }
         public string NormalizedTitle { get; set; }
         public string Url { get; set; }
-        public byte[] RowVersion { get; set; }
+        public byte[] Version { get; set; }
     }
 }

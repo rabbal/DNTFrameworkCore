@@ -6,8 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace DNTFrameworkCore.Web.Http
@@ -20,7 +18,7 @@ namespace DNTFrameworkCore.Web.Http
         /// <summary>
         /// Gets the current HttpContext.Request's UserAgent.
         /// </summary>
-        public static string GetUserAgent(this HttpContext httpContext)
+        public static string FindUserAgent(this HttpContext httpContext)
         {
             return httpContext.GetHeaderValue("User-Agent");
         }
@@ -50,7 +48,7 @@ namespace DNTFrameworkCore.Web.Http
         /// <summary>
         /// Gets the current HttpContext.Request's IP.
         /// </summary>
-        public static string GetIp(this HttpContext httpContext, bool tryUseXForwardHeader = true)
+        public static string FindUserIP(this HttpContext httpContext, bool tryUseXForwardHeader = true)
         {
             var ip = string.Empty;
 
@@ -93,7 +91,7 @@ namespace DNTFrameworkCore.Web.Http
             return string.Empty;
         }
 
-        private static List<string> SplitCsv(string csvList, bool nullOrWhitespaceInputReturnsNull = false)
+        private static IEnumerable<string> SplitCsv(string csvList, bool nullOrWhitespaceInputReturnsNull = false)
         {
             if (string.IsNullOrWhiteSpace(csvList))
             {

@@ -17,7 +17,7 @@
 
 <form asp-action="@(Model.IsNew() ? "Create" : "Edit")" asp-controller="Invoices" modal-form="invoice-modal">
   <input type="hidden" name="save-continue" value="true" />
-  <input asp-for="RowVersion" type="hidden"/>
+  <input asp-for="Version" type="hidden"/>
   <input asp-for="Id" type="hidden"/>
     <div class="form-group row">
         <div class="col col-md-6">                      

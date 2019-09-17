@@ -33,7 +33,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Catalog
             return EntitySet.AsNoTracking().Select(p => new ProductModel
             {
                 Id = p.Id,
-                RowVersion = p.RowVersion,
+                Version = p.Version,
                 Title = p.Title,
                 Price = p.Price,
                 Number = p.Number

@@ -36,7 +36,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Blogging
             return EntitySet.AsNoTracking()
                 .Select(b => new BlogModel
                 {
-                    Id = b.Id, RowVersion = b.RowVersion, Url = b.Url, Title = b.Title
+                    Id = b.Id, Version = b.Version, Url = b.Url, Title = b.Title
                 });
         }
 

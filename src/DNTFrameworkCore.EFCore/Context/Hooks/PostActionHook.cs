@@ -11,10 +11,10 @@ namespace DNTFrameworkCore.EFCore.Context.Hooks
         /// <summary>
         /// Implements the interface.  This causes the hook to only run for objects that are assignable to TEntity.
         /// </summary>
-        public void Hook(object entity, HookEntityMetadata metadata)
+        public void Hook(object entity, HookEntityMetadata metadata, IUnitOfWork context)
         {
             if (entity is TEntity typedEntity)
-                Hook(typedEntity, metadata);
+                Hook(typedEntity, metadata, context);
         }
 
         /// <summary>
@@ -26,6 +26,6 @@ namespace DNTFrameworkCore.EFCore.Context.Hooks
         /// The logic to perform per entity after the registered action gets performed.
         /// This gets run once per entity that has been changed.
         /// </summary>
-        protected abstract void Hook(TEntity entity, HookEntityMetadata metadata);
+        protected abstract void Hook(TEntity entity, HookEntityMetadata metadata, IUnitOfWork context);
     }
 }

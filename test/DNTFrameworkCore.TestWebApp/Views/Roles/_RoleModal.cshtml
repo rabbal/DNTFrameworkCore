@@ -8,7 +8,7 @@
 <form asp-action="@(Model.IsNew() ? "Create" : "Edit")" asp-controller="Roles" asp-modal-form="RoleForm">
     <div class="modal-body">
         <input type="hidden" name="save-continue" value="true"/>
-        <input asp-for="RowVersion" type="hidden"/>
+        <input asp-for="Version" type="hidden"/>
         <input asp-for="Id" type="hidden"/>
         <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">

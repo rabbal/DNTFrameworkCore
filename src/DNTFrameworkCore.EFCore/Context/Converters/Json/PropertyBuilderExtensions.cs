@@ -3,9 +3,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DNTFrameworkCore.EFCore.Context.Converters.Json
 {
-    /// <summary>
-    /// Extensions for <see cref="PropertyBuilder"/>.
-    /// </summary>
     public static class PropertyBuilderExtensions {
 
         /// <summary>

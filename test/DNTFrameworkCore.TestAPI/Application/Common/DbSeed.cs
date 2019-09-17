@@ -17,13 +17,13 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
     {
         private readonly IUnitOfWork _uow;
         private readonly IOptionsSnapshot<ProjectSettings> _settings;
-        private readonly IUserPassword _password;
+        private readonly IUserPasswordHashAlgorithm _password;
         private readonly IPermissionService _permissionManager;
         private readonly ILogger<DbSeed> _logger;
 
         public DbSeed(IUnitOfWork uow,
             IOptionsSnapshot<ProjectSettings> settings,
-            IUserPassword password,
+            IUserPasswordHashAlgorithm password,
             IPermissionService permissionManager,
             ILogger<DbSeed> logger)
         {

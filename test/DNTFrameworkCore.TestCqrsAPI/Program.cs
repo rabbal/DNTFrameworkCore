@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using DNTFrameworkCore.TestCqrsAPI.Domain.Orders;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 namespace DNTFrameworkCore.TestCqrsAPI

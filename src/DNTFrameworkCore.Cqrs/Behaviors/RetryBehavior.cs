@@ -5,7 +5,7 @@ using MediatR;
 
 namespace DNTFrameworkCore.Cqrs.Behaviors
 {
-    class RetryBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class RetryBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : ICommand
     {
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)

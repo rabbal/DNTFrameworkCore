@@ -10,6 +10,6 @@ namespace DNTFrameworkCore.TestWebApp.Domain.Catalog
         public string Title { get; set; }
         public string Number { get; set; }
         public decimal Price { get; set; }
-        public byte[] RowVersion { get; set; }
+        public byte[] Version { get; set; }
     }
 }

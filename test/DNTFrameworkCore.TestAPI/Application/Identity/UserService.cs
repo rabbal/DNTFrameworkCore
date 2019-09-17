@@ -23,12 +23,12 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
     public class UserService : CrudService<User, long, UserReadModel, UserModel>, IUserService
     {
         private readonly IMapper _mapper;
-        private readonly IUserPassword _password;
+        private readonly IUserPasswordHashAlgorithm _password;
 
         public UserService(
             IUnitOfWork uow,
             IEventBus bus,
-            IUserPassword password,
+            IUserPasswordHashAlgorithm password,
             IMapper mapper) : base(uow, bus)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));

@@ -30,8 +30,8 @@ namespace DNTFrameworkCore.TestAPI
             services.AddDNTFrameworkCore()
                 .AddModelValidation()
                 .AddFluentModelValidation()
-                .AddDNTCommonWeb()
-                .AddDNTDataProtection();
+                .AddWebApp()
+                .AddProtection();
 
             services.AddInfrastructure(Configuration);
             services.AddApplication(Configuration);

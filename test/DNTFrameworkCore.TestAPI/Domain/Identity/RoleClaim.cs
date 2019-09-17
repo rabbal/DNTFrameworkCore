@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Identity

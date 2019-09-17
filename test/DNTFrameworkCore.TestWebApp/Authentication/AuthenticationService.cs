@@ -33,7 +33,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
         private readonly IConfiguration _configuration;
         private readonly IUserSession _session;
         private readonly ILogger<AuthenticationService> _logger;
-        private readonly IUserPassword _password;
+        private readonly IUserPasswordHashAlgorithm _password;
         private readonly DbSet<User> _users;
         private readonly DbSet<Role> _roles;
         private readonly IUnitOfWork _uow;
@@ -45,7 +45,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
             ILogger<AuthenticationService> logger,
             IConfiguration configuration,
             IUnitOfWork uow,
-            IUserPassword password)
+            IUserPasswordHashAlgorithm password)
         {
             _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
@@ -78,14 +78,14 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
             var loginCookieExpirationDays = _configuration.GetValue<int>("LoginCookieExpirationDays", defaultValue: 30);
 
             await _httpContext.HttpContext.SignInAsync(
-               CookieAuthenticationDefaults.AuthenticationScheme,
-               claims,
-               new AuthenticationProperties
-               {
-                   IsPersistent = persistent, // "Remember Me"
-                   IssuedUtc = DateTimeOffset.UtcNow,
-                   ExpiresUtc = DateTimeOffset.UtcNow.AddDays(loginCookieExpirationDays)
-               });
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                claims,
+                new AuthenticationProperties
+                {
+                    IsPersistent = persistent, // "Remember Me"
+                    IssuedUtc = DateTimeOffset.UtcNow,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(loginCookieExpirationDays)
+                });
 
             // await UpdateLastActivityDateAsync(user);
 
@@ -100,11 +100,12 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
         /// </summary>
         public async Task SignOutAsync()
         {
-            if (_session.IsAuthenticated && _session.UserId.HasValue)
+            if (_session.IsAuthenticated)
             {
                 // await UpdateSerialNumberAsync(_session.UserId.Value);
                 _logger.LogInformation(LoggingEvents.LOGOUT, $"{_session.UserName} logged out.");
             }
+
             await _httpContext.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
 
@@ -171,9 +172,9 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
         private async Task<IList<Role>> FindUserRolesIncludeClaimsAsync(long userId)
         {
             var query = from role in _roles
-                        from userRoles in role.Users
-                        where userRoles.UserId == userId
-                        select role;
+                from userRoles in role.Users
+                where userRoles.UserId == userId
+                select role;
 
             return await query
                 .AsNoTracking()

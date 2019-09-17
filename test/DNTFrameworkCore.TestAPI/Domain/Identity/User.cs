@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Identity
@@ -20,7 +19,7 @@ namespace DNTFrameworkCore.TestAPI.Domain.Identity
         public string PasswordHash { get; set; }
         public bool IsActive { get; set; }
         public DateTimeOffset? LastLoggedInDateTime { get; set; }
-        public byte[] RowVersion { get; set; }
+        public byte[] Version { get; set; }
 
         /// <summary>
         /// A random value that must change whenever a users credentials change (password,roles or permissions)

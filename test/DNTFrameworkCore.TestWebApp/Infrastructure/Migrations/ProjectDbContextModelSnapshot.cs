@@ -15,7 +15,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -69,6 +69,12 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 
                     b.Property<int>("EventId");
 
+                    b.Property<string>("ImpersonatorTenantId")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("ImpersonatorUserId")
+                        .HasMaxLength(256);
+
                     b.Property<string>("Level")
                         .IsRequired()
                         .HasMaxLength(50);
@@ -79,6 +85,12 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 
                     b.Property<string>("Message")
                         .IsRequired();
+
+                    b.Property<string>("TenantId")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("TenantName")
+                        .HasMaxLength(256);
 
                     b.Property<DateTimeOffset>("Timestamp");
 
@@ -91,7 +103,8 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.Property<string>("UserIP")
                         .HasMaxLength(256);
 
-                    b.Property<long?>("UserId");
+                    b.Property<string>("UserId")
+                        .HasMaxLength(256);
 
                     b.Property<string>("UserName")
                         .HasMaxLength(50);
@@ -159,10 +172,6 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(50);
@@ -170,6 +179,10 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.Property<string>("Url")
                         .IsRequired()
                         .HasMaxLength(50);
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.HasKey("Id");
 
@@ -210,13 +223,13 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 
                     b.Property<decimal>("Price");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(50);
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.HasKey("Id");
 
@@ -296,7 +309,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<byte[]>("Version")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
@@ -387,10 +400,6 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(256);
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
                     b.Property<string>("SerialNumber")
                         .IsRequired()
                         .HasMaxLength(128);
@@ -398,6 +407,10 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(256);
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.HasKey("Id");
 
@@ -473,6 +486,71 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.ToTable("UserRole");
                 });
 
+            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Invoices.Invoice", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("CreationDateTime");
+
+                    b.Property<string>("CreatorBrowserName")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("CreatorIp")
+                        .HasMaxLength(256);
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1024);
+
+                    b.Property<DateTimeOffset?>("ModificationDateTime");
+
+                    b.Property<string>("ModifierBrowserName")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("ModifierIp")
+                        .HasMaxLength(256);
+
+                    b.Property<long?>("ModifierUserId");
+
+                    b.Property<string>("Number");
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Invoice");
+                });
+
+            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Invoices.InvoiceItem", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("InvoiceId");
+
+                    b.Property<long>("ProductId");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<decimal>("UnitDiscount");
+
+                    b.Property<decimal>("UnitPrice");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("InvoiceItem");
+                });
+
             modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Tasks.Task", b =>
                 {
                     b.Property<int>("Id")
@@ -488,15 +566,15 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 
                     b.Property<string>("Number");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
                     b.Property<byte>("State");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(256);
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.HasKey("Id");
 
@@ -559,6 +637,19 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.HasOne("DNTFrameworkCore.TestWebApp.Domain.Identity.User", "User")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Invoices.InvoiceItem", b =>
+                {
+                    b.HasOne("DNTFrameworkCore.TestWebApp.Domain.Invoices.Invoice", "Invoice")
+                        .WithMany("Items")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DNTFrameworkCore.TestWebApp.Domain.Catalog.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

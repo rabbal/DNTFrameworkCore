@@ -1,6 +1,9 @@
 using System;
 using CacheManager.Core;
 using DNTFrameworkCore.EFCore;
+using DNTFrameworkCore.EFCore.SqlServer;
+using DNTFrameworkCore.Numbering;
+using DNTFrameworkCore.TestAPI.Domain.Tasks;
 using DNTFrameworkCore.TestAPI.Infrastructure.Context;
 using EFSecondLevelCache.Core;
 using Microsoft.EntityFrameworkCore;
@@ -22,11 +25,23 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure
                     .AddFilter(level => true)); // log everything
             return serviceCollection.BuildServiceProvider().GetRequiredService<ILoggerFactory>();
         }
-        
-        public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration
-        )
+
+        public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddEFCore<ProjectDbContext>();
+            services.AddEFCore<ProjectDbContext>()
+                .WithTrackingHook<long>()
+                //.WithTenancyHook<long>() need to AddTenancy
+                .WithSoftDeleteHook()
+                .WithRowLevelSecurityHook<long>()
+                .WithNumberingHook(options =>
+                {
+                    options.NumberedEntityMap[typeof(Task)] = new NumberedEntityOption
+                    {
+                        Prefix = "Task",
+                        FieldNames = new[] {nameof(Task.BranchId)}
+                    };
+                });
+
             services.AddDbContext<ProjectDbContext>(builder =>
             {
                 builder.EnableSensitiveDataLogging();
@@ -44,9 +59,9 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure
                         warnings.Throw(RelationalEventId.QueryClientEvaluationWarning);
                         warnings.Throw(CoreEventId.IncludeIgnoredWarning);
                     });
-                    //.UseLoggerFactory(BuildLoggerFactory());
+                //.UseLoggerFactory(BuildLoggerFactory());
             });
-            
+
             services.AddEFSecondLevelCache();
 
             // Add an in-memory cache service provider

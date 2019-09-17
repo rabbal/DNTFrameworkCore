@@ -1,6 +1,9 @@
 using System;
 using CacheManager.Core;
 using DNTFrameworkCore.EFCore;
+using DNTFrameworkCore.EFCore.SqlServer;
+using DNTFrameworkCore.Numbering;
+using DNTFrameworkCore.TestWebApp.Domain.Tasks;
 using DNTFrameworkCore.TestWebApp.Infrastructure.Context;
 using EFSecondLevelCache.Core;
 using Microsoft.EntityFrameworkCore;
@@ -22,11 +25,22 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure
                     .AddFilter(level => true)); // log everything
             return serviceCollection.BuildServiceProvider().GetRequiredService<ILoggerFactory>();
         }
-        
-        public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration
-        )
+
+        public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddEFCore<ProjectDbContext>();
+            services.AddEFCore<ProjectDbContext>()
+                .WithTrackingHook<long>()
+                .WithTenancyHook<long>()
+                .WithSoftDeleteHook()
+                .WithRowLevelSecurityHook<long>()
+                .WithNumberingHook(options =>
+                {
+                    options.NumberedEntityMap[typeof(Task)] = new NumberedEntityOption
+                    {
+                        Prefix = "Task"
+                    };
+                });
+
             services.AddDbContext<ProjectDbContext>(builder =>
             {
                 builder.EnableSensitiveDataLogging();
@@ -44,9 +58,9 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure
                         warnings.Throw(RelationalEventId.QueryClientEvaluationWarning);
                         warnings.Throw(CoreEventId.IncludeIgnoredWarning);
                     });
-                    //.UseLoggerFactory(BuildLoggerFactory());
+                //.UseLoggerFactory(BuildLoggerFactory());
             });
-            
+
             services.AddEFSecondLevelCache();
 
             // Add an in-memory cache service provider

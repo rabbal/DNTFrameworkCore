@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Web", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Web.EFCore", "src\DNTFrameworkCore.Web.EFCore\DNTFrameworkCore.Web.EFCore.csproj", "{FBB23304-5843-476F-9C78-94E804FE6DD7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Web.MultiTenancy", "src\DNTFrameworkCore.Web.MultiTenancy\DNTFrameworkCore.Web.MultiTenancy.csproj", "{3EC0C829-17C9-4D29-B89A-ED33DB8E7023}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Web.Tenancy", "src\DNTFrameworkCore.Web.Tenancy\DNTFrameworkCore.Web.Tenancy.csproj", "{3EC0C829-17C9-4D29-B89A-ED33DB8E7023}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{CE6239C1-7484-493B-B672-CEDA073ADF1E}"
 EndProject
@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.FluentVali
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Web.Tests", "test\DNTFrameworkCore.Web.Tests\DNTFrameworkCore.Web.Tests.csproj", "{D358349B-A911-4CB5-8680-39AD650C49C5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Web.MultiTenancy.Tests", "test\DNTFrameworkCore.Web.MultiTenancy.Tests\DNTFrameworkCore.Web.MultiTenancy.Tests.csproj", "{30379D4A-9A47-4EA3-964F-B9EF0DC75E98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Web.Tenancy.Tests", "test\DNTFrameworkCore.Web.Tenancy.Tests\DNTFrameworkCore.Web.Tenancy.Tests.csproj", "{30379D4A-9A47-4EA3-964F-B9EF0DC75E98}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTFrameworkCore.Web.EFCore.Tests", "test\DNTFrameworkCore.Web.EFCore.Tests\DNTFrameworkCore.Web.EFCore.Tests.csproj", "{EFF425CD-5E05-41A6-8CB6-057B2D140046}"
 EndProject
@@ -48,6 +48,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.NHibernate", "src\DNTFrameworkCore.NHibernate\DNTFrameworkCore.NHibernate.csproj", "{794190E4-3F3B-44C2-9902-5B5948650C4F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Licensing.Tests", "test\DNTFrameworkCore.Licensing.Tests\DNTFrameworkCore.Licensing.Tests.csproj", "{3B25B599-3999-4CCA-B225-97EAB6E735BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.TestTenancy", "test\DNTFrameworkCore.TestTenancy\DNTFrameworkCore.TestTenancy.csproj", "{64EDF591-AC44-4604-A171-33862374DF70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -311,6 +313,18 @@ Global
 		{3B25B599-3999-4CCA-B225-97EAB6E735BC}.Release|x64.Build.0 = Release|Any CPU
 		{3B25B599-3999-4CCA-B225-97EAB6E735BC}.Release|x86.ActiveCfg = Release|Any CPU
 		{3B25B599-3999-4CCA-B225-97EAB6E735BC}.Release|x86.Build.0 = Release|Any CPU
+		{64EDF591-AC44-4604-A171-33862374DF70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64EDF591-AC44-4604-A171-33862374DF70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64EDF591-AC44-4604-A171-33862374DF70}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{64EDF591-AC44-4604-A171-33862374DF70}.Debug|x64.Build.0 = Debug|Any CPU
+		{64EDF591-AC44-4604-A171-33862374DF70}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{64EDF591-AC44-4604-A171-33862374DF70}.Debug|x86.Build.0 = Debug|Any CPU
+		{64EDF591-AC44-4604-A171-33862374DF70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64EDF591-AC44-4604-A171-33862374DF70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64EDF591-AC44-4604-A171-33862374DF70}.Release|x64.ActiveCfg = Release|Any CPU
+		{64EDF591-AC44-4604-A171-33862374DF70}.Release|x64.Build.0 = Release|Any CPU
+		{64EDF591-AC44-4604-A171-33862374DF70}.Release|x86.ActiveCfg = Release|Any CPU
+		{64EDF591-AC44-4604-A171-33862374DF70}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -337,6 +351,7 @@ Global
 		{3AE87F05-402D-4E80-9D9A-C320C661C65A} = {AD7C17EC-ABF0-4488-BB43-A27E0A99BCEE}
 		{794190E4-3F3B-44C2-9902-5B5948650C4F} = {AD7C17EC-ABF0-4488-BB43-A27E0A99BCEE}
 		{3B25B599-3999-4CCA-B225-97EAB6E735BC} = {CE6239C1-7484-493B-B672-CEDA073ADF1E}
+		{64EDF591-AC44-4604-A171-33862374DF70} = {CE6239C1-7484-493B-B672-CEDA073ADF1E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {68AE140E-AF3A-4DAA-9F5A-7F427E4D6E44}

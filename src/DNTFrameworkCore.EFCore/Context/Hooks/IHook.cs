@@ -20,6 +20,7 @@ namespace DNTFrameworkCore.EFCore.Context.Hooks
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <param name="metadata">The metadata.</param>
-        void Hook(object entity, HookEntityMetadata metadata);
+        /// <param name="uow">The current context</param>
+        void Hook(object entity, HookEntityMetadata metadata, IUnitOfWork uow);
     }
 }

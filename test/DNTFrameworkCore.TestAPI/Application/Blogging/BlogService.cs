@@ -41,7 +41,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Blogging
                 .Select(b => new BlogModel
                 {
                     Id = b.Id,
-                    RowVersion = b.RowVersion,
+                    Version = b.Version,
                     Url = b.Url,
                     Title = b.Title
                 });

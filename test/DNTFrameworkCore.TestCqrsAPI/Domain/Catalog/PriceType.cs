@@ -20,7 +20,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
             if (policy == null) throw new ArgumentNullException(nameof(policy));
 
             var priceType = new PriceType(title);
-            if (!policy.IsUnique(priceType)) return Fail<PriceType>("product title must be unique");
+            if (!policy.IsUnique(priceType)) return Fail<PriceType>("PriceType Title Should Be Unique");
                 
             priceType.AddDomainEvent(new PriceTypeCreated(priceType));
             

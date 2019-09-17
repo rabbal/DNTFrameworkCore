@@ -1,4 +1,3 @@
-using System;
 using DNTFrameworkCore.Timing;
 using DateTime = System.DateTime;
 
@@ -13,6 +12,6 @@ namespace DNTFrameworkCore.Domain
     public abstract class DomainEvent : IDomainEvent
     {
         public virtual int Version { get; } = default;
-        public virtual DateTime DateTime => SystemTime.Now.DateTime;
+        public virtual DateTime DateTime => SystemTime.UtcNow.DateTime;
     }
 }

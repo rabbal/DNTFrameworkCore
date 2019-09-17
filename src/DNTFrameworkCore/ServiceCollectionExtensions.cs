@@ -4,8 +4,6 @@ using DNTFrameworkCore.Caching;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.Eventing;
-using DNTFrameworkCore.MultiTenancy;
-using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.Threading.BackgroundTasks;
 using DNTFrameworkCore.Timing;
 using DNTFrameworkCore.Validation;
@@ -22,10 +20,7 @@ namespace DNTFrameworkCore
             if (services == null) throw new ArgumentNullException(nameof(services));
 
             services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
-            services.AddScoped<ITenant>(provider => new TenantWrapper(null));
-            services.AddTransient<PermissionDependencyContext>();
             services.AddScoped<IEventBus, EventBus>();
-            services.AddScoped<IUserSession>(provider => NullUserSession.Instance);
             services.AddSingleton<IRandomNumberProvider, RandomNumberProvider>();
             services.AddSingleton<ISecurityService, SecurityService>();
             services.AddSingleton<IPermissionService, PermissionService>();

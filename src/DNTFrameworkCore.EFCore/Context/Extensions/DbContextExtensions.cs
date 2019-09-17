@@ -1,28 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using DNTFrameworkCore.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace DNTFrameworkCore.EFCore.Context.Extensions
 {
     public static class DbContextExtensions
     {
         /// <summary>
-        ///     Using the ChangeTracker to find names of the changed entities.
+        /// Using the ChangeTracker to find names of the changed entities.
         /// </summary>
         public static IEnumerable<string> FindChangedEntityNames(this DbContext dbContext)
         {
+            return dbContext.FindChangedEntries().FindEntityNames();
+        }
+
+        /// <summary>
+        /// Using the ChangeTracker to find names of the changed entities.
+        /// </summary>
+        public static IEnumerable<string> FindEntityNames(this IEnumerable<EntityEntry> entryList)
+        {
             var typesList = new List<Type>();
-            foreach (var type in dbContext.FindChangedEntityTypes())
+            foreach (var type in entryList.Select(entry => entry.Entity.GetType()))
             {
                 typesList.Add(type);
                 typesList.AddRange(type.FindBaseTypes().Where(t => t != typeof(object)).ToList());
@@ -37,7 +40,7 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
         }
 
         /// <summary>
-        ///     Using the ChangeTracker to find types of the changed entities.
+        /// Using the ChangeTracker to find types of the changed entities.
         /// </summary>
         public static IEnumerable<Type> FindChangedEntityTypes(this DbContext dbContext)
         {
@@ -46,7 +49,7 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
         }
 
         /// <summary>
-        ///     Find the base types of the given type, recursively.
+        /// Find the base types of the given type, recursively.
         /// </summary>
         private static IEnumerable<Type> FindBaseTypes(this Type type)
         {

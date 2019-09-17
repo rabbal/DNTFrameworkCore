@@ -15,7 +15,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -69,6 +69,12 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
 
                     b.Property<int>("EventId");
 
+                    b.Property<string>("ImpersonatorTenantId")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("ImpersonatorUserId")
+                        .HasMaxLength(256);
+
                     b.Property<string>("Level")
                         .IsRequired()
                         .HasMaxLength(50);
@@ -79,6 +85,12 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
 
                     b.Property<string>("Message")
                         .IsRequired();
+
+                    b.Property<string>("TenantId")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("TenantName")
+                        .HasMaxLength(256);
 
                     b.Property<DateTimeOffset>("Timestamp");
 
@@ -91,7 +103,8 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                     b.Property<string>("UserIP")
                         .HasMaxLength(256);
 
-                    b.Property<long?>("UserId");
+                    b.Property<string>("UserId")
+                        .HasMaxLength(256);
 
                     b.Property<string>("UserName")
                         .HasMaxLength(50);
@@ -159,10 +172,6 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(50);
@@ -170,6 +179,10 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                     b.Property<string>("Url")
                         .IsRequired()
                         .HasMaxLength(50);
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.HasKey("Id");
 
@@ -253,7 +266,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<byte[]>("Version")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
@@ -344,10 +357,6 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(256);
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
                     b.Property<string>("SerialNumber")
                         .IsRequired()
                         .HasMaxLength(128);
@@ -355,6 +364,10 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(256);
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.HasKey("Id");
 
@@ -447,7 +460,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("TokenHash")
-                        .HasName("IX_UserToken_AccessTokenHash");
+                        .HasName("IX_UserToken_TokenHash");
 
                     b.HasIndex("UserId");
 
@@ -493,15 +506,15 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
                     b.Property<byte>("State");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(256);
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.HasKey("Id");
 

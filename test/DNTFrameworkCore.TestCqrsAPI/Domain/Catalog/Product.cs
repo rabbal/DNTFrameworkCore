@@ -33,7 +33,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
             if (policy == null) throw new ArgumentNullException(nameof(policy));
 
             var product = new Product(title);
-            if (!policy.IsUnique(product)) return Fail<Product>("product title must be unique");
+            if (!policy.IsUnique(product)) return Fail<Product>("Product Title Should Be Unique");
 
             product.AddDomainEvent(new ProductCreated(product));
 
@@ -46,7 +46,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
             if (price == null) throw new ArgumentNullException(nameof(price));
 
             if (_prices.Exists(p => p.PriceType == priceType))
-                return Fail<ProductPrice>($"one price with priceType:{priceType.Title} already exists");
+                return Fail<ProductPrice>($"A Price With PriceType:{priceType.Title} Already Exists");
 
             var productPrice = new ProductPrice(this, priceType, price);
             _prices.Add(productPrice);
@@ -58,7 +58,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
         {
             if (price == DefaultPrice) return Ok();
 
-            if (!_prices.Contains(price)) return Fail("price not found");
+            if (!_prices.Contains(price)) return Fail("Price Not Found");
 
             DefaultPrice.UnmarkIsDefault();
             price.MarkIsDefault();
@@ -69,9 +69,9 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
         public Result RemovePrice(ProductPrice price)
         {
             if (!_prices.Contains(price))
-                return Fail($"price with priceType: {price.PriceType.Title} not found");
+                return Fail($"Price With PriceType: {price.PriceType.Title} Not Found");
 
-            if (price == DefaultPrice) return Fail("can not remove default price");
+            if (price == DefaultPrice) return Fail("Can Not Remove Default Price");
 
             _prices.Remove(price);
 

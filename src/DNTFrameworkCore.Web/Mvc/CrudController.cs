@@ -5,7 +5,6 @@ using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Mapping;
-using DNTFrameworkCore.Web.Authorization;
 using DNTFrameworkCore.Web.Extensions;
 using DNTFrameworkCore.Web.Filters;
 using Microsoft.AspNetCore.Authorization;
@@ -170,7 +169,7 @@ namespace DNTFrameworkCore.Web.Mvc
         [HttpGet]
         public async Task<IActionResult> Index(TFilteredPagedQueryModel query)
         {
-            if (!await CheckPermissionAsync(ViewPermissionName)) return Forbid();
+            if (!await HasPermission(ViewPermissionName)) return Forbid();
 
             query = query ?? Factory<TFilteredPagedQueryModel>.CreateInstance();
             var model = await ReadPagedListAsync(query);
@@ -184,7 +183,7 @@ namespace DNTFrameworkCore.Web.Mvc
         [NoResponseCache]
         public async Task<IActionResult> ReadPagedList(TFilteredPagedQueryModel query)
         {
-            if (!await CheckPermissionAsync(ViewPermissionName)) return Forbid();
+            if (!await HasPermission(ViewPermissionName)) return Forbid();
 
             query = query ?? Factory<TFilteredPagedQueryModel>.CreateInstance();
             var result = await ReadPagedListAsync(query);
@@ -198,7 +197,7 @@ namespace DNTFrameworkCore.Web.Mvc
         [NoResponseCache]
         public async Task<IActionResult> List(TFilteredPagedQueryModel query)
         {
-            if (!await CheckPermissionAsync(ViewPermissionName)) return Forbid();
+            if (!await HasPermission(ViewPermissionName)) return Forbid();
 
             query = query ?? Factory<TFilteredPagedQueryModel>.CreateInstance();
             var result = await ReadPagedListAsync(query);
@@ -229,7 +228,7 @@ namespace DNTFrameworkCore.Web.Mvc
         [AjaxOnly]
         public async Task<IActionResult> Create()
         {
-            if (!await CheckPermissionAsync(CreatePermissionName)) return Forbid();
+            if (!await HasPermission(CreatePermissionName)) return Forbid();
 
             var model = Factory<TModel>.CreateInstance();
             return RenderView(model);
@@ -241,7 +240,7 @@ namespace DNTFrameworkCore.Web.Mvc
         [ParameterBasedOnFormName(ContinueEditingFormName, ContinueEditingParameterName)]
         public async Task<IActionResult> Create(TModel model, bool continueEditing)
         {
-            if (!await CheckPermissionAsync(CreatePermissionName)) return Forbid();
+            if (!await HasPermission(CreatePermissionName)) return Forbid();
 
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -261,7 +260,7 @@ namespace DNTFrameworkCore.Web.Mvc
         [AjaxOnly]
         public async Task<IActionResult> Edit([BindRequired] TKey id)
         {
-            if (!await CheckPermissionAsync(EditPermissionName)) return Forbid();
+            if (!await HasPermission(EditPermissionName)) return Forbid();
 
             var model = await FindAsync(id);
 
@@ -274,7 +273,7 @@ namespace DNTFrameworkCore.Web.Mvc
         [ParameterBasedOnFormName(ContinueEditingFormName, ContinueEditingParameterName)]
         public async Task<IActionResult> Edit(TModel model, bool continueEditing)
         {
-            if (!await CheckPermissionAsync(EditPermissionName)) return Forbid();
+            if (!await HasPermission(EditPermissionName)) return Forbid();
 
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -295,7 +294,7 @@ namespace DNTFrameworkCore.Web.Mvc
         [NoResponseCache]
         public async Task<IActionResult> Delete([BindRequired] TKey id)
         {
-            if (!await CheckPermissionAsync(DeletePermissionName)) return Forbid();
+            if (!await HasPermission(DeletePermissionName)) return Forbid();
 
             var model = await FindAsync(id);
             if (!model.HasValue) return NotFound();
@@ -307,14 +306,10 @@ namespace DNTFrameworkCore.Web.Mvc
             return BadRequest(ModelState);
         }
 
-        private async Task<bool> CheckPermissionAsync(string permissionName)
+        private async Task<bool> HasPermission(string permissionName)
         {
-            return (await AuthorizationService.AuthorizeAsync(User, BuildPolicyName(permissionName))).Succeeded;
-        }
-
-        private static string BuildPolicyName(string permission)
-        {
-            return PermissionConstant.PolicyPrefix + permission;
+            var policyName = PermissionConstant.PolicyPrefix + permissionName;
+            return (await AuthorizationService.AuthorizeAsync(User, policyName)).Succeeded;
         }
     }
 }

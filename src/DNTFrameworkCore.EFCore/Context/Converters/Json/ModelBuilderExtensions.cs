@@ -11,9 +11,6 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DNTFrameworkCore.EFCore.Context.Converters.Json
 {
-    /// <summary>
-    /// Extensions for <see cref="ModelBuilder"/>.
-    /// </summary>
     public static class ModelBuilderExtensions
     {
         private static bool HasJsonAttribute(PropertyInfo propertyInfo)

@@ -2,7 +2,7 @@
 using System.Collections.Immutable;
 using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.Localization;
-using DNTFrameworkCore.MultiTenancy;
+using DNTFrameworkCore.Tenancy;
 
 namespace DNTFrameworkCore.Authorization
 {
@@ -38,7 +38,7 @@ namespace DNTFrameworkCore.Authorization
         /// <summary>
         /// Which side can use this permission.
         /// </summary>
-        public MultiTenancySides MultiTenancySides { get; set; }
+        public TenancySides MultiTenancySides { get; set; }
 
         /// <summary>
         /// List of child permissions. A child permission can be granted only if parent is granted.
@@ -58,7 +58,7 @@ namespace DNTFrameworkCore.Authorization
             string name,
             ILocalizableString displayName = null,
             ILocalizableString description = null,
-            MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant)
+            TenancySides multiTenancySides = TenancySides.Host | TenancySides.Tenant)
         {
             Guard.ArgumentNotNull(name, nameof(name));
 
@@ -79,7 +79,7 @@ namespace DNTFrameworkCore.Authorization
             string name,
             ILocalizableString displayName = null,
             ILocalizableString description = null,
-            MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant)
+            TenancySides multiTenancySides = TenancySides.Host | TenancySides.Tenant)
         {
             var permission = new Permission(name, displayName, description, multiTenancySides)
                 {Parent = this};
@@ -91,7 +91,7 @@ namespace DNTFrameworkCore.Authorization
             string name,
             ILocalizableString displayName = null,
             ILocalizableString description = null,
-            MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant
+            TenancySides multiTenancySides = TenancySides.Host | TenancySides.Tenant
         )
         {
             var permission = new Permission(name, displayName, description, multiTenancySides);

@@ -7,7 +7,6 @@ using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Mapping;
-using DNTFrameworkCore.Web.Authorization;
 using DNTFrameworkCore.Web.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -189,7 +188,7 @@ namespace DNTFrameworkCore.Web.API
         [ProducesResponseType((int) HttpStatusCode.Forbidden)]
         public async Task<IActionResult> Get(TFilteredPagedQueryModel query)
         {
-            if (!await CheckPermissionAsync(ViewPermissionName)) return Forbid();
+            if (!await HasPermission(ViewPermissionName)) return Forbid();
 
             var result = await ReadPagedListAsync(query ?? Factory<TFilteredPagedQueryModel>.CreateInstance());
 
@@ -202,7 +201,7 @@ namespace DNTFrameworkCore.Web.API
         [ProducesResponseType((int) HttpStatusCode.NotFound)]
         public async Task<ActionResult<TModel>> Get([BindRequired] TKey id)
         {
-            if (!await CheckPermissionAsync(EditPermissionName)) return Forbid();
+            if (!await HasPermission(EditPermissionName)) return Forbid();
 
             var model = await FindAsync(id);
 
@@ -215,7 +214,7 @@ namespace DNTFrameworkCore.Web.API
         [ProducesResponseType((int) HttpStatusCode.Forbidden)]
         public async Task<ActionResult<TModel>> Post(TModel model)
         {
-            if (!await CheckPermissionAsync(CreatePermissionName)) return Forbid();
+            if (!await HasPermission(CreatePermissionName)) return Forbid();
 
             var result = await CreateAsync(model);
             if (!result.Failed) return Created("", model);
@@ -232,7 +231,7 @@ namespace DNTFrameworkCore.Web.API
         {
             if (!model.Id.Equals(id)) return BadRequest();
 
-            if (!await CheckPermissionAsync(EditPermissionName)) return Forbid();
+            if (!await HasPermission(EditPermissionName)) return Forbid();
 
             model.Id = id;
 
@@ -250,7 +249,7 @@ namespace DNTFrameworkCore.Web.API
         [ProducesResponseType((int) HttpStatusCode.NotFound)]
         public async Task<IActionResult> Delete([BindRequired] TKey id)
         {
-            if (!await CheckPermissionAsync(DeletePermissionName)) return Forbid();
+            if (!await HasPermission(DeletePermissionName)) return Forbid();
 
             var model = await FindAsync(id);
             if (!model.HasValue) return NotFound();
@@ -267,7 +266,7 @@ namespace DNTFrameworkCore.Web.API
         [ProducesResponseType((int) HttpStatusCode.Forbidden)]
         public async Task<IActionResult> Delete(IEnumerable<TKey> ids)
         {
-            if (!await CheckPermissionAsync(DeletePermissionName))
+            if (!await HasPermission(DeletePermissionName))
             {
                 return Forbid();
             }
@@ -284,14 +283,10 @@ namespace DNTFrameworkCore.Web.API
         }
 
 
-        private async Task<bool> CheckPermissionAsync(string permissionName)
+        private async Task<bool> HasPermission(string permissionName)
         {
-            return (await AuthorizationService.AuthorizeAsync(User, BuildPolicyName(permissionName))).Succeeded;
-        }
-
-        private static string BuildPolicyName(string permission)
-        {
-            return PermissionConstant.PolicyPrefix + permission;
+            var policyName = PermissionConstant.PolicyPrefix + permissionName;
+            return (await AuthorizationService.AuthorizeAsync(User, policyName)).Succeeded;
         }
     }
 }
