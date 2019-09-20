@@ -11,18 +11,18 @@ namespace DNTFrameworkCore.EFCore.Configuration
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
 
-            builder.ApplyConfiguration(new ConfigurationValueMap());
+            builder.ApplyConfiguration(new KeyValueConfiguration());
         }
     }
 
-    public class ConfigurationValueMap : IEntityTypeConfiguration<ConfigurationValue>
+    public class KeyValueConfiguration : IEntityTypeConfiguration<KeyValue>
     {
-        public void Configure(EntityTypeBuilder<ConfigurationValue> builder)
+        public void Configure(EntityTypeBuilder<KeyValue> builder)
         {
             builder.Property(v => v.Key).HasMaxLength(450).IsRequired();
             builder.Property(v => v.Value).IsRequired();
 
-            builder.HasIndex(v => v.Key).IsUnique();
+            builder.HasIndex(v => v.Key).HasName("UIX_Values_Key").IsUnique();
 
             builder.ToTable("Values");
         }

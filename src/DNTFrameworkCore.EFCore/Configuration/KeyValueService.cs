@@ -8,15 +8,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.EFCore.Configuration
 {
-    internal class ConfigurationValueService : ApplicationService, IConfigurationValueService
+    internal class KeyValueService : ApplicationService, IKeyValueService
     {
         private readonly IUnitOfWork _uow;
-        private readonly DbSet<ConfigurationValue> _values;
+        private readonly DbSet<KeyValue> _values;
 
-        public ConfigurationValueService(IUnitOfWork uow)
+        public KeyValueService(IUnitOfWork uow)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _values = _uow.Set<ConfigurationValue>();
+            _values = _uow.Set<KeyValue>();
         }
 
         public async Task SaveValueAsync(string key, string value)
@@ -24,7 +24,7 @@ namespace DNTFrameworkCore.EFCore.Configuration
             var record = await _values.SingleOrDefaultAsync(v => v.Key == key);
             if (record == null)
             {
-                _values.Add(new ConfigurationValue
+                _values.Add(new KeyValue
                 {
                     Key = key,
                     Value = value

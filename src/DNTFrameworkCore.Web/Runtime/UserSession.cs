@@ -26,6 +26,7 @@ namespace DNTFrameworkCore.Web.Runtime
         public string UserName => _principal?.FindUserName();
         public string BranchId => _principal?.FindBranchId();
         public string BranchName => _principal?.FindBranchName();
+        public bool IsHeadBranch => _principal?.IsHeadTenant() ?? false;
         public IReadOnlyList<string> Permissions => _principal?.FindPermissions();
         public IReadOnlyList<string> Roles => _principal?.FindRoles();
         public IReadOnlyList<Claim> Claims => _principal?.Claims.ToList();

@@ -17,7 +17,7 @@ namespace DNTFrameworkCore.Web.Cryptography
 
         public IReadOnlyCollection<XElement> GetAllElements()
         {
-            return _repository.RetrieveElements();
+            return _repository.ReadElements();
         }
 
         public void StoreElement(XElement element, string friendlyName)

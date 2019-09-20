@@ -18,12 +18,12 @@ namespace DNTFrameworkCore.Web.Tenancy.Internal
 
         public async Task Invoke(HttpContext context, ITenantContainerFactory factory)
         {
-            var tenant = context.FindTenant();
+            var tenant = context.GetTenant();
             if (tenant == null)
                 throw new InvalidOperationException(
-                    "TenantMiddleware must be register before TenantContainerMiddleware");
+                    "TenantResolutionMiddleware must be register before TenantContainerMiddleware");
 
-            using (var scope = factory.CreateContainer(tenant).CreateScope())
+            using (var scope = factory.CreateContainer(tenant.Id).CreateScope())
             {
                 context.RequestServices = scope.ServiceProvider;
                 await _next.Invoke(context);

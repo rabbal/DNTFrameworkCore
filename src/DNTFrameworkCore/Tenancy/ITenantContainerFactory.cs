@@ -5,6 +5,6 @@ namespace DNTFrameworkCore.Tenancy
 {
     public interface ITenantContainerFactory : ISingletonDependency
     {
-        IServiceProvider CreateContainer(Tenant tenant);
+        IServiceProvider CreateContainer(string tenantId);
     }
 }

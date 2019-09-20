@@ -16,9 +16,10 @@ namespace DNTFrameworkCore.TestTenancy.Infrastructure.Context
 {
     public class ProjectDbContext : DbContextCore
     {
-        public ProjectDbContext(DbContextOptions<ProjectDbContext> options, IEnumerable<IHook> hooks) : base(options, hooks)
+        public ProjectDbContext(
+            DbContextOptions<ProjectDbContext> options,
+            IEnumerable<IHook> hooks) : base(options, hooks)
         {
-            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,7 +41,7 @@ namespace DNTFrameworkCore.TestTenancy.Infrastructure.Context
             base.OnModelCreating(modelBuilder);
         }
 
-        protected override void AfterSaveChanges(EntityChangeContext context)
+        protected override void SavedChanges(EntityChangeContext context)
         {
             this.GetService<IEFCacheServiceProvider>()
                 .InvalidateCacheDependencies(context.EntityNames.ToArray());

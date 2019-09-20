@@ -12,7 +12,7 @@ namespace DNTFrameworkCore.Tenancy
                 .Cast<TenancySideAttribute>()
                 .FirstOrDefault();
 
-            return attribute?.Sides ?? TenancySides.None;
+            return attribute?.Side ?? TenancySides.None;
         }
     }
 }

@@ -39,6 +39,11 @@ namespace DNTFrameworkCore.Runtime
         string BranchName { get; }
 
         /// <summary>
+        ///     Represents current user is from head-office branch.
+        /// </summary>
+        bool IsHeadBranch { get; }
+
+        /// <summary>
         ///     Gets current user's Permissions
         ///     It can be null if no user logged in.
         /// </summary>

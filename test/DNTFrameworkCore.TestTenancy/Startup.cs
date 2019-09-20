@@ -34,9 +34,10 @@ namespace DNTFrameworkCore.TestTenancy
 
             services.AddTenancy()
                 .WithTenantSession()
+                .WithTenantContainer()
                 .WithStore<InMemoryTenantStore>()
                 .WithResolutionStrategy<HostResolutionStrategy>();
-            
+
             services.AddDNTFrameworkCore()
                 .AddModelValidation()
                 .AddFluentModelValidation()
@@ -102,9 +103,10 @@ namespace DNTFrameworkCore.TestTenancy
                 app.UseHsts();
             }
 
-            app.UseTenancy();
+            app.UseTenancy()
+                .UseTenantContainer();
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
             app.UseSignalR(routes => { routes.MapHub<NotificationHub>("/api/notificationhub"); });

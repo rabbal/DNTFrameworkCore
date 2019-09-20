@@ -11,7 +11,7 @@ using DNTFrameworkCore.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
-using DbUpdateException = Microsoft.EntityFrameworkCore.DbUpdateException;
+using DbException = DNTFrameworkCore.Exceptions.DbException;
 
 namespace DNTFrameworkCore.EFCore.Context
 {
@@ -23,6 +23,7 @@ namespace DNTFrameworkCore.EFCore.Context
         {
             _hooks = hooks ?? throw new ArgumentNullException(nameof(hooks));
         }
+
         public DbConnection Connection => Database.GetDbConnection();
         public bool HasActiveTransaction => Transaction != null;
         public IDbContextTransaction Transaction { get; private set; }
@@ -44,7 +45,7 @@ namespace DNTFrameworkCore.EFCore.Context
 
         public void CommitTransaction()
         {
-            if (Transaction == null) throw new InvalidOperationException("Transaction is null!");
+            if (Transaction == null) throw new InvalidOperationException("Transaction is null");
 
             try
             {
@@ -122,15 +123,15 @@ namespace DNTFrameworkCore.EFCore.Context
 
                 ExecuteHooks<IPostActionHook>(entryList);
 
-                AfterSaveChanges(new EntityChangeContext(names, entryList));
+                SavedChanges(new EntityChangeContext(names, entryList));
             }
             catch (DbUpdateConcurrencyException e)
             {
-                throw new ConcurrencyException(e.Message, e);
+                throw new DbConcurrencyException(e.Message, e);
             }
             catch (DbUpdateException e)
             {
-                throw new Exceptions.DbUpdateException(e.Message, e);
+                throw new DbException(e.Message, e);
             }
 
             return result;
@@ -152,15 +153,15 @@ namespace DNTFrameworkCore.EFCore.Context
 
                 ExecuteHooks<IPostActionHook>(entryList);
 
-                AfterSaveChanges(new EntityChangeContext(names, entryList));
+                SavedChanges(new EntityChangeContext(names, entryList));
             }
             catch (DbUpdateConcurrencyException e)
             {
-                throw new ConcurrencyException(e.Message, e);
+                throw new DbConcurrencyException(e.Message, e);
             }
-            catch (DbUpdateException e)
+            catch (DbException e)
             {
-                throw new Exceptions.DbUpdateException(e.Message, e);
+                throw new Exceptions.DbException(e.Message, e);
             }
 
             return result;
@@ -176,7 +177,7 @@ namespace DNTFrameworkCore.EFCore.Context
             return Database.ExecuteSqlCommandAsync(query, parameters);
         }
 
-        protected virtual void AfterSaveChanges(EntityChangeContext context)
+        protected virtual void SavedChanges(EntityChangeContext context)
         {
         }
 
@@ -184,7 +185,7 @@ namespace DNTFrameworkCore.EFCore.Context
         {
             foreach (var entry in entryList)
             {
-                var hooks = _hooks.OfType<THook>().Where(x => x.HookState == entry.State);
+                var hooks = _hooks.OfType<THook>().Where(x => x.HookState == entry.State).OrderBy(hook => hook.Order);
                 foreach (var hook in hooks)
                 {
                     var metadata = new HookEntityMetadata(entry);

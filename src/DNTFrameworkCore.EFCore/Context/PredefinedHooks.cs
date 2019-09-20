@@ -55,16 +55,16 @@ namespace DNTFrameworkCore.EFCore.Context
     internal class PreInsertTenantEntityHook<TTenantId> : PreInsertHook<ITenantEntity>
         where TTenantId : IEquatable<TTenantId>
     {
-        private readonly ITenantSession _context;
+        private readonly ITenantSession _session;
 
-        public PreInsertTenantEntityHook(ITenantSession context)
+        public PreInsertTenantEntityHook(ITenantSession session)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _session = session ?? throw new ArgumentNullException(nameof(session));
         }
 
         protected override void Hook(ITenantEntity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(EFCore.TenantId).CurrentValue = _context.Tenant.Id.FromString<TTenantId>();
+            metadata.Entry.Property(EFCore.TenantId).CurrentValue = _session.TenantId.FromString<TTenantId>();
         }
     }
 
@@ -111,9 +111,11 @@ namespace DNTFrameworkCore.EFCore.Context
             _algorithm = algorithm ?? throw new ArgumentNullException(nameof(algorithm));
         }
 
+        public override int Order => int.MaxValue;
+
         protected override void Hook(IHasRowIntegrity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(nameof(entity.Hash)).CurrentValue = _algorithm.HashRow(metadata.Properties);
+            metadata.Entry.Property(EFCore.Hash).CurrentValue = _algorithm.HashRow(metadata.Properties);
         }
     }
 
@@ -126,9 +128,11 @@ namespace DNTFrameworkCore.EFCore.Context
             _algorithm = algorithm ?? throw new ArgumentNullException(nameof(algorithm));
         }
 
+        public override int Order => int.MaxValue;
+
         protected override void Hook(IHasRowIntegrity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(nameof(entity.Hash)).CurrentValue = _algorithm.HashRow(metadata.Properties);
+            metadata.Entry.Property(EFCore.Hash).CurrentValue = _algorithm.HashRow(metadata.Properties);
         }
     }
 }

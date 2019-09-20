@@ -285,7 +285,7 @@ namespace DNTFrameworkCore.NHibernate.Application
         private IReadOnlyList<ModifiedModel<TModel>> BuildModifiedModel(IReadOnlyCollection<TModel> models,
             IReadOnlyCollection<TEntity> entities)
         {
-            if (models.Count != entities.Count) throw new ConcurrencyException();
+            if (models.Count != entities.Count) throw new DbConcurrencyException();
 
             var modelList = entities.MapReadOnlyList(MapToModel);
             var modelDictionary = modelList.ToDictionary(e => e.Id);

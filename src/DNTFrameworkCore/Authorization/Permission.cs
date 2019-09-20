@@ -38,7 +38,7 @@ namespace DNTFrameworkCore.Authorization
         /// <summary>
         /// Which side can use this permission.
         /// </summary>
-        public TenancySides MultiTenancySides { get; set; }
+        public TenancySides TenancySides { get; set; }
 
         /// <summary>
         /// List of child permissions. A child permission can be granted only if parent is granted.
@@ -58,14 +58,14 @@ namespace DNTFrameworkCore.Authorization
             string name,
             ILocalizableString displayName = null,
             ILocalizableString description = null,
-            TenancySides multiTenancySides = TenancySides.Host | TenancySides.Tenant)
+            TenancySides multiTenancySides = TenancySides.HeadTenant | TenancySides.Tenant)
         {
             Guard.ArgumentNotNull(name, nameof(name));
 
             Name = name;
             DisplayName = displayName;
             Description = description;
-            MultiTenancySides = multiTenancySides;
+            TenancySides = multiTenancySides;
 
             _children = new List<Permission>();
         }
@@ -79,7 +79,7 @@ namespace DNTFrameworkCore.Authorization
             string name,
             ILocalizableString displayName = null,
             ILocalizableString description = null,
-            TenancySides multiTenancySides = TenancySides.Host | TenancySides.Tenant)
+            TenancySides multiTenancySides = TenancySides.HeadTenant | TenancySides.Tenant)
         {
             var permission = new Permission(name, displayName, description, multiTenancySides)
                 {Parent = this};
@@ -91,7 +91,7 @@ namespace DNTFrameworkCore.Authorization
             string name,
             ILocalizableString displayName = null,
             ILocalizableString description = null,
-            TenancySides multiTenancySides = TenancySides.Host | TenancySides.Tenant
+            TenancySides multiTenancySides = TenancySides.HeadTenant | TenancySides.Tenant
         )
         {
             var permission = new Permission(name, displayName, description, multiTenancySides);

@@ -38,7 +38,7 @@ namespace DNTFrameworkCore.Web.Filters
                 context.Result = new BadRequestObjectResult(context.ModelState);
                 context.HttpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
             }
-            else if (context.Exception is DbUpdateException && details.Contains("DELETE") &&
+            else if (context.Exception is DbException && details.Contains("DELETE") &&
                      details.Contains("REFERENCE") &&
                      details.Contains("FK_"))
             {
@@ -47,7 +47,7 @@ namespace DNTFrameworkCore.Web.Filters
                 context.Result = new BadRequestObjectResult(context.ModelState);
                 context.HttpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
             }
-            else if (context.Exception is ConcurrencyException)
+            else if (context.Exception is DbConcurrencyException)
             {
                 context.ModelState.AddModelError(string.Empty,
                     "اطلاعات توسط کاربری دیگر در شبکه تغییر کرده است");
@@ -59,7 +59,7 @@ namespace DNTFrameworkCore.Web.Filters
                 string message;
                 switch (context.Exception)
                 {
-                    case DbUpdateException _:
+                    case DbException _:
                         message = "امکان ذخیره‌سازی اطلاعات وجود ندارد؛ دوباره تلاش نمائید";
                         break;
                     default:

@@ -4,6 +4,6 @@ namespace DNTFrameworkCore.Tenancy
 {
     public interface ITenantStore
     {
-        Task<Tenant> FindTenantAsync(string tenantName);
+        Task<Tenant> FindTenantAsync(string tenantId);
     }
 }

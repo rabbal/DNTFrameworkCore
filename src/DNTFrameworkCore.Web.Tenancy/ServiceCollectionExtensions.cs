@@ -19,7 +19,8 @@ namespace DNTFrameworkCore.Web.Tenancy
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
 
-            builder.Services.AddSingleton<ITenantContainerFactory, TenantContainerFactory>();
+            builder.Services.AddSingleton<ITenantContainerFactory>(provider =>
+                new TenantContainerFactory(provider, builder.Services));
             return builder;
         }
     }

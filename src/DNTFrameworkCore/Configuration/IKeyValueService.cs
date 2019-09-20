@@ -4,7 +4,7 @@ using DNTFrameworkCore.Functional;
 
 namespace DNTFrameworkCore.Configuration
 {
-    public interface IConfigurationValueService : IApplicationService
+    public interface IKeyValueService : IApplicationService
     {
         Task SaveValueAsync(string key, string value);
         Task<Maybe<string>> FindValueAsync(string key);

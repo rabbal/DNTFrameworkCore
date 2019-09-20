@@ -7,13 +7,13 @@ namespace DNTFrameworkCore.Tenancy
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Method |
                     AttributeTargets.Interface)]
-    public class TenancySideAttribute : Attribute
+    public sealed class TenancySideAttribute : Attribute
     {
-        public TenancySides Sides { get; }
+        public TenancySides Side { get; }
 
-        public TenancySideAttribute(TenancySides sides)
+        public TenancySideAttribute(TenancySides side)
         {
-            Sides = sides;
+            Side = side;
         }
     }
 }

@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
+using System.Linq;
 using DNTFrameworkCore.Tenancy;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace DNTFrameworkCore.TestTenancy.Tenancy
 {
@@ -10,18 +11,22 @@ namespace DNTFrameworkCore.TestTenancy.Tenancy
     public class HostResolutionStrategy : ITenantResolutionStrategy
     {
         private readonly IHttpContextAccessor _context;
+        private readonly IOptions<TenantOptions> _options;
 
-        public HostResolutionStrategy(IHttpContextAccessor context)
+        public HostResolutionStrategy(IHttpContextAccessor context, IOptions<TenantOptions> options)
         {
             _context = context;
+            _options = options;
         }
-    
+
         /// <summary>
         /// Get the tenant name
         /// </summary>
-        public Task<string> ResolveTenantNameAsync()
+        public string ResolveTenantId()
         {
-            return Task.FromResult(_context.HttpContext.Request.Host.Value);
+            var host = _context.HttpContext.Request.Host.Value;
+
+            return _options.Value.Tenants.FirstOrDefault(t => t.Hostnames.Contains(host))?.Id;
         }
     }
 }

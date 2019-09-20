@@ -54,9 +54,9 @@ namespace DNTFrameworkCore.Extensions
 
         public static bool HasPermission(this ClaimsPrincipal principal, string permission)
         {
-            return principal.FindPermissions().Any(p => p.Equals(permission, StringComparison.Ordinal));
+            return principal.FindPermissions().Any(p => p.Equals(permission, StringComparison.OrdinalIgnoreCase));
         }
-        
+
         public static string FindUserId(this ClaimsPrincipal principal)
         {
             var value = principal.FindFirstValue(UserClaimTypes.UserId);
@@ -77,10 +77,22 @@ namespace DNTFrameworkCore.Extensions
         {
             return principal.FindFirstValue(UserClaimTypes.TenantId);
         }
-        
+
         public static string FindTenantName(this ClaimsPrincipal principal)
         {
             return principal.FindFirstValue(UserClaimTypes.TenantName);
+        }
+
+        public static bool IsHeadTenant(this ClaimsPrincipal principal)
+        {
+            return principal.Claims.Any(c =>
+                c.Type == UserClaimTypes.IsHeadTenant && c.Value == "true");
+        }
+        
+        public static bool IsHeadOffice(this ClaimsPrincipal principal)
+        {
+            return principal.Claims.Any(c =>
+                c.Type == UserClaimTypes.IsHeadOffice && c.Value == "true");
         }
 
         public static string FindImpersonatorTenantId(this ClaimsPrincipal principal)
@@ -92,12 +104,13 @@ namespace DNTFrameworkCore.Extensions
         {
             return principal.FindFirstValue(UserClaimTypes.ImpersonatorUserId);
         }
-        
+
         public static string FindUserDisplayName(this ClaimsPrincipal principal)
         {
             var displayName = principal.FindFirstValue(UserClaimTypes.UserName);
             return string.IsNullOrWhiteSpace(displayName) ? FindUserName(principal) : displayName;
         }
+
         public static string FindUserName(this ClaimsPrincipal principal)
         {
             return principal.FindFirstValue(UserClaimTypes.UserName);

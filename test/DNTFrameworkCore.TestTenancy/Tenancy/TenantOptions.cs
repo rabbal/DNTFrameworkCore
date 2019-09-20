@@ -5,10 +5,10 @@ namespace DNTFrameworkCore.TestTenancy.Tenancy
 {
     public class TenantOptions
     {
-        public IList<TenantOption> Tenants { get; } = new List<TenantOption>();
+        public IList<TenantInformation> Tenants { get; } = new List<TenantInformation>();
     }
     
-    public class TenantOption
+    public class TenantInformation
     {
         public string Id { get; set; }
         public string Name { get; set; }

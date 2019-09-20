@@ -7,28 +7,28 @@ namespace DNTFrameworkCore.Common
 {
     public class LazyConcurrentDictionary<TKey, TValue>
     {
-        private readonly ConcurrentDictionary<TKey, Lazy<TValue>> _concurrentDictionary;
+        private readonly ConcurrentDictionary<TKey, Lazy<TValue>> _dictionary;
 
         public LazyConcurrentDictionary()
         {
-            _concurrentDictionary = new ConcurrentDictionary<TKey, Lazy<TValue>>();
+            _dictionary = new ConcurrentDictionary<TKey, Lazy<TValue>>();
         }
 
         public LazyConcurrentDictionary(IEqualityComparer<TKey> comparer)
         {
-            _concurrentDictionary = new ConcurrentDictionary<TKey, Lazy<TValue>>(comparer);
+            _dictionary = new ConcurrentDictionary<TKey, Lazy<TValue>>(comparer);
         }
 
         public TValue GetOrAdd(TKey key, Func<TKey, TValue> valueFactory)
         {
-            var lazyResult = _concurrentDictionary.GetOrAdd(key,
+            var lazyResult = _dictionary.GetOrAdd(key,
                 k => new Lazy<TValue>(() => valueFactory(k), LazyThreadSafetyMode.ExecutionAndPublication));
             return lazyResult.Value;
         }
 
         public TValue AddOrUpdate(TKey key, TValue addValue, Func<TKey, TValue, TValue> updateValueFactory)
         {
-            var lazyResult = _concurrentDictionary.AddOrUpdate(
+            var lazyResult = _dictionary.AddOrUpdate(
                 key,
                 new Lazy<TValue>(() => addValue),
                 (k, currentValue) => new Lazy<TValue>(() => updateValueFactory(k, currentValue.Value),
@@ -38,7 +38,7 @@ namespace DNTFrameworkCore.Common
 
         public TValue AddOrUpdate(TKey key, Func<TKey, TValue> addValueFactory, Func<TKey, TValue, TValue> updateValueFactory)
         {
-            var lazyResult = _concurrentDictionary.AddOrUpdate(
+            var lazyResult = _dictionary.AddOrUpdate(
                 key,
                 k => new Lazy<TValue>(() => addValueFactory(k)),
                 (k, currentValue) => new Lazy<TValue>(() => updateValueFactory(k, currentValue.Value),
@@ -46,6 +46,6 @@ namespace DNTFrameworkCore.Common
             return lazyResult.Value;
         }
 
-        public int Count => _concurrentDictionary.Count;
+        public int Count => _dictionary.Count;
     }
 }

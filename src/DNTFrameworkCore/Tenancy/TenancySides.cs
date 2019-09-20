@@ -18,6 +18,6 @@ namespace DNTFrameworkCore.Tenancy
         /// <summary>
         /// Host (tenancy owner) side.
         /// </summary>
-        Host = 1 << 1
+        HeadTenant = 1 << 1
     }
 }

@@ -5,8 +5,10 @@ namespace DNTFrameworkCore.Tenancy
     /// <summary>
     /// Tenant information
     /// </summary>
-    public class Tenant
+    public sealed class Tenant
     {
+        private int? _hashCode;
+
         public Tenant()
         {
             Properties = new Dictionary<string, object>();
@@ -46,5 +48,35 @@ namespace DNTFrameworkCore.Tenancy
         /// Tenant items
         /// </summary>
         public IDictionary<string, object> Properties { get; }
+
+        public override int GetHashCode()
+        {
+            if (!_hashCode.HasValue)
+                _hashCode = Id.GetHashCode() ^ 31; // XOR for random distribution
+
+            return _hashCode.Value;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is Tenant other)) return false;
+
+            return ReferenceEquals(this, other) || Id.Equals(other.Id);
+        }
+
+        public override string ToString()
+        {
+            return $"[{Name} : {Id}]";
+        }
+
+        public static bool operator ==(Tenant left, Tenant right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Tenant left, Tenant right)
+        {
+            return !(left == right);
+        }
     }
 }

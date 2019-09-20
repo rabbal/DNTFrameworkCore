@@ -1,11 +1,11 @@
 using System;
 using Microsoft.Extensions.Configuration;
+// ReSharper disable InconsistentNaming
 
 namespace DNTFrameworkCore.EFCore.Configuration
 {
     public static class ConfigurationBuilderExtensions
     {
-        // ReSharper disable once InconsistentNaming
         public static IConfigurationBuilder AddEFCore(this IConfigurationBuilder builder,
             IServiceProvider provider)
         {
@@ -13,7 +13,6 @@ namespace DNTFrameworkCore.EFCore.Configuration
         }
     }
 
-    // ReSharper disable once InconsistentNaming
     public class EFConfigurationSource : IConfigurationSource
     {
         private readonly IServiceProvider _provider;

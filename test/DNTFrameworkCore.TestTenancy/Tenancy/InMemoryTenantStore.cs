@@ -20,11 +20,11 @@ namespace DNTFrameworkCore.TestTenancy.Tenancy
         /// <summary>
         /// Get a tenant for a given tenantName
         /// </summary>
-        /// <param name="tenantName"></param>
+        /// <param name="tenantId"></param>
         /// <returns></returns>
-        public Task<Tenant> FindTenantAsync(string tenantName)
+        public Task<Tenant> FindTenantAsync(string tenantId)
         {
-            var option = _options.Value.Tenants.FirstOrDefault(t => t.Hostnames.Contains(tenantName));
+            var option = _options.Value.Tenants.FirstOrDefault(t => t.Id == tenantId);
 
             if (option == null) return null;
 

@@ -29,12 +29,10 @@ namespace DNTFrameworkCore.Web.Tenancy.Internal
             ? _principal?.FindTenantName()
             : Tenant?.Name;
 
-        public TenancySides TenancySide => TenantId == "" //Todo: using tenancy-options
-            ? TenancySides.Tenant
-            : TenancySides.Host;
+        public bool IsHeadTenant => _principal?.IsHeadTenant() ?? false;
 
         public string ImpersonatorTenantId => _principal?.FindImpersonatorTenantId();
-        public Tenant Tenant => _httpContext?.FindTenant();
+        public Tenant Tenant => _httpContext?.GetTenant();
 
         public IDisposable UseTenantId(string tenantId)
         {

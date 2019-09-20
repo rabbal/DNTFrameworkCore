@@ -29,7 +29,7 @@ namespace DNTFrameworkCore.EFCore.Context.Converters.Json
             return (T) JsonConvert.DeserializeObject(Json(instance), typeof(T));
         }
 
-        private static int ReadHashCode(T instance)
+        private static int HashCode(T instance)
         {
             return instance is IEquatable<T> ? instance.GetHashCode() : Json(instance).GetHashCode();
         }
@@ -44,7 +44,7 @@ namespace DNTFrameworkCore.EFCore.Context.Converters.Json
 
         public JsonValueComparer() : base(
             (t1, t2) => AreEqual(t1, t2),
-            t => ReadHashCode(t),
+            t => HashCode(t),
             t => TakeSnapshot(t))
         {
         }

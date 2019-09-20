@@ -8,13 +8,7 @@ namespace DNTFrameworkCore.EFCore.Context.Hooks
     /// <typeparam name="TEntity">The type of entity this hook must watch for.</typeparam>
     public abstract class PreActionHook<TEntity> : IPreActionHook
     {
-        /// <summary>
-        /// Gets a value indicating whether the hook is only used after successful <typeparamref name="TEntity" /> validation.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if requires validation; otherwise, <c>false</c>.
-        /// </value>
-        public virtual bool RequiresValidation => false;
+        public virtual int Order => default;
 
         /// <summary>
         /// Entity States that this hook must be registered to listen for.

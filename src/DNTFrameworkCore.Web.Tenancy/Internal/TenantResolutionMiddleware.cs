@@ -5,11 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.Web.Tenancy.Internal
 {
-    internal sealed class TenantMiddleware
+    internal sealed class TenantResolutionMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public TenantMiddleware(RequestDelegate next)
+        public TenantResolutionMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -21,8 +21,8 @@ namespace DNTFrameworkCore.Web.Tenancy.Internal
                 var strategy = context.RequestServices.GetRequiredService<ITenantResolutionStrategy>();
                 var store = context.RequestServices.GetRequiredService<ITenantStore>();
 
-                var tenantName = await strategy.ResolveTenantNameAsync();
-                var tenant = await store.FindTenantAsync(tenantName);
+                var tenantId = strategy.ResolveTenantId();
+                var tenant = await store.FindTenantAsync(tenantId);
 
                 context.Items.Add(TenancyConstants.HttpContextItemName, tenant);
             }

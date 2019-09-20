@@ -33,6 +33,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure
                 //.WithTenancyHook<long>() need to AddTenancy
                 .WithSoftDeleteHook()
                 .WithRowLevelSecurityHook<long>()
+                //.WithRowIntegrityHook<>()
                 .WithNumberingHook(options =>
                 {
                     options.NumberedEntityMap[typeof(Task)] = new NumberedEntityOption

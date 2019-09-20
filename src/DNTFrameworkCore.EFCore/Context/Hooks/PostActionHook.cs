@@ -17,6 +17,8 @@ namespace DNTFrameworkCore.EFCore.Context.Hooks
                 Hook(typedEntity, metadata, context);
         }
 
+        public virtual int Order => default;
+
         /// <summary>
         /// Entity States that this hook must be registered to listen for.
         /// </summary>

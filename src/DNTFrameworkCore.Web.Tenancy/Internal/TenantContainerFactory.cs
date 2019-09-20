@@ -20,10 +20,13 @@ namespace DNTFrameworkCore.Web.Tenancy.Internal
             _services = services;
         }
 
-        public IServiceProvider CreateContainer(Tenant tenant)
+        public IServiceProvider CreateContainer(string tenantId)
         {
-            return _providers.GetOrAdd(tenant.Id,
-                key => _provider.CreateChildContainer(_services).BuildServiceProvider());
+            return _providers.GetOrAdd(tenantId, key =>
+            {
+                var services = _provider.CreateChildContainer(_services);
+                return services.BuildServiceProvider();
+            });
         }
     }
 }

@@ -29,8 +29,8 @@ namespace DNTFrameworkCore.EFCore
         {
             services.AddScoped(provider => (IUnitOfWork) provider.GetRequiredService(typeof(TDbContext)));
             services.AddTransient<TransactionInterceptor>();
-            services.AddScoped<IConfigurationValueService, ConfigurationValueService>();
-            services.AddSingleton<IProtectionStore, ProtectionStore<TDbContext>>();
+            services.AddScoped<IKeyValueService, KeyValueService>();
+            services.AddSingleton<IProtectionStore, ProtectionStore>();
             services.AddTransient<IHook, PreUpdateRowVersionHook>();
 
             return new EFCoreBuilder(services, typeof(TDbContext));
@@ -73,9 +73,12 @@ namespace DNTFrameworkCore.EFCore
             return this;
         }
 
-        public EFCoreBuilder WithRowIntegrityHook()
+        public EFCoreBuilder WithRowIntegrityHook<T>() where T : class, IRowIntegrityHashAlgorithm
         {
-            throw new NotImplementedException();
+            Services.AddTransient<IRowIntegrityHashAlgorithm, T>();
+            Services.AddTransient<IHook, PreInsertRowIntegrityHook>();
+            Services.AddTransient<IHook, PreUpdateRowIntegrityHook>();
+            return this;
         }
 
         public EFCoreBuilder WithSoftDeleteHook()

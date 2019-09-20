@@ -40,7 +40,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Context
             base.OnModelCreating(modelBuilder);
         }
 
-        protected override void AfterSaveChanges(EntityChangeContext context)
+        protected override void SavedChanges(EntityChangeContext context)
         {
             this.GetService<IEFCacheServiceProvider>()
                 .InvalidateCacheDependencies(context.EntityNames.ToArray());

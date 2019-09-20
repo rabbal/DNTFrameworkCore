@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
 using DNTFrameworkCore.Configuration;
+using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EFCore.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.EFCore.Configuration
 {
@@ -20,15 +20,13 @@ namespace DNTFrameworkCore.EFCore.Configuration
 
         public override void Load()
         {
-            using (var scope = _provider.CreateScope())
+            _provider.RunScoped<IUnitOfWork>(uow =>
             {
-                var context = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-                
                 Data?.Clear();
-                Data = context.Set<ConfigurationValue>()
+                Data = uow.Set<KeyValue>()
                     .AsNoTracking()
                     .ToDictionary(c => c.Key, c => c.Value);
-            }
+            });
         }
     }
 }

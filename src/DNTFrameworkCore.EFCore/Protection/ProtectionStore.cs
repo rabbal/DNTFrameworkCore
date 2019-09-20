@@ -5,12 +5,11 @@ using System.Linq;
 using System.Xml.Linq;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Dependency;
-using Microsoft.EntityFrameworkCore;
+using DNTFrameworkCore.EFCore.Context;
 
 namespace DNTFrameworkCore.EFCore.Protection
 {
-    public class ProtectionStore<TContext> : IProtectionStore
-        where TContext : DbContext
+    public class ProtectionStore : IProtectionStore
     {
         private readonly IServiceProvider _provider;
 
@@ -19,11 +18,11 @@ namespace DNTFrameworkCore.EFCore.Protection
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
-        public IReadOnlyCollection<XElement> RetrieveElements()
+        public IReadOnlyList<XElement> ReadElements()
         {
-            return _provider.RunScoped<ReadOnlyCollection<XElement>, TContext>(context =>
+            return _provider.RunScoped<ReadOnlyCollection<XElement>, IUnitOfWork>(uow =>
             {
-                var dataProtectionKeys = context.Set<ProtectionKey>();
+                var dataProtectionKeys = uow.Set<ProtectionKey>();
                 return new ReadOnlyCollection<XElement>(dataProtectionKeys.Select(k => XElement.Parse(k.XmlValue))
                     .ToList());
             });
@@ -33,9 +32,9 @@ namespace DNTFrameworkCore.EFCore.Protection
         {
             // We need a separate context to call its SaveChanges several times,
             // without using the current request's context and changing its internal state.
-            _provider.RunScoped<TContext>(context =>
+            _provider.RunScoped<IUnitOfWork>(uow =>
             {
-                var keys = context.Set<ProtectionKey>();
+                var keys = uow.Set<ProtectionKey>();
                 var entity = keys.SingleOrDefault(k => k.FriendlyName == friendlyName);
                 if (entity != null)
                 {
@@ -51,7 +50,7 @@ namespace DNTFrameworkCore.EFCore.Protection
                     });
                 }
 
-                context.SaveChanges();
+                uow.SaveChanges();
             });
         }
     }

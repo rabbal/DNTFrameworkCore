@@ -9,6 +9,8 @@ namespace DNTFrameworkCore.EFCore.Context.Hooks
     /// </summary>
     public interface IHook : ITransientDependency
     {
+        int Order { get; }
+
         /// <summary>
         /// Gets the entity state(s) to listen for.
         /// </summary>

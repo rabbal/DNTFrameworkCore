@@ -40,24 +40,24 @@ namespace DNTFrameworkCore.Web.Dependency
                 // If only one service of a given type.
                 else if (services.Count() == 1)
                 {
-                    var service = services.First();
-
-                    if (service.Lifetime == ServiceLifetime.Singleton)
+                    var descriptor = services.First();
+                    
+                    if (descriptor.Lifetime == ServiceLifetime.Singleton)
                     {
                         // An host singleton is shared across tenant containers but only registered instances are not disposed
                         // by the DI, so we check if it is disposable or if it uses a factory which may return a different type.
 
-                        if (typeof(IDisposable).IsAssignableFrom(service.GetImplementationType()) ||
-                            service.ImplementationFactory != null)
+                        if (typeof(IDisposable).IsAssignableFrom(descriptor.GetImplementationType()) ||
+                            descriptor.ImplementationFactory != null)
                         {
                             // If disposable, register an instance that we resolve immediately from the main container.
-                            clonedCollection.CloneSingleton(service, provider.GetService(service.ServiceType));
+                            clonedCollection.CloneSingleton(descriptor, provider.GetService(descriptor.ServiceType));
                         }
                         else
                         {
                             // If not disposable, the singleton can be resolved through a factory when first requested.
-                            clonedCollection.CloneSingleton(service,
-                                sp => provider.GetService(service.ServiceType));
+                            clonedCollection.CloneSingleton(descriptor,
+                                sp => provider.GetService(descriptor.ServiceType));
 
                             // Note: Most of the time a singleton of a given type is unique and not disposable. So,
                             // most of the time it will be resolved when first requested through a tenant container.
@@ -65,7 +65,7 @@ namespace DNTFrameworkCore.Web.Dependency
                     }
                     else
                     {
-                        clonedCollection.Add(service);
+                        clonedCollection.Add(descriptor);
                     }
                 }
 

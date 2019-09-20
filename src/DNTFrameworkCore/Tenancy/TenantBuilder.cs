@@ -1,5 +1,7 @@
 using System;
+using DNTFrameworkCore.Tenancy.Options;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace DNTFrameworkCore.Tenancy
 {
@@ -20,7 +22,7 @@ namespace DNTFrameworkCore.Tenancy
     /// <summary>
     /// Configure tenant services
     /// </summary>
-    public class TenantBuilder
+    public sealed class TenantBuilder
     {
         public IServiceCollection Services { get; }
 
@@ -42,7 +44,6 @@ namespace DNTFrameworkCore.Tenancy
             return this;
         }
 
-
         /// <summary>
         /// Register the tenant store implementation
         /// </summary>
@@ -55,18 +56,30 @@ namespace DNTFrameworkCore.Tenancy
             Services.Add(ServiceDescriptor.Describe(typeof(ITenantStore), typeof(T), lifetime));
             return this;
         }
-
+        
         /// <summary>
-        /// Register the tenancy options
+        /// Register tenant specific options
         /// </summary>
-        /// <param name="options"></param>
+        /// <typeparam name="TOptions">Type of options we are apply configuration to</typeparam>
         /// <returns></returns>
-        public TenantBuilder WithOptions(Action<TenancyOptions> options)
+        public TenantBuilder WithPerTenantOptions<TOptions>(Action<TOptions, Tenant> setup)
+            where TOptions : class, new()
         {
-            if (options == null)
-                throw new ArgumentNullException(nameof(options));
+            //Register the multi-tenant cache
+            Services.AddSingleton<IOptionsMonitorCache<TOptions>>(a =>
+                ActivatorUtilities.CreateInstance<TenantOptionsCache<TOptions>>(a));
 
-            Services.Configure(options);
+            //Register the multi-tenant options factory
+            Services.AddTransient<IOptionsFactory<TOptions>>(a =>
+                ActivatorUtilities.CreateInstance<TenantOptionsFactory<TOptions>>(a, setup));
+
+            //Register IOptionsSnapshot support
+            Services.AddScoped<IOptionsSnapshot<TOptions>>(a =>
+                ActivatorUtilities.CreateInstance<TenantOptions<TOptions>>(a));
+
+            //Register IOptions support
+            Services.AddSingleton<IOptions<TOptions>>(
+                a => ActivatorUtilities.CreateInstance<TenantOptions<TOptions>>(a));
 
             return this;
         }

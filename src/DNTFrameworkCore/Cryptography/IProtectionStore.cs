@@ -8,7 +8,7 @@ namespace DNTFrameworkCore.Cryptography
     {
         /// <summary>Gets all top-level XML elements in the repository.</summary>
         /// <remarks>All top-level elements in the repository.</remarks>
-        IReadOnlyCollection<XElement> RetrieveElements();
+        IReadOnlyList<XElement> ReadElements();
 
         /// <summary>Adds a top-level XML element to the repository.</summary>
         /// <param name="element">The element to add.</param>

@@ -5,6 +5,5 @@ namespace DNTFrameworkCore.EFCore.Context.Hooks
     /// </summary>
     public interface IPreActionHook : IHook
     {
-        bool RequiresValidation { get; }
     }
 }
