@@ -9,19 +9,19 @@ namespace DNTFrameworkCore.Tenancy
         /// <summary>
         ///     Gets current TenantId or null.
         ///     This TenantId should be the TenantId of the <see cref="IUserSession.UserId" />.
-        ///     It can be null if given <see cref="IUserSession.UserId" /> is a heat-tenant user or no user logged in.
+        ///     It can be null if given <see cref="IUserSession.UserId" /> is a head-tenant user or no user logged in.
         /// </summary>
         string TenantId { get; }
 
         /// <summary>
         ///     Gets current TenantName or null.
         ///     This TenantName should be the TenantName of the <see cref="IUserSession.UserId" />.
-        ///     It can be null if given <see cref="IUserSession.UserId" /> is a heat-tenant user or no user logged in.
+        ///     It can be null if given <see cref="IUserSession.UserId" /> is a head-tenant user or no user logged in.
         /// </summary>
         string TenantName { get; }
 
         /// <summary>
-        ///     Represents current tenant is from head-tenant.
+        ///     Represents current tenant is head-tenant.
         /// </summary>
         bool IsHeadTenant { get; }
 

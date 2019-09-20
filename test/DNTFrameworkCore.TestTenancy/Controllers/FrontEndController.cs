@@ -1,7 +1,5 @@
 using DNTFrameworkCore.Tenancy;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
 namespace DNTFrameworkCore.TestTenancy.Controllers
 {
@@ -9,24 +7,16 @@ namespace DNTFrameworkCore.TestTenancy.Controllers
     public class FrontEndController : ControllerBase
     {
         private readonly ITenantSession _tenantSession;
-        private readonly IOptions<CookiePolicyOptions> _cookieOptions;
 
-        public FrontEndController(ITenantSession tenantSession,IOptions<CookiePolicyOptions> cookieOptions)
+        public FrontEndController(ITenantSession tenantSession)
         {
             _tenantSession = tenantSession;
-            _cookieOptions = cookieOptions;
         }
         
         [HttpGet("[action]")]
         public IActionResult TenantInfo()
         {
             return Ok(_tenantSession.Tenant);
-        }
-        
-        [HttpGet("[action]")]
-        public IActionResult CookieOption()
-        {
-            return Ok(_cookieOptions.Value);
         }
     }
 }
