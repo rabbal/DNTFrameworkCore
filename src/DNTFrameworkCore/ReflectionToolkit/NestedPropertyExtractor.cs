@@ -46,7 +46,7 @@ namespace DNTFrameworkCore.ReflectionToolkit
 
                 else if (propertyGetter.PropertyType.GetTypeInfo().IsEnum)
                 {
-                    var enumValue = ((Enum) dataValue).GetEnumStringValue();
+                    var enumValue = ((Enum) dataValue).GetStringValue();
                     _result.Add(new Property
                     {
                         PropertyName = name,

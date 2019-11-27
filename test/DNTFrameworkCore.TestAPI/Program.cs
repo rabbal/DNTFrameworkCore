@@ -1,9 +1,9 @@
-﻿using DNTFrameworkCore.EFCore.Logging;
+﻿using DNTFrameworkCore.EFCore;
+using DNTFrameworkCore.EFCore.Logging;
 using DNTFrameworkCore.Logging;
 using DNTFrameworkCore.TestAPI.Infrastructure.Context;
-using DNTFrameworkCore.Web.EFCore;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.TestAPI
@@ -17,8 +17,9 @@ namespace DNTFrameworkCore.TestAPI
                 .Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateWebHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>().UseIISIntegration())
                 .UseDefaultServiceProvider((context, options) =>
                 {
                     options.ValidateScopes = context.HostingEnvironment.IsDevelopment();
@@ -35,9 +36,8 @@ namespace DNTFrameworkCore.TestAPI
                         logging.AddConsole();
                         logging.AddDebug();
                         logging.AddEventSourceLogger();
-                        //logging.AddEventLog();
+                        logging.AddEventLog();
                     }
-                })
-                .UseStartup<Startup>();
+                });
     }
 }

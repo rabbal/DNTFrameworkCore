@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
-using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Collections;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Data;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.TestTenancy.Application.Configuration;
+using DNTFrameworkCore.TestTenancy.Authorization;
 using DNTFrameworkCore.TestTenancy.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -18,19 +18,16 @@ namespace DNTFrameworkCore.TestTenancy.Application.Common
         private readonly IUnitOfWork _uow;
         private readonly IOptionsSnapshot<ProjectSettings> _settings;
         private readonly IUserPasswordHashAlgorithm _password;
-        private readonly IPermissionService _permissionManager;
         private readonly ILogger<DbSeed> _logger;
 
         public DbSeed(IUnitOfWork uow,
             IOptionsSnapshot<ProjectSettings> settings,
             IUserPasswordHashAlgorithm password,
-            IPermissionService permissionManager,
             ILogger<DbSeed> logger)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
             _password = password ?? throw new ArgumentNullException(nameof(password));
-            _permissionManager = permissionManager ?? throw new ArgumentNullException(nameof(permissionManager));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -61,7 +58,7 @@ namespace DNTFrameworkCore.TestTenancy.Application.Common
             }
 
             var rolePermissionNames = role.Permissions.Select(a => a.Name).ToList();
-            var allPermissionNames = _permissionManager.ReadList().Select(p => p.Name);
+            var allPermissionNames = Permissions.Names();
 
             var newPermissions = allPermissionNames.Except(rolePermissionNames)
                 .Select(permissionName => new RolePermission {Name = permissionName}).ToList();

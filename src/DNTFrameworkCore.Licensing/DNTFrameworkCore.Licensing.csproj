@@ -1,25 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <Title>DNTFrameworkCore.Licensing</Title>
     <VersionPrefix>3.7.0</VersionPrefix>
-    <Description>DNTFrameworkCore.Licensing</Description>
+    <Description>Lightweight Library for Build and Read Signed License based on SignedXml</Description>
+    <VersionPrefix>3.7.0</VersionPrefix>
     <Authors>GholamReza Rabbal</Authors>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/rabbal/DNTFrameworkCore/blob/master/LICENSE.md</PackageLicenseUrl>
-    <RepositoryUrl>https://github.com/rabbal/DNTFrameworkCore</RepositoryUrl>
-    <PackageTags>.NET Core; ASP.NET Core; Licensing</PackageTags>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageTags>.NETCore;Licensing;License</PackageTags>
     <AssemblyName>DNTFrameworkCore.Licensing</AssemblyName>
     <RootNamespace>DNTFrameworkCore.Licensing</RootNamespace>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="System.Management" Version="4.5.0" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="4.5.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\DNTFrameworkCore\DNTFrameworkCore.csproj" />
   </ItemGroup>

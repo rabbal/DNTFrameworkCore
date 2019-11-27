@@ -45,7 +45,7 @@ namespace DNTFrameworkCore.Extensions
 
             var packedPermissions = principal.Claims.Where(c =>
                     c.Type.Equals(UserClaimTypes.PackedPermission, StringComparison.OrdinalIgnoreCase))
-                .SelectMany(c => c.Value.UnpackPermissionsFromString());
+                .SelectMany(c => c.Value.UnpackFromString(PermissionConstant.PackingSymbol));
 
             permissions.AddRange(packedPermissions);
 

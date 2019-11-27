@@ -9,6 +9,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.Functional;
+using DNTFrameworkCore.Timing;
 
 namespace DNTFrameworkCore.Licensing
 {
@@ -156,7 +157,7 @@ namespace DNTFrameworkCore.Licensing
             var license = new License
             {
                 Id = Guid.NewGuid(),
-                CreationTime = DateTime.UtcNow,
+                CreationTime = SystemTime.UtcNow,
                 ProductName = productName,
                 ProductVersion = productVersion,
                 CustomerName = customerName,

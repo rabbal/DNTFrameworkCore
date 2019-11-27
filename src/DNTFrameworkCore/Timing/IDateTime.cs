@@ -1,25 +1,27 @@
 ﻿using System;
+using DNTFrameworkCore.Dependency;
 
 namespace DNTFrameworkCore.Timing
 {
     /// <summary>
     /// Defines the required contract for implementing a clock.
     /// </summary>
-    public interface IDateTime
+    public interface IDateTime : ISingletonDependency
     {
         /// <summary>
         /// Gets the current date/time in the UTC timezone.
         /// </summary>
-        DateTimeOffset UtcNow { get; }
+        DateTime UtcNow { get; }
+
         /// <summary>
         /// Gets the current date/time in the Local timezone.
         /// </summary>
-        DateTimeOffset Now { get; }
+        DateTime Now { get; }
     }
 
-    internal class DateTime : IDateTime
+    internal sealed class SystemDateTime : IDateTime
     {
-        public DateTimeOffset UtcNow => DateTimeOffset.UtcNow;
-        public DateTimeOffset Now => DateTimeOffset.Now;
+        public DateTime UtcNow => SystemTime.UtcNow;
+        public DateTime Now => SystemTime.Now;
     }
 }

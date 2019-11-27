@@ -9,75 +9,57 @@ using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.TestAPI.Domain.Identity;
+using DNTFrameworkCore.Timing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DNTFrameworkCore.TestAPI.Authentication
 {
-    public interface ITokenManager : IScopedDependency
+    public interface ITokenService : IScopedDependency
     {
-        Task<bool> IsValidTokenAsync(long userId, string accessToken);
-        Task<Token> BuildTokenAsync(long userId, IEnumerable<Claim> claims);
+        Task<bool> IsValidTokenAsync(long userId, string token);
+        Task<Token> NewTokenAsync(long userId, IEnumerable<Claim> claims);
         Task RevokeTokensAsync(long? userId = null);
     }
 
-    public class TokenManager : ITokenManager
+    public class TokenService : ITokenService
     {
         private readonly IUnitOfWork _uow;
         private readonly IOptionsSnapshot<TokenOptions> _options;
+        private readonly IDateTime _dateTime;
         private readonly ISecurityService _security;
         private readonly DbSet<UserToken> _tokens;
 
-        public TokenManager(IUnitOfWork uow,
+        public TokenService(IUnitOfWork uow,
             IOptionsSnapshot<TokenOptions> options,
+            IDateTime dateTime,
             ISecurityService security)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _options = options ?? throw new ArgumentNullException(nameof(options));
+            _dateTime = dateTime ?? throw new ArgumentNullException(nameof(dateTime));
             _security = security ?? throw new ArgumentNullException(nameof(security));
 
             _tokens = _uow.Set<UserToken>();
         }
 
-        public async Task<Token> BuildTokenAsync(long userId, IEnumerable<Claim> claims)
+        public async Task<Token> NewTokenAsync(long userId, IEnumerable<Claim> claims)
         {
-            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Value.SigningKey));
-            var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
-            var encryptingKey = Encoding.UTF8.GetBytes(_options.Value.EncryptingKey); //must be 16 character
-            var encryptingCredentials = new EncryptingCredentials(new SymmetricSecurityKey(encryptingKey),
-                SecurityAlgorithms.Aes128KW, SecurityAlgorithms.Aes128CbcHmacSha256);
+            var token = Token.New(_options.Value, claims);
 
-            var now = DateTime.UtcNow;
+            await AddUserTokenAsync(userId, token.Value);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Issuer = _options.Value.Issuer,
-                Audience = _options.Value.Audience,
-                IssuedAt = now,
-                NotBefore = now,
-                Expires = now.AddMinutes(_options.Value.TokenExpirationMinutes),
-                SigningCredentials = signingCredentials,
-                EncryptingCredentials = encryptingCredentials,
-                Subject = new ClaimsIdentity(claims)
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-            var token = tokenHandler.WriteToken(securityToken);
-
-            await AddUserTokenAsync(userId, token);
-
-            return new Token {Value = token};
+            return token;
         }
 
         public async Task RevokeTokensAsync(long? userId)
         {
             if (userId.HasValue)
             {
-                if (_options.Value.AllowSignOutAllUserActiveClients)
+                if (_options.Value.LogoutEverywhereEnabled)
                 {
-                    await InvalidateUserTokensAsync(userId.Value);
+                    await DeleteUserTokensAsync(userId.Value);
                 }
             }
 
@@ -90,32 +72,32 @@ namespace DNTFrameworkCore.TestAPI.Authentication
         {
             var tokenHash = ComputeHash(token);
 
-            var userToken = await _tokens.FirstOrDefaultAsync(
+            var userToken = await _tokens.AsNoTracking().FirstOrDefaultAsync(
                 x => x.TokenHash == tokenHash && x.UserId == userId);
 
-            return userToken?.TokenExpirationDateTime >= DateTimeOffset.UtcNow;
+            return userToken?.TokenExpirationDateTime >= _dateTime.UtcNow;
         }
 
-        private async Task AddUserTokenAsync(UserToken userToken)
+        private async Task AddUserTokenAsync(UserToken token)
         {
-            if (!_options.Value.AllowMultipleLoginsFromTheSameUser)
+            if (!_options.Value.LoginFromSameUserEnabled)
             {
-                await InvalidateUserTokensAsync(userToken.UserId);
+                await DeleteUserTokensAsync(token.UserId);
             }
 
-            _tokens.Add(userToken);
+            _tokens.Add(token);
 
             await _uow.SaveChangesAsync();
         }
 
         private async Task AddUserTokenAsync(long userId, string token)
         {
-            var now = DateTimeOffset.UtcNow;
+            var now = _dateTime.UtcNow;
             var userToken = new UserToken
             {
                 UserId = userId,
                 TokenHash = ComputeHash(token),
-                TokenExpirationDateTime = now.AddMinutes(_options.Value.TokenExpirationMinutes)
+                TokenExpirationDateTime = now.Add(_options.Value.TokenExpiration)
             };
 
             await AddUserTokenAsync(userToken);
@@ -123,12 +105,13 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
         private async Task DeleteExpiredTokensAsync()
         {
-            var now = DateTimeOffset.UtcNow;
+            var now = _dateTime.UtcNow;
             await _tokens.Where(x => x.TokenExpirationDateTime < now)
                 .ForEachAsync(userToken => { _tokens.Remove(userToken); });
         }
 
-        private async Task InvalidateUserTokensAsync(long userId)
+
+        private async Task DeleteUserTokensAsync(long userId)
         {
             await _tokens.Where(x => x.UserId == userId)
                 .ForEachAsync(userToken => { _tokens.Remove(userToken); });

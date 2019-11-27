@@ -1,15 +1,15 @@
 using System;
 using DNTFrameworkCore.Data;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace DNTFrameworkCore.Web.EFCore
+namespace DNTFrameworkCore.EFCore
 {
-    public static class WebHostExtensions
+    public static class HostExtensions
     {
-        public static IWebHost MigrateDbContext<TContext>(this IWebHost webHost) where TContext : DbContext
+        public static IHost MigrateDbContext<TContext>(this IHost webHost) where TContext : DbContext
         {
             using (var scope = webHost.Services.CreateScope())
             {

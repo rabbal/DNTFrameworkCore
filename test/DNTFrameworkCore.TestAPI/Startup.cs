@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
@@ -28,17 +29,21 @@ namespace DNTFrameworkCore.TestAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDNTFrameworkCore()
-                .AddModelValidation()
-                .AddFluentModelValidation()
-                .AddWebApp()
-                .AddProtection();
+                .WithModelValidation()
+                .WithFluentValidation()
+                .WithMemoryCache()
+                .WithSecurityService()
+                .WithBackgroundTaskQueue()
+                .WithRandomNumberProvider();
+
+            services.AddWebApp().AddProtection();
 
             services.AddInfrastructure(Configuration);
             services.AddApplication(Configuration);
             services.AddResources();
             services.AddWebAPI();
             services.AddJwtAuthentication(Configuration);
-            
+
             services.AddDistributedSqlServerCache(options =>
             {
                 options.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
@@ -48,7 +53,7 @@ namespace DNTFrameworkCore.TestAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -93,11 +98,21 @@ namespace DNTFrameworkCore.TestAPI
             }
 
             app.UseHttpsRedirection();
-            app.UseAuthentication();
-            app.UseMvc();
-            app.UseSignalR(routes => { routes.MapHub<NotificationHub>("/api/notificationhub"); });
+
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
+
+            app.UseRouting();
+            app.UseCors("CorsPolicy");
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<NotificationHub>("/hubs/notification");
+            });
         }
     }
 }

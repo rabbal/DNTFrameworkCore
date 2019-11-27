@@ -104,7 +104,7 @@ namespace DNTFrameworkCore.Common
             while (memberExpression != null &&
                    memberExpression.Expression.NodeType == ExpressionType.MemberAccess)
             {
-                var propInfo = memberExpression.Expression.GetType().GetProperty("Member");
+                var propInfo = memberExpression.Expression.GetType().GetTypeInfo().GetProperty("Member");
                 var propValue = propInfo.GetValue(memberExpression.Expression, null) as PropertyInfo;
                 path = propValue.Name + "." + path;
                 memberExpression = memberExpression.Expression as MemberExpression;
@@ -166,7 +166,7 @@ namespace DNTFrameworkCore.Common
 
             if (value != null && propertyInfo.PropertyType.GetTypeInfo().IsEnum)
             {
-                return ((Enum) value).GetEnumStringValue();
+                return ((Enum) value).GetStringValue();
             }
 
             if (value == null)

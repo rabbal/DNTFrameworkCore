@@ -139,7 +139,7 @@ namespace DNTFrameworkCore.Web.Mvc
             return actionMethodInfo.GetCustomAttributes(inherit: true)
                 .Where(attribute =>
                 {
-                    var attributeNamespace = attribute.GetType().Namespace;
+                    var attributeNamespace = attribute.GetType().GetTypeInfo().Namespace;
                     return attributeNamespace != typeof(CompilerGeneratedAttribute).Namespace &&
                            attributeNamespace != typeof(DebuggerStepThroughAttribute).Namespace;
                 })
@@ -213,7 +213,7 @@ namespace DNTFrameworkCore.Web.Mvc
         {
             const string attribute = "Attribute";
             var attributes =
-                string.Join(",", Attributes.Select(a => a.GetType().Name.Replace(attribute, "")));
+                string.Join(",", Attributes.Select(a => a.GetType().GetTypeInfo().Name.Replace(attribute, "")));
             return $"[{attributes}]{Name}";
         }
     }

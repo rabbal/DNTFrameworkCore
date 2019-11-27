@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 
 namespace DNTFrameworkCore.Extensions
 {
@@ -9,7 +10,7 @@ namespace DNTFrameworkCore.Extensions
     {
         public static string GetGenericTypeName(this object @object)
         {
-            return @object.GetType().GetGenericTypeName();
+            return @object.GetType().GetTypeInfo().GetGenericTypeName();
         }
 
         /// <summary>
@@ -19,7 +20,7 @@ namespace DNTFrameworkCore.Extensions
         /// <typeparam name="T">Type of the target object</typeparam>
         /// <returns>Converted object</returns>
         public static T To<T>(this object value)
-            where T : struct
+            where T : IConvertible
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
 

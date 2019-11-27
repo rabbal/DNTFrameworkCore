@@ -16,9 +16,9 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Context
 {
     public class ProjectDbContext : DbContextCore
     {
-        public ProjectDbContext(DbContextOptions<ProjectDbContext> options, IEnumerable<IHook> hooks) : base(options, hooks)
+        public ProjectDbContext(DbContextOptions<ProjectDbContext> options, IEnumerable<IHook> hooks) : base(options,
+            hooks)
         {
-            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,7 +32,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Context
             modelBuilder.AddJsonFields();
             modelBuilder.AddTrackingFields<long>();
             modelBuilder.AddTenancyField<long>();
-            modelBuilder.AddSoftDeletedField();
+            modelBuilder.AddIsDeletedField();
             modelBuilder.AddRowVersionField();
             modelBuilder.AddRowIntegrityField();
             modelBuilder.AddRowLevelSecurityField<long>();

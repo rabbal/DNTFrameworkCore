@@ -1,43 +1,35 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Title>DNTFrameworkCore.Web</Title>
+    <Description>This Library Contains Infrastructures for Permission-based Authorization,Building CRUD API,Building CRUD Mvc Controller and etc based on ASP.NET Core</Description>
     <VersionPrefix>3.7.0</VersionPrefix>
-    <Description>DNTFrameworkCore.Web</Description>
     <Authors>GholamReza Rabbal</Authors>
+    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
     <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/rabbal/DNTFrameworkCore/blob/master/LICENSE.md</PackageLicenseUrl>
-    <RepositoryUrl>https://github.com/rabbal/DNTFrameworkCore</RepositoryUrl>
-    <PackageTags>.NET Core; ASP.NET Core; EFCore; Multitenancy; Validation; Transaction; Framework; Design; Logging; SOLID; Event-Driven; Domain</PackageTags>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageTags>.NETCore;ASP.NET Core;API;MVC;CRUD</PackageTags>
+    <AssemblyName>DNTFrameworkCore.Web</AssemblyName>
+    <RootNamespace>DNTFrameworkCore.Web</RootNamespace>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\DNTFrameworkCore\DNTFrameworkCore.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Localization" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="2.2.0" />
-    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0" />
     <PackageReference Include="Microsoft.SyndicationFeed.ReaderWriter" Version="1.0.2" />
-    <PackageReference Include="DNTPersianUtils.Core" Version="3.2.1" />
-    <PackageReference Include="MailKit" Version="2.2.0" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.7" />
-    <PackageReference Include="IPAddressRange" Version="3.2.0" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Helpers" />
-    <Folder Include="Network" />
-    <Folder Include="Security\Throttling" />
+    <Folder Include="Mvc\Navigation" />
   </ItemGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <DefineConstants>NETCOREAPP3_0</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <DefineConstants>NETSTANDARD2_0</DefineConstants>
+  </PropertyGroup>
 </Project>

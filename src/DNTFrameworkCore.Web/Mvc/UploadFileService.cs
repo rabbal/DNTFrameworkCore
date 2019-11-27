@@ -43,12 +43,12 @@ namespace DNTFrameworkCore.Web.Mvc
     public class UploadFileService : IUploadFileService
     {
         private const int MaxBufferSize = 0x10000; // 64K. The artificial constraint due to win32 api limitations. Increasing the buffer size beyond 64k will not help in any circumstance, as the underlying SMB protocol does not support buffer lengths beyond 64k.
-        private readonly IHostingEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
 
         /// <summary>
         /// Upload File Service
         /// </summary>
-        public UploadFileService(IHostingEnvironment environment)
+        public UploadFileService(IWebHostEnvironment environment)
         {
             _environment = environment ?? throw new ArgumentNullException(nameof(environment));
         }

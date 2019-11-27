@@ -19,10 +19,12 @@ namespace DNTFrameworkCore.EFCore.Caching
     {
         public void Configure(EntityTypeBuilder<Cache> builder)
         {
-            builder.ToTable(name: "Cache", schema: "dbo");
-            builder.HasIndex(e => e.ExpiresAtTime).HasName("IX_Cache_ExpiresAtTime");
             builder.Property(e => e.Id).HasMaxLength(449);
             builder.Property(e => e.Value).IsRequired();
+            
+            builder.HasIndex(e => e.ExpiresAtTime).HasName("IX_Cache_ExpiresAtTime");
+            
+            builder.ToTable(name: "Cache", schema: "dbo");
         }
     }
 }

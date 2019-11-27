@@ -56,7 +56,7 @@ namespace DNTFrameworkCore.EFCore.Logging
                     UserBrowserName = m.UserBrowserName,
                     UserDisplayName = m.UserDisplayName,
                     UserName = m.UserName,
-                    Timestamp = m.Timestamp
+                    CreationTime = m.CreationTime
                 });
 
             using (var scope = _provider.CreateScope())

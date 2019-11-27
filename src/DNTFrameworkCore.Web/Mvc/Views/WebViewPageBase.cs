@@ -85,7 +85,7 @@ namespace DNTFrameworkCore.Web.Mvc.Views
         /// Checks if current user is granted for a permission.
         /// </summary>
         /// <param name="permissionName">Name of the permission</param>
-        protected bool IsGranted(string permissionName)
+        protected bool HasPermission(string permissionName)
         {
             return UserSession.IsGranted(permissionName);
         }

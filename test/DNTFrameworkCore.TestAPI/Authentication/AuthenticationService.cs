@@ -27,7 +27,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly ITokenManager _token;
+        private readonly ITokenService _token;
         private readonly IUnitOfWork _uow;
         private readonly IAntiforgeryService _antiforgery;
         private readonly IOptionsSnapshot<TokenOptions> _options;
@@ -38,7 +38,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
         private readonly DbSet<Role> _roles;
 
         public AuthenticationService(
-            ITokenManager token,
+            ITokenService token,
             IUnitOfWork uow,
             IAntiforgeryService antiforgery,
             IOptionsSnapshot<TokenOptions> options,
@@ -81,7 +81,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
             var userId = user.Id;
 
             var claims = await BuildClaimsAsync(userId);
-            var token = await _token.BuildTokenAsync(userId, claims);
+            var token = await _token.NewTokenAsync(userId, claims);
             _antiforgery.AddTokenToResponse(claims);
 
             return SignInResult.Ok(token);
@@ -148,24 +148,10 @@ namespace DNTFrameworkCore.TestAPI.Authentication
             var deniedPermissions = user.Permissions.Where(p => !p.IsGranted).Select(a => a.Name);
 
             var permissions = rolePermissions.Union(grantedPermissions).Except(deniedPermissions);
-            foreach (var permission in permissions)
-            {
-                claims.Add(new Claim(UserClaimTypes.Permission, permission, ClaimValueTypes.String,
-                    _options.Value.Issuer));
-            }
 
             //recommended approach to minimize size of  token/cookie
             claims.Add(new Claim(UserClaimTypes.PackedPermission,
-                new[] {"48", "65", "6C", "6C", "6F", "20", "57", "6F", "72", "6C", "64", "21"}
-                    .PackPermissionsToString()));
-
-            //Todo: Set TenantId claim in MultiTenancy scenarios     
-            // claims.Add(new Claim(DNTClaimTypes.TenantId, user.TenantId.ToString(), ClaimValueTypes.Integer64,
-            // _options.Value.Issuer));
-
-            //Todo: Set BranchId claim in MultiBranch scenarios     
-            // claims.Add(new Claim(DNTClaimTypes.BranchId, user.BranchId.ToString(), ClaimValueTypes.Integer64,
-            // _options.Value.Issuer));
+                permissions.PackToString(PermissionConstant.PackingSymbol), ClaimValueTypes.String));
 
             return claims;
         }

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.Web.Hosting
 {
-    public class QueuedHostedService : BackgroundService
+    public sealed class QueuedHostedService : BackgroundService
     {
         private readonly IServiceScopeFactory _factory;
         private readonly ILogger _logger;

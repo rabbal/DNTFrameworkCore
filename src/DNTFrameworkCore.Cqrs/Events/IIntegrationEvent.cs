@@ -7,6 +7,6 @@ namespace DNTFrameworkCore.Cqrs.Events
     {
         Guid Id { get; }
         int Version { get; }
-        DateTimeOffset DateTime { get; }
+        DateTime DateTime { get; }
     }
 }

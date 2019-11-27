@@ -18,9 +18,9 @@ namespace DNTFrameworkCore.Web.IO
 
     internal class PathProvider : IPathProvider
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public PathProvider(IHostingEnvironment environment)
+        public PathProvider(IWebHostEnvironment environment)
         {
             _hostingEnvironment = environment ?? throw new ArgumentNullException(nameof(environment));
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using DNTFrameworkCore.Extensions;
 
 namespace DNTFrameworkCore.GuardToolkit

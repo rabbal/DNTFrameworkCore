@@ -1,5 +1,4 @@
 ﻿using System;
-using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Caching;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Dependency;
@@ -15,41 +14,84 @@ namespace DNTFrameworkCore
     public static class ServiceCollectionExtensions
     {
         // ReSharper disable once InconsistentNaming
-        public static IServiceCollection AddDNTFrameworkCore(this IServiceCollection services)
+        public static FrameworkBuilder AddDNTFrameworkCore(this IServiceCollection services)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
             services.AddScoped<IEventBus, EventBus>();
-            services.AddSingleton<IRandomNumberProvider, RandomNumberProvider>();
-            services.AddSingleton<ISecurityService, SecurityService>();
-            services.AddSingleton<IPermissionService, PermissionService>();
-            services.AddMemoryCache();
-            services.AddSingleton<ICacheService, MemoryCacheService>();
-            services.AddScoped<IDateTime, Timing.DateTime>();
+            services.AddSingleton<IDateTime, SystemDateTime>();
             services.AddTransient(typeof(Lazy<>), typeof(LazyFactory<>));
 
-            return services;
+            return new FrameworkBuilder(services);
+        }
+    }
+
+    /// <summary>
+    /// Configure DNTFrameworkCore services
+    /// </summary>
+    public sealed class FrameworkBuilder
+    {
+        public IServiceCollection Services { get; }
+
+        public FrameworkBuilder(IServiceCollection services)
+        {
+            Services = services;
         }
 
-        public static IServiceCollection AddModelValidation(
-            this IServiceCollection services,
-            Action<ValidationOptions> setupAction = null)
+        /// <summary>
+        /// Register the ISecurityService
+        /// </summary>
+        public FrameworkBuilder WithSecurityService()
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+            Services.AddSingleton<ISecurityService, SecurityService>();
+            return this;
+        }
+        
+        /// <summary>
+        /// Register the ICacheService
+        /// </summary>
+        public FrameworkBuilder WithMemoryCache()
+        {
+            Services.AddMemoryCache();
+            Services.AddSingleton<ICacheService, MemoryCacheService>();
+            return this;
+        }
+        
+        /// <summary>
+        /// Register the IBackgroundTaskQueue
+        /// </summary>
+        public FrameworkBuilder WithBackgroundTaskQueue()
+        {
+            Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+            return this;
+        }
 
-            services.AddTransient<ValidationInterceptor>();
-            services.AddTransient<MethodInvocationValidator>();
-            services.AddTransient<IMethodParameterValidator, DataAnnotationMethodParameterValidator>();
-            services.AddTransient<IMethodParameterValidator, ValidatableObjectMethodParameterValidator>();
-            services.AddTransient<IMethodParameterValidator, ModelValidationMethodParameterValidator>();
+        /// <summary>
+        /// Register the IRandomNumberProvider
+        /// </summary>
+        public FrameworkBuilder WithRandomNumberProvider()
+        {
+            Services.AddSingleton<IRandomNumberProvider, RandomNumberProvider>();
+            return this;
+        }
+        
+        /// <summary>
+        /// Register the validation infrastructure's services
+        /// </summary>
+        public FrameworkBuilder WithModelValidation(Action<ValidationOptions> setupAction = null)
+        {
+            Services.AddTransient<ValidationInterceptor>();
+            Services.AddTransient<MethodInvocationValidator>();
+            Services.AddTransient<IMethodParameterValidator, DataAnnotationMethodParameterValidator>();
+            Services.AddTransient<IMethodParameterValidator, ValidatableObjectMethodParameterValidator>();
+            Services.AddTransient<IMethodParameterValidator, ModelValidationMethodParameterValidator>();
 
             if (setupAction != null)
             {
-                services.Configure(setupAction);
+                Services.Configure(setupAction);
             }
 
-            return services;
+            return this;
         }
     }
 }

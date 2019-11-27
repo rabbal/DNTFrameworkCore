@@ -11,7 +11,7 @@ namespace DNTFrameworkCore.Cryptography
         int Next(int min, int max);
     }
 
-    public class RandomNumberProvider : IRandomNumberProvider, ISingletonDependency
+    internal sealed class RandomNumberProvider : IRandomNumberProvider, ISingletonDependency
     {
         private readonly RandomNumberGenerator _rand = RandomNumberGenerator.Create();
 

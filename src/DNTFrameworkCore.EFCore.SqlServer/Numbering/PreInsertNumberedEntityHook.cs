@@ -45,7 +45,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
                 var parameterNames = option.FieldNames.Aggregate(string.Empty,
                     (current, fieldName) => current + $"AND [t0].[{fieldName}] = @{fieldName} ");
 
-                var tableName = uow.Entry(entity).Metadata.Relational().TableName;
+                var tableName = uow.Entry(entity).Metadata.GetTableName();
                 command.CommandText = $@"SELECT
                     (CASE
                 WHEN EXISTS(
@@ -103,7 +103,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             var numberedEntity = uow.Set<NumberedEntity>().AsNoTracking().FirstOrDefault(a => a.EntityName == key);
             if (numberedEntity == null)
             {
-                uow.ExecuteSqlCommand(
+                uow.ExecuteSqlRawCommand(
                     "INSERT INTO [dbo].[NumberedEntity]([EntityName], [NextNumber]) VALUES(@p0,@p1)",
                     key,
                     option.Start + option.IncrementBy);
@@ -111,7 +111,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             else
             {
                 number = numberedEntity.NextNumber.ToString();
-                uow.ExecuteSqlCommand(
+                uow.ExecuteSqlRawCommand(
                     "UPDATE [dbo].[NumberedEntity] SET [NextNumber] = @p0 WHERE [Id] = @p1 ",
                     numberedEntity.NextNumber + option.IncrementBy, numberedEntity.Id);
             }

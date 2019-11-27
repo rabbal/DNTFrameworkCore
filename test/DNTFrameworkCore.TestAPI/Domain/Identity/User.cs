@@ -33,7 +33,7 @@ namespace DNTFrameworkCore.TestAPI.Domain.Identity
 
         public override string ToString() => UserName;
 
-        public string NewSerialNumber()
+        public static string NewSerialNumber()
         {
             return Guid.NewGuid().ToString("N");
         }

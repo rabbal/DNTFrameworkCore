@@ -7,7 +7,7 @@ using DNTFrameworkCore.Collections;
 
 namespace DNTFrameworkCore.Validation.Interception
 {
-    public class DataAnnotationMethodParameterValidator : IMethodParameterValidator
+    internal sealed class DataAnnotationMethodParameterValidator : IMethodParameterValidator
     {
         private readonly IServiceProvider _provider;
 

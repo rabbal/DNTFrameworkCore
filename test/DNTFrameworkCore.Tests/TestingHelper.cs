@@ -14,7 +14,7 @@ namespace DNTFrameworkCore.Tests
 
             configure?.Invoke(services);
 
-            var serviceProvider = IoC.ApplicationServices = services.BuildServiceProvider();
+            var serviceProvider = services.BuildServiceProvider();
 
 
             return serviceProvider;

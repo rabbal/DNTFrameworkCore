@@ -1,4 +1,3 @@
-using System;
 using System.Security.Claims;
 using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.GuardToolkit;
@@ -10,33 +9,20 @@ namespace DNTFrameworkCore.Web.Tenancy.Internal
 {
     internal sealed class TenantSession : ITenantSession
     {
-        private readonly HttpContext _httpContext;
-        private readonly ClaimsPrincipal _principal;
+        private readonly IHttpContextAccessor _context;
         private readonly IUserSession _session;
 
-        public TenantSession(IHttpContextAccessor httpContext, IUserSession session)
+        public TenantSession(IHttpContextAccessor context, IUserSession session)
         {
             _session = Ensure.IsNotNull(session, nameof(session));
-            _httpContext = Ensure.IsNotNull(httpContext, nameof(httpContext)).HttpContext;
-            _principal = _httpContext?.User;
+            _context = Ensure.IsNotNull(context, nameof(context));
         }
 
-        public string TenantId => _session.IsAuthenticated
-            ? _principal?.FindTenantId()
-            : Tenant?.Id;
-
-        public string TenantName => _session.IsAuthenticated
-            ? _principal?.FindTenantName()
-            : Tenant?.Name;
-
-        public bool IsHeadTenant => _principal?.IsHeadTenant() ?? false;
-
-        public string ImpersonatorTenantId => _principal?.FindImpersonatorTenantId();
-        public Tenant Tenant => _httpContext?.GetTenant();
-
-        public IDisposable UseTenantId(string tenantId)
-        {
-            throw new NotImplementedException();
-        }
+        private ClaimsPrincipal Principal => _context?.HttpContext?.User;
+        private Tenant Tenant => _context?.HttpContext?.GetTenant();
+        public string TenantId => _session.IsAuthenticated ? Principal?.FindTenantId() : Tenant?.Id;
+        public string TenantName => _session.IsAuthenticated ? Principal?.FindTenantName() : Tenant?.Name;
+        public bool IsHeadTenant => Principal?.IsHeadTenant() ?? false;
+        public string ImpersonatorTenantId => Principal?.FindImpersonatorTenantId();
     }
 }

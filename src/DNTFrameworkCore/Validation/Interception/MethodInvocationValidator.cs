@@ -7,7 +7,6 @@ using System.Reflection;
 using DNTFrameworkCore.Collections;
 using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.GuardToolkit;
-using DNTFrameworkCore.Normalization;
 using DNTFrameworkCore.ReflectionToolkit;
 using Microsoft.Extensions.Options;
 
@@ -16,14 +15,13 @@ namespace DNTFrameworkCore.Validation.Interception
     /// <summary>
     /// This class is used to validate a method call (invocation) for method arguments.
     /// </summary>
-    public class MethodInvocationValidator : ITransientDependency
+    public sealed class MethodInvocationValidator : ITransientDependency
     {
         private const int MaxRecursiveParameterValidationDepth = 8;
 
         private readonly IOptions<ValidationOptions> _options;
         private readonly IEnumerable<IMethodParameterValidator> _validators;
         private readonly IList<ValidationFailure> _failures;
-        private readonly IList<IShouldNormalize> _objectsToBeNormalized;
 
         public MethodInvocationValidator(
             IOptions<ValidationOptions> options,
@@ -33,7 +31,6 @@ namespace DNTFrameworkCore.Validation.Interception
             _validators = validators ?? throw new ArgumentNullException(nameof(validators));
 
             _failures = new List<ValidationFailure>();
-            _objectsToBeNormalized = new List<IShouldNormalize>();
         }
 
         public IEnumerable<ValidationFailure> Validate(MethodInfo method, object[] parameterValues)
@@ -73,15 +70,10 @@ namespace DNTFrameworkCore.Validation.Interception
                 return _failures;
             }
 
-            foreach (var objectToBeNormalized in _objectsToBeNormalized)
-            {
-                objectToBeNormalized.Normalize();
-            }
-
             return Enumerable.Empty<ValidationFailure>();
         }
 
-        protected virtual bool IsValidationSkipped(MethodInfo method)
+        private bool IsValidationSkipped(MethodInfo method)
         {
             if (method.IsDefined(typeof(EnableValidationAttribute), true))
             {
@@ -97,7 +89,7 @@ namespace DNTFrameworkCore.Validation.Interception
         /// </summary>
         /// <param name="parameterInfo">Parameter of the method to validate</param>
         /// <param name="parameterValue">Value to validate</param>
-        protected virtual void ValidateMethodParameter(ParameterInfo parameterInfo, object parameterValue)
+        private void ValidateMethodParameter(ParameterInfo parameterInfo, object parameterValue)
         {
             if (parameterValue == null)
             {
@@ -114,7 +106,7 @@ namespace DNTFrameworkCore.Validation.Interception
             ValidateObjectRecursively(parameterValue, 1);
         }
 
-        protected virtual void ValidateObjectRecursively(object validatingObject, int depth)
+        private void ValidateObjectRecursively(object validatingObject, int depth)
         {
             if (depth > MaxRecursiveParameterValidationDepth)
             {
@@ -147,12 +139,6 @@ namespace DNTFrameworkCore.Validation.Interception
                 }
             }
 
-            // Add list to be normalized later
-            if (validatingObject is IShouldNormalize shouldNormalize)
-            {
-                _objectsToBeNormalized.Add(shouldNormalize);
-            }
-
             if (!ShouldMakeDeepValidation(validatingObject)) return;
 
             var properties = TypeDescriptor.GetProperties(validatingObject).Cast<PropertyDescriptor>();
@@ -167,23 +153,16 @@ namespace DNTFrameworkCore.Validation.Interception
             }
         }
 
-        protected virtual void SetValidationErrors(object parameter)
+        private void SetValidationErrors(object parameter)
         {
             foreach (var validator in _validators)
             {
-                if (!ShouldValidateUsingValidator(parameter, validator.GetType())) continue;
-
                 var failures = validator.Validate(parameter);
                 _failures.AddRange(failures);
             }
         }
 
-        protected virtual bool ShouldValidateUsingValidator(object validatingObject, Type validatorType)
-        {
-            return true;
-        }
-
-        protected virtual bool ShouldMakeDeepValidation(object validatingObject)
+        private static bool ShouldMakeDeepValidation(object validatingObject)
         {
             // Do not recursively validate for enumerable objects
             if (validatingObject is IEnumerable)

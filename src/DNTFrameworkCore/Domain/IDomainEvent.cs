@@ -1,5 +1,5 @@
 using DNTFrameworkCore.Timing;
-using DateTime = System.DateTime;
+using System;
 
 namespace DNTFrameworkCore.Domain
 {
@@ -12,6 +12,6 @@ namespace DNTFrameworkCore.Domain
     public abstract class DomainEvent : IDomainEvent
     {
         public virtual int Version { get; } = default;
-        public virtual DateTime DateTime => SystemTime.UtcNow.DateTime;
+        public virtual DateTime DateTime => SystemTime.UtcNow;
     }
 }

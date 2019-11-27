@@ -77,7 +77,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
         {
             if (!model.ShouldMapSerialNumber()) return;
 
-            user.SerialNumber = user.NewSerialNumber();
+            user.SerialNumber = User.NewSerialNumber();
         }
 
         private void MapPasswordHash(User user, UserModel model)

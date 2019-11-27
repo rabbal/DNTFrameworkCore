@@ -89,7 +89,7 @@ namespace DNTFrameworkCore.Logging
 
         private (int Year, int Month, int Day) GetGrouping(LogMessage message)
         {
-            return (message.Timestamp.Year, message.Timestamp.Month, message.Timestamp.Day);
+            return (message.CreationTime.Year, message.CreationTime.Month, message.CreationTime.Day);
         }
 
         /// <summary>    

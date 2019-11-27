@@ -9,14 +9,12 @@ namespace DNTFrameworkCore.FluentValidation
 {
     public static class Extensions
     {
-        public static IServiceCollection AddFluentModelValidation(this IServiceCollection services)
+        public static FrameworkBuilder WithFluentValidation(this FrameworkBuilder builder)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
-            
-            services.AddTransient(typeof(IModelValidator<>), typeof(FluentValidationModelValidator<>));
-            services.AddTransient<IValidatorFactory, ServiceProviderValidatorFactory>();
+            builder.Services.AddTransient(typeof(IModelValidator<>), typeof(FluentValidationModelValidator<>));
+            builder.Services.AddTransient<IValidatorFactory, ServiceProviderValidatorFactory>();
 
-            return services;
+            return builder;
         }
 
         /// <summary>

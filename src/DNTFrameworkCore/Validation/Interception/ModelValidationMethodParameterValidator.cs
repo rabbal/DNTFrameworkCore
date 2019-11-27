@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace DNTFrameworkCore.Validation.Interception
 {
-    public class ModelValidationMethodParameterValidator : IMethodParameterValidator
+    internal sealed class ModelValidationMethodParameterValidator : IMethodParameterValidator
     {
         private readonly IServiceProvider _provider;
 

@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
-using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Collections;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Data;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.TestAPI.Application.Configuration;
+using DNTFrameworkCore.TestAPI.Authorization;
 using DNTFrameworkCore.TestAPI.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -16,21 +16,18 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
     public class DbSeed : IDbSeed
     {
         private readonly IUnitOfWork _uow;
-        private readonly IOptionsSnapshot<ProjectSettings> _settings;
+        private readonly IOptionsSnapshot<ProjectOptions> _settings;
         private readonly IUserPasswordHashAlgorithm _password;
-        private readonly IPermissionService _permissionManager;
         private readonly ILogger<DbSeed> _logger;
 
         public DbSeed(IUnitOfWork uow,
-            IOptionsSnapshot<ProjectSettings> settings,
+            IOptionsSnapshot<ProjectOptions> settings,
             IUserPasswordHashAlgorithm password,
-            IPermissionService permissionManager,
             ILogger<DbSeed> logger)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
             _password = password ?? throw new ArgumentNullException(nameof(password));
-            _permissionManager = permissionManager ?? throw new ArgumentNullException(nameof(permissionManager));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -61,7 +58,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
             }
 
             var rolePermissionNames = role.Permissions.Select(a => a.Name).ToList();
-            var allPermissionNames = _permissionManager.ReadList().Select(p => p.Name);
+            var allPermissionNames = Permissions.Names();
 
             var newPermissions = allPermissionNames.Except(rolePermissionNames)
                 .Select(permissionName => new RolePermission {Name = permissionName}).ToList();
@@ -86,7 +83,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Common
                     NormalizedDisplayName = admin.DisplayName, //.NormalizePersianTitle(),
                     IsActive = true,
                     PasswordHash = _password.HashPassword(admin.Password),
-                    SerialNumber = Guid.NewGuid().ToString("N")
+                    SerialNumber = User.NewSerialNumber()
                 };
 
                 _uow.Set<User>().Add(user);

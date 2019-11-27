@@ -15,13 +15,13 @@ namespace DNTFrameworkCore.Web.Tenancy
             return builder;
         }
 
-        public static TenantBuilder WithTenantContainer(this TenantBuilder builder)
-        {
-            if (builder == null) throw new ArgumentNullException(nameof(builder));
-
-            builder.Services.AddSingleton<ITenantContainerFactory>(provider =>
-                new TenantContainerFactory(provider, builder.Services));
-            return builder;
-        }
+//        public static TenantBuilder WithTenantContainer(this TenantBuilder builder)
+//        {
+//            if (builder == null) throw new ArgumentNullException(nameof(builder));
+//
+//            builder.Services.AddSingleton<ITenantContainerFactory>(provider =>
+//                new TenantContainerFactory(provider, builder.Services));
+//            return builder;
+//        }
     }
 }

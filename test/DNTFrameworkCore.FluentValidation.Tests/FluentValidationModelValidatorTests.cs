@@ -15,7 +15,8 @@ namespace DNTFrameworkCore.FluentValidation.Tests
         {
             var services = new ServiceCollection();
             services.AddDNTFrameworkCore()
-                .AddFluentModelValidation();
+                .WithModelValidation()
+                .WithFluentValidation();
 
             services.AddSingleton<IValidatorFactory, ServiceProviderValidatorFactory>();
             services.AddTransient<IValidator<TestModel>, TestModelValidator>();
@@ -33,7 +34,8 @@ namespace DNTFrameworkCore.FluentValidation.Tests
         {
             var services = new ServiceCollection();
             services.AddDNTFrameworkCore()
-                .AddFluentModelValidation();
+                .WithModelValidation()
+                .WithFluentValidation();
 
             services.AddSingleton<IValidatorFactory, ServiceProviderValidatorFactory>();
             // services.AddTransient<IValidator<TestModel>, TestModelValidator>();

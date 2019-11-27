@@ -10,7 +10,7 @@ using DNTFrameworkCore.Transaction;
 
 namespace DNTFrameworkCore.EFCore.Transaction
 {
-    public class TransactionInterceptor : IInterceptor
+    public sealed class TransactionInterceptor : IInterceptor
     {
         private readonly IUnitOfWork _uow;
 
@@ -34,7 +34,7 @@ namespace DNTFrameworkCore.EFCore.Transaction
             var attribute = FindTransactionalAttribute(method);
 
             //If there is a running transaction, just run the method
-            if (!attribute.HasValue || _uow.HasActiveTransaction)
+            if (!attribute.HasValue || _uow.HasTransaction)
             {
                 invocation.Proceed();
                 return;

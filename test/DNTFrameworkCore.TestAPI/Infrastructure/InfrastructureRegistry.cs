@@ -30,8 +30,8 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure
         {
             services.AddEFCore<ProjectDbContext>()
                 .WithTrackingHook<long>()
-                //.WithTenancyHook<long>() need to AddTenancy
-                .WithSoftDeleteHook()
+                //.WithTenancyHook<long>()
+                .WithDeletedEntityHook()
                 .WithRowLevelSecurityHook<long>()
                 //.WithRowIntegrityHook<>()
                 .WithNumberingHook(options =>

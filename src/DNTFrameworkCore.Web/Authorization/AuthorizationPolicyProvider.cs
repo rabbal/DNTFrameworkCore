@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Common;
+using DNTFrameworkCore.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
@@ -26,7 +27,8 @@ namespace DNTFrameworkCore.Web.Authorization
 
             var policy = _policies.GetOrAdd(policyName, name =>
             {
-                var permissions = policyName.ExtractPermissionsFromPolicyName();
+                var permissions = policyName.Substring(PermissionConstant.PolicyPrefix.Length)
+                    .UnpackFromString(PermissionConstant.PolicyNameSplitSymbol);
 
                 return new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()

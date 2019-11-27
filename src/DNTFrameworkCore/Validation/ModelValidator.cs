@@ -14,7 +14,7 @@ namespace DNTFrameworkCore.Validation
             if (!((IModelValidator) this).CanValidateInstancesOfType(model.GetType()))
             {
                 throw new InvalidOperationException(
-                    $"Cannot validate instances of type '{model.GetType().Name}'. This validator can only validate instances of type '{typeof(TModel).Name}'.");
+                    $"Cannot validate instances of type '{model.GetType().GetTypeInfo().Name}'. This validator can only validate instances of type '{typeof(TModel).Name}'.");
             }
 
             return Validate((TModel) model);

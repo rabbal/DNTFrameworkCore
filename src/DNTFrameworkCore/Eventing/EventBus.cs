@@ -14,7 +14,7 @@ namespace DNTFrameworkCore.Eventing
         Task TriggerAsync(IDomainEvent domainEvent);
     }
 
-    internal class EventBus : IEventBus
+    internal sealed class EventBus : IEventBus
     {
         private const string MethodName = "Handle";
         private readonly IServiceProvider _provider;

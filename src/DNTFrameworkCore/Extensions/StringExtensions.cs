@@ -10,7 +10,33 @@ namespace DNTFrameworkCore.Extensions
 {
     public static class StringExtensions
     {
-                /// <summary>
+        static readonly Regex MatchArabicHebrew = new Regex(@"[\u0600-\u06FF,\u0590-\u05FF]",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        /// <summary>
+        /// Indicates whether the input text contains rtl data or not
+        /// </summary>
+        /// <param name="data">input text</param>
+        /// <returns></returns>
+        public static bool ContainsRtlText(this string data)
+        {
+            if (string.IsNullOrEmpty(data)) return false;
+            return MatchArabicHebrew.IsMatch(data);
+        }
+
+        public static string PackToString(this IEnumerable<string> values, string packingSymbol)
+        {
+            return string.Join(packingSymbol, values);
+        }
+        
+        public static IEnumerable<string> UnpackFromString(this string packedValues,string packingSymbol)
+        {
+            if (packedValues == null) throw new ArgumentNullException(nameof(packedValues));
+
+            return packedValues.Split(new[] {packingSymbol}, StringSplitOptions.None);
+        }
+
+        /// <summary>
         /// Adds a char to end of given string if it does not ends with the char.
         /// </summary>
         public static string EnsureEndsWith(this string str, char c)
@@ -267,7 +293,7 @@ namespace DNTFrameworkCore.Extensions
         /// </summary>
         public static string[] Split(this string str, string separator)
         {
-            return str.Split(new[] { separator }, StringSplitOptions.None);
+            return str.Split(new[] {separator}, StringSplitOptions.None);
         }
 
         /// <summary>
@@ -275,7 +301,7 @@ namespace DNTFrameworkCore.Extensions
         /// </summary>
         public static string[] Split(this string str, string separator, StringSplitOptions options)
         {
-            return str.Split(new[] { separator }, options);
+            return str.Split(new[] {separator}, options);
         }
 
         /// <summary>
@@ -352,7 +378,8 @@ namespace DNTFrameworkCore.Extensions
             return Regex.Replace(
                 str,
                 "[a-z][A-Z]",
-                m => m.Value[0] + " " + (invariantCulture ? char.ToLowerInvariant(m.Value[1]) : char.ToLower(m.Value[1]))
+                m => m.Value[0] + " " +
+                     (invariantCulture ? char.ToLowerInvariant(m.Value[1]) : char.ToLower(m.Value[1]))
             );
         }
 
@@ -386,7 +413,7 @@ namespace DNTFrameworkCore.Extensions
                 throw new ArgumentNullException(nameof(value));
             }
 
-            return (T)Enum.Parse(typeof(T), value);
+            return (T) Enum.Parse(typeof(T), value);
         }
 
         /// <summary>
@@ -404,7 +431,7 @@ namespace DNTFrameworkCore.Extensions
                 throw new ArgumentNullException(nameof(value));
             }
 
-            return (T)Enum.Parse(typeof(T), value, ignoreCase);
+            return (T) Enum.Parse(typeof(T), value, ignoreCase);
         }
 
         /// <summary>
@@ -422,7 +449,7 @@ namespace DNTFrameworkCore.Extensions
 
             if (str.Length == 1)
             {
-                return invariantCulture ? str.ToUpperInvariant(): str.ToUpper();
+                return invariantCulture ? str.ToUpperInvariant() : str.ToUpper();
             }
 
             return (invariantCulture ? char.ToUpperInvariant(str[0]) : char.ToUpper(str[0])) + str.Substring(1);
@@ -509,6 +536,7 @@ namespace DNTFrameworkCore.Extensions
 
             return str.Left(maxLength - postfix.Length) + postfix;
         }
+
         private static List<string> SplitCsv(this string csvList, bool nullOrWhitespaceInputReturnsNull = false)
         {
             if (string.IsNullOrWhiteSpace(csvList))
@@ -523,7 +551,7 @@ namespace DNTFrameworkCore.Extensions
                 .Select(s => s.Trim())
                 .ToList();
         }
-        
+
         /// <summary>
         ///     Formats a string to an invariant culture
         /// </summary>

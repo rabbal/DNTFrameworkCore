@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace DNTFrameworkCore.Validation.Interception
 {
-    public class ValidatableObjectMethodParameterValidator : IMethodParameterValidator
+    internal sealed class ValidatableObjectMethodParameterValidator : IMethodParameterValidator
     {
         public IEnumerable<ValidationFailure> Validate(object parameter)
         {

@@ -12,51 +12,42 @@ namespace DNTFrameworkCore.Web.Runtime
 {
     internal sealed class UserSession : IUserSession
     {
-        private readonly HttpContext _httpContext;
-        private readonly ClaimsPrincipal _principal;
+        private readonly IHttpContextAccessor _context;
 
-        public UserSession(IHttpContextAccessor httpContext)
+        public UserSession(IHttpContextAccessor context)
         {
-            _httpContext = Ensure.IsNotNull(httpContext, nameof(httpContext)).HttpContext;
-            _principal = _httpContext?.User;
+            _context = Ensure.IsNotNull(context, nameof(context));
         }
 
-        public bool IsAuthenticated => _principal?.Identity.IsAuthenticated ?? false;
-        public string UserId => _principal?.FindUserId();
-        public string UserName => _principal?.FindUserName();
-        public string BranchId => _principal?.FindBranchId();
-        public string BranchName => _principal?.FindBranchName();
-        public bool IsHeadBranch => _principal?.IsHeadTenant() ?? false;
-        public IReadOnlyList<string> Permissions => _principal?.FindPermissions();
-        public IReadOnlyList<string> Roles => _principal?.FindRoles();
-        public IReadOnlyList<Claim> Claims => _principal?.Claims.ToList();
-        public string UserDisplayName => _principal?.FindUserDisplayName();
-        public string UserBrowserName => _httpContext?.FindUserAgent();
-        public string UserIP => _httpContext?.FindUserIP();
-        public string ImpersonatorUserId => _principal?.FindImpersonatorUserId();
+        private HttpContext HttpContext => _context.HttpContext;
+        private ClaimsPrincipal Principal => HttpContext?.User;
+
+        public bool IsAuthenticated => Principal?.Identity.IsAuthenticated ?? false;
+        public string UserId => Principal?.FindUserId();
+        public string UserName => Principal?.FindUserName();
+        public string BranchId => Principal?.FindBranchId();
+        public string BranchName => Principal?.FindBranchName();
+        public bool IsHeadBranch => Principal?.IsHeadTenant() ?? false;
+        public IReadOnlyList<string> Permissions => Principal?.FindPermissions();
+        public IReadOnlyList<string> Roles => Principal?.FindRoles();
+        public IReadOnlyList<Claim> Claims => Principal?.Claims.ToList();
+        public string UserDisplayName => Principal?.FindUserDisplayName();
+        public string UserBrowserName => HttpContext?.FindUserAgent();
+        public string UserIP => HttpContext?.FindUserIP();
+        public string ImpersonatorUserId => Principal?.FindImpersonatorUserId();
 
         public bool IsInRole(string role)
         {
             ThrowIfUnauthenticated();
 
-            return _principal.IsInRole(role);
+            return Principal.IsInRole(role);
         }
 
         public bool IsGranted(string permission)
         {
             ThrowIfUnauthenticated();
 
-            return _principal.HasPermission(permission);
-        }
-
-        public IDisposable UseUserId(string userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IDisposable UseBranchId(string branchId)
-        {
-            throw new NotImplementedException();
+            return Principal.HasPermission(permission);
         }
 
         private void ThrowIfUnauthenticated()

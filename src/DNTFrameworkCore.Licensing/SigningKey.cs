@@ -4,20 +4,20 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.Licensing
 {
-    public class LicenseKey : ValueObject
+    public class SigningKey : ValueObject
     {
-        private LicenseKey()
+        private SigningKey()
         {
         }
 
         public string PublicKey { get; private set; }
         public string PrivateKey { get; private set; }
 
-        public static LicenseKey New(int dwKeySize = 1024)
+        public static SigningKey New(int dwKeySize = 1024)
         {
             using (var provider = new RSACryptoServiceProvider(dwKeySize))
             {
-                return new LicenseKey
+                return new SigningKey
                 {
                     PublicKey = provider.ToXml(false),
                     PrivateKey = provider.ToXml(true)

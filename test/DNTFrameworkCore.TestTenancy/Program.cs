@@ -1,9 +1,9 @@
-﻿using DNTFrameworkCore.EFCore.Logging;
+﻿using DNTFrameworkCore.EFCore;
+using DNTFrameworkCore.EFCore.Logging;
 using DNTFrameworkCore.Logging;
 using DNTFrameworkCore.TestTenancy.Infrastructure.Context;
-using DNTFrameworkCore.Web.EFCore;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.TestTenancy
@@ -17,8 +17,13 @@ namespace DNTFrameworkCore.TestTenancy
                 .Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateWebHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(builder =>
+                {
+                    builder.UseUrls("http://localhost:7000", "https://localhost:7001", "http://localhost:7002");
+                    builder.UseStartup<Startup>();
+                })
                 .UseDefaultServiceProvider((context, options) =>
                 {
                     options.ValidateScopes = context.HostingEnvironment.IsDevelopment();
@@ -35,10 +40,8 @@ namespace DNTFrameworkCore.TestTenancy
                         logging.AddConsole();
                         logging.AddDebug();
                         logging.AddEventSourceLogger();
-                        //logging.AddEventLog();
+                        logging.AddEventLog();
                     }
-                })
-                .UseUrls("http://localhost:7000", "https://localhost:7001", "http://localhost:7002")
-                .UseStartup<Startup>();
+                });
     }
 }

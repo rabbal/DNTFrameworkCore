@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using DNTFrameworkCore.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DNTFrameworkCore.EFCore.Context
 {
-    // ReSharper disable once InconsistentNaming
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class EFCore
     {
         public const string CreatorBrowserName = nameof(CreatorBrowserName);
@@ -25,6 +26,24 @@ namespace DNTFrameworkCore.EFCore.Context
         public const string Version = nameof(Version);
         public const string Hash = nameof(Hash);
 
+        public static readonly Func<object, string> PropertyCreatorBrowserName =
+            entity => EF.Property<string>(entity, CreatorBrowserName);
+
+        public static readonly Func<object, string> PropertyCreatorIp =
+            entity => EF.Property<string>(entity, CreatorIp);
+
+        public static readonly Func<object, DateTime> PropertyCreationDateTime =
+            entity => EF.Property<DateTime>(entity, CreationDateTime);
+
+        public static readonly Func<object, string> PropertyModifierBrowserName =
+            entity => EF.Property<string>(entity, ModifierBrowserName);
+
+        public static readonly Func<object, string> PropertyModifierIp =
+            entity => EF.Property<string>(entity, ModifierIp);
+
+        public static readonly Func<object, DateTime?> PropertyModificationDateTime =
+            entity => EF.Property<DateTime?>(entity, ModificationDateTime);
+
         public static void AddTrackingFields<TUserId>(this ModelBuilder builder) where TUserId : IEquatable<TUserId>
         {
             var types = builder.Model.GetEntityTypes().ToList();
@@ -36,26 +55,26 @@ namespace DNTFrameworkCore.EFCore.Context
             foreach (var entityType in types.Where(e => typeof(ICreationTracking).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
-                    .Property<DateTimeOffset>(CreationDateTime)
-                    .Metadata.AfterSaveBehavior = PropertySaveBehavior.Ignore;
+                    .Property<DateTime>(CreationDateTime)
+                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
                 builder.Entity(entityType.ClrType)
                     .Property<string>(CreatorBrowserName).HasMaxLength(1024)
-                    .Metadata.AfterSaveBehavior = PropertySaveBehavior.Ignore;
+                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
                 builder.Entity(entityType.ClrType)
                     .Property<string>(CreatorIp).HasMaxLength(256)
-                    .Metadata.AfterSaveBehavior = PropertySaveBehavior.Ignore;
+                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
                 builder.Entity(entityType.ClrType)
                     .Property(propertyType, CreatorUserId)
-                    .Metadata.AfterSaveBehavior = PropertySaveBehavior.Ignore;
+                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
             }
 
             foreach (var entityType in types.Where(e => typeof(IModificationTracking).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
-                    .Property<DateTimeOffset?>(ModificationDateTime);
+                    .Property<DateTime?>(ModificationDateTime);
 
                 builder.Entity(entityType.ClrType)
                     .Property<string>(ModifierBrowserName).HasMaxLength(1024);
@@ -76,7 +95,7 @@ namespace DNTFrameworkCore.EFCore.Context
             {
                 builder.Entity(entityType.ClrType)
                     .Property(typeof(TTenantId), TenantId).Metadata
-                    .AfterSaveBehavior = PropertySaveBehavior.Ignore;
+                    .SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
                 builder.Entity(entityType.ClrType)
                     .HasIndex(TenantId)
@@ -84,11 +103,11 @@ namespace DNTFrameworkCore.EFCore.Context
             }
         }
 
-        public static void AddSoftDeletedField(this ModelBuilder builder)
+        public static void AddIsDeletedField(this ModelBuilder builder)
         {
             var types = builder.Model.GetEntityTypes().ToList();
 
-            foreach (var entityType in types.Where(e => typeof(ISoftDeleteEntity).IsAssignableFrom(e.ClrType)))
+            foreach (var entityType in types.Where(e => typeof(IDeletedEntity).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
                     .Property<bool>(IsDeleted);
@@ -104,7 +123,7 @@ namespace DNTFrameworkCore.EFCore.Context
             {
                 builder.Entity(entityType.ClrType)
                     .Property(typeof(TUserId), UserId)
-                    .Metadata.AfterSaveBehavior = PropertySaveBehavior.Ignore;
+                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
             }
         }
 

@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.Tenancy;
+using DNTFrameworkCore.Timing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -35,7 +36,7 @@ namespace DNTFrameworkCore.Logging
             return true;
         }
 
-        public void Log<TState>(DateTimeOffset timestamp, LogLevel logLevel, EventId eventId, TState state,
+        public void Log<TState>(DateTime timestamp, LogLevel logLevel, EventId eventId, TState state,
             Exception exception, Func<TState, Exception, string> formatter)
         {
             if (!IsEnabled(logLevel))
@@ -44,7 +45,7 @@ namespace DNTFrameworkCore.Logging
             }
 
             var builder = new StringBuilder();
-            builder.Append(timestamp.ToString("yyyy-MM-dd HH:mm:ss.fff zzz"));
+            builder.Append(timestamp.ToString("yyyy-MM-dd HH:mm:ss"));
             builder.Append(" [");
             builder.Append(logLevel.ToString());
             builder.Append("] ");
@@ -68,7 +69,7 @@ namespace DNTFrameworkCore.Logging
 
                 _loggerProvider.AddMessage(new LogMessage
                 {
-                    Timestamp = timestamp,
+                    CreationTime = timestamp,
                     Message = message,
                     LoggerName = _loggerName,
                     Level = logLevel,
@@ -89,7 +90,7 @@ namespace DNTFrameworkCore.Logging
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception,
             Func<TState, Exception, string> formatter)
         {
-            Log(DateTimeOffset.UtcNow, logLevel, eventId, state, exception, formatter);
+            Log(_provider.GetService<IDateTime>().UtcNow, logLevel, eventId, state, exception, formatter);
         }
 
         private class NoopDisposable : IDisposable

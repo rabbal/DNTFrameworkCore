@@ -157,7 +157,7 @@ namespace DNTFrameworkCore.TestTenancy.Authentication
 
             //Todo: recommended approach to minimize size of  token/cookie
             // permissions=new[] {"48", "65", "6C", "6C", "6F", "20", "57", "6F", "72", "6C", "64", "21"};
-            // claims.Add(new Claim(UserClaimTypes.PackedPermission, permissions.PackPermissionsToString()));
+            // claims.Add(new Claim(UserClaimTypes.PackedPermission, permissions.PackToString(PermissionConstant.PackingSymbol)));
 
             //Todo: Set TenantId claim in MultiTenancy senarios     
             // claims.Add(new Claim(UserClaimTypes.TenantId, user.TenantId.ToString(), ClaimValueTypes.Integer64,

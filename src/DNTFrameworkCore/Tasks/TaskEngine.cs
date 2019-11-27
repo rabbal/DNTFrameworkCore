@@ -40,7 +40,7 @@ namespace DNTFrameworkCore.Tasks
         }
 
         /// <inheritdoc />
-        public async Task RunShutdownTasksAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task RunShutdownTasksAsync(CancellationToken cancellationToken = default)
         {
             using (var scope = _provider.CreateScope())
             {
@@ -54,7 +54,7 @@ namespace DNTFrameworkCore.Tasks
         }
 
         /// <inheritdoc />
-        public async Task RunStartupTasksAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task RunStartupTasksAsync(CancellationToken cancellationToken = default)
         {
             using (var scope = _provider.CreateScope())
             {

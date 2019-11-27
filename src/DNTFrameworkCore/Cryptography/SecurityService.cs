@@ -5,16 +5,16 @@ using DNTFrameworkCore.Dependency;
 
 namespace DNTFrameworkCore.Cryptography
 {
-    public interface ISecurityService
+    public interface ISecurityService : ISingletonDependency
     {
         Guid NewSecureGuid();
         string ComputeSha256Hash(string input);
     }
 
-    public class SecurityService : ISecurityService, ISingletonDependency
+    internal sealed class SecurityService : ISecurityService
     {
         private readonly RandomNumberGenerator _rand = RandomNumberGenerator.Create();
-        
+
         public Guid NewSecureGuid()
         {
             var bytes = new byte[16];
@@ -31,6 +31,5 @@ namespace DNTFrameworkCore.Cryptography
                 return Convert.ToBase64String(byteHash);
             }
         }
-
     }
 }

@@ -14,13 +14,12 @@ namespace DNTFrameworkCore.Caching
         /// A thread-safe way of working with memory cache. First tries to get the key's value from the cache.
         /// Otherwise it will use the factory method to get the value and then inserts it.
         /// </summary>
-        T GetOrAdd<T>(string cacheKey, Func<T> factory, DateTimeOffset absoluteExpiration);
-
-        /// <summary>
-        /// A thread-safe way of working with memory cache. First tries to get the key's value from the cache.
-        /// Otherwise it will use the factory method to get the value and then inserts it.
-        /// </summary>
-        Task<T> GetOrAddAsync<T>(string cacheKey, Func<Task<T>> factory, DateTimeOffset absoluteExpiration);
+        /// <param name="cacheKey"></param>
+        /// <param name="factory"></param>
+        /// <param name="absoluteExpiration"></param>
+        /// <param name="size">Gets or sets the size of the cache entry value. If you set it to 1, the size limit will be the count of entries.</param>
+        /// <typeparam name="T"></typeparam>
+        T GetOrAdd<T>(string cacheKey, Func<T> factory, DateTimeOffset absoluteExpiration, int size = 1);
 
         /// <summary>
         /// Gets the key's value from the cache.
@@ -35,18 +34,32 @@ namespace DNTFrameworkCore.Caching
         /// <summary>
         /// Adds a key-value to the cache.
         /// </summary>
-        void Add<T>(string cacheKey, T value, DateTimeOffset absoluteExpiration);
+        /// <param name="cacheKey"></param>
+        /// <param name="value"></param>
+        /// <param name="absoluteExpiration"></param>
+        /// <param name="size">Gets or sets the size of the cache entry value. If you set it to 1, the size limit will be the count of entries.</param>
+        /// <typeparam name="T"></typeparam>
+        void Add<T>(string cacheKey, T value, DateTimeOffset absoluteExpiration, int size = 1);
 
         /// <summary>
         /// Adds a key-value to the cache.
         /// It will use the factory method to get the value and then inserts it.
         /// </summary>
-        void Add<T>(string cacheKey, Func<T> factory, DateTimeOffset absoluteExpiration);
+        /// <param name="cacheKey"></param>
+        /// <param name="factory"></param>
+        /// <param name="absoluteExpiration"></param>
+        /// <param name="size">Gets or sets the size of the cache entry value. If you set it to 1, the size limit will be the count of entries.</param>
+        /// <typeparam name="T"></typeparam>
+        void Add<T>(string cacheKey, Func<T> factory, DateTimeOffset absoluteExpiration, int size = 1);
 
         /// <summary>
         /// Adds a key-value to the cache.
         /// </summary>
-        void Add<T>(string cacheKey, T value);
+        /// <param name="cacheKey"></param>
+        /// <param name="value"></param>
+        /// <param name="size">Gets or sets the size of the cache entry value. If you set it to 1, the size limit will be the count of entries.</param>
+        /// <typeparam name="T"></typeparam>
+        void Add<T>(string cacheKey, T value, int size = 1);
 
         /// <summary>
         /// Removes the object associated with the given key.
@@ -57,14 +70,8 @@ namespace DNTFrameworkCore.Caching
     /// <summary>
     /// Encapsulates IMemoryCache functionality.
     /// </summary>
-    public class MemoryCacheService : ICacheService
+    internal sealed class MemoryCacheService : ICacheService
     {
-        /// <summary>
-        /// فقط یک ترد امکان دسترسی به کد را داشته باشد
-        /// </summary>
-        /// <returns></returns>
-        private static readonly SemaphoreSlim _locker = new SemaphoreSlim(1, 1);
-
         private readonly IMemoryCache _memoryCache;
 
         /// <summary>
@@ -95,32 +102,43 @@ namespace DNTFrameworkCore.Caching
         /// Adds a key-value to the cache.
         /// It will use the factory method to get the value and then inserts it.
         /// </summary>
-        public void Add<T>(string cacheKey, Func<T> factory, DateTimeOffset absoluteExpiration)
+        public void Add<T>(string cacheKey, Func<T> factory, DateTimeOffset absoluteExpiration, int size = 1)
         {
-            _memoryCache.Set(cacheKey, factory(), absoluteExpiration);
+            _memoryCache.Set(cacheKey, factory(), new MemoryCacheEntryOptions
+            {
+                AbsoluteExpiration = absoluteExpiration,
+                Size = size // the size limit is the count of entries
+            });
         }
 
         /// <summary>
         /// Adds a key-value to the cache.
         /// </summary>
-        public void Add<T>(string cacheKey, T value, DateTimeOffset absoluteExpiration)
+        public void Add<T>(string cacheKey, T value, DateTimeOffset absoluteExpiration, int size = 1)
         {
-            _memoryCache.Set(cacheKey, value, absoluteExpiration);
+            _memoryCache.Set(cacheKey, value, new MemoryCacheEntryOptions
+            {
+                AbsoluteExpiration = absoluteExpiration,
+                Size = size // the size limit is the count of entries
+            });
         }
 
         /// <summary>
         /// Adds a key-value to the cache.
         /// </summary>
-        public void Add<T>(string cacheKey, T value)
+        public void Add<T>(string cacheKey, T value, int size = 1)
         {
-            _memoryCache.Set(cacheKey, value);
+            _memoryCache.Set(cacheKey, value, new MemoryCacheEntryOptions
+            {
+                Size = size // the size limit is the count of entries
+            });
         }
 
         /// <summary>
         /// A thread-safe way of working with memory cache. First tries to get the key's value from the cache.
         /// Otherwise it will use the factory method to get the value and then inserts it.
         /// </summary>
-        public T GetOrAdd<T>(string cacheKey, Func<T> factory, DateTimeOffset absoluteExpiration)
+        public T GetOrAdd<T>(string cacheKey, Func<T> factory, DateTimeOffset absoluteExpiration, int size = 1)
         {
             // locks get and set internally
             if (_memoryCache.TryGetValue<T>(cacheKey, out var result))
@@ -136,45 +154,13 @@ namespace DNTFrameworkCore.Caching
                 }
 
                 result = factory();
-
-                _memoryCache.Set(cacheKey, result, absoluteExpiration);
-
-                return result;
-            }
-        }
-
-
-        /// <summary>
-        /// A thread-safe way of working with memory cache. First tries to get the key's value from the cache.
-        /// Otherwise it will use the factory method to get the value and then inserts it.
-        /// </summary>
-        public async Task<T> GetOrAddAsync<T>(string cacheKey, Func<Task<T>> factory,
-            DateTimeOffset absoluteExpiration)
-        {
-            // locks get and set internally
-            if (_memoryCache.TryGetValue<T>(cacheKey, out var result))
-            {
-                return result;
-            }
-
-            await _locker.WaitAsync();
-
-            try
-            {
-                if (_memoryCache.TryGetValue(cacheKey, out result))
+                _memoryCache.Set(cacheKey, result, new MemoryCacheEntryOptions
                 {
-                    return result;
-                }
-
-                result = await factory();
-
-                _memoryCache.Set(cacheKey, result, absoluteExpiration);
+                    AbsoluteExpiration = absoluteExpiration,
+                    Size = size // the size limit is the count of entries
+                });
 
                 return result;
-            }
-            finally
-            {
-                _locker.Release();
             }
         }
 
@@ -186,10 +172,9 @@ namespace DNTFrameworkCore.Caching
             _memoryCache.Remove(cacheKey);
         }
 
-
         private static class TypeLock<T>
         {
-            public static readonly object Lock = new object();
+            public static object Lock { get; } = new object();
         }
     }
 }

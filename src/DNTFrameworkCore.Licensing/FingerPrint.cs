@@ -10,7 +10,7 @@ namespace DNTFrameworkCore.Licensing
     /// Generates a 16 byte Unique Identification code of a computer
     /// Example: 4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9
     /// </summary>
-    public class FingerPrint
+    public static class FingerPrint
     {
         private static string _value = string.Empty;
 
@@ -20,9 +20,10 @@ namespace DNTFrameworkCore.Licensing
             {
                 if (!string.IsNullOrEmpty(_value)) return _value;
 
-                var serialNumber = $"CPU >> {CpuId()} \nBIOS >> {BiosId()} \nBASE >> {MotherboardId()}";
+                var serial =
+                    $"CPU >> {CpuId()} \nBIOS >> {BiosId()} \nBASE >> {MotherboardId()} \nDISK >> {DiskId()} \nVIDEO >> {VideoId()} \nMAC >> {MacId()}";
 
-                _value = ComputeHash(serialNumber);
+                _value = ComputeHash(serial);
 
                 return _value;
             }
@@ -83,7 +84,33 @@ namespace DNTFrameworkCore.Licensing
                    + HardwareQuery("Win32_BaseBoard", "SerialNumber");
         }
 
-        private static string HardwareQuery(string hardware, string property)
+        private static string DiskId()
+        {
+            return HardwareQuery("Win32_DiskDrive", "Model")
+                   + HardwareQuery("Win32_DiskDrive", "Manufacturer")
+                   + HardwareQuery("Win32_DiskDrive", "Signature")
+                   + HardwareQuery("Win32_DiskDrive", "TotalHeads");
+        }
+
+        private static string VideoId()
+        {
+            return HardwareQuery("Win32_VideoController", "DriverVersion")
+                   + HardwareQuery("Win32_VideoController", "Name");
+        }
+
+        //First enabled network card ID
+        private static string MacId()
+        {
+            return HardwareQuery("Win32_NetworkAdapterConfiguration",
+                "MACAddress", o =>
+                {
+                    var value = o["IPEnabled"];
+                    return value != null && value.ToString() == "True";
+                });
+        }
+
+        private static string HardwareQuery(string hardware, string property,
+            Predicate<ManagementBaseObject> predicate = null)
         {
             var queryString = $"Select {property} From {hardware}";
 
@@ -91,7 +118,8 @@ namespace DNTFrameworkCore.Licensing
             {
                 foreach (var item in query.Get())
                 {
-                    return item[property]?.ToString() ?? "None";
+                    if (predicate == null || predicate.Invoke(item))
+                        return item[property]?.ToString() ?? "None";
                 }
             }
 

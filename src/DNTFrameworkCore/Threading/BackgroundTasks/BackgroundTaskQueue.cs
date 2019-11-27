@@ -14,7 +14,7 @@ namespace DNTFrameworkCore.Threading.BackgroundTasks
             CancellationToken cancellationToken);
     }
 
-    internal class BackgroundTaskQueue : IBackgroundTaskQueue
+    internal sealed class BackgroundTaskQueue : IBackgroundTaskQueue
     {
         private readonly ConcurrentQueue<Func<CancellationToken, IServiceProvider, Task>> _workItems =
             new ConcurrentQueue<Func<CancellationToken, IServiceProvider, Task>>();

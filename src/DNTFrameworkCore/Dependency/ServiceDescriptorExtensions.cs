@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.Dependency
@@ -23,7 +24,7 @@ namespace DNTFrameworkCore.Dependency
                 return descriptor.ImplementationInstance.GetType();
             }
 
-            return descriptor.ImplementationFactory?.GetType().GenericTypeArguments[1];
+            return descriptor.ImplementationFactory?.GetType().GetTypeInfo().GenericTypeArguments[1];
         }
     }
 }

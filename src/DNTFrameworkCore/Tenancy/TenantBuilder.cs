@@ -57,31 +57,31 @@ namespace DNTFrameworkCore.Tenancy
             return this;
         }
         
-        /// <summary>
-        /// Register tenant specific options
-        /// </summary>
-        /// <typeparam name="TOptions">Type of options we are apply configuration to</typeparam>
-        /// <returns></returns>
-        public TenantBuilder WithPerTenantOptions<TOptions>(Action<TOptions, Tenant> setup)
-            where TOptions : class, new()
-        {
-            //Register the multi-tenant cache
-            Services.AddSingleton<IOptionsMonitorCache<TOptions>>(a =>
-                ActivatorUtilities.CreateInstance<TenantOptionsCache<TOptions>>(a));
-
-            //Register the multi-tenant options factory
-            Services.AddTransient<IOptionsFactory<TOptions>>(a =>
-                ActivatorUtilities.CreateInstance<TenantOptionsFactory<TOptions>>(a, setup));
-
-            //Register IOptionsSnapshot support
-            Services.AddScoped<IOptionsSnapshot<TOptions>>(a =>
-                ActivatorUtilities.CreateInstance<TenantOptions<TOptions>>(a));
-
-            //Register IOptions support
-            Services.AddSingleton<IOptions<TOptions>>(
-                a => ActivatorUtilities.CreateInstance<TenantOptions<TOptions>>(a));
-
-            return this;
-        }
+//        /// <summary>
+//        /// Register tenant specific options
+//        /// </summary>
+//        /// <typeparam name="TOptions">Type of options we are apply configuration to</typeparam>
+//        /// <returns></returns>
+//        public TenantBuilder WithPerTenantOptions<TOptions>(Action<TOptions, Tenant> setup)
+//            where TOptions : class, new()
+//        {
+//            //Register the multi-tenant cache
+//            Services.AddSingleton<IOptionsMonitorCache<TOptions>>(a =>
+//                ActivatorUtilities.CreateInstance<TenantOptionsCache<TOptions>>(a));
+//
+//            //Register the multi-tenant options factory
+//            Services.AddTransient<IOptionsFactory<TOptions>>(a =>
+//                ActivatorUtilities.CreateInstance<TenantOptionsFactory<TOptions>>(a, setup));
+//
+//            //Register IOptionsSnapshot support
+//            Services.AddScoped<IOptionsSnapshot<TOptions>>(a =>
+//                ActivatorUtilities.CreateInstance<TenantOptions<TOptions>>(a));
+//
+//            //Register IOptions support
+//            Services.AddSingleton<IOptions<TOptions>>(
+//                a => ActivatorUtilities.CreateInstance<TenantOptions<TOptions>>(a));
+//
+//            return this;
+//        }
     }
 }

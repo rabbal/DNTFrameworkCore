@@ -5,7 +5,6 @@ using Castle.DynamicProxy;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Transaction;
-using DNTFrameworkCore.Transaction.Interception;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;

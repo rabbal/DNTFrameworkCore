@@ -1,5 +1,6 @@
 using System.Collections;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using DNTFrameworkCore.GuardToolkit;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ namespace DNTFrameworkCore.Web.Results
             {
                 foreach (var item in data)
                 {
-                    var properties = item.GetType().GetProperties();
+                    var properties = item.GetType().GetTypeInfo().GetProperties();
                     foreach (var prop in properties)
                     {
                         writer.Write(prop.GetValue(item).ToString() ?? "");

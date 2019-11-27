@@ -1,6 +1,6 @@
 namespace DNTFrameworkCore.TestAPI.Application.Configuration
 {
-    public class ProjectSettings
+    public class ProjectOptions
     {
         public UserSeed UserSeed { get; set; }
     }

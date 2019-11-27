@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.EFCore.Context
 {
-    internal class PreInsertCreationTrackingHook<TUserId> : PreInsertHook<ICreationTracking>
+    internal sealed class PreInsertCreationTrackingHook<TUserId> : PreInsertHook<ICreationTracking>
         where TUserId : IEquatable<TUserId>
     {
         private readonly IUserSession _session;
@@ -24,14 +24,14 @@ namespace DNTFrameworkCore.EFCore.Context
 
         protected override void Hook(ICreationTracking entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(EFCore.CreationDateTime).CurrentValue = _dateTime.UtcNow;
+            metadata.Entry.Property(EFCore.CreationDateTime).CurrentValue =_dateTime.UtcNow;
             metadata.Entry.Property(EFCore.CreatorBrowserName).CurrentValue = _session.UserBrowserName;
             metadata.Entry.Property(EFCore.CreatorIp).CurrentValue = _session.UserIP;
-            metadata.Entry.Property(EFCore.CreatorUserId).CurrentValue = _session.UserId.FromString<TUserId>();
+            metadata.Entry.Property(EFCore.CreatorUserId).CurrentValue = _session.UserId.To<TUserId>();
         }
     }
 
-    internal class PreUpdateModificationTrackingHook<TUserId> : PreUpdateHook<IModificationTracking>
+    internal sealed class PreUpdateModificationTrackingHook<TUserId> : PreUpdateHook<IModificationTracking>
         where TUserId : IEquatable<TUserId>
     {
         private readonly IUserSession _session;
@@ -48,11 +48,11 @@ namespace DNTFrameworkCore.EFCore.Context
             metadata.Entry.Property(EFCore.ModificationDateTime).CurrentValue = _dateTime.UtcNow;
             metadata.Entry.Property(EFCore.ModifierBrowserName).CurrentValue = _session.UserBrowserName;
             metadata.Entry.Property(EFCore.ModifierIp).CurrentValue = _session.UserIP;
-            metadata.Entry.Property(EFCore.ModifierUserId).CurrentValue = _session.UserId.FromString<TUserId>();
+            metadata.Entry.Property(EFCore.ModifierUserId).CurrentValue = _session.UserId.To<TUserId>();
         }
     }
 
-    internal class PreInsertTenantEntityHook<TTenantId> : PreInsertHook<ITenantEntity>
+    internal sealed class PreInsertTenantEntityHook<TTenantId> : PreInsertHook<ITenantEntity>
         where TTenantId : IEquatable<TTenantId>
     {
         private readonly ITenantSession _session;
@@ -64,11 +64,11 @@ namespace DNTFrameworkCore.EFCore.Context
 
         protected override void Hook(ITenantEntity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(EFCore.TenantId).CurrentValue = _session.TenantId.FromString<TTenantId>();
+            metadata.Entry.Property(EFCore.TenantId).CurrentValue = _session.TenantId.To<TTenantId>();
         }
     }
 
-    internal class PreInsertHasRowLevelSecurityHook<TUserId> : PreInsertHook<IHasRowLevelSecurity>
+    internal sealed class PreInsertHasRowLevelSecurityHook<TUserId> : PreInsertHook<IHasRowLevelSecurity>
         where TUserId : IEquatable<TUserId>
     {
         private readonly IUserSession _session;
@@ -80,20 +80,20 @@ namespace DNTFrameworkCore.EFCore.Context
 
         protected override void Hook(IHasRowLevelSecurity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(EFCore.UserId).CurrentValue = _session.UserId.FromString<TUserId>();
+            metadata.Entry.Property(EFCore.UserId).CurrentValue = _session.UserId.To<TUserId>();
         }
     }
 
-    internal class PreDeleteSoftDeleteEntityHook : PreDeleteHook<ISoftDeleteEntity>
+    internal sealed class PreDeleteDeletedEntityHook : PreDeleteHook<IDeletedEntity>
     {
-        protected override void Hook(ISoftDeleteEntity entity, HookEntityMetadata metadata, IUnitOfWork uow)
+        protected override void Hook(IDeletedEntity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
             metadata.Entry.State = EntityState.Modified;
             metadata.Entry.Property(EFCore.IsDeleted).CurrentValue = true;
         }
     }
 
-    internal class PreUpdateRowVersionHook : PreUpdateHook<IHasRowVersion>
+    internal sealed class PreUpdateRowVersionHook : PreUpdateHook<IHasRowVersion>
     {
         protected override void Hook(IHasRowVersion entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
@@ -102,7 +102,7 @@ namespace DNTFrameworkCore.EFCore.Context
         }
     }
 
-    internal class PreInsertRowIntegrityHook : PreInsertHook<IHasRowIntegrity>
+    internal sealed class PreInsertRowIntegrityHook : PreInsertHook<IHasRowIntegrity>
     {
         private readonly IRowIntegrityHashAlgorithm _algorithm;
 
@@ -119,7 +119,7 @@ namespace DNTFrameworkCore.EFCore.Context
         }
     }
 
-    internal class PreUpdateRowIntegrityHook : PreUpdateHook<IHasRowIntegrity>
+    internal sealed class PreUpdateRowIntegrityHook : PreUpdateHook<IHasRowIntegrity>
     {
         private readonly IRowIntegrityHashAlgorithm _algorithm;
 

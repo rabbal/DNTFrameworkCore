@@ -15,8 +15,7 @@ namespace DNTFrameworkCore.Web.Filters
                     || filterContext.Result is RedirectToRouteResult
                     || filterContext.Result is RedirectToActionResult)
                 {
-                    var controller = filterContext.Controller as Controller;
-                    if (controller != null && filterContext.ModelState != null)
+                    if (filterContext.Controller is Controller && filterContext.ModelState != null)
                     {
                         ExportModelStateToTempData(filterContext);
                     }

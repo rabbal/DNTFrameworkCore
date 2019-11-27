@@ -1,5 +1,6 @@
 using System;
 using DNTFrameworkCore.Authorization;
+using DNTFrameworkCore.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DNTFrameworkCore.Web.Authorization
@@ -13,7 +14,7 @@ namespace DNTFrameworkCore.Web.Authorization
         /// <param name="permissions">A list of permissions to authorize</param>
         public PermissionAuthorizeAttribute(params string[] permissions)
         {
-            Policy = $"{PermissionConstant.PolicyPrefix}{string.Join(PermissionConstant.PolicyNameSplitSymbol, permissions)}";
+            Policy = $"{PermissionConstant.PolicyPrefix}{permissions.PackToString(PermissionConstant.PolicyNameSplitSymbol)}";
         }
     }
 }

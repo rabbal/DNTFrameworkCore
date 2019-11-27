@@ -49,10 +49,10 @@ namespace DNTFrameworkCore.Tenancy.Options
                 }
             }
 
-            if (_tenantSession.Tenant != null)
-            {
-                _tenantSetup(options, _tenantSession.Tenant);
-            }
+//            if (_tenantSession.Tenant != null)
+//            {
+//                _tenantSetup(options, _tenantSession.Tenant);
+//            }
 
             foreach (var postConfig in _postSetups)
             {

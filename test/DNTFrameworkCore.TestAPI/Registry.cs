@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
 using DNTFrameworkCore.Localization;
@@ -17,9 +17,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Swashbuckle.AspNetCore.Swagger;
+
 
 namespace DNTFrameworkCore.TestAPI
 {
@@ -36,35 +36,12 @@ namespace DNTFrameworkCore.TestAPI
 
             services.AddLocalization(setup => setup.ResourcesPath = "Resources");
             services.AddHttpContextAccessor();
-            services.AddMvcCore(options =>
+            services.AddControllers(options =>
                 {
-                    // options.UseYeKeModelBinder();
                     options.UseDefaultFilteredPagedQueryModelBinder();
                     options.UseFilteredPagedQueryModelBinder<TaskFilteredPagedQueryModel>();
                     options.Filters.Add<HandleExceptionFilter>();
-                })
-                .AddApiExplorer()
-                .AddCors(options =>
-                {
-                    options.AddPolicy("CorsPolicy",
-                        builder => builder
-                            .SetIsOriginAllowed(host => true)
-                            .AllowAnyMethod()
-                            .AllowAnyHeader()
-                            .AllowCredentials());
-                })
-                .AddAuthorization()
-                .AddFormatterMappings()
-                .AddJsonFormatters()
-                .AddDataAnnotations()
-                .AddJsonOptions(options =>
-                {
-                    options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Include;
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Error;
-                })
-                .AddDataAnnotationsLocalization(o =>
+                }).AddDataAnnotationsLocalization(o =>
                 {
                     o.DataAnnotationLocalizerProvider = (type, factory) =>
                     {
@@ -74,48 +51,54 @@ namespace DNTFrameworkCore.TestAPI
                             : factory.Create(localizationResource.Name, localizationResource.Location);
                     };
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .ConfigureApiBehaviorOptions(options =>
                 {
-                    options.SuppressUseValidationProblemDetailsForInvalidModelStateResponses = true;
                     options.SuppressMapClientErrors = true;
-                    //options.SuppressModelStateInvalidFilter = true;
                 });
+            
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                        .SetIsOriginAllowed(host => true)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
+
 
             services.AddAntiforgery(x => x.HeaderName = "X-XSRF-TOKEN");
             services.AddSignalR();
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info
+                c.SwaggerDoc("v1", new OpenApiInfo 
                 {
                     Version = "v1",
                     Title = "API Documentation",
                     Description = "DNTFrameworkCore API Documentation",
-                    Contact = new Contact
+                    Contact = new OpenApiContact
                     {
                         Email = "gholamrezarabbal@gmail.com",
                         Name = "GholamReza Rabbal",
-                        Url =
-                            "https://www.dotnettips.info/user/%D8%BA%D9%84%D8%A7%D9%85%D8%B1%D8%B6%D8%A7%20%D8%B1%D8%A8%D8%A7%D9%84"
+                        Url =new Uri("https://www.dotnettips.info/user/%D8%BA%D9%84%D8%A7%D9%85%D8%B1%D8%B6%D8%A7%20%D8%B1%D8%A8%D8%A7%D9%84")
+                            
                     }
                 });
 
-                c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
-                    In = "header",
+                    In = ParameterLocation.Header,
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
                     Name = "Authorization",
-                    Type = "apiKey"
+                    Type = SecuritySchemeType.ApiKey
                 });
-
-                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
-                {
-                    {"Bearer", new string[] { }},
-                    {"oauth2", new string[] { }}
-                });
-
-                c.EnableAnnotations();
             });
         }
 
@@ -126,9 +109,7 @@ namespace DNTFrameworkCore.TestAPI
 
             var signingKey =
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authentication[nameof(TokenOptions.SigningKey)]));
-            var encryptingKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(authentication[nameof(TokenOptions.EncryptingKey)])); //must be 16 character
-
+           
             var tokenValidationParameters = new TokenValidationParameters
             {
                 // Ensure the token was issued by a trusted authorization server (default true):
@@ -143,7 +124,6 @@ namespace DNTFrameworkCore.TestAPI
                 RequireSignedTokens = true,
                 IssuerSigningKey = signingKey,
                 ValidateIssuerSigningKey = true, // verify signature to avoid tampering
-                TokenDecryptionKey = encryptingKey,
                 // Ensure the token hasn't expired:
                 ValidateLifetime = true,
                 RequireExpirationTime = true,
@@ -179,7 +159,7 @@ namespace DNTFrameworkCore.TestAPI
                         {
                             var validator = context.HttpContext.RequestServices.GetRequiredService<ITokenValidator>();
                             await validator.ValidateAsync(context);
-                            
+
                             context.Principal.AddIdentity(new ClaimsIdentity());
                         },
                         OnMessageReceived = context =>

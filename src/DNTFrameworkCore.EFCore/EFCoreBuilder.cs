@@ -73,17 +73,17 @@ namespace DNTFrameworkCore.EFCore
             return this;
         }
 
-        public EFCoreBuilder WithRowIntegrityHook<T>() where T : class, IRowIntegrityHashAlgorithm
+        public EFCoreBuilder WithRowIntegrityHook<THashAlgorithm>() where THashAlgorithm : class, IRowIntegrityHashAlgorithm
         {
-            Services.AddTransient<IRowIntegrityHashAlgorithm, T>();
+            Services.AddTransient<IRowIntegrityHashAlgorithm, THashAlgorithm>();
             Services.AddTransient<IHook, PreInsertRowIntegrityHook>();
             Services.AddTransient<IHook, PreUpdateRowIntegrityHook>();
             return this;
         }
 
-        public EFCoreBuilder WithSoftDeleteHook()
+        public EFCoreBuilder WithDeletedEntityHook()
         {
-            Services.AddTransient<IHook, PreDeleteSoftDeleteEntityHook>();
+            Services.AddTransient<IHook, PreDeleteDeletedEntityHook>();
             return this;
         }
     }

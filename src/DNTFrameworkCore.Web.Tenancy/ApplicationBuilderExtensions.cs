@@ -16,11 +16,11 @@ namespace DNTFrameworkCore.Web.Tenancy
         public static IApplicationBuilder UseTenancy(this IApplicationBuilder builder) =>
             builder.UseMiddleware<TenantResolutionMiddleware>();
 
-        /// <summary>
-        ///     Use the Tenant Container Middleware to TenantScoped Dependency Injection
-        /// </summary>
-        public static IApplicationBuilder UseTenantContainer(this IApplicationBuilder builder) =>
-            builder.UseMiddleware<TenantContainerMiddleware>();
+//        /// <summary>
+//        ///     Use the Tenant Container Middleware to TenantScoped Dependency Injection
+//        /// </summary>
+//        public static IApplicationBuilder UseTenantContainer(this IApplicationBuilder builder) =>
+//            builder.UseMiddleware<TenantContainerMiddleware>();
 
         /// <summary>
         /// Forking the pipeline - adding tenant specific middlewares 

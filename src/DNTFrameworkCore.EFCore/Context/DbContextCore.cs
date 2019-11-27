@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.EFCore.Context.Extensions;
 using DNTFrameworkCore.EFCore.Context.Hooks;
 using DNTFrameworkCore.Exceptions;
+using DNTFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -25,12 +27,12 @@ namespace DNTFrameworkCore.EFCore.Context
         }
 
         public DbConnection Connection => Database.GetDbConnection();
-        public bool HasActiveTransaction => Transaction != null;
+        public bool HasTransaction => Transaction != null;
         public IDbContextTransaction Transaction { get; private set; }
 
         public IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
-            if (Transaction != null) return null;
+            if (HasTransaction) return Transaction;
 
             return Transaction = Database.BeginTransaction(isolationLevel);
         }
@@ -45,7 +47,7 @@ namespace DNTFrameworkCore.EFCore.Context
 
         public void CommitTransaction()
         {
-            if (Transaction == null) throw new InvalidOperationException("Transaction is null");
+            if (!HasTransaction) throw new NullReferenceException("Please call `BeginTransaction()` method first.");
 
             try
             {
@@ -68,9 +70,11 @@ namespace DNTFrameworkCore.EFCore.Context
 
         public void RollbackTransaction()
         {
+            if (!HasTransaction) throw new NullReferenceException("Please call `BeginTransaction()` method first.");
+
             try
             {
-                Transaction?.Rollback();
+                Transaction.Rollback();
             }
             finally
             {
@@ -90,16 +94,6 @@ namespace DNTFrameworkCore.EFCore.Context
         public void UseConnectionString(string connectionString)
         {
             Database.GetDbConnection().ConnectionString = connectionString;
-        }
-
-        public int ExecuteSqlCommand(string query)
-        {
-            return Database.ExecuteSqlCommand(query);
-        }
-
-        public int ExecuteSqlCommand(string query, params object[] parameters)
-        {
-            return Database.ExecuteSqlCommand(query, parameters);
         }
 
         public void TrackGraph<TEntity>(TEntity entity, Action<EntityEntryGraphNode> callback) where TEntity : class
@@ -159,24 +153,33 @@ namespace DNTFrameworkCore.EFCore.Context
             {
                 throw new DbConcurrencyException(e.Message, e);
             }
-            catch (DbException e)
+            catch (DbUpdateException e)
             {
-                throw new Exceptions.DbException(e.Message, e);
+                throw new DbException(e.Message, e);
             }
 
             return result;
         }
 
-        public Task<int> ExecuteSqlCommandAsync(string query)
+        public int ExecuteSqlInterpolatedCommand(FormattableString query)
         {
-            return Database.ExecuteSqlCommandAsync(query);
+            return Database.ExecuteSqlInterpolated(query);
         }
 
-        public Task<int> ExecuteSqlCommandAsync(string query, params object[] parameters)
+        public int ExecuteSqlRawCommand(string query, params object[] parameters)
         {
-            return Database.ExecuteSqlCommandAsync(query, parameters);
+            return Database.ExecuteSqlRaw(query, parameters);
         }
 
+        public Task<int> ExecuteSqlInterpolatedCommandAsync(FormattableString query)
+        {
+            return Database.ExecuteSqlInterpolatedAsync(query);
+        }
+
+        public Task<int> ExecuteSqlRawCommandAsync(string query, params object[] parameters)
+        {
+            return Database.ExecuteSqlRawAsync(query, parameters);
+        }
         protected virtual void SavedChanges(EntityChangeContext context)
         {
         }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.EFCore.Configuration
 {
-    internal class KeyValueService : ApplicationService, IKeyValueService
+    internal sealed class KeyValueService : ApplicationService, IKeyValueService
     {
         private readonly IUnitOfWork _uow;
         private readonly DbSet<KeyValue> _values;

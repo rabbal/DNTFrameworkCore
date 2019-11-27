@@ -33,7 +33,7 @@ namespace DNTFrameworkCore.TestTenancy.Infrastructure.Context
             modelBuilder.AddJsonFields();
             modelBuilder.AddTrackingFields<long>();
             modelBuilder.AddTenancyField<long>();
-            modelBuilder.AddSoftDeletedField();
+            modelBuilder.AddIsDeletedField();
             modelBuilder.AddRowVersionField();
             modelBuilder.AddRowIntegrityField();
             modelBuilder.AddRowLevelSecurityField<long>();

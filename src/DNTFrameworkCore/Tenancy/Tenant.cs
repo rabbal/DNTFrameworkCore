@@ -59,9 +59,9 @@ namespace DNTFrameworkCore.Tenancy
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !(obj is Tenant other)) return false;
+            if (obj == null || !(obj is Tenant tenant)) return false;
 
-            return ReferenceEquals(this, other) || Id.Equals(other.Id);
+            return ReferenceEquals(this, tenant) || Id.Equals(tenant.Id);
         }
 
         public override string ToString()

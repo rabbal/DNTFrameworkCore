@@ -12,20 +12,20 @@ namespace DNTFrameworkCore.Localization
     {
         /// <summary>
         /// The localization to load navigation resources from.
-        /// Can be Null for Database localization source <see cref="LocalizationSourceType"/>.
+        /// Can be Null for Database localization source.
         /// </summary>
         /// <returns></returns>
-        public virtual string ResourceLocation { get; set;}
+        public string ResourceLocation { get; }
 
         /// <summary>
         /// Unique name of the localization resource like, SharedResource,...
         /// </summary>
-        public virtual string ResourceName { get; }
+        public string ResourceName { get; }
 
         /// <summary>
         /// Unique Name of the string to be localized.
         /// </summary>
-        public virtual string Name { get; }
+        public string Name { get; }
 
         /// <summary>
         /// Needed for serialization.
@@ -34,13 +34,11 @@ namespace DNTFrameworkCore.Localization
         {
         }
 
-        public LocalizableString(string name, string resourceName)
+        public LocalizableString(string name, string resourceName, string resourceLocation = null)
         {
-            Guard.ArgumentNotNull(name, nameof(name));
-            Guard.ArgumentNotNull(resourceName, nameof(resourceName));
-            
-            Name = name;
-            ResourceName = resourceName;
+            Name = Ensure.IsNotNullOrEmpty(name, nameof(name));
+            ResourceName = Ensure.IsNotNullOrEmpty(resourceName, nameof(resourceName));
+            ResourceLocation = resourceLocation;
         }
 
         public string Localize(IStringLocalizerFactory factory)

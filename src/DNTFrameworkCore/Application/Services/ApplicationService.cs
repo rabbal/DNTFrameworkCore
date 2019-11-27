@@ -1,12 +1,14 @@
 ﻿using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Validation;
 using System.Collections.Generic;
+using DNTFrameworkCore.Dependency;
 
 namespace DNTFrameworkCore.Application.Services
 {
-    /// <summary>
-    /// base class of application services for support versioning
-    /// </summary>
+    public interface IApplicationService : IScopedDependency
+    {
+    }
+    
     public abstract class ApplicationService : IApplicationService
     {
         protected static Result Ok() => Result.Ok();

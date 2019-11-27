@@ -10,7 +10,7 @@ namespace DNTFrameworkCore.Logging
     {
         public string Message { get; set; }
         public string Level { get; set; }
-        public DateTimeOffset Timestamp { get; set; }
+        public DateTime CreationTime { get; set; }
         public string LoggerName { get; set; }
         public string UserBrowserName { get; set; }
         public string UserIP { get; set; }

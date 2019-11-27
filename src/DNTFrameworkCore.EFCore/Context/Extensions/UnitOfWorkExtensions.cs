@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Domain;
+using DNTFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
@@ -13,6 +14,18 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 {
     public static class UnitOfWorkExtensions
     {
+        public static T GetShadowPropertyValue<T>(this IUnitOfWork uow, object entity, string propertyName)
+            where T : IConvertible
+        {
+            var value = uow.Entry(entity).Property(propertyName).CurrentValue;
+            return value != null ? value.To<T>() : default;
+        }
+
+        public static object GetShadowPropertyValue(this IUnitOfWork uow, object entity, string propertyName)
+        {
+            return uow.Entry(entity).Property(propertyName).CurrentValue;
+        }
+
         public static TResult RunInTransaction<TResult>(this IUnitOfWork uow, Func<TResult> action,
             IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
@@ -258,20 +271,22 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 
 
         /// <summary>
-        ///     Traverse an object graph executing a callback on each node.
+        /// Traverse an object graph executing a callback on each node.
         /// </summary>
-        /// <param name="uow">Used to query and save changes to a database</param>
-        /// <param name="item">Object that implements IHasTrackingState</param>
+        /// <param name="context">Used to query and save changes to a database</param>
+        /// <param name="item">Object that implements ITrackable</param>
         /// <param name="callback">Callback executed on each node in the object graph</param>
-        public static void TraverseGraph(this IUnitOfWork uow, object item,
+        private static void TraverseGraph(this IUnitOfWork context, object item,
             Action<EntityEntryGraphNode> callback)
         {
-            var stateManager = uow.Entry(item).GetInfrastructure().StateManager;
-            var node = new EntityEntryGraphNode(stateManager.GetOrCreateEntry(item), null, null);
+#pragma warning disable EF1001 // Internal EF Core API usage.
+            var stateManager = context.Entry(item).GetInfrastructure().StateManager;
+            var node = new EntityEntryGraphNode<object>(stateManager.GetOrCreateEntry(item), null, null, null);
             IEntityEntryGraphIterator graphIterator = new EntityEntryGraphIterator();
+#pragma warning restore EF1001 // Internal EF Core API usage.
             var visited = new HashSet<int>();
 
-            graphIterator.TraverseGraph<object>(node, null, (n, s) =>
+            graphIterator.TraverseGraph(node, n =>
             {
                 // Check visited
                 if (visited.Contains(n.Entry.Entity.GetHashCode()))
@@ -289,20 +304,22 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
         }
 
         /// <summary>
-        ///     Traverse an object graph asynchronously executing a callback on each node.
+        /// Traverse an object graph asynchronously executing a callback on each node.
         /// </summary>
-        /// <param name="uow">Used to query and save changes to a database</param>
-        /// <param name="item">Object that implements IHasTrackingState</param>
+        /// <param name="context">Used to query and save changes to a database</param>
+        /// <param name="item">Object that implements ITrackable</param>
         /// <param name="callback">Async callback executed on each node in the object graph</param>
-        private static async Task TraverseGraphAsync(this IUnitOfWork uow, object item,
+        private static async Task TraverseGraphAsync(this IUnitOfWork context, object item,
             Func<EntityEntryGraphNode, Task> callback)
         {
-            var stateManager = uow.Entry(item).GetInfrastructure().StateManager;
-            var node = new EntityEntryGraphNode(stateManager.GetOrCreateEntry(item), null, null);
+#pragma warning disable EF1001 // Internal EF Core API usage.
+            var stateManager = context.Entry(item).GetInfrastructure().StateManager;
+            var node = new EntityEntryGraphNode<object>(stateManager.GetOrCreateEntry(item), null, null, null);
             IEntityEntryGraphIterator graphIterator = new EntityEntryGraphIterator();
+#pragma warning restore EF1001 // Internal EF Core API usage.
             var visited = new HashSet<int>();
 
-            await graphIterator.TraverseGraphAsync<object>(node, null, async (n, s, ct) =>
+            await graphIterator.TraverseGraphAsync<object>(node, async (n, ct) =>
             {
                 // Check visited
                 if (visited.Contains(n.Entry.Entity.GetHashCode()))

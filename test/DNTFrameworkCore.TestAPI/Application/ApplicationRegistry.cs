@@ -19,7 +19,7 @@ namespace DNTFrameworkCore.TestAPI.Application
 
         public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<ProjectSettings>(configuration.Bind);
+            services.Configure<ProjectOptions>(configuration.Bind);
 
             services.AddAutoMapper(typeof(ApplicationRegistry));
             services.AddValidatorsFromAssembly(typeof(ApplicationRegistry).Assembly);

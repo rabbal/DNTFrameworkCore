@@ -9,7 +9,7 @@ using DNTFrameworkCore.EFCore.Context;
 
 namespace DNTFrameworkCore.EFCore.Protection
 {
-    public class ProtectionStore : IProtectionStore
+    internal sealed class ProtectionStore : IProtectionStore
     {
         private readonly IServiceProvider _provider;
 

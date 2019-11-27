@@ -23,7 +23,7 @@ namespace DNTFrameworkCore.EFCore.Configuration
             builder.Property(v => v.Value).IsRequired();
 
             builder.HasIndex(v => v.Key).HasName("UIX_Values_Key").IsUnique();
-
+            
             builder.ToTable("Values");
         }
     }

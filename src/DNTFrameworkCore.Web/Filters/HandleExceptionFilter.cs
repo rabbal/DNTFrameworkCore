@@ -4,16 +4,18 @@ using DNTFrameworkCore.Web.Results;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.Web.Filters
 {
+    //Todo: ModelState Message Localization
     public class HandleExceptionFilter : IExceptionFilter
     {
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
         private readonly ILogger<HandleExceptionFilter> _logger;
 
-        public HandleExceptionFilter(IHostingEnvironment env, ILogger<HandleExceptionFilter> logger)
+        public HandleExceptionFilter(IWebHostEnvironment env, ILogger<HandleExceptionFilter> logger)
         {
             _env = env;
             _logger = logger;

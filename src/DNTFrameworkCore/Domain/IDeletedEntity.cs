@@ -1,6 +1,6 @@
 ﻿namespace DNTFrameworkCore.Domain
 {
-    public interface ISoftDeleteEntity
+    public interface IDeletedEntity
     {
         bool IsDeleted { get; }
     }

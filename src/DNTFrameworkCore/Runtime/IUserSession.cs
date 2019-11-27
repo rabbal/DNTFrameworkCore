@@ -87,7 +87,5 @@ namespace DNTFrameworkCore.Runtime
 
         bool IsInRole(string role);
         bool IsGranted(string permission);
-        IDisposable UseUserId(string userId);
-        IDisposable UseBranchId(string branchId);
     }
 }

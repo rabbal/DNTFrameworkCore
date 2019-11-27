@@ -17,13 +17,13 @@ namespace DNTFrameworkCore.EFCore.Context
         void TrackGraph<TEntity>(TEntity entity, Action<EntityEntryGraphNode> callback) where TEntity : class;
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
         int SaveChanges();
-        int ExecuteSqlCommand(string query);
-        int ExecuteSqlCommand(string query, params object[] parameters);
-        Task<int> ExecuteSqlCommandAsync(string query);
-        Task<int> ExecuteSqlCommandAsync(string query, params object[] parameters);
+        int ExecuteSqlInterpolatedCommand(FormattableString query);
+        int ExecuteSqlRawCommand(string query, params object[] parameters);
+        Task<int> ExecuteSqlInterpolatedCommandAsync(FormattableString query);
+        Task<int> ExecuteSqlRawCommandAsync(string query, params object[] parameters);
         void UseTransaction(DbTransaction transaction);
         void UseConnectionString(string connectionString);
-        bool HasActiveTransaction { get; }
+        bool HasTransaction { get; }
         DbConnection Connection { get; }
         IDbContextTransaction Transaction { get; }
         IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);

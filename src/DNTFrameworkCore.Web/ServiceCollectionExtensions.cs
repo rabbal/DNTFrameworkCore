@@ -36,14 +36,25 @@ namespace DNTFrameworkCore.Web
             {
                 return new ConfigureOptions<KeyManagementOptions>(options =>
                 {
-                    using (var scope = provider.CreateScope())
-                    {
-                        options.XmlRepository = scope.ServiceProvider.GetService<IXmlRepository>();
-                    }
+                    using var scope = provider.CreateScope();
+                    options.XmlRepository = scope.ServiceProvider.GetService<IXmlRepository>();
                 });
             });
 
             return services;
+        }
+    }
+
+    /// <summary>
+    /// Configure DNTFrameworkCore.Web services
+    /// </summary>
+    public class WebBuilder
+    {
+        public IServiceCollection Services { get; }
+
+        public WebBuilder(IServiceCollection services)
+        {
+            Services = services;
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 
 namespace DNTFrameworkCore.Common
 {
@@ -53,7 +54,7 @@ namespace DNTFrameworkCore.Common
         {
             if (!_disposed) return;
             
-            var objectName = This.GetType().Name;
+            var objectName = This.GetType().GetTypeInfo().Name;
             throw new ObjectDisposedException(objectName);
         }
     }
