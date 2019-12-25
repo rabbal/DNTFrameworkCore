@@ -147,7 +147,6 @@ namespace DNTFrameworkCore.EFCore.Context
             {
                 builder.Entity(entityType.ClrType)
                     .Property<string>(Hash)
-                    .IsRequired()
                     .HasMaxLength(256);
             }
         }

@@ -17,6 +17,7 @@ namespace DNTFrameworkCore.EFCore.Context.Hooks
                 Hook(typedEntity, metadata, context);
         }
 
+        public abstract string Name { get; }
         public virtual int Order => default;
 
         /// <summary>

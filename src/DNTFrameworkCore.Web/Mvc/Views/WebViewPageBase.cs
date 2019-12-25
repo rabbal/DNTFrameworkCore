@@ -33,7 +33,7 @@ namespace DNTFrameworkCore.Web.Mvc.Views
             }
         }
 
-        protected string BuildMenuUrl(string url)
+        protected string MenuUrl(string url)
         {
             if (string.IsNullOrEmpty(url))
             {

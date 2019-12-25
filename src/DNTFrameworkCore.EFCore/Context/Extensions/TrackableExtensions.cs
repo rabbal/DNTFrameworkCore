@@ -1,5 +1,6 @@
 ﻿using DNTFrameworkCore.Domain;
 using Microsoft.EntityFrameworkCore;
+
 namespace DNTFrameworkCore.EFCore.Context.Extensions
 {
     /// <summary>
@@ -7,6 +8,15 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
     /// </summary>
     public static class TrackableExtensions
     {
+        public static void Unchange(this ITrackable trackable)
+        {
+            if (trackable.TrackingState != TrackingState.Unchanged)
+                trackable.TrackingState = TrackingState.Unchanged;
+
+            if (trackable.ModifiedProperties?.Count > 0)
+                trackable.ModifiedProperties.Clear();
+        }
+
         /// <summary>
         ///     Convert TrackingState to EntityState.
         /// </summary>
@@ -18,13 +28,13 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
             {
                 case TrackingState.Added:
                     return EntityState.Added;
-                
+
                 case TrackingState.Modified:
                     return EntityState.Modified;
-                
+
                 case TrackingState.Deleted:
                     return EntityState.Deleted;
-                
+
                 default:
                     return EntityState.Unchanged;
             }
@@ -41,13 +51,13 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
             {
                 case EntityState.Added:
                     return TrackingState.Added;
-                
+
                 case EntityState.Modified:
                     return TrackingState.Modified;
-                
+
                 case EntityState.Deleted:
                     return TrackingState.Deleted;
-                
+
                 default:
                     return TrackingState.Unchanged;
             }

@@ -2,7 +2,7 @@ using System;
 
 namespace DNTFrameworkCore.Application.Models
 {
-    public class Id : Id<long>
+    public class Id : Id<int>
     {
     }
 

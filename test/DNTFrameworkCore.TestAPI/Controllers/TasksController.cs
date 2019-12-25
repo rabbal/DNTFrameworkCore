@@ -18,5 +18,11 @@ namespace DNTFrameworkCore.TestAPI.Controllers
         protected override string EditPermissionName => PermissionNames.Tasks_Edit;
         protected override string ViewPermissionName => PermissionNames.Tasks_View;
         protected override string DeletePermissionName => PermissionNames.Tasks_Delete;
+
+        [HttpGet("[action]")]
+        public IActionResult TamperedFromOutside()
+        {
+            return Ok(Service.TamperedTaskExists());
+        }
     }
 }

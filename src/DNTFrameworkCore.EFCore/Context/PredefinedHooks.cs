@@ -1,5 +1,4 @@
 using System;
-using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.EFCore.Context.Hooks;
 using DNTFrameworkCore.Extensions;
@@ -10,6 +9,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.EFCore.Context
 {
+    public static class HookNames
+    {
+        public const string CreationTracking = nameof(CreationTracking);
+        public const string ModificationTracking = nameof(ModificationTracking);
+        public const string Tenancy = nameof(Tenancy);
+        public const string RowLevelSecurity = nameof(RowLevelSecurity);
+        public const string SoftDelete = nameof(SoftDelete);
+        public const string RowVersion = nameof(RowVersion);
+        public const string RowIntegrity = nameof(RowIntegrity);
+        public const string Numbering = nameof(Numbering);
+    }
+
     internal sealed class PreInsertCreationTrackingHook<TUserId> : PreInsertHook<ICreationTracking>
         where TUserId : IEquatable<TUserId>
     {
@@ -22,9 +33,11 @@ namespace DNTFrameworkCore.EFCore.Context
             _dateTime = dateTime ?? throw new ArgumentNullException(nameof(dateTime));
         }
 
+        public override string Name => HookNames.CreationTracking;
+
         protected override void Hook(ICreationTracking entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(EFCore.CreationDateTime).CurrentValue =_dateTime.UtcNow;
+            metadata.Entry.Property(EFCore.CreationDateTime).CurrentValue = _dateTime.UtcNow;
             metadata.Entry.Property(EFCore.CreatorBrowserName).CurrentValue = _session.UserBrowserName;
             metadata.Entry.Property(EFCore.CreatorIp).CurrentValue = _session.UserIP;
             metadata.Entry.Property(EFCore.CreatorUserId).CurrentValue = _session.UserId.To<TUserId>();
@@ -42,6 +55,8 @@ namespace DNTFrameworkCore.EFCore.Context
             _session = session ?? throw new ArgumentNullException(nameof(session));
             _dateTime = dateTime ?? throw new ArgumentNullException(nameof(dateTime));
         }
+
+        public override string Name => HookNames.ModificationTracking;
 
         protected override void Hook(IModificationTracking entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
@@ -62,21 +77,25 @@ namespace DNTFrameworkCore.EFCore.Context
             _session = session ?? throw new ArgumentNullException(nameof(session));
         }
 
+        public override string Name => HookNames.Tenancy;
+
         protected override void Hook(ITenantEntity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
             metadata.Entry.Property(EFCore.TenantId).CurrentValue = _session.TenantId.To<TTenantId>();
         }
     }
 
-    internal sealed class PreInsertHasRowLevelSecurityHook<TUserId> : PreInsertHook<IHasRowLevelSecurity>
+    internal sealed class PreInsertRowLevelSecurityHook<TUserId> : PreInsertHook<IHasRowLevelSecurity>
         where TUserId : IEquatable<TUserId>
     {
         private readonly IUserSession _session;
 
-        public PreInsertHasRowLevelSecurityHook(IUserSession session)
+        public PreInsertRowLevelSecurityHook(IUserSession session)
         {
             _session = session ?? throw new ArgumentNullException(nameof(session));
         }
+
+        public override string Name => HookNames.RowLevelSecurity;
 
         protected override void Hook(IHasRowLevelSecurity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
@@ -86,6 +105,8 @@ namespace DNTFrameworkCore.EFCore.Context
 
     internal sealed class PreDeleteDeletedEntityHook : PreDeleteHook<IDeletedEntity>
     {
+        public override string Name => HookNames.SoftDelete;
+
         protected override void Hook(IDeletedEntity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
             metadata.Entry.State = EntityState.Modified;
@@ -93,8 +114,13 @@ namespace DNTFrameworkCore.EFCore.Context
         }
     }
 
+    /// <summary>
+    /// For connected scenarios when we want 
+    /// </summary>
     internal sealed class PreUpdateRowVersionHook : PreUpdateHook<IHasRowVersion>
     {
+        public override string Name => HookNames.RowVersion;
+
         protected override void Hook(IHasRowVersion entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
             metadata.Entry.Property(EFCore.Version).OriginalValue =
@@ -102,37 +128,15 @@ namespace DNTFrameworkCore.EFCore.Context
         }
     }
 
-    internal sealed class PreInsertRowIntegrityHook : PreInsertHook<IHasRowIntegrity>
+    internal sealed class RowIntegrityHook : PostActionHook<IHasRowIntegrity>
     {
-        private readonly IRowIntegrityHashAlgorithm _algorithm;
-
-        public PreInsertRowIntegrityHook(IRowIntegrityHashAlgorithm algorithm)
-        {
-            _algorithm = algorithm ?? throw new ArgumentNullException(nameof(algorithm));
-        }
-
+        public override string Name => HookNames.RowIntegrity;
         public override int Order => int.MaxValue;
+        public override EntityState HookState => EntityState.Unchanged;
 
         protected override void Hook(IHasRowIntegrity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(EFCore.Hash).CurrentValue = _algorithm.HashRow(metadata.Properties);
-        }
-    }
-
-    internal sealed class PreUpdateRowIntegrityHook : PreUpdateHook<IHasRowIntegrity>
-    {
-        private readonly IRowIntegrityHashAlgorithm _algorithm;
-
-        public PreUpdateRowIntegrityHook(IRowIntegrityHashAlgorithm algorithm)
-        {
-            _algorithm = algorithm ?? throw new ArgumentNullException(nameof(algorithm));
-        }
-
-        public override int Order => int.MaxValue;
-
-        protected override void Hook(IHasRowIntegrity entity, HookEntityMetadata metadata, IUnitOfWork uow)
-        {
-            metadata.Entry.Property(EFCore.Hash).CurrentValue = _algorithm.HashRow(metadata.Properties);
+            metadata.Entry.Property(EFCore.Hash).CurrentValue = uow.EntityHash(entity);
         }
     }
 }

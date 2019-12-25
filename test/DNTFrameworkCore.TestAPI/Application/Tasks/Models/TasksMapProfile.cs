@@ -12,6 +12,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks.Models
             AllowNullCollections = true;
 
             CreateMap<TaskModel, Task>(MemberList.None)
+                .ForMember(d => d.Number, m => m.Ignore())
                 .ForMember(d => d.NormalizedTitle, m => m.MapFrom(s => s.Title.NormalizePersianTitle()))
                 .ReverseMap();
         }

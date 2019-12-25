@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Eventing;
-using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestAPI.Application.Identity.Models;
 using DNTFrameworkCore.TestAPI.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -46,11 +43,6 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
                     Name = r.Name,
                     Description = r.Description
                 });
-        }
-
-        protected override Task<Result> BeforeEditAsync(IReadOnlyList<ModifiedModel<RoleModel>> models, IReadOnlyList<Role> entities)
-        {
-            return base.BeforeEditAsync(models, entities);
         }
 
         protected override void MapToEntity(RoleModel model, Role role)

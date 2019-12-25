@@ -2,7 +2,7 @@ using System;
 
 namespace DNTFrameworkCore.Cryptography
 {
-    [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Property)]
     public sealed class EncryptedAttribute : Attribute
     { }
 }

@@ -1,8 +1,10 @@
+using System;
 using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Tasks
 {
-    public class Task : TrackableEntity, IHasRowVersion, ICreationTracking, IModificationTracking, INumberedEntity
+    public class Task : Entity, IHasRowVersion, ICreationTracking, IModificationTracking, INumberedEntity,
+        IHasRowIntegrity
     {
         public const int MaxTitleLength = 256;
         public const int MaxDescriptionLength = 1024;
@@ -12,7 +14,9 @@ namespace DNTFrameworkCore.TestAPI.Domain.Tasks
         public string Number { get; set; }
         public string Description { get; set; }
         public TaskState State { get; set; } = TaskState.Todo;
-        public byte[] Version { get; set; }
         public long BranchId { get; set; }
+
+        public byte[] Version { get; set; }
+        public string Hash { get; set; }
     }
 }

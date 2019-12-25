@@ -2,28 +2,29 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.EFCore.Context.Extensions;
 using DNTFrameworkCore.EFCore.Context.Hooks;
 using DNTFrameworkCore.Exceptions;
-using DNTFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
+using Newtonsoft.Json;
 using DbException = DNTFrameworkCore.Exceptions.DbException;
 
 namespace DNTFrameworkCore.EFCore.Context
 {
     public abstract class DbContextCore : DbContext, IUnitOfWork
     {
-        private readonly IEnumerable<IHook> _hooks;
+        private readonly List<IHook> _hooks;
 
         protected DbContextCore(DbContextOptions options, IEnumerable<IHook> hooks) : base(options)
         {
-            _hooks = hooks ?? throw new ArgumentNullException(nameof(hooks));
+            _hooks = (hooks ?? throw new ArgumentNullException(nameof(hooks))).ToList();
         }
 
         public DbConnection Connection => Database.GetDbConnection();
@@ -86,6 +87,11 @@ namespace DNTFrameworkCore.EFCore.Context
             }
         }
 
+        public void IgnoreHook(string hookName)
+        {
+            _hooks.RemoveAll(hook => hook.Name.Equals(hookName));
+        }
+
         public void UseTransaction(DbTransaction transaction)
         {
             Database.UseTransaction(transaction);
@@ -96,9 +102,28 @@ namespace DNTFrameworkCore.EFCore.Context
             Database.GetDbConnection().ConnectionString = connectionString;
         }
 
-        public void TrackGraph<TEntity>(TEntity entity, Action<EntityEntryGraphNode> callback) where TEntity : class
+        public string EntityHash<TEntity>(TEntity entity) where TEntity : class
         {
-            ChangeTracker.TrackGraph(entity, callback);
+            var row = Entry(entity).ToDictionary(p => p.Metadata.Name != EFCore.Hash &&
+                                                      !p.Metadata.IsConcurrencyToken &&
+                                                      !p.Metadata.IsShadowProperty());
+            return EntityHash<TEntity>(row);
+        }
+
+        protected virtual string EntityHash<TEntity>(Dictionary<string, object> row) where TEntity : class
+        {
+            var json = JsonConvert.SerializeObject(row, Formatting.Indented);
+            using (var hashAlgorithm = SHA256.Create())
+            {
+                var byteValue = Encoding.UTF8.GetBytes(json);
+                var byteHash = hashAlgorithm.ComputeHash(byteValue);
+                return Convert.ToBase64String(byteHash);
+            }
+        }
+
+        public void TrackGraph(object rootEntity, Action<EntityEntryGraphNode> callback)
+        {
+            ChangeTracker.TrackGraph(rootEntity, callback);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -117,7 +142,10 @@ namespace DNTFrameworkCore.EFCore.Context
 
                 ExecuteHooks<IPostActionHook>(entryList);
 
-                SavedChanges(new EntityChangeContext(names, entryList));
+                //for RowIntegrity scenarios
+                await base.SaveChangesAsync(true, cancellationToken);
+
+                OnSaveCompleted(new EntityChangeContext(names, entryList));
             }
             catch (DbUpdateConcurrencyException e)
             {
@@ -147,7 +175,10 @@ namespace DNTFrameworkCore.EFCore.Context
 
                 ExecuteHooks<IPostActionHook>(entryList);
 
-                SavedChanges(new EntityChangeContext(names, entryList));
+                //for RowIntegrity scenarios
+                base.SaveChanges(true);
+
+                OnSaveCompleted(new EntityChangeContext(names, entryList));
             }
             catch (DbUpdateConcurrencyException e)
             {
@@ -180,7 +211,8 @@ namespace DNTFrameworkCore.EFCore.Context
         {
             return Database.ExecuteSqlRawAsync(query, parameters);
         }
-        protected virtual void SavedChanges(EntityChangeContext context)
+
+        protected virtual void OnSaveCompleted(EntityChangeContext context)
         {
         }
 

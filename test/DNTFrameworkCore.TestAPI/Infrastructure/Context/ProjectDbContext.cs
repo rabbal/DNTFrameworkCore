@@ -4,6 +4,7 @@ using System.Reflection;
 using DNTFrameworkCore.EFCore.Caching;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Context.Converters.Json;
+using DNTFrameworkCore.EFCore.Context.Extensions;
 using DNTFrameworkCore.EFCore.Context.Hooks;
 using DNTFrameworkCore.EFCore.Logging;
 using DNTFrameworkCore.EFCore.Protection;
@@ -36,11 +37,13 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Context
             modelBuilder.AddRowVersionField();
             modelBuilder.AddRowIntegrityField();
             modelBuilder.AddRowLevelSecurityField<long>();
-
+            
+            modelBuilder.AddDateTimeUtcKind();
+            
             base.OnModelCreating(modelBuilder);
         }
 
-        protected override void SavedChanges(EntityChangeContext context)
+        protected override void OnSaveCompleted(EntityChangeContext context)
         {
             this.GetService<IEFCacheServiceProvider>()
                 .InvalidateCacheDependencies(context.EntityNames.ToArray());

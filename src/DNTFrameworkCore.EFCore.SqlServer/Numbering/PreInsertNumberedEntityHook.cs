@@ -21,6 +21,8 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             _options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
+        public override string Name => HookNames.Numbering;
+
         protected override void Hook(INumberedEntity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
             if (!string.IsNullOrEmpty(entity.Number)) return;
@@ -38,7 +40,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             uow.Entry(entity).Property(nameof(INumberedEntity.Number)).CurrentValue = number;
         }
 
-        private bool IsUniqueNumber(INumberedEntity entity, string number, NumberedEntityOption option, IUnitOfWork uow)
+        private static bool IsUniqueNumber(INumberedEntity entity, string number, NumberedEntityOption option, IUnitOfWork uow)
         {
             using (var command = uow.Connection.CreateCommand())
             {
@@ -92,9 +94,9 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             }
         }
 
-        private string NewNumber(INumberedEntity entity, NumberedEntityOption option, IUnitOfWork uow)
+        private static string NewNumber(INumberedEntity entity, NumberedEntityOption option, IUnitOfWork uow)
         {
-            var key = BuildEntityKey(entity, option, uow);
+            var key = CreateEntityKey(entity, option, uow);
 
             uow.AcquireDistributedLock(key);
 
@@ -122,7 +124,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             return number;
         }
 
-        private string BuildEntityKey(INumberedEntity entity, NumberedEntityOption option, IUnitOfWork uow)
+        private static string CreateEntityKey(INumberedEntity entity, NumberedEntityOption option, IUnitOfWork uow)
         {
             var type = entity.GetType();
 

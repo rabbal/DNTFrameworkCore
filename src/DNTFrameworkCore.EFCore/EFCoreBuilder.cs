@@ -56,7 +56,7 @@ namespace DNTFrameworkCore.EFCore
 
         public EFCoreBuilder WithRowLevelSecurityHook<TUserId>() where TUserId : IEquatable<TUserId>
         {
-            Services.AddTransient<IHook, PreInsertHasRowLevelSecurityHook<TUserId>>();
+            Services.AddTransient<IHook, PreInsertRowLevelSecurityHook<TUserId>>();
             return this;
         }
 
@@ -73,11 +73,9 @@ namespace DNTFrameworkCore.EFCore
             return this;
         }
 
-        public EFCoreBuilder WithRowIntegrityHook<THashAlgorithm>() where THashAlgorithm : class, IRowIntegrityHashAlgorithm
+        public EFCoreBuilder WithRowIntegrityHook()
         {
-            Services.AddTransient<IRowIntegrityHashAlgorithm, THashAlgorithm>();
-            Services.AddTransient<IHook, PreInsertRowIntegrityHook>();
-            Services.AddTransient<IHook, PreUpdateRowIntegrityHook>();
+            Services.AddTransient<IHook, RowIntegrityHook>();
             return this;
         }
 

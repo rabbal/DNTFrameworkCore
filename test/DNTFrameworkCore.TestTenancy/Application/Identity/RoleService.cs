@@ -10,6 +10,7 @@ using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestTenancy.Application.Identity.Models;
+using DNTFrameworkCore.TestTenancy.Authorization;
 using DNTFrameworkCore.TestTenancy.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,7 +49,8 @@ namespace DNTFrameworkCore.TestTenancy.Application.Identity
                 });
         }
 
-        protected override Task<Result> BeforeEditAsync(IReadOnlyList<ModifiedModel<RoleModel>> models, IReadOnlyList<Role> entities)
+        protected override Task<Result> BeforeEditAsync(IReadOnlyList<ModifiedModel<RoleModel>> models,
+            IReadOnlyList<Role> entities)
         {
             return base.BeforeEditAsync(models, entities);
         }

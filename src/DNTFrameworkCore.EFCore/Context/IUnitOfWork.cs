@@ -14,7 +14,8 @@ namespace DNTFrameworkCore.EFCore.Context
     {
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
         EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
-        void TrackGraph<TEntity>(TEntity entity, Action<EntityEntryGraphNode> callback) where TEntity : class;
+        string EntityHash<TEntity>(TEntity entity) where TEntity : class;
+        void TrackGraph(object rootEntity, Action<EntityEntryGraphNode> callback);
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
         int SaveChanges();
         int ExecuteSqlInterpolatedCommand(FormattableString query);
@@ -30,5 +31,6 @@ namespace DNTFrameworkCore.EFCore.Context
         Task<IDbContextTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
         void CommitTransaction();
         void RollbackTransaction();
+        void IgnoreHook(string hookName);
     }
 }

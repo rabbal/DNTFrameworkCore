@@ -8,6 +8,7 @@ namespace DNTFrameworkCore.EFCore.Context.Hooks
     /// <typeparam name="TEntity">The type of entity this hook must watch for.</typeparam>
     public abstract class PreActionHook<TEntity> : IPreActionHook
     {
+        public abstract string Name { get; }
         public virtual int Order => default;
 
         /// <summary>

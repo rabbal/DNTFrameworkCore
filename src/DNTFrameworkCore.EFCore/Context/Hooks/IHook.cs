@@ -1,5 +1,4 @@
-﻿using System;
-using DNTFrameworkCore.Dependency;
+﻿using DNTFrameworkCore.Dependency;
 using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.EFCore.Context.Hooks
@@ -9,12 +8,12 @@ namespace DNTFrameworkCore.EFCore.Context.Hooks
     /// </summary>
     public interface IHook : ITransientDependency
     {
+        string Name { get; }
         int Order { get; }
 
         /// <summary>
         /// Gets the entity state(s) to listen for.
         /// </summary>
-        /// <remarks>The entity state being <see cref="FlagsAttribute"/>, it allows this hook to listen to multiple states.</remarks>
         EntityState HookState { get; }
 
         /// <summary>

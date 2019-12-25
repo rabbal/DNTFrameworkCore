@@ -9,14 +9,14 @@ namespace DNTFrameworkCore.EFCore
 {
     public static class HostExtensions
     {
-        public static IHost MigrateDbContext<TContext>(this IHost webHost) where TContext : DbContext
+        public static IHost MigrateDbContext<TContext>(this IHost host) where TContext : DbContext
         {
-            using (var scope = webHost.Services.CreateScope())
+            using (var scope = host.Services.CreateScope())
             {
                 var provider = scope.ServiceProvider;
 
                 var logger = provider.GetRequiredService<ILogger<TContext>>();
-                var dbSeed = provider.GetService<IDbSeed>();
+                var db = provider.GetService<IDbSetup>();
                 var context = provider.GetRequiredService<TContext>();
 
                 try
@@ -25,7 +25,7 @@ namespace DNTFrameworkCore.EFCore
 
                     context.Database.Migrate();
 
-                    dbSeed?.Seed();
+                    db?.Seed();
 
                     logger.LogInformation($"Migrated database associated with context {typeof(TContext).Name}");
                 }
@@ -36,7 +36,7 @@ namespace DNTFrameworkCore.EFCore
                 }
             }
 
-            return webHost;
+            return host;
         }
     }
 }

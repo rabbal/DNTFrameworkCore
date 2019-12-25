@@ -25,7 +25,7 @@ namespace DNTFrameworkCore.EFCore.Application
     public abstract class CrudService<TEntity, TKey, TModel> :
         CrudService<TEntity, TKey, TModel, TModel>,
         ICrudService<TKey, TModel>
-        where TEntity : TrackableEntity<TKey>, new()
+        where TEntity : Entity<TKey>, new()
         where TModel : MasterModel<TKey>
         where TKey : IEquatable<TKey>
     {
@@ -37,7 +37,7 @@ namespace DNTFrameworkCore.EFCore.Application
     public abstract class CrudService<TEntity, TKey, TReadModel, TModel> :
         CrudService<TEntity, TKey, TReadModel, TModel, FilteredPagedQueryModel>,
         ICrudService<TKey, TReadModel, TModel>
-        where TEntity : TrackableEntity<TKey>, new()
+        where TEntity : Entity<TKey>, new()
         where TModel : MasterModel<TKey>
         where TReadModel : ReadModel<TKey>
         where TKey : IEquatable<TKey>
@@ -50,7 +50,7 @@ namespace DNTFrameworkCore.EFCore.Application
     public abstract class CrudService<TEntity, TKey, TReadModel, TModel,
         TFilteredPagedQueryModel> : ApplicationService,
         ICrudService<TKey, TReadModel, TModel, TFilteredPagedQueryModel>
-        where TEntity : TrackableEntity<TKey>, new()
+        where TEntity : Entity<TKey>, new()
         where TModel : MasterModel<TKey>
         where TReadModel : ReadModel<TKey>
         where TFilteredPagedQueryModel : class, IFilteredPagedQueryModel
@@ -70,7 +70,11 @@ namespace DNTFrameworkCore.EFCore.Application
         [SkipValidation]
         public async Task<IPagedQueryResult<TReadModel>> ReadPagedListAsync(TFilteredPagedQueryModel model)
         {
-            return await BuildReadQuery(model).ToPagedQueryResultAsync(model);
+            var result = await BuildReadQuery(model).ToPagedQueryResultAsync(model);
+
+            await AfterReadAsync(result);
+
+            return result;
         }
 
         public async Task<Maybe<TModel>> FindAsync(TKey id)
@@ -93,9 +97,7 @@ namespace DNTFrameworkCore.EFCore.Application
         [SkipValidation]
         public async Task<IPagedQueryResult<TModel>> FindPagedListAsync(PagedQueryModel model)
         {
-            var pagedList = await BuildFindQuery()
-                .AsNoTracking()
-                .ToPagedQueryResultAsync(model);
+            var pagedList = await BuildFindQuery().ToPagedQueryResultAsync(model);
 
             var result = new PagedQueryResult<TModel>
             {
@@ -133,7 +135,7 @@ namespace DNTFrameworkCore.EFCore.Application
 
             EntitySet.AddRange(entityList);
             await UnitOfWork.SaveChangesAsync();
-            UnitOfWork.AcceptChanges(entityList);
+            UnitOfWork.MarkUnchanged(entityList);
 
             MapToModel(entityList, modelList);
 
@@ -159,7 +161,7 @@ namespace DNTFrameworkCore.EFCore.Application
             var modelList = models.ToList();
 
             var ids = modelList.Select(m => m.Id).ToList();
-            var entityList = await BuildFindQuery().AsNoTracking().Where(e => ids.Contains(e.Id)).ToListAsync();
+            var entityList = await BuildFindQuery().Where(e => ids.Contains(e.Id)).ToListAsync();
 
             var modifiedList = BuildModifiedModel(modelList, entityList);
 
@@ -173,10 +175,9 @@ namespace DNTFrameworkCore.EFCore.Application
             result = await EventBus.TriggerEditingEventAsync<TModel, TKey>(modifiedList);
             if (result.Failed) return result;
 
-            entityList.ForEach(e => e.TrackingState = TrackingState.Modified);
-            UnitOfWork.ApplyChanges(entityList);
+            UnitOfWork.TrackChanges(entityList);
             await UnitOfWork.SaveChangesAsync();
-            UnitOfWork.AcceptChanges(entityList);
+            UnitOfWork.MarkUnchanged(entityList);
 
             MapToModel(entityList, modelList);
 
@@ -251,10 +252,7 @@ namespace DNTFrameworkCore.EFCore.Application
 
         protected async Task<IReadOnlyList<TModel>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            var entityList = await BuildFindQuery()
-                .AsNoTracking()
-                .Where(predicate)
-                .ToListAsync();
+            var entityList = await BuildFindQuery().Where(predicate).ToListAsync();
 
             var modelList = entityList.MapReadOnlyList(MapToModel);
 
@@ -266,6 +264,11 @@ namespace DNTFrameworkCore.EFCore.Application
         protected virtual IQueryable<TEntity> BuildFindQuery()
         {
             return EntitySet.AsNoTracking();
+        }
+
+        protected virtual Task AfterReadAsync(PagedQueryResult<TReadModel> result)
+        {
+            return Task.CompletedTask;
         }
 
         protected virtual Task AfterFindAsync(IReadOnlyList<TModel> models)

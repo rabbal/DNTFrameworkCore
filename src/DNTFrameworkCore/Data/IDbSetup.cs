@@ -2,7 +2,7 @@ using DNTFrameworkCore.Dependency;
 
 namespace DNTFrameworkCore.Data
 {
-    public interface IDbSeed : IScopedDependency
+    public interface IDbSetup : ITransientDependency
     {
         void Seed();
     }

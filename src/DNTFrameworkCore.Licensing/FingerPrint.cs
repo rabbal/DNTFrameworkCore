@@ -6,6 +6,18 @@ using System.Text;
 
 namespace DNTFrameworkCore.Licensing
 {
+    [Flags]
+    public enum FingerPrintHardwares
+    {
+        None = 0,
+        Cpu = 1,
+        Bios = 1 << 1,
+        Motherboard = 1 << 2,
+        Disk = 1 << 3,
+        Video = 1 << 4,
+        Mac = 1 << 5
+    }
+
     /// <summary>
     /// Generates a 16 byte Unique Identification code of a computer
     /// Example: 4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9
@@ -14,19 +26,33 @@ namespace DNTFrameworkCore.Licensing
     {
         private static string _value = string.Empty;
 
-        public static string Value
+        public static string Value(FingerPrintHardwares hardwares)
         {
-            get
-            {
-                if (!string.IsNullOrEmpty(_value)) return _value;
+            if (!string.IsNullOrEmpty(_value)) return _value;
 
-                var serial =
-                    $"CPU >> {CpuId()} \nBIOS >> {BiosId()} \nBASE >> {MotherboardId()} \nDISK >> {DiskId()} \nVIDEO >> {VideoId()} \nMAC >> {MacId()}";
+            var serial = new StringBuilder();
 
-                _value = ComputeHash(serial);
+            if (hardwares.HasFlag(FingerPrintHardwares.Cpu))
+                serial.AppendLine($"CPU >> {CpuId()}");
 
-                return _value;
-            }
+            if (hardwares.HasFlag(FingerPrintHardwares.Bios))
+                serial.AppendLine($"BIOS >> {BiosId()}");
+
+            if (hardwares.HasFlag(FingerPrintHardwares.Motherboard))
+                serial.AppendLine($"BASE >> {MotherboardId()}");
+
+            if (hardwares.HasFlag(FingerPrintHardwares.Disk))
+                serial.AppendLine($"DISK >> {DiskId()}");
+
+            if (hardwares.HasFlag(FingerPrintHardwares.Video))
+                serial.AppendLine($"VIDEO >> {VideoId()}");
+
+            if (hardwares.HasFlag(FingerPrintHardwares.Mac))
+                serial.AppendLine($"MAC >> {MacId()}");
+
+            _value = ComputeHash(serial.ToString());
+
+            return _value;
         }
 
         private static string ComputeHash(string s)
@@ -101,12 +127,7 @@ namespace DNTFrameworkCore.Licensing
         //First enabled network card ID
         private static string MacId()
         {
-            return HardwareQuery("Win32_NetworkAdapterConfiguration",
-                "MACAddress", o =>
-                {
-                    var value = o["IPEnabled"];
-                    return value != null && value.ToString() == "True";
-                });
+            return HardwareQuery("Win32_NetworkAdapterConfiguration WHERE IPEnabled = 'TRUE'", "MACAddress");
         }
 
         private static string HardwareQuery(string hardware, string property,

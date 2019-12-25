@@ -14,14 +14,20 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 {
     public static class UnitOfWorkExtensions
     {
-        public static T GetShadowPropertyValue<T>(this IUnitOfWork uow, object entity, string propertyName)
+        public static void IgnoreTrackingHook(this IUnitOfWork uow)
+        {
+            uow.IgnoreHook(HookNames.CreationTracking);
+            uow.IgnoreHook(HookNames.ModificationTracking);
+        }
+
+        public static T ShadowPropertyValue<T>(this IUnitOfWork uow, object entity, string propertyName)
             where T : IConvertible
         {
             var value = uow.Entry(entity).Property(propertyName).CurrentValue;
             return value != null ? value.To<T>() : default;
         }
 
-        public static object GetShadowPropertyValue(this IUnitOfWork uow, object entity, string propertyName)
+        public static object ShadowPropertyValue(this IUnitOfWork uow, object entity, string propertyName)
         {
             return uow.Entry(entity).Property(propertyName).CurrentValue;
         }
@@ -65,127 +71,107 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
             return result;
         }
 
-        public static void ApplyChanges(this IUnitOfWork uow, ITrackable item)
+        /// <summary>
+        /// Begins tracking a collection of entity and any entities that are reachable by traversing their navigation properties.
+        /// This method is designed for use in disconnected scenarios.
+        /// </summary>
+        public static void TrackChanges(this IUnitOfWork uow, IEnumerable<object> rootEntities)
         {
-            // Detach root entity
-            uow.Entry(item).State = EntityState.Detached;
+            foreach (var rootEntity in rootEntities)
+                uow.TrackChanges(rootEntity);
+        }
 
-            // Recursively set entity state for DbContext entry
-            uow.TrackGraph(item, node =>
+        /// <summary>
+        /// Begins tracking an entity and any entities that are reachable by traversing it's navigation properties.
+        /// This method is designed for use in disconnected scenarios.
+        /// </summary>
+        public static void TrackChanges(this IUnitOfWork uow, object rootEntity)
+        {
+            uow.Entry(rootEntity).State = EntityState.Detached;
+
+            uow.TrackGraph(rootEntity, node =>
             {
-                // Exit if not ITrackable
-                if (!(node.Entry.Entity is ITrackable trackable)) return;
-
-                // Detach node entity
-                node.Entry.State = EntityState.Detached;
-
-                // Get related parent entity
-                if (node.SourceEntry != null)
+                if (node.Entry.Entity is ITrackable trackable)
                 {
-                    var relationship = node.InboundNavigation?.GetRelationshipType();
-                    switch (relationship)
-                    {
-                        case RelationshipType.OneToOne:
-                            // If parent is added set to added
-                            if (node.SourceEntry.State == EntityState.Added)
-                                SetEntityState(node.Entry, TrackingState.Added.ToEntityState(), trackable);
-                            else if (node.SourceEntry.State == EntityState.Deleted)
-                                SetEntityState(node.Entry, TrackingState.Deleted.ToEntityState(), trackable);
-                            else
-                                SetEntityState(node.Entry, trackable.TrackingState.ToEntityState(), trackable);
-
-                            return;
-                        case RelationshipType.ManyToOne:
-                            // If parent is added set to added
-                            if (node.SourceEntry.State == EntityState.Added)
-                            {
-                                SetEntityState(node.Entry, TrackingState.Added.ToEntityState(), trackable);
-                                return;
-                            }
-
-                            // If parent is deleted set to deleted
-                            var parent = node.SourceEntry.Entity as ITrackable;
-                            if (node.SourceEntry.State == EntityState.Deleted
-                                || parent?.TrackingState == TrackingState.Deleted)
-                            {
-                                try
-                                {
-                                    // Will throw if there are added children
-                                    SetEntityState(node.Entry, TrackingState.Deleted.ToEntityState(), trackable);
-                                }
-                                catch (InvalidOperationException e)
-                                {
-                                    throw new InvalidOperationException(
-                                        @"An entity may not be marked as Deleted if it has related entities which are marked as Added. 
-                                        Remove added related entities before deleting a parent entity.", e);
-                                }
-
-                                return;
-                            }
-
-                            break;
-                        case RelationshipType.OneToMany:
-                            // If trackable is set deleted set entity state to unchanged,
-                            // since it may be related to other entities.
-                            if (trackable.TrackingState == TrackingState.Deleted)
-                            {
-                                SetEntityState(node.Entry, TrackingState.Unchanged.ToEntityState(), trackable);
-                                return;
-                            }
-
-                            break;
-                    }
+                    SetEntityState(node, trackable);
                 }
-
-                // Set entity state to tracking state
-                SetEntityState(node.Entry, trackable.TrackingState.ToEntityState(), trackable);
+                else
+                {
+                    uow.Entry(rootEntity).State = EntityState.Modified;
+                }
             });
         }
 
-        /// <summary>
-        ///     Update entity state on DbContext for more than one object graph.
-        /// </summary>
-        /// <param name="uow">Used to query and save changes to a database</param>
-        /// <param name="items">Objects that implement ITrackable</param>
-        public static void ApplyChanges(this IUnitOfWork uow, IEnumerable<ITrackable> items)
+        private static void SetEntityState(EntityEntryGraphNode node, ITrackable trackable)
         {
-            // Apply changes to collection of items
-            foreach (var item in items)
-                uow.ApplyChanges(item);
-        }
+            node.Entry.State = EntityState.Detached;
 
-        /// <summary>
-        ///     Set entity state to Detached for entities in more than one object graph.
-        /// </summary>
-        /// <param name="uow">Used to query and save changes to a database</param>
-        /// <param name="items">Objects that implement ITrackable</param>
-        public static void DetachEntities(this IUnitOfWork uow, IEnumerable<ITrackable> items)
-        {
-            // Detach each item in the object graph
-            foreach (var item in items)
-                uow.DetachEntities(item);
-        }
+            if (node.SourceEntry != null)
+            {
+                var relationship = node.InboundNavigation?.GetRelationshipType();
+                switch (relationship)
+                {
+                    case RelationshipType.OneToOne:
+                        // If parent is added set to added
+                        if (node.SourceEntry.State == EntityState.Added)
+                            SetEntityState(node.Entry, TrackingState.Added.ToEntityState(), trackable);
+                        else if (node.SourceEntry.State == EntityState.Deleted)
+                            SetEntityState(node.Entry, TrackingState.Deleted.ToEntityState(), trackable);
+                        else
+                            SetEntityState(node.Entry, trackable.TrackingState.ToEntityState(), trackable);
 
-        /// <summary>
-        ///     Set entity state to Detached for entities in an object graph.
-        /// </summary>
-        /// <param name="uow">Used to query and save changes to a database</param>
-        /// <param name="item">Object that implements ITrackable</param>
-        public static void DetachEntities(this IUnitOfWork uow, ITrackable item)
-        {
-            // Detach each item in the object graph
-            uow.TraverseGraph(item, n => n.Entry.State = EntityState.Detached);
+                        return;
+                    case RelationshipType.ManyToOne:
+                        // If parent is added set to added
+                        if (node.SourceEntry.State == EntityState.Added)
+                        {
+                            SetEntityState(node.Entry, TrackingState.Added.ToEntityState(), trackable);
+                            return;
+                        }
+
+                        // If parent is deleted set to deleted
+                        var parent = node.SourceEntry.Entity as ITrackable;
+                        if (node.SourceEntry.State == EntityState.Deleted
+                            || parent?.TrackingState == TrackingState.Deleted)
+                        {
+                            try
+                            {
+                                // Will throw if there are added children
+                                SetEntityState(node.Entry, TrackingState.Deleted.ToEntityState(), trackable);
+                            }
+                            catch (InvalidOperationException e)
+                            {
+                                throw new InvalidOperationException(
+                                    @"An entity may not be marked as Deleted if it has related entities which are marked as Added. 
+                                        Remove added related entities before deleting a parent entity.", e);
+                            }
+
+                            return;
+                        }
+
+                        break;
+                    case RelationshipType.OneToMany:
+                        // If trackable is set deleted set entity state to unchanged,
+                        // since it may be related to other entities.
+                        if (trackable.TrackingState == TrackingState.Deleted)
+                        {
+                            SetEntityState(node.Entry, TrackingState.Unchanged.ToEntityState(), trackable);
+                            return;
+                        }
+
+                        break;
+                }
+            }
+
+            SetEntityState(node.Entry, trackable.TrackingState.ToEntityState(), trackable);
         }
 
         /// <summary>
         ///     Traverse an object graph to populate null reference properties.
         /// </summary>
-        /// <param name="uow">Used to query and save changes to a database</param>
-        /// <param name="item">Object that implements ITrackable</param>
-        public static void LoadRelatedEntities(this IUnitOfWork uow, ITrackable item)
+        public static void LoadRelatedEntities(this IUnitOfWork uow, object entity)
         {
-            // Traverse graph to load references          
-            uow.TraverseGraph(item, n =>
+            uow.TraverseGraph(entity, n =>
             {
                 if (n.Entry.State == EntityState.Detached)
                     n.Entry.State = EntityState.Unchanged;
@@ -198,24 +184,18 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
         /// <summary>
         ///     Traverse more than one object graph to populate null reference properties.
         /// </summary>
-        /// <param name="uow">Used to query and save changes to a database</param>
-        /// <param name="items">Objects that implement ITrackable</param>
-        public static void LoadRelatedEntities(this IUnitOfWork uow, IEnumerable<ITrackable> items)
+        public static void LoadRelatedEntities(this IUnitOfWork uow, IEnumerable<object> entities)
         {
-            // Traverse graph to load references          
-            foreach (var item in items)
-                uow.LoadRelatedEntities(item);
+            foreach (var entity in entities)
+                uow.LoadRelatedEntities(entity);
         }
 
         /// <summary>
         ///     Traverse an object graph asynchronously to populate null reference properties.
         /// </summary>
-        /// <param name="uow">Used to query and save changes to a database</param>
-        /// <param name="item">Object that implements ITrackable</param>
-        public static async Task LoadRelatedEntitiesAsync(this IUnitOfWork uow, ITrackable item)
+        public static async Task LoadRelatedEntitiesAsync(this IUnitOfWork uow, object entity)
         {
-            // Detach each item in the object graph         
-            await uow.TraverseGraphAsync(item, async n =>
+            await uow.TraverseGraphAsync(entity, async n =>
             {
                 if (n.Entry.State == EntityState.Detached)
                     n.Entry.State = EntityState.Unchanged;
@@ -228,31 +208,22 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
         /// <summary>
         ///     Traverse more than one object graph asynchronously to populate null reference properties.
         /// </summary>
-        /// <param name="uow">Used to query and save changes to a database</param>
-        /// <param name="items">Objects that implement ITrackable</param>
-        public static async Task LoadRelatedEntitiesAsync(this IUnitOfWork uow, IEnumerable<ITrackable> items)
+        public static async Task LoadRelatedEntitiesAsync(this IUnitOfWork uow, IEnumerable<object> entities)
         {
-            // Traverse graph to load references
-            foreach (var item in items)
-                await uow.LoadRelatedEntitiesAsync(item);
+            foreach (var entity in entities)
+                await uow.LoadRelatedEntitiesAsync(entity);
         }
 
         /// <summary>
         ///     Traverse an object graph to set TrackingState to Unchanged.
         /// </summary>
-        /// <param name="uow">Used to query and save changes to a database</param>
-        /// <param name="item">Object that implements ITrackable</param>
-        public static void AcceptChanges(this IUnitOfWork uow, ITrackable item)
+        public static void MarkUnchanged(this IUnitOfWork uow, object entity)
         {
-            // Traverse graph to set TrackingState to Unchanged
-            uow.TraverseGraph(item, n =>
+            uow.TraverseGraph(entity, n =>
             {
                 if (n.Entry.Entity is ITrackable trackable)
                 {
-                    if (trackable.TrackingState != TrackingState.Unchanged)
-                        trackable.TrackingState = TrackingState.Unchanged;
-                    if (trackable.ModifiedProperties?.Count > 0)
-                        trackable.ModifiedProperties.Clear();
+                    trackable.Unchange();
                 }
             });
         }
@@ -260,28 +231,22 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
         /// <summary>
         ///     Traverse more than one object graph to set TrackingState to Unchanged.
         /// </summary>
-        /// <param name="uow">Used to query and save changes to a database</param>
-        /// <param name="items">Objects that implement ITrackable</param>
-        public static void AcceptChanges(this IUnitOfWork uow, IEnumerable<ITrackable> items)
+        public static void MarkUnchanged(this IUnitOfWork uow, IEnumerable<object> items)
         {
-            // Traverse graph to set TrackingState to Unchanged
             foreach (var item in items)
-                uow.AcceptChanges(item);
+                uow.MarkUnchanged(item);
         }
 
 
         /// <summary>
         /// Traverse an object graph executing a callback on each node.
         /// </summary>
-        /// <param name="context">Used to query and save changes to a database</param>
-        /// <param name="item">Object that implements ITrackable</param>
-        /// <param name="callback">Callback executed on each node in the object graph</param>
-        private static void TraverseGraph(this IUnitOfWork context, object item,
+        internal static void TraverseGraph(this IUnitOfWork context, object entity,
             Action<EntityEntryGraphNode> callback)
         {
 #pragma warning disable EF1001 // Internal EF Core API usage.
-            var stateManager = context.Entry(item).GetInfrastructure().StateManager;
-            var node = new EntityEntryGraphNode<object>(stateManager.GetOrCreateEntry(item), null, null, null);
+            var stateManager = context.Entry(entity).GetInfrastructure().StateManager;
+            var node = new EntityEntryGraphNode<object>(stateManager.GetOrCreateEntry(entity), null, null, null);
             IEntityEntryGraphIterator graphIterator = new EntityEntryGraphIterator();
 #pragma warning restore EF1001 // Internal EF Core API usage.
             var visited = new HashSet<int>();
@@ -306,10 +271,7 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
         /// <summary>
         /// Traverse an object graph asynchronously executing a callback on each node.
         /// </summary>
-        /// <param name="context">Used to query and save changes to a database</param>
-        /// <param name="item">Object that implements ITrackable</param>
-        /// <param name="callback">Async callback executed on each node in the object graph</param>
-        private static async Task TraverseGraphAsync(this IUnitOfWork context, object item,
+        internal static async Task TraverseGraphAsync(this IUnitOfWork context, object item,
             Func<EntityEntryGraphNode, Task> callback)
         {
 #pragma warning disable EF1001 // Internal EF Core API usage.
@@ -319,7 +281,7 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 #pragma warning restore EF1001 // Internal EF Core API usage.
             var visited = new HashSet<int>();
 
-            await graphIterator.TraverseGraphAsync<object>(node, async (n, ct) =>
+            await graphIterator.TraverseGraphAsync(node, async (n, ct) =>
             {
                 // Check visited
                 if (visited.Contains(n.Entry.Entity.GetHashCode()))
@@ -338,12 +300,10 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 
         private static void SetEntityState(EntityEntry entry, EntityState state, ITrackable trackable)
         {
-            // Set entity state to tracking state
             entry.State = state;
 
             if (entry.State != EntityState.Modified || trackable.ModifiedProperties == null) return;
 
-            // Set modified properties
             foreach (var property in entry.Properties)
                 property.IsModified = trackable.ModifiedProperties.Any(p =>
                     string.Compare(p, property.Metadata.Name, StringComparison.InvariantCultureIgnoreCase) == 0);
