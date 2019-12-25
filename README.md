@@ -82,9 +82,9 @@ PM> Install-Package DNTFrameworkCore
 PM> Install-Package DNTFrameworkCore.EFCore
 PM> Install-Package DNTFrameworkCore.EFCore.SqlServer
 PM> Install-Package DNTFrameworkCore.Web
-PM> Install-Package DNTFrameworkCore.Web.EFCore
 PM> Install-Package DNTFrameworkCore.FluentValidation
-PM> Install-Package DNTFrameworkCore.Web.MultiTenancy
+PM> Install-Package DNTFrameworkCore.Web.Tenancy
+PM> Install-Package DNTFrameworkCore.Licensing
 ```
 
 OR
@@ -105,23 +105,24 @@ For more info about templates you can watch [DNTFrameworkCoreTemplate repository
 
 ## Features
 
-* Automatic Input Validation and Business Validation
-* Automatic Transaction Management
+* Input Validation and Business Validation
+* Transaction Management
 * Eventing
 * Aggregate Update (Master-Detail)
-* Automatic Numbering
+* Numbering
 * Functional Programming Error Handling
-* Dynamic Permission Authorization
+* Permission Authorization
 * CrudService
 * CrudController
 * DbLogger Provider
-* ProtectionKeys DbRepository
+* ProtectionKey DbRepository
 * Hooks
 * SoftDelete
-* MultiTenancy
+* Tenancy
 * Tracking mechanism (ICreationTracking, IModificationTracking)
 * FluentValidation Integration
 * BackgroundTaskQueue
+* RowIntegrity
 * CQRS (coming soon)
 * EntityHistory (coming soon)
 
@@ -130,7 +131,7 @@ For more info about templates you can watch [DNTFrameworkCoreTemplate repository
 
 **Create Entity**
 ```c#
-public class Task : TrackableEntity<int>, IAggregateRoot, INumberedEntity, ICreationTracking, IModificationTracking
+public class Task : Entity<int>, INumberedEntity, ICreationTracking, IModificationTracking
 {
     public const int MaxTitleLength = 256;
     public const int MaxDescriptionLength = 1024;
@@ -140,7 +141,7 @@ public class Task : TrackableEntity<int>, IAggregateRoot, INumberedEntity, ICrea
     public string Number { get; set; }
     public string Description { get; set; }
     public TaskState State { get; set; } = TaskState.Todo;
-    public byte[] RowVersion { get; set; }
+    public byte[] Version { get; set; }
 }
 ```
 
@@ -234,7 +235,7 @@ public class TaskService : CrudService<Task, int, TaskReadModel, TaskModel, Task
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper);
     }
 
-    protected override IQueryable<TaskReadModel> BuildReadQueryTaskFilteredPagedQueryModel model)
+    protected override IQueryable<TaskReadModel> BuildReadQuery(TaskFilteredPagedQueryModel model)
     {
         return EntitySet.AsNoTracking()
             .WhereIf(model.State.HasValue, t => t.State == model.State)
