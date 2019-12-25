@@ -4,7 +4,7 @@
         <Description>DNTFrameworkCore is a Lightweight and Extensible Infrastructure for Building Web Applications</Description>
         <VersionPrefix>3.7.0</VersionPrefix>
         <Authors>GholamReza Rabbal</Authors>
-        <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageTags>.NETCore;EFCore;Tenancy;Validation;Transaction;Logging</PackageTags>
@@ -15,21 +15,21 @@
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     </PropertyGroup>
-    <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
-        <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.0.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="3.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="3.0.0" />
+    <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+        <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="3.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.0" />
         <PackageReference Include="Castle.Core" Version="4.4.0" />
         <PackageReference Include="System.Data.Common" Version="4.3.0" />
         <PackageReference Include="System.Collections.Immutable" Version="1.6.0" />
         <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.19" />
     </ItemGroup>
-    <ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp3.0'">
+    <ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp3.1'">
         <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
@@ -39,8 +39,8 @@
         <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
         <PackageReference Include="Castle.Core" Version="4.4.0" />
         <PackageReference Include="System.Data.Common" Version="4.3.0" />
-        <PackageReference Include="System.Collections.Immutable" Version="1.6.0" />
-        <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
+        <PackageReference Include="System.Collections.Immutable" Version="1.7.0" />
+        <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.19" />
     </ItemGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

@@ -71,17 +71,6 @@ namespace DNTFrameworkCore.Web.Mvc.Views
         protected string L(string name, params object[] args) => HtmlLocalizer.GetString(name, args);
 
         /// <summary>
-        /// Gets localized string for given key name and specified culture information.
-        /// </summary>
-        protected string L(string name, CultureInfo culture) => HtmlLocalizer.WithCulture(culture).GetString(name);
-
-        /// <summary>
-        /// Gets localized string for given key name and current language with formatting strings.
-        /// </summary>
-        protected string L(string name, CultureInfo culture, params object[] args) =>
-            HtmlLocalizer.WithCulture(culture).GetString(name, args);
-
-        /// <summary>
         /// Checks if current user is granted for a permission.
         /// </summary>
         /// <param name="permissionName">Name of the permission</param>

@@ -1,12 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace DNTFrameworkCore.ReflectionToolkit
 {
     public static class ReflectionHelper
     {
+        public static T Bind<T>(this T model, Expression<Func<T, object>> expression, object value)
+            => model.Bind<T, object>(expression, value);
+
+        public static T BindId<T>(this T model, Expression<Func<T, Guid>> expression)
+            => model.Bind(expression, Guid.NewGuid());
+
+
+        private static TModel Bind<TModel, TProperty>(this TModel model, Expression<Func<TModel, TProperty>> expression,
+            object value)
+        {
+            var memberExpression = expression.Body as MemberExpression ??
+                                   ((UnaryExpression) expression.Body).Operand as MemberExpression;
+
+            var propertyName = memberExpression.Member.Name.ToLowerInvariant();
+            var modelType = model.GetType();
+            var field = modelType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                .SingleOrDefault(x => x.Name.ToLowerInvariant().StartsWith($"<{propertyName}>"));
+            if (field == null)
+            {
+                return model;
+            }
+
+            field.SetValue(model, value);
+
+            return model;
+        }
+
+        public static TModel BindProperty<TModel, TProperty>(this TModel model,
+            Expression<Func<TModel, TProperty>> expression,
+            object value)
+        {
+            var memberExpression = expression.Body as MemberExpression ??
+                                   ((UnaryExpression) expression.Body).Operand as MemberExpression;
+
+            var propertyName = memberExpression.Member.Name;
+            var modelType = model.GetType();
+            var property = modelType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .SingleOrDefault(x => x.Name == propertyName);
+            if (property == null)
+            {
+                return model;
+            }
+
+            property.SetValue(model, value);
+
+            return model;
+        }
+        
         /// <summary>
         /// Checks whether <paramref name="givenType"/> implements/inherits <paramref name="genericType"/>.
         /// </summary>

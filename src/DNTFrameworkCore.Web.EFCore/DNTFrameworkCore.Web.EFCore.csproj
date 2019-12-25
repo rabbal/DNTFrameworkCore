@@ -8,7 +8,7 @@
         <PackageLicenseUrl>https://github.com/rabbal/DNTFrameworkCore/blob/master/LICENSE.md</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/rabbal/DNTFrameworkCore</RepositoryUrl>
         <PackageTags>.NET Core; ASP.NET Core; EFCore; Multitenancy; Validation; Transaction; Framework; Design; Logging; SOLID; Event-Driven; Domain</PackageTags>
-        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
     <ItemGroup>

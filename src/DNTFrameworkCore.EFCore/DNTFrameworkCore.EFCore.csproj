@@ -5,7 +5,7 @@
         <Description>This Library Contains Implementations of ICrudService,Logging and Transaction Interception based on EFCore </Description>
         <VersionPrefix>3.7.0</VersionPrefix>
         <Authors>GholamReza Rabbal</Authors>
-        <TargetFrameworks>netstandard2.1</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0</TargetFrameworks>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageTags>.NETCore;EFCore;CRUD;Transaction;Logging</PackageTags>
@@ -22,10 +22,10 @@
         <Folder Include="Context\Converters\Encryption" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.0" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.0" />
     </ItemGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <PlatformTarget>anycpu</PlatformTarget>
