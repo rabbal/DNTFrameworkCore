@@ -1,9 +1,5 @@
-using System.Threading.Tasks;
 using DNTFrameworkCore.TestCqrsAPI.Authorization;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Commands;
-using DNTFrameworkCore.Web.Authorization;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Controllers
 {

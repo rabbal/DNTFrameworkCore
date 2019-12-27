@@ -10,39 +10,39 @@ namespace DNTFrameworkCore.EFCore.Context
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class EFCore
     {
-        public const string CreatorBrowserName = nameof(CreatorBrowserName);
-        public const string CreatorIp = nameof(CreatorIp);
-        public const string CreationDateTime = nameof(CreationDateTime);
-        public const string CreatorUserId = nameof(CreatorUserId);
-
-        public const string ModifierBrowserName = nameof(ModifierBrowserName);
-        public const string ModifierIp = nameof(ModifierIp);
-        public const string ModificationDateTime = nameof(ModificationDateTime);
-        public const string ModifierUserId = nameof(ModifierUserId);
+        public const string CreatedDateTime = nameof(ICreationTracking.CreatedDateTime);
+        public const string CreatedByUserId = nameof(CreatedByUserId);
+        public const string CreatedByBrowserName = nameof(CreatedByBrowserName);
+        public const string CreatedByIP = nameof(CreatedByIP);
+        
+        public const string ModifiedDateTime = nameof(IModificationTracking.ModifiedDateTime);
+        public const string ModifiedByUserId = nameof(ModifiedByUserId);
+        public const string ModifiedByBrowserName = nameof(ModifiedByBrowserName);
+        public const string ModifiedByIP = nameof(ModifiedByIP);
 
         public const string UserId = nameof(UserId);
         public const string TenantId = nameof(TenantId);
         public const string IsDeleted = nameof(IsDeleted);
-        public const string Version = nameof(Version);
-        public const string Hash = nameof(Hash);
+        public const string Version = nameof(IHasRowVersion.Version);
+        public const string Hash = nameof(IHasRowIntegrity.Hash);
 
-        public static readonly Func<object, string> PropertyCreatorBrowserName =
-            entity => EF.Property<string>(entity, CreatorBrowserName);
+        public static readonly Func<object, string> PropertyCreatedByBrowserName =
+            entity => EF.Property<string>(entity, CreatedByBrowserName);
 
-        public static readonly Func<object, string> PropertyCreatorIp =
-            entity => EF.Property<string>(entity, CreatorIp);
+        public static readonly Func<object, string> PropertyCreatedByIP =
+            entity => EF.Property<string>(entity, CreatedByIP);
 
-        public static readonly Func<object, DateTime> PropertyCreationDateTime =
-            entity => EF.Property<DateTime>(entity, CreationDateTime);
+        public static readonly Func<object, DateTime> PropertyCreatedDateTime =
+            entity => EF.Property<DateTime>(entity, CreatedDateTime);
 
-        public static readonly Func<object, string> PropertyModifierBrowserName =
-            entity => EF.Property<string>(entity, ModifierBrowserName);
+        public static readonly Func<object, string> PropertyModifiedByBrowserName =
+            entity => EF.Property<string>(entity, ModifiedByBrowserName);
 
-        public static readonly Func<object, string> PropertyModifierIp =
-            entity => EF.Property<string>(entity, ModifierIp);
+        public static readonly Func<object, string> PropertyModifiedByIP =
+            entity => EF.Property<string>(entity, ModifiedByIP);
 
-        public static readonly Func<object, DateTime?> PropertyModificationDateTime =
-            entity => EF.Property<DateTime?>(entity, ModificationDateTime);
+        public static readonly Func<object, DateTime?> PropertyModifiedDateTime =
+            entity => EF.Property<DateTime?>(entity, ModifiedDateTime);
 
         public static void AddTrackingFields<TUserId>(this ModelBuilder builder) where TUserId : IEquatable<TUserId>
         {
@@ -55,35 +55,35 @@ namespace DNTFrameworkCore.EFCore.Context
             foreach (var entityType in types.Where(e => typeof(ICreationTracking).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
-                    .Property<DateTime>(CreationDateTime)
+                    .Property<DateTime>(CreatedDateTime)
                     .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
                 builder.Entity(entityType.ClrType)
-                    .Property<string>(CreatorBrowserName).HasMaxLength(1024)
+                    .Property<string>(CreatedByBrowserName).HasMaxLength(1024)
                     .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
                 builder.Entity(entityType.ClrType)
-                    .Property<string>(CreatorIp).HasMaxLength(256)
+                    .Property<string>(CreatedByIP).HasMaxLength(256)
                     .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
                 builder.Entity(entityType.ClrType)
-                    .Property(propertyType, CreatorUserId)
+                    .Property(propertyType, CreatedByUserId)
                     .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
             }
 
             foreach (var entityType in types.Where(e => typeof(IModificationTracking).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
-                    .Property<DateTime?>(ModificationDateTime);
+                    .Property<DateTime?>(ModifiedDateTime);
 
                 builder.Entity(entityType.ClrType)
-                    .Property<string>(ModifierBrowserName).HasMaxLength(1024);
+                    .Property<string>(ModifiedByBrowserName).HasMaxLength(1024);
 
                 builder.Entity(entityType.ClrType)
-                    .Property<string>(ModifierIp).HasMaxLength(256);
+                    .Property<string>(ModifiedByIP).HasMaxLength(256);
 
                 builder.Entity(entityType.ClrType)
-                    .Property(propertyType, ModifierUserId);
+                    .Property(propertyType, ModifiedByUserId);
             }
         }
 

@@ -14,7 +14,7 @@ namespace DNTFrameworkCore.FluentValidation.Tests
         public void Should_Have_Failures_When_Validator_Resolved_And_Defined_Some_Rules()
         {
             var services = new ServiceCollection();
-            services.AddDNTFrameworkCore()
+            services.AddFramework()
                 .WithModelValidation()
                 .WithFluentValidation();
 
@@ -33,7 +33,7 @@ namespace DNTFrameworkCore.FluentValidation.Tests
         public void Should_Not_Have_Failures_When_Validator_Not_Registered()
         {
             var services = new ServiceCollection();
-            services.AddDNTFrameworkCore()
+            services.AddFramework()
                 .WithModelValidation()
                 .WithFluentValidation();
 

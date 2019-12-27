@@ -28,15 +28,20 @@ namespace DNTFrameworkCore.TestAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDNTFrameworkCore()
+            services.AddFramework()
                 .WithModelValidation()
                 .WithFluentValidation()
                 .WithMemoryCache()
                 .WithSecurityService()
                 .WithBackgroundTaskQueue()
-                .WithRandomNumberProvider();
+                .WithRandomNumber();
 
-            services.AddWebApp().AddProtection();
+            services.AddWebFramework()
+                .WithPermissionAuthorization()
+                .WithProtectionService()
+                .WithPasswordHashAlgorithm()
+                .WithQueuedHostedService()
+                .WithAntiforgeryService();
 
             services.AddInfrastructure(Configuration);
             services.AddApplication(Configuration);

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using DNTFrameworkCore.Domain;
-
 namespace DNTFrameworkCore.TestTenancy.Domain.Identity
 {
     public class User : TrackableEntity<long>, IHasRowVersion, ICreationTracking, IModificationTracking

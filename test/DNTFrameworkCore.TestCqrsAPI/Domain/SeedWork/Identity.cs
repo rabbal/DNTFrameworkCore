@@ -1,5 +1,3 @@
-using System;
-
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.SeedWork
 {
     public abstract class Identity<T> where T : IEquatable<T>

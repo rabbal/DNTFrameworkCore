@@ -1,5 +1,3 @@
-using DNTFrameworkCore.Domain;
-
 namespace DNTFrameworkCore.TestTenancy.Domain.Blogging
 {
     public class Blog : TrackableEntity, IHasRowVersion, ICreationTracking, IModificationTracking

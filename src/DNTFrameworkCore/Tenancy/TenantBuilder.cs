@@ -1,7 +1,4 @@
-using System;
-using DNTFrameworkCore.Tenancy.Options;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace DNTFrameworkCore.Tenancy
 {

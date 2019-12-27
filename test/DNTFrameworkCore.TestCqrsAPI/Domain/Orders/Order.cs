@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DNTFrameworkCore.Domain;
+﻿using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Parties;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Sales;

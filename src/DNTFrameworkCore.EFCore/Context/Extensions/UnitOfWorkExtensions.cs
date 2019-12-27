@@ -14,6 +14,16 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 {
     public static class UnitOfWorkExtensions
     {
+        public static void IgnoreRowIntegrityHook(this IUnitOfWork uow)
+        {
+            uow.IgnoreHook(HookNames.RowIntegrity);
+        }
+
+        public static void IgnoreNumberingHook(this IUnitOfWork uow)
+        {
+            uow.IgnoreHook(HookNames.Numbering);
+        }
+
         public static void IgnoreTrackingHook(this IUnitOfWork uow)
         {
             uow.IgnoreHook(HookNames.CreationTracking);

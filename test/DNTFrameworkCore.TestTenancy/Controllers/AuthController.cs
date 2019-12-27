@@ -1,10 +1,5 @@
-using System;
-using System.Net;
-using System.Threading.Tasks;
 using DNTFrameworkCore.TestTenancy.Authentication;
 using DNTFrameworkCore.TestTenancy.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DNTFrameworkCore.TestTenancy.Controllers
 {

@@ -1,10 +1,3 @@
-using DNTFrameworkCore.EntityFramework.Context;
-using DNTFrameworkCore.EntityFramework.Context.Hooks;
-using DNTFrameworkCore.EntityFramework.SqlServer.Numbering;
-using DNTFrameworkCore.Runtime;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 namespace DNTFrameworkCore.EntityFramework.Tests.Numbering
 {
     public class NumberingDbContext : DbContextCore

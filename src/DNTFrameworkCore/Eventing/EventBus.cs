@@ -18,7 +18,7 @@ namespace DNTFrameworkCore.Eventing
     {
         private const string MethodName = "Handle";
         private readonly IServiceProvider _provider;
-
+        
         public EventBus(IServiceProvider provider)
         {
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));

@@ -1,5 +1,3 @@
-using DNTFrameworkCore.Domain;
-
 namespace DNTFrameworkCore.TestTenancy.Domain.Identity
 {
     public class UserRole : TrackableEntity, ICreationTracking

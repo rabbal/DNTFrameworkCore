@@ -1,6 +1,4 @@
-using AutoMapper;
 using DNTFrameworkCore.TestTenancy.Domain.Tasks;
-using DNTFrameworkCore.TestTenancy.Helpers;
 
 namespace DNTFrameworkCore.TestTenancy.Application.Tasks.Models
 {

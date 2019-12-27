@@ -1,6 +1,3 @@
-using System;
-using DNTFrameworkCore.Domain;
-
 namespace DNTFrameworkCore.TestTenancy.Domain.Identity
 {
     public class UserToken : Entity

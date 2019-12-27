@@ -1,5 +1,6 @@
 ﻿using System;
 using DNTFrameworkCore.Domain;
+// ReSharper disable InconsistentNaming
 
 namespace DNTFrameworkCore.Logging
 {

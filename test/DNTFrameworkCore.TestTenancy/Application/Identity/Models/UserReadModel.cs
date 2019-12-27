@@ -1,6 +1,3 @@
-using System;
-using DNTFrameworkCore.Application.Models;
-
 namespace DNTFrameworkCore.TestTenancy.Application.Identity.Models
 {
     public class UserReadModel : ReadModel<long>

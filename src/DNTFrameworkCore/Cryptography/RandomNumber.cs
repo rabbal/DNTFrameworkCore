@@ -4,14 +4,14 @@ using DNTFrameworkCore.Dependency;
 
 namespace DNTFrameworkCore.Cryptography
 {
-    public interface IRandomNumberProvider
+    public interface IRandomNumber
     {
         int Next();
         int Next(int max);
         int Next(int min, int max);
     }
 
-    internal sealed class RandomNumberProvider : IRandomNumberProvider, ISingletonDependency
+    internal sealed class RandomNumber : IRandomNumber, ISingletonDependency
     {
         private readonly RandomNumberGenerator _rand = RandomNumberGenerator.Create();
 

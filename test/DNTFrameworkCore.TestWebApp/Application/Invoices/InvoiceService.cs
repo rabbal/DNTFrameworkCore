@@ -39,7 +39,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Invoices
             {
                 Id = i.Id,
                 Number = i.Number,
-                CreationDateTime = EF.Property<DateTimeOffset>(i, EFCore.Context.EFCore.CreationDateTime)
+                CreationDateTime = EF.Property<DateTimeOffset>(i, EFCore.Context.EFCore.CreatedDateTime)
             });
         }
 

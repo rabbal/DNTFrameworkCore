@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using DNTFrameworkCore.Domain;
+﻿using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel

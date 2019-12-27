@@ -4,7 +4,7 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Identity
 {
-    public class User : TrackableEntity<long>, IHasRowVersion, ICreationTracking, IModificationTracking
+    public class User : Entity<long>, IHasRowVersion, IHasRowIntegrity, ICreationTracking, IModificationTracking
     {
         public const int MaxUserNameLength = 256;
         public const int MaxDisplayNameLength = 50;
@@ -18,14 +18,18 @@ namespace DNTFrameworkCore.TestAPI.Domain.Identity
         public string NormalizedDisplayName { get; set; }
         public string PasswordHash { get; set; }
         public bool IsActive { get; set; }
-        public DateTimeOffset? LastLoggedInDateTime { get; set; }
-        public byte[] Version { get; set; }
+        public DateTime? LastLoggedInDateTime { get; set; }
 
         /// <summary>
         /// A random value that must change whenever a users credentials change (password,roles or permissions)
         /// </summary>
         public string SerialNumber { get; set; }
-
+        
+        public byte[] Version { get; set; }
+        public string Hash { get; set; }
+        public DateTime CreatedDateTime { get; set; }
+        public DateTime? ModifiedDateTime { get; set; }
+        
         public ICollection<UserRole> Roles { get; set; } = new HashSet<UserRole>();
         public ICollection<UserToken> Tokens { get; set; } = new HashSet<UserToken>();
         public ICollection<UserPermission> Permissions { get; set; } = new HashSet<UserPermission>();

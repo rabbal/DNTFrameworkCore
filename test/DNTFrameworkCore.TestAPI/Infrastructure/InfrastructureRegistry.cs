@@ -7,7 +7,6 @@ using DNTFrameworkCore.TestAPI.Domain.Tasks;
 using DNTFrameworkCore.TestAPI.Infrastructure.Context;
 using EFSecondLevelCache.Core;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -30,10 +29,10 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure
         {
             services.AddEFCore<ProjectDbContext>()
                 .WithTrackingHook<long>()
-                //.WithTenancyHook<long>()
                 .WithDeletedEntityHook()
                 .WithRowLevelSecurityHook<long>()
                 .WithRowIntegrityHook()
+                .WithProtectionStore()
                 .WithNumberingHook(options =>
                 {
                     options.NumberedEntityMap[typeof(Task)] = new NumberedEntityOption
@@ -57,8 +56,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure
                         })
                     .ConfigureWarnings(warnings =>
                     {
-                        warnings.Throw(RelationalEventId.QueryClientEvaluationWarning);
-                        warnings.Throw(CoreEventId.IncludeIgnoredWarning);
+                        //...
                     });
                 //.UseLoggerFactory(BuildLoggerFactory());
             });

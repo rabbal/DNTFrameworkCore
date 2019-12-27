@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Globalization;
-using Microsoft.Extensions.Localization;
-
 namespace DNTFrameworkCore.TestTenancy.Resources
 {
     public class MessagesResource

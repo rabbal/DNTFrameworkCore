@@ -1,4 +1,3 @@
-using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.TestTenancy.Domain.Tasks;
 
 namespace DNTFrameworkCore.TestTenancy.Application.Tasks.Models

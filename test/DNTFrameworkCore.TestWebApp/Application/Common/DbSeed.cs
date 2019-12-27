@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Collections;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Data;
@@ -13,7 +12,7 @@ using Microsoft.Extensions.Options;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Common
 {
-    public class DbSeed : IDbSeed
+    public class DbSeed : IDbSetup
     {
         private readonly IUnitOfWork _uow;
         private readonly IOptionsSnapshot<ProjectSetting> _settings;

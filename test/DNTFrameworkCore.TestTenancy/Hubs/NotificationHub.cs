@@ -1,9 +1,3 @@
-using System;
-using System.Threading.Tasks;
-using DNTFrameworkCore.Runtime;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.SignalR;
-
 namespace DNTFrameworkCore.TestTenancy.Hubs
 {
     [Authorize]

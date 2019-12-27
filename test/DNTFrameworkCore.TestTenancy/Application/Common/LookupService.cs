@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DNTFrameworkCore.Application.Models;
-using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.TestTenancy.Domain.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.TestTenancy.Application.Common
 {

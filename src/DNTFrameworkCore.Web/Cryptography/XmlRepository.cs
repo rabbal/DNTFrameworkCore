@@ -6,23 +6,23 @@ using Microsoft.AspNetCore.DataProtection.Repositories;
 
 namespace DNTFrameworkCore.Web.Cryptography
 {
-    internal class XmlRepository : IXmlRepository
+    internal sealed class XmlRepository : IXmlRepository
     {
-        private readonly IProtectionStore _repository;
+        private readonly IProtectionStore _store;
 
-        public XmlRepository(IProtectionStore repository)
+        public XmlRepository(IProtectionStore store)
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _store = store ?? throw new ArgumentNullException(nameof(store));
         }
 
         public IReadOnlyCollection<XElement> GetAllElements()
         {
-            return _repository.ReadElements();
+            return _store.FetchElements();
         }
 
         public void StoreElement(XElement element, string friendlyName)
         {
-            _repository.StoreElement(element, friendlyName);
+            _store.SaveElement(element, friendlyName);
         }
     }
 }

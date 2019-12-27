@@ -8,7 +8,7 @@ namespace DNTFrameworkCore.Cryptography
     {
         /// <summary>Gets all top-level XML elements in the repository.</summary>
         /// <remarks>All top-level elements in the repository.</remarks>
-        IReadOnlyList<XElement> ReadElements();
+        IReadOnlyCollection<XElement> FetchElements();
 
         /// <summary>Adds a top-level XML element to the repository.</summary>
         /// <param name="element">The element to add.</param>
@@ -20,6 +20,6 @@ namespace DNTFrameworkCore.Cryptography
         /// The 'friendlyName' parameter must be unique if specified. For instance, it could
         /// be the id of the key being stored.
         /// </remarks>
-        void StoreElement(XElement element, string friendlyName);
+        void SaveElement(XElement element, string friendlyName);
     }
 }

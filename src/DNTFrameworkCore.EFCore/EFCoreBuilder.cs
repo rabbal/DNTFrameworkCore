@@ -30,7 +30,6 @@ namespace DNTFrameworkCore.EFCore
             services.AddScoped(provider => (IUnitOfWork) provider.GetRequiredService(typeof(TDbContext)));
             services.AddTransient<TransactionInterceptor>();
             services.AddScoped<IKeyValueService, KeyValueService>();
-            services.AddSingleton<IProtectionStore, ProtectionStore>();
             services.AddTransient<IHook, PreUpdateRowVersionHook>();
 
             return new EFCoreBuilder(services, typeof(TDbContext));
@@ -48,6 +47,11 @@ namespace DNTFrameworkCore.EFCore
         public IServiceCollection Services { get; }
         public Type ContextType { get; }
 
+        public EFCoreBuilder WithProtectionStore()
+        {
+            Services.AddSingleton<IProtectionStore, ProtectionStore>();
+            return this;
+        }
         public EFCoreBuilder WithTransactionOptions(Action<TransactionOptions> options)
         {
             Services.Configure(options);

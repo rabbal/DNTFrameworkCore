@@ -1,6 +1,3 @@
-using DNTFrameworkCore.Tenancy;
-using Microsoft.AspNetCore.Mvc;
-
 namespace DNTFrameworkCore.TestTenancy.Controllers
 {
     [Route("api/[controller]")]

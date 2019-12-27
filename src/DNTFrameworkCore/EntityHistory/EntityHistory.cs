@@ -10,5 +10,6 @@ namespace DNTFrameworkCore.EntityHistory
         public string EntityId { get; set; }
         public string JsonOriginalValue { get; set; }
         public string JsonNewValue { get; set; }
+        public DateTime CreatedDateTime { get; set; }
     }
 }

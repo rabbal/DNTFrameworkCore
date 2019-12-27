@@ -2,32 +2,27 @@
 using System.Security.Cryptography;
 using System.Text;
 using DNTFrameworkCore.Cryptography;
-using DNTFrameworkCore.Dependency;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.Web.Security
 {
-    /// <summary>
-    /// Protection Provider Service
-    /// More info: http://www.dotnettips.info/post/2519
-    /// </summary>
-    public class ProtectionProvider : IProtectionProvider, ISingletonDependency
+    internal sealed class ProtectionService : IProtectionService
     {
-        private readonly ILogger<ProtectionProvider> _logger;
+        private readonly ILogger<ProtectionService> _logger;
         private readonly IDataProtector _dataProtector;
 
-        public ProtectionProvider(
-            IDataProtectionProvider dataProtectionProvider,
-            ILogger<ProtectionProvider> logger)
+        public ProtectionService(
+            IDataProtectionProvider provider,
+            ILogger<ProtectionService> logger)
         {
-            if (dataProtectionProvider == null)
+            if (provider == null)
             {
-                throw new ArgumentNullException(nameof(dataProtectionProvider));
+                throw new ArgumentNullException(nameof(provider));
             }
 
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _dataProtector = dataProtectionProvider.CreateProtector(typeof(ProtectionProvider).FullName);
+            _dataProtector = provider.CreateProtector(typeof(ProtectionService).FullName);
         }
 
         public string Decrypt(string inputText)

@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using DNTFrameworkCore.TestTenancy.Application.Tasks.Models;
 using DNTFrameworkCore.TestTenancy.Domain.Tasks;
-using DNTFrameworkCore.Validation;
 
 namespace DNTFrameworkCore.TestTenancy.Application.Tasks.Validators
 {

@@ -1,18 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using DNTFrameworkCore.Application.Models;
-using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
-using DNTFrameworkCore.Eventing;
-using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestTenancy.Application.Blogging.Models;
 using DNTFrameworkCore.TestTenancy.Domain.Blogging;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.TestTenancy.Application.Blogging
 {

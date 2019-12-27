@@ -1,7 +1,4 @@
 ﻿using DNTFrameworkCore.TestTenancy.Domain.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DNTFrameworkCore.TestTenancy.Infrastructure.Mappings.Tasks
 {

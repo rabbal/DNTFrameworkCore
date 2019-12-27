@@ -1,8 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using DNTFrameworkCore.Application.Models;
-using DNTFrameworkCore.Extensions;
-
 namespace DNTFrameworkCore.TestTenancy.Application.Identity.Models
 {
     public class UserModel : MasterModel<long>

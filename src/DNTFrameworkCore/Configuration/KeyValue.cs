@@ -1,4 +1,5 @@
-﻿using DNTFrameworkCore.Domain;
+﻿using System;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.Configuration
 {
@@ -6,5 +7,8 @@ namespace DNTFrameworkCore.Configuration
     {
         public string Key { get; set; }
         public string Value { get; set; }
+        public string Hash { get; set; }
+        public DateTime CreatedDateTime { get; set; }
+        public DateTime? ModifiedDateTime { get; set; }
     }
 }

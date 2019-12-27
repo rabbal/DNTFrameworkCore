@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using DNTFrameworkCore.TestTenancy.Domain.Blogging;
+﻿using DNTFrameworkCore.TestTenancy.Domain.Blogging;
 
 namespace DNTFrameworkCore.TestTenancy.Application.Blogging.Models
 {

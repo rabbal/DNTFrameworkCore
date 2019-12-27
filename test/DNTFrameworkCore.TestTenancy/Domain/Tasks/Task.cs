@@ -1,5 +1,3 @@
-using DNTFrameworkCore.Domain;
-
 namespace DNTFrameworkCore.TestTenancy.Domain.Tasks
 {
     public class Task : TrackableEntity, IHasRowVersion, ICreationTracking, IModificationTracking, INumberedEntity

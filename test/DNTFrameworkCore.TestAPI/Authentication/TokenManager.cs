@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Dependency;
@@ -12,7 +10,6 @@ using DNTFrameworkCore.TestAPI.Domain.Identity;
 using DNTFrameworkCore.Timing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 
 namespace DNTFrameworkCore.TestAPI.Authentication
 {

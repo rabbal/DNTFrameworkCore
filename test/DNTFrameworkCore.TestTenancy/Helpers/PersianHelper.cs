@@ -1,5 +1,3 @@
-using DNTPersianUtils.Core;
-
 namespace DNTFrameworkCore.TestTenancy.Helpers
 {
     public static class PersianHelper

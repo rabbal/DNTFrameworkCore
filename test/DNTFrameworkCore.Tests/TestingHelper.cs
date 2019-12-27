@@ -1,5 +1,4 @@
 ﻿using System;
-using DNTFrameworkCore.Dependency;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.Tests

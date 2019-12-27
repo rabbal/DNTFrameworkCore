@@ -1,15 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using DNTFrameworkCore.Cryptography;
-using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.TestTenancy.Domain.Identity;
-using DNTFrameworkCore.Timing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace DNTFrameworkCore.TestTenancy.Authentication
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using DNTFrameworkCore.Dependency;
+﻿using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.Runtime;
 
 namespace DNTFrameworkCore.Tenancy

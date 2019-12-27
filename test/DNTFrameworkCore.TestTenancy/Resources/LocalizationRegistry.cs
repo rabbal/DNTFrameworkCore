@@ -1,5 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-
 namespace DNTFrameworkCore.TestTenancy.Resources
 {
     public static class LocalizationRegistry

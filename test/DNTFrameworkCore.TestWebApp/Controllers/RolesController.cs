@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using DNTFrameworkCore.Application.Models;
-using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.TestWebApp.Application.Identity;
 using DNTFrameworkCore.TestWebApp.Application.Identity.Models;
 using DNTFrameworkCore.TestWebApp.Authorization;

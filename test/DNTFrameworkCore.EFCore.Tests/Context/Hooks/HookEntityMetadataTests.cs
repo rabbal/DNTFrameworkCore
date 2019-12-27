@@ -1,7 +1,3 @@
-using DNTFrameworkCore.EntityFramework.Context.Hooks;
-using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
-
 namespace DNTFrameworkCore.EntityFramework.Tests.Context.Hooks
 {
     [TestFixture]

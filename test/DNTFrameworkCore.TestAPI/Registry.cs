@@ -7,6 +7,7 @@ using Castle.Core.Internal;
 using DNTFrameworkCore.Localization;
 using DNTFrameworkCore.TestAPI.Application.Tasks.Models;
 using DNTFrameworkCore.TestAPI.Authentication;
+using DNTFrameworkCore.Web.Cryptography;
 using DNTFrameworkCore.Web.Filters;
 using DNTFrameworkCore.Web.ModelBinders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,7 +19,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
 
 
 namespace DNTFrameworkCore.TestAPI
@@ -61,6 +61,8 @@ namespace DNTFrameworkCore.TestAPI
                 {
                     options.SuppressMapClientErrors = true;
                 });
+
+            services.AddDataProtection().PersistKeysToStore();
             
             services.AddCors(options =>
             {

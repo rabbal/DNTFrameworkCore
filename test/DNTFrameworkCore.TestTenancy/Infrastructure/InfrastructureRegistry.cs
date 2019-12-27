@@ -1,16 +1,5 @@
-using System;
-using CacheManager.Core;
-using DNTFrameworkCore.EFCore;
-using DNTFrameworkCore.EFCore.SqlServer;
-using DNTFrameworkCore.Numbering;
 using DNTFrameworkCore.TestTenancy.Domain.Tasks;
 using DNTFrameworkCore.TestTenancy.Infrastructure.Context;
-using EFSecondLevelCache.Core;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.TestTenancy.Infrastructure
 {

@@ -1,15 +1,5 @@
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EFCore.Context;
-using DNTFrameworkCore.Functional;
-using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.TestTenancy.Domain.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.TestTenancy.Authentication
 {

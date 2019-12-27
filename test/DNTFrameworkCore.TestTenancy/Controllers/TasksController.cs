@@ -1,8 +1,6 @@
 using DNTFrameworkCore.TestTenancy.Application.Tasks;
 using DNTFrameworkCore.TestTenancy.Application.Tasks.Models;
 using DNTFrameworkCore.TestTenancy.Authorization;
-using DNTFrameworkCore.Web.API;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DNTFrameworkCore.TestTenancy.Controllers
 {

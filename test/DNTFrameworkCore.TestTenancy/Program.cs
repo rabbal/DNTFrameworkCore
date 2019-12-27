@@ -1,10 +1,4 @@
-﻿using DNTFrameworkCore.EFCore;
-using DNTFrameworkCore.EFCore.Logging;
-using DNTFrameworkCore.Logging;
-using DNTFrameworkCore.TestTenancy.Infrastructure.Context;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+﻿using DNTFrameworkCore.TestTenancy.Infrastructure.Context;
 
 namespace DNTFrameworkCore.TestTenancy
 {

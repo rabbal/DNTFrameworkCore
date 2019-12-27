@@ -1,4 +1,3 @@
-using System;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Events;

@@ -1,8 +1,3 @@
-using System.Linq;
-using DNTFrameworkCore.Tenancy;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
-
 namespace DNTFrameworkCore.TestTenancy.Tenancy
 {
     /// <summary>

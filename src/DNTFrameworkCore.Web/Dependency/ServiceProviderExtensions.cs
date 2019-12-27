@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using DNTFrameworkCore.Dependency;
-using DNTFrameworkCore.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 

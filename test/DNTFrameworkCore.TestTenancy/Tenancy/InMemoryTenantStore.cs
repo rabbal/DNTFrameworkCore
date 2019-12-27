@@ -1,8 +1,3 @@
-using System.Linq;
-using System.Threading.Tasks;
-using DNTFrameworkCore.Tenancy;
-using Microsoft.Extensions.Options;
-
 namespace DNTFrameworkCore.TestTenancy.Tenancy
 {
     /// <summary>

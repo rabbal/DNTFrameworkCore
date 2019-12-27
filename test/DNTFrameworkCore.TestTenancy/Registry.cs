@@ -1,25 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Castle.Core.Internal;
-using DNTFrameworkCore.Localization;
 using DNTFrameworkCore.TestTenancy.Application.Tasks.Models;
 using DNTFrameworkCore.TestTenancy.Authentication;
-using DNTFrameworkCore.Web.Filters;
-using DNTFrameworkCore.Web.ModelBinders;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace DNTFrameworkCore.TestTenancy
 {

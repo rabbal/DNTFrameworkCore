@@ -1,5 +1,3 @@
-using System;
-
 namespace DNTFrameworkCore.TestTenancy.Authentication
 {
     public class SignInResult

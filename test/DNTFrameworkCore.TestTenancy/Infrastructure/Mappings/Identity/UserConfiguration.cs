@@ -1,6 +1,4 @@
 using DNTFrameworkCore.TestTenancy.Domain.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DNTFrameworkCore.TestTenancy.Infrastructure.Mappings.Identity
 {

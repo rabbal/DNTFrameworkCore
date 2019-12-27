@@ -1,5 +1,4 @@
 using DNTFrameworkCore.Cqrs.Commands;
-using Newtonsoft.Json;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Commands
 {

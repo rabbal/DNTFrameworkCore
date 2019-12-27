@@ -1,5 +1,4 @@
-﻿using DNTFrameworkCore.FluentValidation;
-using DNTFrameworkCore.TestWebApp.Application;
+﻿using DNTFrameworkCore.TestWebApp.Application;
 using DNTFrameworkCore.TestWebApp.Infrastructure;
 using DNTFrameworkCore.TestWebApp.Resources;
 using DNTFrameworkCore.Web;

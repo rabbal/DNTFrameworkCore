@@ -12,6 +12,7 @@ using DNTFrameworkCore.EFCore.Context.Hooks;
 using DNTFrameworkCore.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 using Newtonsoft.Json;
 using DbException = DNTFrameworkCore.Exceptions.DbException;
@@ -20,11 +21,12 @@ namespace DNTFrameworkCore.EFCore.Context
 {
     public abstract class DbContextCore : DbContext, IUnitOfWork
     {
-        private readonly List<IHook> _hooks;
+        private readonly IEnumerable<IHook> _hooks;
+        private readonly List<string> _ignoredHookList = new List<string>();
 
         protected DbContextCore(DbContextOptions options, IEnumerable<IHook> hooks) : base(options)
         {
-            _hooks = (hooks ?? throw new ArgumentNullException(nameof(hooks))).ToList();
+            _hooks = hooks ?? throw new ArgumentNullException(nameof(hooks));
         }
 
         public DbConnection Connection => Database.GetDbConnection();
@@ -41,7 +43,7 @@ namespace DNTFrameworkCore.EFCore.Context
         public async Task<IDbContextTransaction> BeginTransactionAsync(
             IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
-            if (Transaction != null) return null;
+            if (HasTransaction) return Transaction;
 
             return Transaction = await Database.BeginTransactionAsync(isolationLevel);
         }
@@ -89,7 +91,7 @@ namespace DNTFrameworkCore.EFCore.Context
 
         public void IgnoreHook(string hookName)
         {
-            _hooks.RemoveAll(hook => hook.Name.Equals(hookName));
+            _ignoredHookList.Add(hookName);
         }
 
         public void UseTransaction(DbTransaction transaction)
@@ -99,13 +101,13 @@ namespace DNTFrameworkCore.EFCore.Context
 
         public void UseConnectionString(string connectionString)
         {
-            Database.GetDbConnection().ConnectionString = connectionString;
+            Connection.ConnectionString = connectionString;
         }
 
         public string EntityHash<TEntity>(TEntity entity) where TEntity : class
         {
             var row = Entry(entity).ToDictionary(p => p.Metadata.Name != EFCore.Hash &&
-                                                      !p.Metadata.IsConcurrencyToken &&
+                                                      !p.Metadata.ValueGenerated.HasFlag(ValueGenerated.OnUpdate) &&
                                                       !p.Metadata.IsShadowProperty());
             return EntityHash<TEntity>(row);
         }
@@ -220,7 +222,10 @@ namespace DNTFrameworkCore.EFCore.Context
         {
             foreach (var entry in entryList)
             {
-                var hooks = _hooks.OfType<THook>().Where(x => x.HookState == entry.State).OrderBy(hook => hook.Order);
+                var hooks = _hooks.OfType<THook>()
+                    .Where(hook => !_ignoredHookList.Contains(hook.Name))
+                    .Where(hook => hook.HookState == entry.State).OrderBy(hook => hook.Order);
+
                 foreach (var hook in hooks)
                 {
                     var metadata = new HookEntityMetadata(entry);

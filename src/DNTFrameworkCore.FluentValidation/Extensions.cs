@@ -9,7 +9,7 @@ namespace DNTFrameworkCore.FluentValidation
 {
     public static class Extensions
     {
-        public static CoreBuilder WithFluentValidation(this CoreBuilder builder)
+        public static FrameworkBuilder WithFluentValidation(this FrameworkBuilder builder)
         {
             builder.Services.AddTransient(typeof(IModelValidator<>), typeof(FluentValidationModelValidator<>));
             builder.Services.AddTransient<IValidatorFactory, ServiceProviderValidatorFactory>();

@@ -1,8 +1,3 @@
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using DNTFrameworkCore.Application.Models;
-using DNTFrameworkCore.Localization;
-
 namespace DNTFrameworkCore.TestTenancy.Application.Blogging.Models
 {
     [LocalizationResource(Name = "SharedResource", Location = "DNTFrameworkCore.TestAPI")]

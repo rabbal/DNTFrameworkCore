@@ -1,8 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using DNTFrameworkCore.Authorization;
-using DNTFrameworkCore.Localization;
-
 namespace DNTFrameworkCore.TestTenancy.Authorization
 {
    public static class Permissions

@@ -1,7 +1,6 @@
 using DNTFrameworkCore.FluentValidation;
 using DNTFrameworkCore.TestTenancy.Application.Blogging.Models;
 using DNTFrameworkCore.TestTenancy.Resources;
-using FluentValidation;
 
 namespace DNTFrameworkCore.TestTenancy.Application.Blogging.Validators
 {

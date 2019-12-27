@@ -1,16 +1,5 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using DNTFrameworkCore.EFCore.Caching;
 using DNTFrameworkCore.EFCore.Context;
-using DNTFrameworkCore.EFCore.Context.Converters.Json;
 using DNTFrameworkCore.EFCore.Context.Hooks;
-using DNTFrameworkCore.EFCore.Logging;
-using DNTFrameworkCore.EFCore.Protection;
-using DNTFrameworkCore.EFCore.SqlServer.Numbering;
-using EFSecondLevelCache.Core.Contracts;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace DNTFrameworkCore.TestTenancy.Infrastructure.Context
 {

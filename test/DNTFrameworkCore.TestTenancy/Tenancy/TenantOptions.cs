@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace DNTFrameworkCore.TestTenancy.Tenancy
 {
     public class TenantOptions

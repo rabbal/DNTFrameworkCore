@@ -1,8 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace DNTFrameworkCore.TestTenancy.Infrastructure.Migrations
+﻿namespace DNTFrameworkCore.TestTenancy.Infrastructure.Migrations
 {
     public partial class V2019_09_16_2228 : Migration
     {

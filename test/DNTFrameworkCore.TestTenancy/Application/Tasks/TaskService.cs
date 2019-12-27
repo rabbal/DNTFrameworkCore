@@ -1,14 +1,7 @@
-using System;
-using System.Linq;
-using AutoMapper;
-using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
-using DNTFrameworkCore.Eventing;
-using DNTFrameworkCore.Linq;
 using DNTFrameworkCore.TestTenancy.Application.Tasks.Models;
 using DNTFrameworkCore.TestTenancy.Domain.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.TestTenancy.Application.Tasks
 {

@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using DNTFrameworkCore.TestTenancy.Domain.Identity;
-using DNTFrameworkCore.TestTenancy.Helpers;
+﻿using DNTFrameworkCore.TestTenancy.Domain.Identity;
 
 namespace DNTFrameworkCore.TestTenancy.Application.Identity.Models
 {

@@ -1,8 +1,6 @@
 using DNTFrameworkCore.TestTenancy.Application.Blogging;
 using DNTFrameworkCore.TestTenancy.Application.Blogging.Models;
 using DNTFrameworkCore.TestTenancy.Authorization;
-using DNTFrameworkCore.Web.API;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DNTFrameworkCore.TestTenancy.Controllers
 {

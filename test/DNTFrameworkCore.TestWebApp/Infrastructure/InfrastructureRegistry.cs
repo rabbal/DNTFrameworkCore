@@ -1,7 +1,6 @@
 using System;
 using CacheManager.Core;
 using DNTFrameworkCore.EFCore;
-using DNTFrameworkCore.EFCore.SqlServer;
 using DNTFrameworkCore.Numbering;
 using DNTFrameworkCore.TestWebApp.Domain.Tasks;
 using DNTFrameworkCore.TestWebApp.Infrastructure.Context;

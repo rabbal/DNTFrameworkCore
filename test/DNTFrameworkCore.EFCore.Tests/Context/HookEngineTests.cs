@@ -1,5 +1,3 @@
-using NUnit.Framework;
-
 namespace DNTFrameworkCore.EntityFramework.Tests.Context
 {
     [TestFixture]

@@ -15,7 +15,7 @@ namespace DNTFrameworkCore.EFCore.Context
         public const string ModificationTracking = nameof(ModificationTracking);
         public const string Tenancy = nameof(Tenancy);
         public const string RowLevelSecurity = nameof(RowLevelSecurity);
-        public const string SoftDelete = nameof(SoftDelete);
+        public const string DeletedEntity = nameof(DeletedEntity);
         public const string RowVersion = nameof(RowVersion);
         public const string RowIntegrity = nameof(RowIntegrity);
         public const string Numbering = nameof(Numbering);
@@ -37,10 +37,10 @@ namespace DNTFrameworkCore.EFCore.Context
 
         protected override void Hook(ICreationTracking entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(EFCore.CreationDateTime).CurrentValue = _dateTime.UtcNow;
-            metadata.Entry.Property(EFCore.CreatorBrowserName).CurrentValue = _session.UserBrowserName;
-            metadata.Entry.Property(EFCore.CreatorIp).CurrentValue = _session.UserIP;
-            metadata.Entry.Property(EFCore.CreatorUserId).CurrentValue = _session.UserId.To<TUserId>();
+            metadata.Entry.Property(EFCore.CreatedDateTime).CurrentValue = _dateTime.UtcNow;
+            metadata.Entry.Property(EFCore.CreatedByBrowserName).CurrentValue = _session.UserBrowserName;
+            metadata.Entry.Property(EFCore.CreatedByIP).CurrentValue = _session.UserIP;
+            metadata.Entry.Property(EFCore.CreatedByUserId).CurrentValue = _session.UserId.To<TUserId>();
         }
     }
 
@@ -60,10 +60,10 @@ namespace DNTFrameworkCore.EFCore.Context
 
         protected override void Hook(IModificationTracking entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(EFCore.ModificationDateTime).CurrentValue = _dateTime.UtcNow;
-            metadata.Entry.Property(EFCore.ModifierBrowserName).CurrentValue = _session.UserBrowserName;
-            metadata.Entry.Property(EFCore.ModifierIp).CurrentValue = _session.UserIP;
-            metadata.Entry.Property(EFCore.ModifierUserId).CurrentValue = _session.UserId.To<TUserId>();
+            metadata.Entry.Property(EFCore.ModifiedDateTime).CurrentValue = _dateTime.UtcNow;
+            metadata.Entry.Property(EFCore.ModifiedByBrowserName).CurrentValue = _session.UserBrowserName;
+            metadata.Entry.Property(EFCore.ModifiedByIP).CurrentValue = _session.UserIP;
+            metadata.Entry.Property(EFCore.ModifiedByUserId).CurrentValue = _session.UserId.To<TUserId>();
         }
     }
 
@@ -105,7 +105,7 @@ namespace DNTFrameworkCore.EFCore.Context
 
     internal sealed class PreDeleteDeletedEntityHook : PreDeleteHook<IDeletedEntity>
     {
-        public override string Name => HookNames.SoftDelete;
+        public override string Name => HookNames.DeletedEntity;
 
         protected override void Hook(IDeletedEntity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {

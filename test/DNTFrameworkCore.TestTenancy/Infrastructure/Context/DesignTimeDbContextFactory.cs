@@ -1,9 +1,4 @@
-using System.IO;
-using System.Linq;
 using DNTFrameworkCore.EFCore.Context.Hooks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 
 namespace DNTFrameworkCore.TestTenancy.Infrastructure.Context
 {

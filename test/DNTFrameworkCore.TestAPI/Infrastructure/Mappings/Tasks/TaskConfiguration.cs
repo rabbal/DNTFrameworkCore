@@ -1,6 +1,5 @@
 ﻿using DNTFrameworkCore.TestAPI.Domain.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DNTFrameworkCore.TestAPI.Infrastructure.Mappings.Tasks

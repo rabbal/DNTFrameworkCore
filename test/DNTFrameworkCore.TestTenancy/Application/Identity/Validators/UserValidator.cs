@@ -1,12 +1,8 @@
-using System;
-using System.Linq;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.FluentValidation;
 using DNTFrameworkCore.TestTenancy.Application.Identity.Models;
 using DNTFrameworkCore.TestTenancy.Domain.Identity;
-using DNTFrameworkCore.TestTenancy.Helpers;
 using DNTFrameworkCore.TestTenancy.Resources;
-using FluentValidation;
 
 namespace DNTFrameworkCore.TestTenancy.Application.Identity.Validators
 {

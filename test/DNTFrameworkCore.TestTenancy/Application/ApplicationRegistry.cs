@@ -1,15 +1,5 @@
-using System.Linq;
-using AutoMapper;
-using Castle.DynamicProxy;
-using DNTFrameworkCore.Application.Services;
-using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EFCore.Transaction;
-using DNTFrameworkCore.Eventing;
-using DNTFrameworkCore.FluentValidation;
 using DNTFrameworkCore.TestTenancy.Application.Configuration;
-using DNTFrameworkCore.Validation.Interception;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.TestTenancy.Application
 {

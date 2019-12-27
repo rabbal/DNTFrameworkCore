@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using DNTFrameworkCore.Application.Models;
-
 namespace DNTFrameworkCore.TestTenancy.Application.Identity.Models
 {
     public class RoleModel : MasterModel<long>

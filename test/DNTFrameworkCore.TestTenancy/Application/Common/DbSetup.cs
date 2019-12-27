@@ -1,15 +1,7 @@
-using System;
-using System.Linq;
-using DNTFrameworkCore.Collections;
-using DNTFrameworkCore.Cryptography;
-using DNTFrameworkCore.Data;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.TestTenancy.Application.Configuration;
 using DNTFrameworkCore.TestTenancy.Authorization;
 using DNTFrameworkCore.TestTenancy.Domain.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace DNTFrameworkCore.TestTenancy.Application.Common
 {

@@ -1,10 +1,4 @@
-using System;
-using System.Threading.Tasks;
-using DNTFrameworkCore.Application.Events;
-using DNTFrameworkCore.Eventing;
-using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestTenancy.Application.Tasks.Models;
-using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.TestTenancy.Application.Tasks.Handlers
 {

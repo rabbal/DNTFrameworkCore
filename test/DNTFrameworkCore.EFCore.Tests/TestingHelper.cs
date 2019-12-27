@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-
 namespace DNTFrameworkCore.EntityFramework.Tests
 {
     public static class TestingHelper

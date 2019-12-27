@@ -7,7 +7,6 @@ using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Functional;
-using DNTFrameworkCore.Logging;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.TestWebApp.Domain.Identity;
 using DNTFrameworkCore.TestWebApp.Resources;

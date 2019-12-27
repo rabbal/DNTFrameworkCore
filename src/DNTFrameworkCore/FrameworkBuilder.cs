@@ -14,7 +14,7 @@ namespace DNTFrameworkCore
     public static class ServiceCollectionExtensions
     {
         // ReSharper disable once InconsistentNaming
-        public static CoreBuilder AddDNTFrameworkCore(this IServiceCollection services)
+        public static FrameworkBuilder AddFramework(this IServiceCollection services)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
@@ -22,18 +22,18 @@ namespace DNTFrameworkCore
             services.AddSingleton<IDateTime, SystemDateTime>();
             services.AddTransient(typeof(Lazy<>), typeof(LazyFactory<>));
 
-            return new CoreBuilder(services);
+            return new FrameworkBuilder(services);
         }
     }
 
     /// <summary>
     /// Configure DNTFrameworkCore services
     /// </summary>
-    public sealed class CoreBuilder
+    public sealed class FrameworkBuilder
     {
         public IServiceCollection Services { get; }
 
-        public CoreBuilder(IServiceCollection services)
+        public FrameworkBuilder(IServiceCollection services)
         {
             Services = services;
         }
@@ -41,7 +41,7 @@ namespace DNTFrameworkCore
         /// <summary>
         /// Register the ISecurityService
         /// </summary>
-        public CoreBuilder WithSecurityService()
+        public FrameworkBuilder WithSecurityService()
         {
             Services.AddSingleton<ISecurityService, SecurityService>();
             return this;
@@ -50,7 +50,7 @@ namespace DNTFrameworkCore
         /// <summary>
         /// Register the ICacheService
         /// </summary>
-        public CoreBuilder WithMemoryCache()
+        public FrameworkBuilder WithMemoryCache()
         {
             Services.AddMemoryCache();
             Services.AddSingleton<ICacheService, MemoryCacheService>();
@@ -60,7 +60,7 @@ namespace DNTFrameworkCore
         /// <summary>
         /// Register the IBackgroundTaskQueue
         /// </summary>
-        public CoreBuilder WithBackgroundTaskQueue()
+        public FrameworkBuilder WithBackgroundTaskQueue()
         {
             Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
             return this;
@@ -69,16 +69,16 @@ namespace DNTFrameworkCore
         /// <summary>
         /// Register the IRandomNumberProvider
         /// </summary>
-        public CoreBuilder WithRandomNumberProvider()
+        public FrameworkBuilder WithRandomNumber()
         {
-            Services.AddSingleton<IRandomNumberProvider, RandomNumberProvider>();
+            Services.AddSingleton<IRandomNumber, RandomNumber>();
             return this;
         }
         
         /// <summary>
         /// Register the validation infrastructure's services
         /// </summary>
-        public CoreBuilder WithModelValidation(Action<ValidationOptions> setupAction = null)
+        public FrameworkBuilder WithModelValidation(Action<ValidationOptions> setupAction = null)
         {
             Services.AddTransient<ValidationInterceptor>();
             Services.AddTransient<MethodInvocationValidator>();
