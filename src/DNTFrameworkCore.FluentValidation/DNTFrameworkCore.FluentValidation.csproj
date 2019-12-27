@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>DNTFrameworkCore.FluentValidation</Title>
     <Description>This Library Contains Implementation of IModelValidator based on FluentValidation Library</Description>
-    <VersionPrefix>4.0.0</VersionPrefix>
+    <VersionPrefix>4.1.0</VersionPrefix>
     <Authors>GholamReza Rabbal</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>

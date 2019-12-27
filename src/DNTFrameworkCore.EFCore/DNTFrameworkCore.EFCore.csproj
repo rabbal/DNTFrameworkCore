@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Title>DNTFrameworkCore.EFCore</Title>
-        <VersionPrefix>3.7.0</VersionPrefix>
         <Description>This Library Contains Implementations of ICrudService,Logging and Transaction Interception based on EFCore </Description>
-        <VersionPrefix>4.0.0</VersionPrefix>
+        <VersionPrefix>4.1.0</VersionPrefix>
         <Authors>GholamReza Rabbal</Authors>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
