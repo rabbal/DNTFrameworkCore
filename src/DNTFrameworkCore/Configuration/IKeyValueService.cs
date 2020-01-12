@@ -6,7 +6,8 @@ namespace DNTFrameworkCore.Configuration
 {
     public interface IKeyValueService : IApplicationService
     {
-        Task SaveValueAsync(string key, string value);
-        Task<Maybe<string>> FindValueAsync(string key);
+        Task SetValueAsync(string key, string value);
+        Task<Maybe<string>> LoadValueAsync(string key);
+        Task<bool> IsTamperedAsync(string key);
     }
 }

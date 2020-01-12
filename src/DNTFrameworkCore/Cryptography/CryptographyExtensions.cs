@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DNTFrameworkCore.Cryptography
 {
-    public static class CryptographyExtension
+    public static class CryptographyExtensions
     {
         /// More info: http://www.dotnettips.info/post/2519
         public static string Decrypt(this string inputText, string key, string salt)

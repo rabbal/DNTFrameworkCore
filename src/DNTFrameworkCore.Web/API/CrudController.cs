@@ -219,7 +219,7 @@ namespace DNTFrameworkCore.Web.API
             var result = await CreateAsync(model);
             if (!result.Failed) return Created("", model);
 
-            ModelState.AddModelError(result);
+            ModelState.AddResult(result);
             return BadRequest(ModelState);
         }
 
@@ -238,7 +238,7 @@ namespace DNTFrameworkCore.Web.API
             var result = await EditAsync(model);
             if (!result.Failed) return Ok(model);
 
-            ModelState.AddModelError(result);
+            ModelState.AddResult(result);
             return BadRequest(ModelState);
         }
 
@@ -257,7 +257,7 @@ namespace DNTFrameworkCore.Web.API
             var result = await DeleteAsync(model.Value);
             if (!result.Failed) return NoContent();
 
-            ModelState.AddModelError(result);
+            ModelState.AddResult(result);
             return BadRequest(ModelState);
         }
 
@@ -278,7 +278,7 @@ namespace DNTFrameworkCore.Web.API
                 return NoContent();
             }
 
-            ModelState.AddModelError(result);
+            ModelState.AddResult(result);
             return BadRequest(ModelState);
         }
 

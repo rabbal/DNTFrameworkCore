@@ -4,19 +4,24 @@ using System.Threading.Tasks;
 using Castle.DynamicProxy;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Functional;
+using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.ReflectionToolkit;
 using DNTFrameworkCore.Threading;
 using DNTFrameworkCore.Transaction;
+using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.EFCore.Transaction
 {
     public sealed class TransactionInterceptor : IInterceptor
     {
         private readonly IUnitOfWork _uow;
+        private readonly ILogger _logger;
 
-        public TransactionInterceptor(IUnitOfWork uow)
+        public TransactionInterceptor(IUnitOfWork uow, ILoggerFactory loggerFactory)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _logger = Ensure.IsNotNull(loggerFactory, nameof(loggerFactory))
+                .CreateLogger("DNTFrameworkCore.Transaction.Interception");
         }
 
         public void Intercept(IInvocation invocation)
@@ -40,6 +45,8 @@ namespace DNTFrameworkCore.EFCore.Transaction
                 return;
             }
 
+            _logger.LogInformation($"Intercepting {invocation.TargetType?.FullName}.{method.Name}");
+            
             Intercept(invocation, attribute.Value);
         }
 

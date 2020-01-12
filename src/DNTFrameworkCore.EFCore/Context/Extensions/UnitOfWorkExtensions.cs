@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Extensions;
+using DNTFrameworkCore.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
@@ -14,6 +16,35 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 {
     public static class UnitOfWorkExtensions
     {
+        public static async Task<bool> IsTamperedAsync<TEntity, TKey>(this IUnitOfWork uow, TKey id)
+            where TEntity : Entity<TKey>, IHasRowIntegrity
+            where TKey : IEquatable<TKey>
+
+        {
+            var entity = await uow.Set<TEntity>().FindAsync(id);
+            return uow.EntityHash(entity) != entity.Hash;
+        }
+
+        public static async Task<bool> HasTamperedEntryAsync<TEntity>(this IUnitOfWork uow,
+            Expression<Func<TEntity, bool>> predicate = null)
+            where TEntity : class, IHasRowIntegrity
+        {
+            var tamperedEntryList = await uow.TamperedEntryListAsync(predicate);
+            return tamperedEntryList.Any();
+        }
+
+        public static async Task<IReadOnlyList<TEntity>> TamperedEntryListAsync<TEntity>(this IUnitOfWork uow,
+            Expression<Func<TEntity, bool>> predicate = null)
+            where TEntity : class, IHasRowIntegrity
+        {
+            var entityList = await uow.Set<TEntity>()
+                .AsNoTracking()
+                .WhereIf(predicate != null, predicate)
+                .ToListAsync();
+
+            return entityList.Where(entity => uow.EntityHash(entity) != entity.Hash).ToList();
+        }
+
         public static void IgnoreRowIntegrityHook(this IUnitOfWork uow)
         {
             uow.IgnoreHook(HookNames.RowIntegrity);

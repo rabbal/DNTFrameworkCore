@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.Validation;
 
 namespace DNTFrameworkCore.Functional
@@ -82,7 +83,7 @@ namespace DNTFrameworkCore.Functional
         {
             return !Failed
                 ? "Ok"
-                : $"Failed : {Message}";
+                : $"Failed: {Message}";
         }
     }
 

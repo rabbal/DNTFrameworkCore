@@ -6,7 +6,7 @@ namespace DNTFrameworkCore.Timing
     /// <summary>
     /// Defines the required contract for implementing a clock.
     /// </summary>
-    public interface IDateTime : ISingletonDependency
+    public interface IDateTime : ITransientDependency
     {
         /// <summary>
         /// Gets the current date/time in the UTC timezone.

@@ -7,9 +7,23 @@ namespace DNTFrameworkCore.Web
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseSpaRouting(this IApplicationBuilder builder)
+        /// <summary>
+        /// Make sure you add this code BEFORE app.UseStaticFiles();,
+        /// otherwise the headers will not be applied to your static files.
+        /// </summary>
+        public static IApplicationBuilder UseContentSecurityPolicy(this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<SpaRoutingMiddleware>();
+            return builder.UseMiddleware<ContentSecurityPolicyMiddleware>();
+        }
+        
+        public static IApplicationBuilder UseExceptionHandling(this IApplicationBuilder app)
+        {
+            return app.UseExceptionHandler(appException => appException.UseMiddleware<ExceptionMiddleware>());
+        }
+
+        public static IApplicationBuilder UseSpaRouting(this IApplicationBuilder application)
+        {
+            return application.UseMiddleware<SpaRoutingMiddleware>();
         }
 
         /// <summary>

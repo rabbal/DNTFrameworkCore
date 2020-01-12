@@ -1,18 +1,15 @@
-﻿using DNTFrameworkCore.FluentValidation;
+﻿using DNTFrameworkCore.Exceptions;
+using DNTFrameworkCore.FluentValidation;
 using DNTFrameworkCore.TestAPI.Application;
 using DNTFrameworkCore.TestAPI.Hubs;
 using DNTFrameworkCore.TestAPI.Infrastructure;
 using DNTFrameworkCore.TestAPI.Resources;
 using DNTFrameworkCore.Web;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 
 namespace DNTFrameworkCore.TestAPI
 {
@@ -46,7 +43,7 @@ namespace DNTFrameworkCore.TestAPI
             services.AddInfrastructure(Configuration);
             services.AddApplication(Configuration);
             services.AddResources();
-            services.AddWebAPI();
+            services.AddWebApp();
             services.AddJwtAuthentication(Configuration);
 
             services.AddDistributedSqlServerCache(options =>
@@ -55,6 +52,8 @@ namespace DNTFrameworkCore.TestAPI
                 options.SchemaName = "dbo";
                 options.TableName = "Cache";
             });
+
+            services.Configure<ExceptionOptions>(Configuration.GetSection("Exception"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,37 +66,7 @@ namespace DNTFrameworkCore.TestAPI
             }
             else
             {
-                app.UseExceptionHandler(appBuilder =>
-                {
-                    appBuilder.Use(async (context, next) =>
-                    {
-                        var error = context.Features[typeof(IExceptionHandlerFeature)] as IExceptionHandlerFeature;
-                        if (error?.Error is SecurityTokenExpiredException)
-                        {
-                            context.Response.StatusCode = 401;
-                            context.Response.ContentType = "application/json";
-                            await context.Response.WriteAsync(JsonConvert.SerializeObject(new
-                            {
-                                Message = "authentication token expired"
-                            }));
-                        }
-                        else if (error?.Error != null)
-                        {
-                            context.Response.StatusCode = 500;
-                            context.Response.ContentType = "application/json";
-                            const string message = "متأسفانه مشکلی در فرآیند انجام درخواست شما پیش آمده است!";
-
-                            await context.Response.WriteAsync(JsonConvert.SerializeObject(new
-                            {
-                                Message = message
-                            }));
-                        }
-                        else
-                        {
-                            await next();
-                        }
-                    });
-                });
+                app.UseExceptionHandling();
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

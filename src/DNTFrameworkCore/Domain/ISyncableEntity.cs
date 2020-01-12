@@ -4,7 +4,7 @@ namespace DNTFrameworkCore.Domain
 {
     public interface ISyncableEntity
     {
-        Guid RowId { get; set; }
+        Guid UniqueId { get; set; }
         DateTime? SyncedDateTime { get; set; }
     }
 }

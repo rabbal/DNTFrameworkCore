@@ -57,7 +57,7 @@ namespace DNTFrameworkCore.Domain
 
         public override string ToString()
         {
-            return $"[{GetRealType().Name} : {Id}]";
+            return $"[{GetRealType().Name}: {Id}]";
         }
 
         public static bool operator ==(Entity<TKey> left, Entity<TKey> right)

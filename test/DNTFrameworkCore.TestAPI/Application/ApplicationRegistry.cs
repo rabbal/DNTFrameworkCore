@@ -10,6 +10,7 @@ using DNTFrameworkCore.Validation.Interception;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using DNTFrameworkCore.FluentValidation;
+using DNTFrameworkCore.Validation;
 
 namespace DNTFrameworkCore.TestAPI.Application
 {
@@ -35,6 +36,9 @@ namespace DNTFrameworkCore.TestAPI.Application
                 .AsMatchingInterface()
                 .WithTransientLifetime()
                 .AddClasses(classes => classes.AssignableTo(typeof(IBusinessEventHandler<>)))
+                .AsImplementedInterfaces()
+                .WithTransientLifetime()
+                .AddClasses(classes => classes.AssignableTo(typeof(IModelValidator<>)))
                 .AsImplementedInterfaces()
                 .WithTransientLifetime());
 

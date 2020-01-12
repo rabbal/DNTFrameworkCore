@@ -251,7 +251,7 @@ namespace DNTFrameworkCore.Web.Mvc
                 return continueEditing ? RenderView(model) : Ok();
             }
 
-            ModelState.AddModelError(result);
+            ModelState.AddResult(result);
             return BadRequest(ModelState);
         }
 
@@ -284,7 +284,7 @@ namespace DNTFrameworkCore.Web.Mvc
                 return continueEditing ? RenderView(model) : Ok();
             }
 
-            ModelState.AddModelError(result);
+            ModelState.AddResult(result);
             return BadRequest(ModelState);
         }
 
@@ -302,7 +302,7 @@ namespace DNTFrameworkCore.Web.Mvc
             var result = await DeleteAsync(model.Value);
             if (!result.Failed) return Ok();
 
-            ModelState.AddModelError(result);
+            ModelState.AddResult(result);
             return BadRequest(ModelState);
         }
 

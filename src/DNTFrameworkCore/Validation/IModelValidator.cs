@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DNTFrameworkCore.Dependency;
 
 namespace DNTFrameworkCore.Validation
 {
@@ -16,7 +17,7 @@ namespace DNTFrameworkCore.Validation
         IEnumerable<ValidationFailure> Validate(TModel model);
     }
 
-    public interface IModelValidator
+    public interface IModelValidator : ITransientDependency
     {
         /// <summary>
         /// Validate the specified instance synchronously.

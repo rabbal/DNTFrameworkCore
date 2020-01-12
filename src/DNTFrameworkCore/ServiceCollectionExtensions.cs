@@ -18,8 +18,8 @@ namespace DNTFrameworkCore
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped<IEventBus, EventBus>();
-            services.AddSingleton<IDateTime, SystemDateTime>();
+            services.AddSingleton<IEventBus, EventBus>();
+            services.AddTransient<IDateTime, SystemDateTime>();
             services.AddTransient(typeof(Lazy<>), typeof(LazyFactory<>));
 
             return new FrameworkBuilder(services);
@@ -46,7 +46,7 @@ namespace DNTFrameworkCore
             Services.AddSingleton<ISecurityService, SecurityService>();
             return this;
         }
-        
+
         /// <summary>
         /// Register the ICacheService
         /// </summary>
@@ -56,7 +56,7 @@ namespace DNTFrameworkCore
             Services.AddSingleton<ICacheService, MemoryCacheService>();
             return this;
         }
-        
+
         /// <summary>
         /// Register the IBackgroundTaskQueue
         /// </summary>
@@ -74,7 +74,7 @@ namespace DNTFrameworkCore
             Services.AddSingleton<IRandomNumber, RandomNumber>();
             return this;
         }
-        
+
         /// <summary>
         /// Register the validation infrastructure's services
         /// </summary>

@@ -1,10 +1,14 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Castle.DynamicProxy;
 using DNTFrameworkCore.Exceptions;
+using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.Functional;
+using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.Threading;
+using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.Validation.Interception
 {
@@ -14,10 +18,13 @@ namespace DNTFrameworkCore.Validation.Interception
     public sealed class ValidationInterceptor : IInterceptor
     {
         private readonly MethodInvocationValidator _validator;
+        private readonly ILogger _logger;
 
-        public ValidationInterceptor(MethodInvocationValidator validator)
+        public ValidationInterceptor(MethodInvocationValidator validator, ILoggerFactory loggerFactory)
         {
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+            _logger = Ensure.IsNotNull(loggerFactory, nameof(loggerFactory))
+                .CreateLogger("DNTFrameworkCore.Validation.Interception");
         }
 
         public void Intercept(IInvocation invocation)
@@ -37,9 +44,15 @@ namespace DNTFrameworkCore.Validation.Interception
 
             if (!result.Failed)
             {
+                _logger.LogInformation(
+                    $"Model Validation Completed Successfully: {invocation.TargetType?.FullName}.{method.Name}");
+
                 invocation.Proceed();
                 return;
             }
+
+            _logger.LogInformation(
+                $"Model Validation Failed: {invocation.TargetType?.FullName}.{method.Name} {result.Failures.Select(f => f.ToString()).PackToString(",")}");
 
             if (invocation.Method.IsAsync())
             {
@@ -85,7 +98,7 @@ namespace DNTFrameworkCore.Validation.Interception
 
         private static void ThrowValidationException(Result result)
         {
-            throw new ValidationException(result.Message);
+            throw new ValidationException(result.Message, result.Failures);
         }
     }
 }

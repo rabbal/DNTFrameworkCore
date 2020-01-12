@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using DNTFrameworkCore.Functional;
@@ -22,12 +23,34 @@ namespace DNTFrameworkCore.Web.Extensions
         }
 
         /// <summary>
+        /// Stores the errors in a ValidationException object to the specified modelstate dictionary.
+        /// </summary>
+        public static void AddValidationException(this ModelStateDictionary modelState,
+            Exceptions.ValidationException exception)
+        {
+            if (!string.IsNullOrEmpty(exception.Message))
+            {
+                modelState.AddModelError(string.Empty, exception.Message);
+            }
+
+            foreach (var failure in exception.Failures)
+            {
+                var key = failure.MemberName;
+
+                if (!modelState.ContainsKey(key) || modelState[key].Errors.All(i => i.ErrorMessage != failure.Message))
+                {
+                    modelState.AddModelError(key, failure.Message);
+                }
+            }
+        }
+
+        /// <summary>
         /// Stores the errors in a ModelValidationResult object to the specified modelstate dictionary.
         /// </summary>
         /// <param name="result">The validation result to store</param>
         /// <param name="modelState">The ModelStateDictionary to store the errors in.</param>
         /// <param name="prefix">An optional prefix. If ommitted, the property names will be the keys. If specified, the prefix will be concatenatd to the property name with a period. Eg "user.Name"</param>
-        public static void AddModelError(this ModelStateDictionary modelState, Result result, string prefix = null)
+        public static void AddResult(this ModelStateDictionary modelState, Result result, string prefix = null)
         {
             if (!result.Failed) return;
 
@@ -41,8 +64,8 @@ namespace DNTFrameworkCore.Web.Extensions
                 var key = string.IsNullOrEmpty(prefix) || string.IsNullOrEmpty(failure.MemberName)
                     ? failure.MemberName
                     : prefix + "." + failure.MemberName;
-                if (!modelState.ContainsKey(key) ||
-                    modelState[key].Errors.All(i => i.ErrorMessage != failure.Message))
+
+                if (!modelState.ContainsKey(key) || modelState[key].Errors.All(i => i.ErrorMessage != failure.Message))
                 {
                     modelState.AddModelError(key, failure.Message);
                 }

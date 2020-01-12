@@ -1,7 +1,5 @@
 using System;
-using System.Security.Claims;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
 using DNTFrameworkCore.Localization;
@@ -19,13 +17,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 namespace DNTFrameworkCore.TestAPI
 {
     public static class Registry
     {
-        public static void AddWebAPI(this IServiceCollection services)
+        public static void AddWebApp(this IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -35,12 +35,11 @@ namespace DNTFrameworkCore.TestAPI
             });
 
             services.AddLocalization(setup => setup.ResourcesPath = "Resources");
-            services.AddHttpContextAccessor();
             services.AddControllers(options =>
                 {
                     options.UseDefaultFilteredPagedQueryModelBinder();
                     options.UseFilteredPagedQueryModelBinder<TaskFilteredPagedQueryModel>();
-                    options.Filters.Add<HandleExceptionFilter>();
+                    options.UseExceptionHandling();
                 }).AddDataAnnotationsLocalization(o =>
                 {
                     o.DataAnnotationLocalizerProvider = (type, factory) =>
@@ -51,19 +50,21 @@ namespace DNTFrameworkCore.TestAPI
                             : factory.Create(localizationResource.Name, localizationResource.Location);
                     };
                 })
-                .AddJsonOptions(options =>
+                .AddNewtonsoftJson(options =>
                 {
-                    options.JsonSerializerOptions.IgnoreNullValues = true;
-                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Include;
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .ConfigureApiBehaviorOptions(options =>
                 {
-                    options.SuppressMapClientErrors = true;
+                    options.InvalidModelStateResponseFactory =
+                        context => new BadRequestObjectResult(context.ModelState);
                 });
 
             services.AddDataProtection().PersistKeysToStore();
-            
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
@@ -73,14 +74,13 @@ namespace DNTFrameworkCore.TestAPI
                         .AllowAnyHeader()
                         .AllowCredentials());
             });
-
-
+            
             services.AddAntiforgery(x => x.HeaderName = "X-XSRF-TOKEN");
             services.AddSignalR();
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo 
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
                     Title = "API Documentation",
@@ -89,8 +89,8 @@ namespace DNTFrameworkCore.TestAPI
                     {
                         Email = "gholamrezarabbal@gmail.com",
                         Name = "GholamReza Rabbal",
-                        Url =new Uri("https://www.dotnettips.info/user/%D8%BA%D9%84%D8%A7%D9%85%D8%B1%D8%B6%D8%A7%20%D8%B1%D8%A8%D8%A7%D9%84")
-                            
+                        Url = new Uri(
+                            "https://www.dotnettips.info/user/%D8%BA%D9%84%D8%A7%D9%85%D8%B1%D8%B6%D8%A7%20%D8%B1%D8%A8%D8%A7%D9%84")
                     }
                 });
 
@@ -111,7 +111,7 @@ namespace DNTFrameworkCore.TestAPI
 
             var signingKey =
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authentication[nameof(TokenOptions.SigningKey)]));
-           
+
             var tokenValidationParameters = new TokenValidationParameters
             {
                 // Ensure the token was issued by a trusted authorization server (default true):
@@ -154,15 +154,14 @@ namespace DNTFrameworkCore.TestAPI
                         {
                             var logger = context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>()
                                 .CreateLogger(nameof(JwtBearerEvents));
-                            logger.LogError("Authentication failed.", context.Exception);
+                            logger.LogError("Authentication Failed", context.Exception);
                             return Task.CompletedTask;
                         },
                         OnTokenValidated = async context =>
                         {
                             var validator = context.HttpContext.RequestServices.GetRequiredService<ITokenValidator>();
                             await validator.ValidateAsync(context);
-
-                            context.Principal.AddIdentity(new ClaimsIdentity());
+                            //context.Principal.AddIdentity(new ClaimsIdentity());
                         },
                         OnMessageReceived = context =>
                         {
@@ -180,7 +179,7 @@ namespace DNTFrameworkCore.TestAPI
                         {
                             var logger = context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>()
                                 .CreateLogger(nameof(JwtBearerEvents));
-                            logger.LogError("OnChallenge error", context.Error, context.ErrorDescription);
+                            logger.LogError("OnChallenge Error", context.Error, context.ErrorDescription);
                             return Task.CompletedTask;
                         }
                     };

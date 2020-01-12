@@ -1,25 +1,29 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.Configuration;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Functional;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace DNTFrameworkCore.EFCore.Configuration
 {
     internal sealed class KeyValueService : ApplicationService, IKeyValueService
     {
         private readonly IUnitOfWork _uow;
+        private readonly IConfiguration _configuration;
         private readonly DbSet<KeyValue> _values;
 
-        public KeyValueService(IUnitOfWork uow)
+        public KeyValueService(IUnitOfWork uow, IConfiguration configuration)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _values = _uow.Set<KeyValue>();
         }
 
-        public async Task SaveValueAsync(string key, string value)
+        public async Task SetValueAsync(string key, string value)
         {
             var record = await _values.FirstOrDefaultAsync(v => v.Key == key);
             if (record == null)
@@ -36,12 +40,25 @@ namespace DNTFrameworkCore.EFCore.Configuration
             }
 
             await _uow.SaveChangesAsync();
+
+            ReloadConfiguration();
         }
 
-        public async Task<Maybe<string>> FindValueAsync(string key)
+        public async Task<Maybe<string>> LoadValueAsync(string key)
         {
-            var record = await _values.FirstOrDefaultAsync(v => v.Key == key);
-            return record == null ? Maybe<string>.None : record.Value;
+            var keyValue = await _values.FirstOrDefaultAsync(v => v.Key == key);
+            return keyValue == null ? Maybe<string>.None : keyValue.Value;
+        }
+
+        public async Task<bool> IsTamperedAsync(string key)
+        {
+            var keyValue = await _values.SingleAsync(v => v.Key == key);
+            return _uow.EntityHash(keyValue) != keyValue.Hash;
+        }
+
+        private void ReloadConfiguration()
+        {
+            ((IConfigurationRoot) _configuration).Reload();
         }
     }
 }

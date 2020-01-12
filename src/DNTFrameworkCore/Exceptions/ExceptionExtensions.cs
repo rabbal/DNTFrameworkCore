@@ -5,21 +5,22 @@ namespace DNTFrameworkCore.Exceptions
 {
     public static class ExceptionExtensions
     {
-        public static string ReadExceptionDetails(this Exception ex)
+        public static string ToStringFormat(this Exception ex)
         {
-            var errorString = new StringBuilder();
-            errorString.AppendLine("An error occurred. ");
+            var builder = new StringBuilder();
+            builder.AppendLine("An error occurred. ");
+            
             var inner = ex;
             while (inner != null)
             {
-                errorString.Append("Error Message:");
-                errorString.AppendLine(inner.Message);
-                errorString.Append("Stack Trace:");
-                errorString.AppendLine(inner.StackTrace);
+                builder.Append("Error Message:");
+                builder.AppendLine(inner.Message);
+                builder.Append("Stack Trace:");
+                builder.AppendLine(inner.StackTrace);
                 inner = inner.InnerException;
             }
 
-            return errorString.ToString();
+            return builder.ToString();
         }
     }
 }

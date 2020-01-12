@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DNTFrameworkCore.Common;
 using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
@@ -8,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.Eventing
 {
-    public interface IEventBus : IScopedDependency
+    public interface IEventBus : ISingletonDependency
     {
         Task<Result> TriggerAsync(IBusinessEvent businessEvent);
         Task TriggerAsync(IDomainEvent domainEvent);
@@ -16,9 +18,12 @@ namespace DNTFrameworkCore.Eventing
 
     internal sealed class EventBus : IEventBus
     {
+        private readonly LazyConcurrentDictionary<Type, IEnumerable<object>> _handlers =
+            new LazyConcurrentDictionary<Type, IEnumerable<object>>();
+
         private const string MethodName = "Handle";
         private readonly IServiceProvider _provider;
-        
+
         public EventBus(IServiceProvider provider)
         {
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
@@ -32,7 +37,9 @@ namespace DNTFrameworkCore.Eventing
             var method = handlerType.GetMethod(MethodName, new[] {eventType});
             if (method == null) throw new InvalidOperationException();
 
-            foreach (var handler in _provider.GetServices(handlerType))
+            var handlers = _handlers.GetOrAdd(handlerType, type => _provider.GetServices(type));
+
+            foreach (var handler in handlers)
             {
                 var result = await (Task<Result>) method.Invoke(handler, new object[] {businessEvent});
 
@@ -50,8 +57,10 @@ namespace DNTFrameworkCore.Eventing
             var method = handlerType.GetMethod(MethodName, new[] {eventType});
             if (method == null) throw new InvalidOperationException();
 
-            var tasks = _provider.GetServices(handlerType).Select(async handler =>
-                await (Task) method.Invoke(handler, new object[] {domainEvent}));
+            var handlers = _handlers.GetOrAdd(handlerType, type => _provider.GetServices(type));
+
+            var tasks = handlers.Select(
+                async handler => await (Task) method.Invoke(handler, new object[] {domainEvent}));
 
             return Task.WhenAll(tasks);
         }

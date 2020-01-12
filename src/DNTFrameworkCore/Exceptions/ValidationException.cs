@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DNTFrameworkCore.Validation;
 
 namespace DNTFrameworkCore.Exceptions
 {
+    [Serializable]
     public class ValidationException : FrameworkException
     {
         public IReadOnlyList<ValidationFailure> Failures { get; }

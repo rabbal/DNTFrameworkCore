@@ -16,32 +16,12 @@
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     </PropertyGroup>
     <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-        <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="3.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.0" />
         <PackageReference Include="Castle.Core" Version="4.4.0" />
         <PackageReference Include="System.Data.Common" Version="4.3.0" />
-        <PackageReference Include="System.Collections.Immutable" Version="1.6.0" />
-        <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
-        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.19" />
     </ItemGroup>
     <ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp3.1'">
-        <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
         <PackageReference Include="Castle.Core" Version="4.4.0" />
         <PackageReference Include="System.Data.Common" Version="4.3.0" />
-        <PackageReference Include="System.Collections.Immutable" Version="1.7.0" />
-        <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
-        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.19" />
     </ItemGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <PlatformTarget>anycpu</PlatformTarget>
@@ -51,5 +31,17 @@
             <Pack>true</Pack>
             <PackagePath>README.md</PackagePath>
         </Content>
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.1.0" />
+      <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.0" />
+      <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="3.1.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.0" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.0" />
+      <PackageReference Include="System.Collections.Immutable" Version="1.7.0" />
+      <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+      <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.20" />
     </ItemGroup>
 </Project>

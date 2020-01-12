@@ -9,11 +9,11 @@ namespace DNTFrameworkCore.Validation
         }
 
         public string MemberName { get; }
-        public string Message { get; }
+        public string Message { get; }    
 
         public override string ToString()
         {
-            return $"{MemberName}: {Message}";
+            return $"[{MemberName}: {Message}]";
         }
     }
 }

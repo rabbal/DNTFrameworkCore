@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Localization;
 using DNTFrameworkCore.TestAPI.Domain.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace DNTFrameworkCore.TestAPI.Application.Tasks.Models
 {
