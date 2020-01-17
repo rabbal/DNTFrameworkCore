@@ -18,11 +18,10 @@ namespace DNTFrameworkCore.Logging
         private Task _outputTask;
         private CancellationTokenSource _cancellationTokenSource;
         private readonly IServiceProvider _provider;
+        private int _messagesDropped;
 
         protected BatchingLoggerProvider(IOptions<BatchingLoggerOptions> options, IServiceProvider provider)
         {
-            // NOTE: Only IsEnabled is monitored
-
             var loggerOptions = options.Value;
             if (loggerOptions.BatchSize <= 0)
             {
@@ -44,7 +43,8 @@ namespace DNTFrameworkCore.Logging
             Start();
         }
 
-        protected abstract Task WriteMessagesAsync(IEnumerable<LogMessage> messages, CancellationToken token);
+        protected abstract Task WriteMessagesAsync(IEnumerable<LogMessage> messages,
+            CancellationToken cancellationToken);
 
         private async Task ProcessLogQueue(object state)
         {
@@ -56,6 +56,19 @@ namespace DNTFrameworkCore.Logging
                 {
                     _batch.Add(message);
                     limit--;
+                }
+
+                var messagesDropped = Interlocked.Exchange(ref _messagesDropped, 0);
+                if (messagesDropped != 0)
+                {
+                    _batch.Add(new LogMessage
+                    {
+                        Message =
+                            $"{messagesDropped} message(s) dropped because of queue size limit. Increase the queue size or decrease logging verbosity to avoid this.{Environment.NewLine}",
+                        Level = LogLevel.Critical,
+                        LoggerName = "ProcessLogQueue",
+                        CreationTime = DateTime.UtcNow
+                    });
                 }
 
                 if (_batch.Count > 0)
@@ -81,13 +94,18 @@ namespace DNTFrameworkCore.Logging
             return Task.Delay(interval, cancellationToken);
         }
 
-        internal void AddMessage(LogMessage message)
+        internal void Queue(LogMessage message)
         {
             if (!_queue.IsAddingCompleted)
             {
                 try
                 {
                     _queue.Add(message, _cancellationTokenSource.Token);
+
+                    if (!_queue.TryAdd(message, 0, _cancellationTokenSource.Token))
+                    {
+                        Interlocked.Increment(ref _messagesDropped);
+                    }
                 }
                 catch
                 {
@@ -137,5 +155,4 @@ namespace DNTFrameworkCore.Logging
             return new BatchingLogger(this, _provider, categoryName);
         }
     }
-
 }

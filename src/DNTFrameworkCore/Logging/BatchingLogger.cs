@@ -36,7 +36,7 @@ namespace DNTFrameworkCore.Logging
             return true;
         }
 
-        public void Log<TState>(DateTime timestamp, LogLevel logLevel, EventId eventId, TState state,
+        public void Log<TState>(DateTime dateTime, LogLevel logLevel, EventId eventId, TState state,
             Exception exception, Func<TState, Exception, string> formatter)
         {
             if (!IsEnabled(logLevel))
@@ -45,7 +45,7 @@ namespace DNTFrameworkCore.Logging
             }
 
             var builder = new StringBuilder();
-            builder.Append(timestamp.ToString("yyyy-MM-dd HH:mm:ss"));
+            builder.Append(dateTime.ToString("yyyy-MM-dd HH:mm:ss"));
             builder.Append(" [");
             builder.Append(logLevel.ToString());
             builder.Append("] ");
@@ -67,9 +67,9 @@ namespace DNTFrameworkCore.Logging
                 var user = scope.ServiceProvider.GetService<IUserSession>();
                 var tenant = scope.ServiceProvider.GetService<ITenantSession>();
 
-                _loggerProvider.AddMessage(new LogMessage
+                _loggerProvider.Queue(new LogMessage
                 {
-                    CreationTime = timestamp,
+                    CreationTime = dateTime,
                     Message = message,
                     LoggerName = _loggerName,
                     Level = logLevel,

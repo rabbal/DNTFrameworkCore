@@ -70,7 +70,7 @@ namespace DNTFrameworkCore.Logging
                     return;
                 }
 
-                using (var streamWriter = System.IO.File.AppendText(fullName))
+                using (var streamWriter = File.AppendText(fullName))
                 {
                     foreach (var item in group)
                     {
