@@ -20,7 +20,7 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 
         public static void SpecifyDateTimeKind(this ModelBuilder builder)
         {
-            var dateTimeConverter = new ValueConverter<DateTime, DateTime>(
+            var clockConverter = new ValueConverter<DateTime, DateTime>(
                 v => v.Kind == DateTimeKind.Utc ? v : v.ToUniversalTime(),
                 v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
 
@@ -32,7 +32,7 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
             {
                 if (property.ClrType == typeof(DateTime))
                 {
-                    property.SetValueConverter(dateTimeConverter);
+                    property.SetValueConverter(clockConverter);
                 }
 
                 if (property.ClrType == typeof(DateTime?))

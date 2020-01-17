@@ -17,9 +17,9 @@ namespace DNTFrameworkCore.Licensing
 
         public bool Expired => this != Infinite && Value < DateTime.UtcNow;
 
-        public static ExpirationTime New(DateTime dateTime)
+        public static ExpirationTime New(DateTime clock)
         {
-            return new ExpirationTime(dateTime);
+            return new ExpirationTime(clock);
         }
 
         public static ExpirationTime Parse(string value)
@@ -34,14 +34,14 @@ namespace DNTFrameworkCore.Licensing
             get { yield return Value; }
         }
 
-        public static explicit operator ExpirationTime(DateTime? dateTime)
+        public static explicit operator ExpirationTime(DateTime? clock)
         {
-            return dateTime.HasValue ? New(dateTime.Value) : Infinite;
+            return clock.HasValue ? New(clock.Value) : Infinite;
         }
 
-        public static implicit operator DateTime?(ExpirationTime dateTime)
+        public static implicit operator DateTime?(ExpirationTime clock)
         {
-            return dateTime.Value;
+            return clock.Value;
         }
 
         public override string ToString()

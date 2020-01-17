@@ -39,20 +39,23 @@ namespace DNTFrameworkCore.Validation.Interception
                 method = invocation.GetConcreteMethod();
             }
 
+            _logger.LogInformation(
+                $"Starting Validation: {invocation.TargetType?.FullName}.{method.Name}");
+            
             var failures = _validator.Validate(method, invocation.Arguments);
             var result = failures.ToResult();
 
             if (!result.Failed)
             {
                 _logger.LogInformation(
-                    $"Model Validation Completed Successfully: {invocation.TargetType?.FullName}.{method.Name}");
+                    $"Validation Completed Successfully: {invocation.TargetType?.FullName}.{method.Name}");
 
                 invocation.Proceed();
                 return;
             }
 
             _logger.LogInformation(
-                $"Model Validation Failed: {invocation.TargetType?.FullName}.{method.Name} {result.Failures.Select(f => f.ToString()).PackToString(",")}");
+                $"Validation Failed: {invocation.TargetType?.FullName}.{method.Name} {result.Failures.Select(f => f.ToString()).PackToString(",")}");
 
             if (invocation.Method.IsAsync())
             {

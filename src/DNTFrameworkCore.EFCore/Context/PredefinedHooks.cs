@@ -25,19 +25,19 @@ namespace DNTFrameworkCore.EFCore.Context
         where TUserId : IEquatable<TUserId>
     {
         private readonly IUserSession _session;
-        private readonly IDateTime _dateTime;
+        private readonly IClock _clock;
 
-        public PreInsertCreationTrackingHook(IUserSession session, IDateTime dateTime)
+        public PreInsertCreationTrackingHook(IUserSession session, IClock clock)
         {
             _session = session ?? throw new ArgumentNullException(nameof(session));
-            _dateTime = dateTime ?? throw new ArgumentNullException(nameof(dateTime));
+            _clock = clock ?? throw new ArgumentNullException(nameof(clock));
         }
 
         public override string Name => HookNames.CreationTracking;
 
         protected override void Hook(ICreationTracking entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(EFCore.CreatedDateTime).CurrentValue = _dateTime.UtcNow;
+            metadata.Entry.Property(EFCore.CreatedDateTime).CurrentValue = _clock.Now;
             metadata.Entry.Property(EFCore.CreatedByBrowserName).CurrentValue = _session.UserBrowserName;
             metadata.Entry.Property(EFCore.CreatedByIP).CurrentValue = _session.UserIP;
             metadata.Entry.Property(EFCore.CreatedByUserId).CurrentValue = _session.UserId.To<TUserId>();
@@ -48,19 +48,19 @@ namespace DNTFrameworkCore.EFCore.Context
         where TUserId : IEquatable<TUserId>
     {
         private readonly IUserSession _session;
-        private readonly IDateTime _dateTime;
+        private readonly IClock _clock;
 
-        public PreUpdateModificationTrackingHook(IUserSession session, IDateTime dateTime)
+        public PreUpdateModificationTrackingHook(IUserSession session, IClock clock)
         {
             _session = session ?? throw new ArgumentNullException(nameof(session));
-            _dateTime = dateTime ?? throw new ArgumentNullException(nameof(dateTime));
+            _clock = clock ?? throw new ArgumentNullException(nameof(clock));
         }
 
         public override string Name => HookNames.ModificationTracking;
 
         protected override void Hook(IModificationTracking entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(EFCore.ModifiedDateTime).CurrentValue = _dateTime.UtcNow;
+            metadata.Entry.Property(EFCore.ModifiedDateTime).CurrentValue = _clock.Now;
             metadata.Entry.Property(EFCore.ModifiedByBrowserName).CurrentValue = _session.UserBrowserName;
             metadata.Entry.Property(EFCore.ModifiedByIP).CurrentValue = _session.UserIP;
             metadata.Entry.Property(EFCore.ModifiedByUserId).CurrentValue = _session.UserId.To<TUserId>();

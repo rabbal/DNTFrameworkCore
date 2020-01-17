@@ -90,7 +90,7 @@ namespace DNTFrameworkCore.Logging
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception,
             Func<TState, Exception, string> formatter)
         {
-            Log(_provider.GetService<IDateTime>().UtcNow, logLevel, eventId, state, exception, formatter);
+            Log(_provider.GetService<IClock>().Now, logLevel, eventId, state, exception, formatter);
         }
 
         private class NoopDisposable : IDisposable

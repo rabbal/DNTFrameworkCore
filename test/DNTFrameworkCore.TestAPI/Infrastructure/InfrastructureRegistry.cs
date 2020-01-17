@@ -32,7 +32,6 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure
                 .WithDeletedEntityHook()
                 .WithRowLevelSecurityHook<long>()
                 .WithRowIntegrityHook()
-                .WithProtectionStore()
                 .WithNumberingHook(options =>
                 {
                     options.NumberedEntityMap[typeof(Task)] = new NumberedEntityOption

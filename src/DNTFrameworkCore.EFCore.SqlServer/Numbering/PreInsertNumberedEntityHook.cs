@@ -71,11 +71,11 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
                     var value = uow.Entry(entity).Property(fieldName).CurrentValue;
                     switch (value)
                     {
-                        case DateTimeOffset dateTimeOffset:
-                            value = dateTimeOffset.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
+                        case DateTimeOffset clockOffset:
+                            value = clockOffset.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
                             break;
-                        case DateTime dateTime:
-                            value = dateTime.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
+                        case DateTime clock:
+                            value = clock.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
                             break;
                     }
 
@@ -128,7 +128,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
         {
             var type = entity.GetType();
 
-            var key = $"{type.FullName}";
+            var key = type.FullName;
 
             foreach (var fieldName in option.FieldNames)
             {

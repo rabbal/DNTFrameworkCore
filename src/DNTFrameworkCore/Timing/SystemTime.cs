@@ -4,16 +4,10 @@ namespace DNTFrameworkCore.Timing
 {
     public static class SystemTime
     {
-        public static Func<DateTime> NowFactory { get; set; } = () => DateTime.Now;
-        public static Func<DateTime> UtcNowFactory { get; set; } = () => DateTime.UtcNow;
-
-        /// <summary>
-        /// Gets the current date/time in the Local timezone.
-        /// </summary>
-        public static DateTime Now => NowFactory();
-        /// <summary>
-        /// Gets the current date/time in the UTC timezone.
-        /// </summary>
-        public static DateTime UtcNow => UtcNowFactory();
+        public static Func<DateTime> Now = () => DateTime.UtcNow;
+        public static DateTime Normalize(DateTime dateTime)
+        {
+            return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+        }
     }
 }

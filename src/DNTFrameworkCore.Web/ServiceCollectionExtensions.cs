@@ -2,6 +2,7 @@ using System;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.Web.Authorization;
+using DNTFrameworkCore.Web.Cryptography;
 using DNTFrameworkCore.Web.Hosting;
 using DNTFrameworkCore.Web.Runtime;
 using DNTFrameworkCore.Web.Security;

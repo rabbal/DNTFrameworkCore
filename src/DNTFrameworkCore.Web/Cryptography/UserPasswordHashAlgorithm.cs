@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using DNTFrameworkCore.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
-namespace DNTFrameworkCore.Web.Security
+namespace DNTFrameworkCore.Web.Cryptography
 {
     public sealed class UserPasswordHashAlgorithm : IUserPasswordHashAlgorithm
     {

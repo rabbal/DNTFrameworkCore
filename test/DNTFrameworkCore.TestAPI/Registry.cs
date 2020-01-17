@@ -5,7 +5,8 @@ using Castle.Core.Internal;
 using DNTFrameworkCore.Localization;
 using DNTFrameworkCore.TestAPI.Application.Tasks.Models;
 using DNTFrameworkCore.TestAPI.Authentication;
-using DNTFrameworkCore.Web.Cryptography;
+using DNTFrameworkCore.TestAPI.Infrastructure.Context;
+using DNTFrameworkCore.Web.EFCore.Cryptography;
 using DNTFrameworkCore.Web.Filters;
 using DNTFrameworkCore.Web.ModelBinders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -63,7 +64,7 @@ namespace DNTFrameworkCore.TestAPI
                         context => new BadRequestObjectResult(context.ModelState);
                 });
 
-            services.AddDataProtection().PersistKeysToStore();
+            services.AddDataProtection().PersistKeysToDbContext<ProjectDbContext>();
 
             services.AddCors(options =>
             {

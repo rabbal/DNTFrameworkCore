@@ -3,7 +3,7 @@ using DNTFrameworkCore.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DNTFrameworkCore.EFCore.Protection
+namespace DNTFrameworkCore.EFCore.Cryptography
 {
     public static class ModelBuilderExtensions
     {

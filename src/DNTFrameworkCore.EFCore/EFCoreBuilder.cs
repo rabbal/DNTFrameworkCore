@@ -4,7 +4,6 @@ using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.EFCore.Configuration;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Context.Hooks;
-using DNTFrameworkCore.EFCore.Protection;
 using DNTFrameworkCore.EFCore.Transaction;
 using DNTFrameworkCore.Transaction;
 using Microsoft.EntityFrameworkCore;
@@ -47,11 +46,6 @@ namespace DNTFrameworkCore.EFCore
         public IServiceCollection Services { get; }
         public Type ContextType { get; }
 
-        public EFCoreBuilder WithProtectionStore()
-        {
-            Services.AddSingleton<IProtectionStore, ProtectionStore>();
-            return this;
-        }
         public EFCoreBuilder WithTransactionOptions(Action<TransactionOptions> options)
         {
             Services.Configure(options);

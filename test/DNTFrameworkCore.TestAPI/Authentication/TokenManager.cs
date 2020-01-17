@@ -24,18 +24,18 @@ namespace DNTFrameworkCore.TestAPI.Authentication
     {
         private readonly IUnitOfWork _uow;
         private readonly IOptionsSnapshot<TokenOptions> _options;
-        private readonly IDateTime _dateTime;
+        private readonly IClock _clock;
         private readonly ISecurityService _security;
         private readonly DbSet<UserToken> _tokens;
 
         public TokenService(IUnitOfWork uow,
             IOptionsSnapshot<TokenOptions> options,
-            IDateTime dateTime,
+            IClock clock,
             ISecurityService security)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _options = options ?? throw new ArgumentNullException(nameof(options));
-            _dateTime = dateTime ?? throw new ArgumentNullException(nameof(dateTime));
+            _clock = clock ?? throw new ArgumentNullException(nameof(clock));
             _security = security ?? throw new ArgumentNullException(nameof(security));
 
             _tokens = _uow.Set<UserToken>();
@@ -72,7 +72,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
             var userToken = await _tokens.AsNoTracking().FirstOrDefaultAsync(
                 x => x.TokenHash == tokenHash && x.UserId == userId);
 
-            return userToken?.TokenExpirationDateTime >= _dateTime.UtcNow;
+            return userToken?.TokenExpirationDateTime >= _clock.Now;
         }
 
         private async Task AddUserTokenAsync(UserToken token)
@@ -89,7 +89,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
         private async Task AddUserTokenAsync(long userId, string token)
         {
-            var now = _dateTime.UtcNow;
+            var now = _clock.Now;
             var userToken = new UserToken
             {
                 UserId = userId,
@@ -102,7 +102,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
         private async Task DeleteExpiredTokensAsync()
         {
-            var now = _dateTime.UtcNow;
+            var now = _clock.Now;
             await _tokens.Where(x => x.TokenExpirationDateTime < now)
                 .ForEachAsync(userToken => { _tokens.Remove(userToken); });
         }

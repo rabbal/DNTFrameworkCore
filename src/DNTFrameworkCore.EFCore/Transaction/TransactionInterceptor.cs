@@ -45,9 +45,11 @@ namespace DNTFrameworkCore.EFCore.Transaction
                 return;
             }
 
-            _logger.LogInformation($"Intercepting {invocation.TargetType?.FullName}.{method.Name}");
-            
+            _logger.LogInformation($"Starting Interception {invocation.TargetType?.FullName}.{method.Name}");
+
             Intercept(invocation, attribute.Value);
+
+            _logger.LogInformation($"Finished Interception {invocation.TargetType?.FullName}.{method.Name}");
         }
 
         private void Intercept(IInvocation invocation, TransactionalAttribute attribute)
@@ -66,6 +68,8 @@ namespace DNTFrameworkCore.EFCore.Transaction
 
         private void InterceptAsync(IInvocation invocation, TransactionalAttribute attribute)
         {
+            _logger.LogInformation($"BeginTransaction with IsolationLevel: {attribute.IsolationLevel}");
+
             _uow.BeginTransaction(attribute.IsolationLevel);
 
             try
@@ -82,7 +86,7 @@ namespace DNTFrameworkCore.EFCore.Transaction
                 invocation.ReturnValue = InterceptAsync((Task) invocation.ReturnValue, _uow);
             else //Task<TResult>
                 invocation.ReturnValue = typeof(TransactionInterceptor)
-                    .GetMethod(nameof(InterceptWitResultAsync),
+                    .GetMethod(nameof(InterceptWithResultAsync),
                         BindingFlags.NonPublic | BindingFlags.Static)
                     ?.MakeGenericMethod(invocation.Method.ReturnType.GenericTypeArguments[0])
                     .Invoke(null, new[] {invocation.ReturnValue, _uow});
@@ -102,15 +106,19 @@ namespace DNTFrameworkCore.EFCore.Transaction
             }
         }
 
-        private static async Task<T> InterceptWitResultAsync<T>(Task<T> task, IUnitOfWork uow)
+        private static async Task<T> InterceptWithResultAsync<T>(Task<T> task, IUnitOfWork uow)
         {
             try
             {
                 var result = await task.ConfigureAwait(false);
                 if (result is Result returnValue && returnValue.Failed)
+                {
                     uow.RollbackTransaction();
+                }
                 else
+                {
                     uow.CommitTransaction();
+                }
 
                 return result;
             }
@@ -123,15 +131,21 @@ namespace DNTFrameworkCore.EFCore.Transaction
 
         private void InterceptSync(IInvocation invocation, TransactionalAttribute attribute)
         {
+            _logger.LogInformation($"BeginTransaction with IsolationLevel: {attribute.IsolationLevel}");
+            
             _uow.BeginTransaction(attribute.IsolationLevel);
             try
             {
                 invocation.Proceed();
 
                 if (invocation.ReturnValue is Result returnValue && returnValue.Failed)
+                {
                     _uow.RollbackTransaction();
+                }
                 else
+                {
                     _uow.CommitTransaction();
+                }
             }
             catch (Exception)
             {

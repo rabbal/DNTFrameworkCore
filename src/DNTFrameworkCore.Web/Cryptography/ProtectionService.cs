@@ -5,7 +5,7 @@ using DNTFrameworkCore.Cryptography;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Logging;
 
-namespace DNTFrameworkCore.Web.Security
+namespace DNTFrameworkCore.Web.Cryptography
 {
     internal sealed class ProtectionService : IProtectionService
     {

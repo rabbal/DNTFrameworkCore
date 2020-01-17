@@ -157,7 +157,7 @@ namespace DNTFrameworkCore.Licensing
             var license = new License
             {
                 Id = Guid.NewGuid(),
-                CreationTime = SystemTime.UtcNow,
+                CreationTime = DateTime.UtcNow,
                 ProductName = productName,
                 ProductVersion = productVersion,
                 CustomerName = customerName,
