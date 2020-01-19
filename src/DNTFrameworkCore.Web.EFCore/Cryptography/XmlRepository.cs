@@ -63,7 +63,9 @@ namespace DNTFrameworkCore.Web.EFCore.Cryptography
             using (var scope = _provider.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<TContext>();
-                return context.Set<ProtectionKey>().AsNoTracking().Select(key => TryParseKeyXml(key.XmlValue)).ToList()
+                var logger = _logger;
+                return context.Set<ProtectionKey>().AsNoTracking().Select(key => TryParseKeyXml(key.XmlValue, logger))
+                    .ToList()
                     .AsReadOnly();
             }
         }
@@ -86,7 +88,7 @@ namespace DNTFrameworkCore.Web.EFCore.Cryptography
             }
         }
 
-        private XElement TryParseKeyXml(string xml)
+        private static XElement TryParseKeyXml(string xml, ILogger logger)
         {
             try
             {
@@ -94,7 +96,7 @@ namespace DNTFrameworkCore.Web.EFCore.Cryptography
             }
             catch (Exception e)
             {
-                _logger?.LogExceptionWhileParsingKeyXml(xml, e);
+                logger?.LogExceptionWhileParsingKeyXml(xml, e);
                 return null;
             }
         }

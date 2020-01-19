@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Reflection;
+using DNTFrameworkCore.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -7,38 +9,35 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 {
     public static class ModelBuilderExtensions
     {
-        public static void SpecifyDecimalPrecision(this ModelBuilder builder, int precision = 20, int scale = 6)
+        public static void NormalizeDecimalPrecision(this ModelBuilder builder, int precision = 20, int scale = 6)
         {
-            foreach (var property in builder.Model.GetEntityTypes()
-                .SelectMany(t => t.GetProperties())
-                .Where(p => p.ClrType == typeof(decimal)
-                            || p.ClrType == typeof(decimal?)))
+            var propertyList = builder.Model.GetEntityTypes().SelectMany(t => t.GetProperties())
+                .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?))
+                .Where(property => !property.PropertyInfo.GetCustomAttributes<SkipNormalizationAttribute>().Any());
+            
+            foreach (var property in propertyList)
             {
                 property.SetColumnType($"decimal({precision}, {scale})");
             }
         }
 
-        public static void SpecifyDateTimeKind(this ModelBuilder builder)
+        /// <summary>
+        /// SpecifyKind of DateTime fields with DateTimeKind.Utc as a best-practice in web applications
+        /// </summary>
+        /// <param name="builder"></param>
+        public static void NormalizeDateTime(this ModelBuilder builder)
         {
-            var clockConverter = new ValueConverter<DateTime, DateTime>(
-                v => v.Kind == DateTimeKind.Utc ? v : v.ToUniversalTime(),
+            var conversion = new ValueConverter<DateTime, DateTime>(
+                v => v,
                 v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
 
-            var nullableDateTimeConverter = new ValueConverter<DateTime?, DateTime?>(
-                v => !v.HasValue ? v : (v.Value.Kind == DateTimeKind.Utc ? v : v.Value.ToUniversalTime()),
-                v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : v);
+            var propertyList = builder.Model.GetEntityTypes().SelectMany(t => t.GetProperties())
+                .Where(property => property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
+                .Where(property => !property.PropertyInfo.GetCustomAttributes<SkipNormalizationAttribute>().Any());
 
-            foreach (var property in builder.Model.GetEntityTypes().SelectMany(t => t.GetProperties()))
+            foreach (var property in propertyList)
             {
-                if (property.ClrType == typeof(DateTime))
-                {
-                    property.SetValueConverter(clockConverter);
-                }
-
-                if (property.ClrType == typeof(DateTime?))
-                {
-                    property.SetValueConverter(nullableDateTimeConverter);
-                }
+                property.SetValueConverter(conversion);
             }
         }
     }

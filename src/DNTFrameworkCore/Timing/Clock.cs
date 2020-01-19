@@ -14,11 +14,11 @@ namespace DNTFrameworkCore.Timing
 
     internal sealed class Clock : IClock
     {
-        public DateTime Now => DateTime.UtcNow;
+        public DateTime Now => SystemTime.Now();
 
         public DateTime Normalize(DateTime dateTime)
         {
-            return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+            return SystemTime.Normalize(dateTime);
         }
     }
 }

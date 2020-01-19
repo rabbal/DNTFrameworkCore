@@ -7,6 +7,7 @@ using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Linq;
 using DNTFrameworkCore.TestAPI.Application.Tasks.Models;
+using DNTPersianUtils.Core;
 using Microsoft.EntityFrameworkCore;
 using Task = DNTFrameworkCore.TestAPI.Domain.Tasks.Task;
 
@@ -45,14 +46,22 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
                     Id = t.Id,
                     Title = t.Title,
                     State = t.State,
-                    Number = t.Number
+                    Number = t.Number,
+                    LocalDateTime = t.LocalDateTime,
+                    CreatedDateTime = t.CreatedDateTime,
+                    NullableDateTime = t.NullableDateTime
                 });
         }
 
         protected override void MapToEntity(TaskModel model, Task task)
         {
             _mapper.Map(model, task);
-            task.BranchId = 3;
+            if (task.IsTransient())
+            {
+                task.BranchId = 3;
+                task.LocalDateTime = DateTime.UtcNow.ToIranTimeZoneDateTime();
+                task.NullableDateTime = DateTime.UtcNow;
+            }
         }
 
         protected override TaskModel MapToModel(Task task)

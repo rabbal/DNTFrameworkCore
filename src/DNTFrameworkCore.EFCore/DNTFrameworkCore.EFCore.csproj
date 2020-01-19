@@ -18,6 +18,7 @@
         <ProjectReference Include="..\DNTFrameworkCore\DNTFrameworkCore.csproj" />
     </ItemGroup>
     <ItemGroup>
+        <Folder Include="Context\Converters\DateTime" />
         <Folder Include="Context\Converters\Encryption" />
     </ItemGroup>
     <ItemGroup>

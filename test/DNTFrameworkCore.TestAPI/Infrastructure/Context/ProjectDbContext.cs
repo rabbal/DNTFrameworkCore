@@ -38,8 +38,8 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Context
             modelBuilder.AddRowIntegrityField();
             modelBuilder.AddRowLevelSecurityField<long>();
             
-            modelBuilder.SpecifyDateTimeKind();
-            modelBuilder.SpecifyDecimalPrecision();
+            modelBuilder.NormalizeDateTime();
+            modelBuilder.NormalizeDecimalPrecision();
             
             base.OnModelCreating(modelBuilder);
         }

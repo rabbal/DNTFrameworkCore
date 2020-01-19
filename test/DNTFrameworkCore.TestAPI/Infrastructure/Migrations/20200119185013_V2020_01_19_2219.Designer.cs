@@ -4,14 +4,16 @@ using DNTFrameworkCore.TestAPI.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
 {
     [DbContext(typeof(ProjectDbContext))]
-    partial class ProjectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200119185013_V2020_01_19_2219")]
+    partial class V2020_01_19_2219
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -743,9 +745,6 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
 
                     b.Property<decimal>("NormalizedValue")
                         .HasColumnType("decimal(20, 6)");
-
-                    b.Property<DateTime?>("NullableDateTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Number")
                         .IsRequired()

@@ -5,12 +5,15 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace DNTFrameworkCore.TestAPI.Authentication
 {
     public class Token
     {
-        [JsonPropertyName("token")] public string Value { get; private set; }
+        [JsonPropertyName("token"), JsonProperty("token")]
+        public string Value { get; private set; }
+
         private Token(string value)
         {
             Value = value;
@@ -34,7 +37,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
                 credentials);
 
             var token = new JwtSecurityTokenHandler().WriteToken(securityToken);
-            
+
             return new Token(token);
         }
 
@@ -43,5 +46,4 @@ namespace DNTFrameworkCore.TestAPI.Authentication
             return Value;
         }
     }
-
 }
