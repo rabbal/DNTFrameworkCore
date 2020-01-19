@@ -115,7 +115,7 @@ For more info about templates you can watch [DNTFrameworkCoreTemplate repository
 * CrudService
 * CrudController
 * DbLogger Provider
-* ProtectionKey DbRepository
+* ProtectionKey EFCore Store
 * Hooks
 * SoftDelete
 * Tenancy
@@ -131,7 +131,7 @@ For more info about templates you can watch [DNTFrameworkCoreTemplate repository
 
 **Create Entity**
 ```c#
-public class Task : Entity<int>, INumberedEntity, ICreationTracking, IModificationTracking
+public class Task : Entity<int>, INumberedEntity, IHasRowVersion, IHasRowIntegrity, ICreationTracking, IModificationTracking
 {
     public const int MaxTitleLength = 256;
     public const int MaxDescriptionLength = 1024;
@@ -141,7 +141,11 @@ public class Task : Entity<int>, INumberedEntity, ICreationTracking, IModificati
     public string Number { get; set; }
     public string Description { get; set; }
     public TaskState State { get; set; } = TaskState.Todo;
+    
     public byte[] Version { get; set; }
+    public string Hash { get; set; }
+    public DateTime CreatedDateTime { get; set; }
+    public DateTime? ModifiedDateTime { get; set; }
 }
 ```
 
@@ -149,25 +153,31 @@ public class Task : Entity<int>, INumberedEntity, ICreationTracking, IModificati
 ```c#
 public class ProjectDbContext : DbContextCore
 {
-    public ProjectDbContext(
-        IHookEngine hookEngine,
-        IUserSession session,
-        DbContextOptions<ProjectDbContext> options) : base(hookEngine,session, options)
+    public ProjectDbContext(DbContextOptions<ProjectDbContext> options, IEnumerable<IHook> hooks) : base(options, hooks)
     {
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.ApplyConfiguration(new TaskConfiguration());
+    {               
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+        modelBuilder.AddJsonFields();
+        modelBuilder.AddTrackingFields<long>();
+        modelBuilder.AddIsDeletedField();
+        modelBuilder.AddRowVersionField();
+        modelBuilder.AddRowIntegrityField();
+            
+        modelBuilder.NormalizeDateTime();
+        modelBuilder.NormalizeDecimalPrecision();
+            
         base.OnModelCreating(modelBuilder);
     }
 
-    protected override void AfterSaveChanges(SaveChangeContext context)
+    protected override void OnSaveCompleted(EntityChangeContext context)
     {
         //if you are using https://github.com/VahidN/EFSecondLevelCache.Core as SecondLevelCache library
         this.GetService<IEFCacheServiceProvider>()
-            .InvalidateCacheDependencies(context.ChangedEntityNames.ToArray());
+            .InvalidateCacheDependencies(context.EntityNames.ToArray());
     }
 }
 ```
