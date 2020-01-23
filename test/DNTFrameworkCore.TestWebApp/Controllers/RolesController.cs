@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.TestWebApp.Application.Identity;
@@ -16,17 +17,14 @@ namespace DNTFrameworkCore.TestWebApp.Controllers
     public class
         RolesController : CrudController<IRoleService, long, RoleReadModel, RoleModel, RoleFilteredPagedQueryModel>
     {
-        private readonly IPermissionService _permission;
         private readonly IMapper _mapper;
         private readonly IStringLocalizerFactory _localizerFactory;
 
         public RolesController(
             IRoleService service,
-            IPermissionService permission,
             IMapper mapper,
             IStringLocalizerFactory localizerFactory) : base(service)
         {
-            _permission = permission ?? throw new ArgumentNullException(nameof(permission));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _localizerFactory = localizerFactory ?? throw new ArgumentNullException(nameof(localizerFactory));
         }
@@ -61,8 +59,7 @@ namespace DNTFrameworkCore.TestWebApp.Controllers
 
         private List<LookupItem> ReadPermissionList()
         {
-            return _permission
-                .ReadList()
+            return Permissions.List()
                 .Select(p => new LookupItem {Value = p.Name, Text = p.DisplayName.Localize(_localizerFactory)})
                 .ToList();
         }

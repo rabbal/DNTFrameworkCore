@@ -1,3 +1,4 @@
+using System;
 using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestWebApp.Domain.Blogging
@@ -10,5 +11,7 @@ namespace DNTFrameworkCore.TestWebApp.Domain.Blogging
         public string NormalizedTitle { get; set; }
         public string Url { get; set; }
         public byte[] Version { get; set; }
+        public DateTime CreatedDateTime { get; set; }
+        public DateTime? ModifiedDateTime { get; set; }
     }
 }

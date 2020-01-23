@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>DNTFrameworkCore.Web</Title>
     <Description>This Library Contains Infrastructures for Permission-based Authorization,Building CRUD API,Building CRUD Mvc Controller and etc based on ASP.NET Core</Description>
-    <VersionPrefix>4.1.0</VersionPrefix>
+    <VersionPrefix>4.5.0</VersionPrefix>
     <Authors>GholamReza Rabbal</Authors>
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
@@ -13,7 +13,6 @@
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\DNTFrameworkCore\DNTFrameworkCore.csproj" />

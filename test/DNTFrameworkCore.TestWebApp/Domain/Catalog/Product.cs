@@ -1,3 +1,4 @@
+using System;
 using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestWebApp.Domain.Catalog
@@ -11,5 +12,7 @@ namespace DNTFrameworkCore.TestWebApp.Domain.Catalog
         public string Number { get; set; }
         public decimal Price { get; set; }
         public byte[] Version { get; set; }
+        public DateTime CreatedDateTime { get; set; }
+        public DateTime? ModifiedDateTime { get; set; }
     }
 }

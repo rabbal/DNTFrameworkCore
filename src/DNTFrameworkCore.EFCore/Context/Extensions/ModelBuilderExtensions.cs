@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using DNTFrameworkCore.Common;
+using DNTFrameworkCore.Timing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -14,7 +15,7 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
             var propertyList = builder.Model.GetEntityTypes().SelectMany(t => t.GetProperties())
                 .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?))
                 .Where(property => !property.PropertyInfo.GetCustomAttributes<SkipNormalizationAttribute>().Any());
-            
+
             foreach (var property in propertyList)
             {
                 property.SetColumnType($"decimal({precision}, {scale})");
@@ -29,7 +30,7 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
         {
             var conversion = new ValueConverter<DateTime, DateTime>(
                 v => v,
-                v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+                v => SystemTime.Normalize(v));
 
             var propertyList = builder.Model.GetEntityTypes().SelectMany(t => t.GetProperties())
                 .Where(property => property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))

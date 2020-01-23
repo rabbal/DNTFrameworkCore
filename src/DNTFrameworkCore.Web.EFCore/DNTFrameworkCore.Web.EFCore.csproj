@@ -1,20 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Title>DNTFrameworkCore.Web.EntityFramework</Title>
-        <VersionPrefix>3.7.0</VersionPrefix>
-        <Description>DNTFrameworkCore.Web.EntityFramework</Description>
+        <Title>DNTFrameworkCore.Web.EFCore</Title>
+        <Description>This Library Contains Infrastructures that Related to ASP.NET Core and EFCore</Description>
+        <VersionPrefix>4.5.0</VersionPrefix>
         <Authors>GholamReza Rabbal</Authors>
+        <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
-        <PackageLicenseUrl>https://github.com/rabbal/DNTFrameworkCore/blob/master/LICENSE.md</PackageLicenseUrl>
-        <RepositoryUrl>https://github.com/rabbal/DNTFrameworkCore</RepositoryUrl>
-        <PackageTags>.NET Core; ASP.NET Core; EFCore; Multitenancy; Validation; Transaction; Framework; Design; Logging; SOLID; Event-Driven; Domain</PackageTags>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <LangVersion>latest</LangVersion>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageTags>.NETCore;ASP.NET Core;EFCore</PackageTags>
+        <AssemblyName>DNTFrameworkCore.Web.EFCore</AssemblyName>
+        <RootNamespace>DNTFrameworkCore.Web.EFCore</RootNamespace>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\DNTFrameworkCore.EFCore\DNTFrameworkCore.EFCore.csproj" />
+        <ProjectReference Include="..\DNTFrameworkCore.EFCore\DNTFrameworkCore.EFCore.csproj"/>
     </ItemGroup>
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
 </Project>

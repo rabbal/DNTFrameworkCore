@@ -5,6 +5,7 @@ using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Data;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.TestWebApp.Application.Configuration;
+using DNTFrameworkCore.TestWebApp.Authorization;
 using DNTFrameworkCore.TestWebApp.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -17,19 +18,16 @@ namespace DNTFrameworkCore.TestWebApp.Application.Common
         private readonly IUnitOfWork _uow;
         private readonly IOptionsSnapshot<ProjectSetting> _settings;
         private readonly IUserPasswordHashAlgorithm _password;
-        private readonly IPermissionService _permission;
         private readonly ILogger<DbSeed> _logger;
 
         public DbSeed(IUnitOfWork uow,
             IOptionsSnapshot<ProjectSetting> settings,
             IUserPasswordHashAlgorithm password,
-            IPermissionService permission,
             ILogger<DbSeed> logger)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
             _password = password ?? throw new ArgumentNullException(nameof(password));
-            _permission = permission ?? throw new ArgumentNullException(nameof(permission));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -60,7 +58,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Common
             }
 
             var rolePermissionNames = role.Permissions.Select(a => a.Name).ToList();
-            var allPermissionNames = _permission.ReadList().Select(p => p.Name);
+            var allPermissionNames = Permissions.Names();
 
             var newPermissions = allPermissionNames.Except(rolePermissionNames)
                 .Select(permissionName => new RolePermission {Name = permissionName}).ToList();

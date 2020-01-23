@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DNTFrameworkCore.Domain;
 
@@ -16,5 +17,7 @@ namespace DNTFrameworkCore.TestWebApp.Domain.Identity
         public ICollection<UserRole> Users { get; set; } = new HashSet<UserRole>();
         public ICollection<RolePermission> Permissions { get; set; } = new HashSet<RolePermission>();
         public ICollection<RoleClaim> Claims { get; set; } = new HashSet<RoleClaim>();
+        public DateTime CreatedDateTime { get; set; }
+        public DateTime? ModifiedDateTime { get; set; }
     }
 }

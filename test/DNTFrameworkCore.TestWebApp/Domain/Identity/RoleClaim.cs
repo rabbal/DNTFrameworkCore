@@ -1,3 +1,4 @@
+using System;
 using System.Security.Claims;
 using DNTFrameworkCore.Domain;
 
@@ -23,5 +24,7 @@ namespace DNTFrameworkCore.TestWebApp.Domain.Identity
             ClaimType = claim.Type;
             ClaimValue = claim.Value;
         }
+
+        public DateTime? ModifiedDateTime { get; set; }
     }
 }

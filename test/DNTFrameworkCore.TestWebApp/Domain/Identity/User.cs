@@ -36,5 +36,8 @@ namespace DNTFrameworkCore.TestWebApp.Domain.Identity
         {
             return Guid.NewGuid().ToString("N");
         }
+
+        public DateTime CreatedDateTime { get; set; }
+        public DateTime? ModifiedDateTime { get; set; }
     }
 }

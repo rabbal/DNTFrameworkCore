@@ -74,7 +74,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
 
             var claims = await BuildClaimsAsync(userId);
 
-            var loginCookieExpirationDays = _configuration.GetValue<int>("LoginCookieExpirationDays", defaultValue: 30);
+            var loginCookieExpirationDays = _configuration.GetValue("LoginCookieExpirationDays", defaultValue: 30);
 
             await _httpContext.HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
@@ -86,9 +86,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
                     ExpiresUtc = DateTimeOffset.UtcNow.AddDays(loginCookieExpirationDays)
                 });
 
-            // await UpdateLastActivityDateAsync(user);
-
-            _logger.LogInformation(LoggingEvents.LOGIN, $"{userName} logged in.");
+            _logger.LogInformation($"{userName} logged in.");
 
             return SignInResult.Ok();
         }
@@ -102,7 +100,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
             if (_session.IsAuthenticated)
             {
                 // await UpdateSerialNumberAsync(_session.UserId.Value);
-                _logger.LogInformation(LoggingEvents.LOGOUT, $"{_session.UserName} logged out.");
+                _logger.LogInformation($"{_session.UserName} logged out.");
             }
 
             await _httpContext.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
