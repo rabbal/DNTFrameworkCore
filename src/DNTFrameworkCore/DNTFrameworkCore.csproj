@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Title>DNTFrameworkCore</Title>
         <Description>DNTFrameworkCore is a Lightweight and Extensible Infrastructure for Building Web Applications</Description>
-        <VersionPrefix>4.5.0</VersionPrefix>
+        <VersionPrefix>4.5.1</VersionPrefix>
         <Authors>GholamReza Rabbal</Authors>
         <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
