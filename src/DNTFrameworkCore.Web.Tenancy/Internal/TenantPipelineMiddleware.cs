@@ -28,7 +28,7 @@ namespace DNTFrameworkCore.Web.Tenancy.Internal
 
         public async Task Invoke(HttpContext context)
         {
-            var tenant = context.GetTenant();
+            var tenant = context.Tenant();
             if (tenant == null)
                 throw new InvalidOperationException(
                     "TenantResolutionMiddleware must be register before TenantPipelineMiddleware");

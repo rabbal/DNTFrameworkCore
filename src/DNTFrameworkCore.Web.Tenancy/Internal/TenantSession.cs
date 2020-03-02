@@ -19,7 +19,7 @@ namespace DNTFrameworkCore.Web.Tenancy.Internal
         }
 
         private ClaimsPrincipal Principal => _context?.HttpContext?.User;
-        private Tenant Tenant => _context?.HttpContext?.GetTenant();
+        private Tenant Tenant => _context?.HttpContext?.Tenant();
         public string TenantId => _session.IsAuthenticated ? Principal?.FindTenantId() : Tenant?.Id;
         public string TenantName => _session.IsAuthenticated ? Principal?.FindTenantName() : Tenant?.Name;
         public bool IsHeadTenant => Principal?.IsHeadTenant() ?? false;

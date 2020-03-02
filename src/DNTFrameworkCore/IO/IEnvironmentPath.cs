@@ -1,6 +1,6 @@
 ﻿namespace DNTFrameworkCore.IO
 {
-    public interface IPathProvider {
+    public interface IEnvironmentPath {
         string MapPath(string path);
     }
 }

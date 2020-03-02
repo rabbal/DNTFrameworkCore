@@ -21,13 +21,13 @@ namespace DNTFrameworkCore.Web.Runtime
 
         private HttpContext HttpContext => _context.HttpContext;
         private ClaimsPrincipal Principal => HttpContext?.User;
-
+        
         public bool IsAuthenticated => Principal?.Identity.IsAuthenticated ?? false;
         public string UserId => Principal?.FindUserId();
         public string UserName => Principal?.FindUserName();
         public string BranchId => Principal?.FindBranchId();
         public string BranchName => Principal?.FindBranchName();
-        public bool IsHeadBranch => Principal?.IsHeadTenant() ?? false;
+        public bool IsHeadOffice => Principal?.IsHeadOffice() ?? false;
         public IReadOnlyList<string> Permissions => Principal?.FindPermissions();
         public IReadOnlyList<string> Roles => Principal?.FindRoles();
         public IReadOnlyList<Claim> Claims => Principal?.Claims.ToList();

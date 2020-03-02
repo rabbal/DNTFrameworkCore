@@ -7,7 +7,7 @@ namespace DNTFrameworkCore.EFCore.Configuration
 {
     public static class ModelBuilderExtensions
     {
-        public static void ApplyConfigurationValue(this ModelBuilder builder)
+        public static void ApplyKeyValueConfiguration(this ModelBuilder builder)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
 

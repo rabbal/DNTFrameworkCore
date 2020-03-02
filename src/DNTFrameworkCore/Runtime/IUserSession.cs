@@ -1,5 +1,3 @@
-// ReSharper disable InconsistentNaming
-
 using System.Collections.Generic;
 using System.Security.Claims;
 using DNTFrameworkCore.Dependency;
@@ -40,7 +38,7 @@ namespace DNTFrameworkCore.Runtime
         /// <summary>
         ///     Represents current user is from head-office branch.
         /// </summary>
-        bool IsHeadBranch { get; }
+        bool IsHeadOffice { get; }
 
         /// <summary>
         ///     Gets current user's Permissions

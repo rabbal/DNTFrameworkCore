@@ -11,7 +11,7 @@ namespace DNTFrameworkCore.Web.Tenancy
         /// <summary>
         /// Returns the current tenant
         /// </summary>
-        public static Tenant GetTenant(this HttpContext context)
+        public static Tenant Tenant(this HttpContext context)
         {
             if (!context.Items.ContainsKey(TenancyConstants.HttpContextItemName))
                 return null;

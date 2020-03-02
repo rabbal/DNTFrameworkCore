@@ -1,9 +1,11 @@
 using System;
 using DNTFrameworkCore.Cryptography;
+using DNTFrameworkCore.IO;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.Web.Authorization;
 using DNTFrameworkCore.Web.Cryptography;
 using DNTFrameworkCore.Web.Hosting;
+using DNTFrameworkCore.Web.IO;
 using DNTFrameworkCore.Web.Runtime;
 using DNTFrameworkCore.Web.Security;
 using Microsoft.AspNetCore.Authorization;
@@ -63,6 +65,12 @@ namespace DNTFrameworkCore.Web
         public WebFrameworkBuilder WithQueuedHostedService()
         {
             Services.AddHostedService<QueuedHostedService>();
+            return this;
+        }
+        
+        public WebFrameworkBuilder WithEnvironmentPath()
+        {
+            Services.AddSingleton<IEnvironmentPath, EnvironmentPath>();
             return this;
         }
     }

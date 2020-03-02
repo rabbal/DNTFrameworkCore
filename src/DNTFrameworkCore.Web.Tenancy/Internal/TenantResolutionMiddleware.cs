@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.Web.Tenancy.Internal
                 var strategy = context.RequestServices.GetRequiredService<ITenantResolutionStrategy>();
                 var store = context.RequestServices.GetRequiredService<ITenantStore>();
 
-                var tenantId = strategy.ResolveTenantId();
+                var tenantId = strategy.TenantId();
                 var tenant = await store.FindTenantAsync(tenantId);
 
                 context.Items.Add(TenancyConstants.HttpContextItemName, tenant);
