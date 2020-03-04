@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>DNTFrameworkCore.Licensing</Title>
     <Description>Lightweight Library for Build and Read Signed License based on SignedXml</Description>
-    <VersionPrefix>4.5.2</VersionPrefix>
+    <VersionPrefix>4.5.3</VersionPrefix>
     <Authors>GholamReza Rabbal</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
