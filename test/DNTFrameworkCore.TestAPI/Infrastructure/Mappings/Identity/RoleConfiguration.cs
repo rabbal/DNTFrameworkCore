@@ -15,7 +15,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Mappings.Identity
             builder.HasIndex(a => a.NormalizedName).HasName("UIX_Role_NormalizedName").IsUnique();
 
             builder.HasMany(a => a.Users).WithOne(a => a.Role).HasForeignKey(a => a.RoleId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
             builder.HasMany(a => a.Claims).WithOne(a => a.Role).HasForeignKey(a => a.RoleId)
                 .OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(a => a.Permissions).WithOne(a => a.Role).HasForeignKey(a => a.RoleId)

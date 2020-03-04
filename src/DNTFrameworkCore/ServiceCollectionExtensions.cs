@@ -18,7 +18,7 @@ namespace DNTFrameworkCore
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            services.AddSingleton<IEventBus, EventBus>();
+            services.AddScoped<IEventBus, EventBus>();
             services.AddTransient<IClock, Clock>();
             services.AddTransient(typeof(Lazy<>), typeof(LazyFactory<>));
 

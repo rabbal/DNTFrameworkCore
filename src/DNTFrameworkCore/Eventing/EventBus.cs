@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DNTFrameworkCore.Common;
 using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
@@ -10,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.Eventing
 {
-    public interface IEventBus : ISingletonDependency
+    public interface IEventBus : IScopedDependency
     {
         Task<Result> TriggerAsync(IBusinessEvent businessEvent);
         Task TriggerAsync(IDomainEvent domainEvent);
@@ -18,9 +16,6 @@ namespace DNTFrameworkCore.Eventing
 
     internal sealed class EventBus : IEventBus
     {
-        private readonly LazyConcurrentDictionary<Type, IEnumerable<object>> _handlers =
-            new LazyConcurrentDictionary<Type, IEnumerable<object>>();
-
         private const string MethodName = "Handle";
         private readonly IServiceProvider _provider;
 
@@ -37,7 +32,7 @@ namespace DNTFrameworkCore.Eventing
             var method = handlerType.GetMethod(MethodName, new[] {eventType});
             if (method == null) throw new InvalidOperationException();
 
-            var handlers = _handlers.GetOrAdd(handlerType, type => _provider.GetServices(type));
+            var handlers = _provider.GetServices(handlerType);
 
             foreach (var handler in handlers)
             {
@@ -57,7 +52,7 @@ namespace DNTFrameworkCore.Eventing
             var method = handlerType.GetMethod(MethodName, new[] {eventType});
             if (method == null) throw new InvalidOperationException();
 
-            var handlers = _handlers.GetOrAdd(handlerType, type => _provider.GetServices(type));
+            var handlers = _provider.GetServices(handlerType);
 
             var tasks = handlers.Select(
                 async handler => await (Task) method.Invoke(handler, new object[] {domainEvent}));
