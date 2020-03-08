@@ -96,11 +96,8 @@ namespace DNTFrameworkCore.ReflectionToolkit
         private static Func<object, object> CreateGetterPropertyDelegate(Type type, PropertyInfo propertyInfo,
             int index)
         {
-#if NET40
-            var getMethod = propertyInfo.GetGetMethod();
-#else
             var getMethod = propertyInfo.GetMethod;
-#endif
+
             if (getMethod == null)
                 throw new InvalidOperationException($"Couldn't get the GetMethod of {type}");
 
@@ -115,7 +112,7 @@ namespace DNTFrameworkCore.ReflectionToolkit
             return Expression.Lambda<Func<object, object>>(getterExpression, instanceParam).Compile();
         }
     }
-    
+
     /// <summary>
     /// Getter method's info.
     /// </summary>

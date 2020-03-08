@@ -38,7 +38,8 @@ namespace DNTFrameworkCore.TestAPI
                 .WithProtectionService()
                 .WithPasswordHashAlgorithm()
                 .WithQueuedHostedService()
-                .WithAntiforgeryService();
+                .WithAntiforgeryService()
+                .WithEnvironmentPath();
 
             services.AddInfrastructure(Configuration);
             services.AddApplication(Configuration);

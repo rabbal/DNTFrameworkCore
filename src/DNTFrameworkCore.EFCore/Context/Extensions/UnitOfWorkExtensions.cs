@@ -73,6 +73,12 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
             return uow.Entry(entity).Property(propertyName).CurrentValue;
         }
 
+        public static void ShadowPropertyValue(this IUnitOfWork uow, object entity, string propertyName,
+            object propertyValue)
+        {
+            uow.Entry(entity).Property(propertyName).CurrentValue = propertyValue;
+        }
+
         public static TResult RunInTransaction<TResult>(this IUnitOfWork uow, Func<TResult> action,
             IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {

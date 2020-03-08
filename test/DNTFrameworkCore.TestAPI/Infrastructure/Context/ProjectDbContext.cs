@@ -37,10 +37,10 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Context
             modelBuilder.AddRowVersionField();
             modelBuilder.AddRowIntegrityField();
             modelBuilder.AddRowLevelSecurityField<long>();
-            
+
             modelBuilder.NormalizeDateTime();
-            modelBuilder.NormalizeDecimalPrecision();
-            
+            modelBuilder.NormalizeDecimalPrecision(precision: 20, scale: 6);
+
             base.OnModelCreating(modelBuilder);
         }
 

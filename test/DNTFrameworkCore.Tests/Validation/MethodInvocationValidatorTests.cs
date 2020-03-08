@@ -102,8 +102,8 @@ namespace DNTFrameworkCore.Tests.Validation
 
             services.AddTransient<IModelValidator<TestParameter>, TestParameterValidator>();
             
-            services.AddDNTFrameworkCore()
-                .AddModelValidation(options);
+            services.AddFramework()
+                .WithModelValidation(options);
 
             var helper = services.BuildServiceProvider().GetRequiredService<MethodInvocationValidator>();
             return helper;

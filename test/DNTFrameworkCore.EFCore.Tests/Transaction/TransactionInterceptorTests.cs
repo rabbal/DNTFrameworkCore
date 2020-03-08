@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.Tests.Transaction
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
-            services.AddDNTFrameworkCore();
+            services.AddFramework();
 
             var transactionMock = new Mock<ITransaction>();
             transactionMock.Setup(transaction => transaction.Commit());

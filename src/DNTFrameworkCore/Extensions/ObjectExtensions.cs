@@ -8,9 +8,10 @@ namespace DNTFrameworkCore.Extensions
 {
     public static class ObjectExtensions
     {
-        public static string GetGenericTypeName(this object @object)
+        
+        public static string GetGenericTypeName(this object instance)
         {
-            return @object.GetType().GetTypeInfo().GetGenericTypeName();
+            return instance.GetType().GetTypeInfo().GetGenericTypeName();
         }
 
         /// <summary>

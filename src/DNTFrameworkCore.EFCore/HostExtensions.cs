@@ -16,7 +16,7 @@ namespace DNTFrameworkCore.EFCore
                 var provider = scope.ServiceProvider;
 
                 var logger = provider.GetRequiredService<ILogger<TContext>>();
-                var db = provider.GetService<IDbSetup>();
+                var setup = provider.GetService<IDbSetup>();
                 var context = provider.GetRequiredService<TContext>();
 
                 try
@@ -25,7 +25,7 @@ namespace DNTFrameworkCore.EFCore
 
                     context.Database.Migrate();
 
-                    db?.Seed();
+                    setup?.Seed();
 
                     logger.LogInformation($"Migrated database associated with context {typeof(TContext).Name}");
                 }

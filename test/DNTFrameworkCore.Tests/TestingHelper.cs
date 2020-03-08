@@ -8,8 +8,8 @@ namespace DNTFrameworkCore.Tests
         public static IServiceProvider BuildServiceProvider(Action<IServiceCollection> configure = null)
         {
             var services = new ServiceCollection();
-            
-            services.AddDNTFrameworkCore();
+
+            services.AddFramework();
 
             configure?.Invoke(services);
 

@@ -14,7 +14,7 @@ namespace DNTFrameworkCore.Tests.Eventing
         public async Task Should_Trigger_With_Multiple_Handler_That_Returns_Ok_Result()
         {
             var services = new ServiceCollection();
-            services.AddDNTFrameworkCore();
+            services.AddFramework();
             services.AddTransient<IBusinessEventHandler<SimpleBusinessEvent>, SimpleBusinessEventHandler1>();
             services.AddTransient<IBusinessEventHandler<SimpleBusinessEvent>, SimpleBusinessEventHandler2>();
             var bus = services.BuildServiceProvider().GetRequiredService<IEventBus>();
@@ -29,7 +29,7 @@ namespace DNTFrameworkCore.Tests.Eventing
         public async Task Should_Failed_Trigger_When_One_Handler_Failed()
         {
             var services = new ServiceCollection();
-            services.AddDNTFrameworkCore();
+            services.AddFramework();
             services.AddTransient<IBusinessEventHandler<SimpleBusinessEvent>, FailedSimpleBusinessEventHandler>();
             var bus = services.BuildServiceProvider().GetRequiredService<IEventBus>();
 

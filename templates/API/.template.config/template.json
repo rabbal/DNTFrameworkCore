@@ -1,0 +1,11 @@
+{
+  "author": "GholamReza Rabbal <https://www.dotnettips.info/user/غلامرضا ربال>",
+  "classifications": [".NET Core", "ASP.NET Core", "Web API", "EFCore"],
+  "name": "DNTFrameworkCore API project",
+  "identity": "DNTFrameworkCore.API",
+  "shortName": "dntcore-api",
+  "tags": {
+    "language": "C#"
+  },
+  "sourceName": "ProjectName"
+}
