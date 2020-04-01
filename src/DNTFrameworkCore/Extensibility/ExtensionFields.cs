@@ -3,12 +3,12 @@ using System.Runtime.CompilerServices;
 
 namespace DNTFrameworkCore.Extensibility
 {
-    public static class ExtraFields
+    public static class ExtensionFields
     {
         private static readonly ConditionalWeakTable<object, Dictionary<string, object>> FieldCache =
             new ConditionalWeakTable<object, Dictionary<string, object>>();
 
-        public static void ExtraField<T>(this T instance, string name, object value) where T : class
+        public static void ExtensionField<T>(this T instance, string name, object value) where T : class
         {
             var fields = FieldCache.GetOrCreateValue(instance);
 
@@ -18,12 +18,12 @@ namespace DNTFrameworkCore.Extensibility
                 fields.Add(name, value);
         }
 
-        public static object ExtraField(this object instance, string name)
+        public static object ExtensionField(this object instance, string name)
         {
-            return instance.ExtraField<object>(name);
+            return instance.ExtensionField<object>(name);
         }
 
-        public static TValue ExtraField<TValue>(this object instance, string name)
+        public static TValue ExtensionField<TValue>(this object instance, string name)
         {
             if (FieldCache.TryGetValue(instance, out var fields) && fields.ContainsKey(name))
                 return (TValue) fields[name];

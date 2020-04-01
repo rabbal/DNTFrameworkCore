@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace DNTFrameworkCore.Extensibility
 {
-    public static class ExtraProperties
+    public static class ExtensionProperties
     {
         private static readonly ConditionalWeakTable<object, List<ExtraPropertyInfo>> PropertyCache =
             new ConditionalWeakTable<object, List<ExtraPropertyInfo>>();
@@ -19,12 +19,12 @@ namespace DNTFrameworkCore.Extensibility
             public Attribute[] Attributes { get; set; }
         }
 
-        public static void ExtraProperty<T>(this T instance, string propertyName, object propertyValue) where T : class
+        public static void ExtensionProperty<T>(this T instance, string propertyName, object propertyValue) where T : class
         {
-            instance.ExtraProperty(propertyName, _ => propertyValue, propertyValue.GetType());
+            instance.ExtensionProperty(propertyName, _ => propertyValue, propertyValue.GetType());
         }
 
-        public static void ExtraProperty<T>(this T instance, string propertyName, Func<T, object> propertyValueFunc,
+        public static void ExtensionProperty<T>(this T instance, string propertyName, Func<T, object> propertyValueFunc,
             Type propertyType, Action<T, object> setPropertyValueFunc = null, Attribute[] attributes = null)
             where T : class
         {
@@ -52,7 +52,7 @@ namespace DNTFrameworkCore.Extensibility
             }
         }
 
-        public static TValue ExtraProperty<TValue>(this object instance, string name)
+        public static TValue ExtensionProperty<TValue>(this object instance, string name)
         {
             if (!PropertyCache.TryGetValue(instance, out var properties)) return default;
 
@@ -62,18 +62,18 @@ namespace DNTFrameworkCore.Extensibility
             return (TValue) property.PropertyValueFunc(instance);
         }
 
-        public static object ExtraProperty(this object instance, string name)
+        public static object ExtensionProperty(this object instance, string name)
         {
-            return instance.ExtraProperty<object>(name);
+            return instance.ExtensionProperty<object>(name);
         }
 
-        public static IEnumerable<ExtraPropertyDescriptor<T>> ExtraPropertyList<T>(this object instance) where T : class
+        public static IEnumerable<ExtensionPropertyDescriptor<T>> ExtraPropertyList<T>(this object instance) where T : class
         {
             if (!PropertyCache.TryGetValue(instance, out var properties))
                 throw new KeyNotFoundException($"key: {instance.GetType().Name} was not found in dictionary");
 
             return properties.Select(p =>
-                new ExtraPropertyDescriptor<T>(p.PropertyName, p.PropertyValueFunc, p.SetPropertyValueFunc,
+                new ExtensionPropertyDescriptor<T>(p.PropertyName, p.PropertyValueFunc, p.SetPropertyValueFunc,
                     p.PropertyType,
                     p.Attributes));
         }

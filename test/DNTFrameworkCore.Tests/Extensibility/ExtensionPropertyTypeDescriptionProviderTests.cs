@@ -6,10 +6,10 @@ using Shouldly;
 namespace DNTFrameworkCore.Tests.Extensibility
 {
     [TestFixture]
-    public class ExtraPropertyTypeDescriptionProviderTests
+    public class ExtensionPropertyTypeDescriptionProviderTests
     {
         [Test]
-        public void Should_TypeDescriptor_GetProperties_Returns_ExtraProperties_And_PredefinedProperties()
+        public void Should_TypeDescriptor_GetProperties_Returns_ExtensionProperties_And_PredefinedProperties()
         {
             //Arrange
             var rabbal = new Person {Name = "GholamReza", Family = "Rabbal"};
@@ -17,16 +17,16 @@ namespace DNTFrameworkCore.Tests.Extensibility
             const string propertyValue = "Software Engineer";
 
             //Act
-            rabbal.ExtraProperty(propertyName, propertyValue);
+            rabbal.ExtensionProperty(propertyName, propertyValue);
             var title = TypeDescriptor.GetProperties(rabbal).Find(propertyName, true);
 
             //Assert
-            rabbal.ExtraProperty<string>(propertyName).ShouldBe(propertyValue);
+            rabbal.ExtensionProperty<string>(propertyName).ShouldBe(propertyValue);
             title.ShouldNotBeNull();
             title.GetValue(rabbal).ShouldBe(propertyValue);
         }
         
-        [TypeDescriptionProvider(typeof(ExtraPropertyTypeDescriptionProvider<Person>))]
+        [TypeDescriptionProvider(typeof(ExtensionPropertyTypeDescriptionProvider<Person>))]
         private class Person
         {
             public string Name { get; set; }

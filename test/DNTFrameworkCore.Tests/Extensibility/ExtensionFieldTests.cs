@@ -5,23 +5,23 @@ using Shouldly;
 namespace DNTFrameworkCore.Tests.Extensibility
 {
     [TestFixture]
-    public class ExtraFieldTests
+    public class ExtensionFieldTests
     {
         [Test]
-        public void Should_ExtraField_ExtensionMethod_Add_New_Field()
+        public void Should_ExtensionField_ExtensionMethod_Add_New_Field()
         {
             var instance = new
             {
                 Field = "Value"
             };
 
-            instance.ExtraField("NewField", true);
+            instance.ExtensionField("NewField", true);
 
-            instance.ExtraField<bool>("NewField").ShouldBe(true);
+            instance.ExtensionField<bool>("NewField").ShouldBe(true);
         }
 
         [Test]
-        public void Should_ExtraField_ExtensionMethod_Add_New_Complex_Field()
+        public void Should_ExtensionField_ExtensionMethod_Add_New_Complex_Field()
         {
             var instance = new
             {
@@ -32,9 +32,9 @@ namespace DNTFrameworkCore.Tests.Extensibility
             {
                 Field = true
             };
-            instance.ExtraField("NewField", property);
+            instance.ExtensionField("NewField", property);
 
-            dynamic value = instance.ExtraField("NewField");
+            dynamic value = instance.ExtensionField("NewField");
             Assert.AreEqual(value.Field, true);
         }
     }

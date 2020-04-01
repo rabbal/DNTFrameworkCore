@@ -3,13 +3,13 @@ using System.ComponentModel;
 
 namespace DNTFrameworkCore.Extensibility
 {
-    public sealed class ExtraPropertyDescriptor<T> : PropertyDescriptor where T : class
+    public sealed class ExtensionPropertyDescriptor<T> : PropertyDescriptor where T : class
     {
         private readonly Func<object, object> _propertyValueFunc;
         private readonly Action<object, object> _setPropertyValueFunc;
         private readonly Type _propertyType;
 
-        public ExtraPropertyDescriptor(
+        public ExtensionPropertyDescriptor(
             string propertyName,
             Func<object, object> propertyValueFunc,
             Action<object, object> setPropertyValueFunc,

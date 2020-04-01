@@ -5,23 +5,23 @@ using Shouldly;
 namespace DNTFrameworkCore.Tests.Extensibility
 {
     [TestFixture]
-    public class ExtraPropertyTests
+    public class ExtensionPropertyTests
     {
         [Test]
-        public void Should_ExtraField_ExtensionMethod_Add_New_Field()
+        public void Should_ExtensionField_ExtensionMethod_Add_New_Field()
         {
             var instance = new
             {
                 Field = "Value"
             };
 
-            instance.ExtraProperty("NewField", true);
+            instance.ExtensionProperty("NewField", true);
 
-            instance.ExtraProperty<bool>("NewField").ShouldBe(true);
+            instance.ExtensionProperty<bool>("NewField").ShouldBe(true);
         }
 
         [Test]
-        public void Should_ExtraField_ExtensionMethod_Add_New_Complex_Field()
+        public void Should_ExtensionField_ExtensionMethod_Add_New_Complex_Field()
         {
             var instance = new
             {
@@ -32,23 +32,23 @@ namespace DNTFrameworkCore.Tests.Extensibility
             {
                 Field = true
             };
-            instance.ExtraProperty("NewField", property);
+            instance.ExtensionProperty("NewField", property);
 
-            dynamic value = instance.ExtraProperty("NewField");
+            dynamic value = instance.ExtensionProperty("NewField");
             Assert.AreEqual(value.Field, true);
         }
 
         [Test]
-        public void Should_ExtraField_ExtensionMethod_Add_New_Field_With_Accessors()
+        public void Should_ExtensionField_ExtensionMethod_Add_New_Field_With_Accessors()
         {
             var instance = new Person
             {
                 Name = "Rabbal"
             };
 
-            instance.ExtraProperty("NewField", p => $"__{p.Name}__", typeof(string));
+            instance.ExtensionProperty("NewField", p => $"__{p.Name}__", typeof(string));
 
-            instance.ExtraProperty<string>("NewField").ShouldBe($"__{instance.Name}__");
+            instance.ExtensionProperty<string>("NewField").ShouldBe($"__{instance.Name}__");
         }
 
         private class Person
