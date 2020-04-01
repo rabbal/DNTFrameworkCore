@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.ComponentModel;
 using DNTFrameworkCore.Extensibility;
 using NUnit.Framework;
@@ -26,7 +25,7 @@ namespace DNTFrameworkCore.Tests.Extensibility
             title.ShouldNotBeNull();
             title.GetValue(rabbal).ShouldBe(propertyValue);
         }
-
+        
         [TypeDescriptionProvider(typeof(ExtraPropertyTypeDescriptionProvider<Person>))]
         private class Person
         {

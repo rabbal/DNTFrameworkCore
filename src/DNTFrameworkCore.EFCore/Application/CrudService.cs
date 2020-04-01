@@ -13,6 +13,7 @@ using DNTFrameworkCore.EFCore.Context.Extensions;
 using DNTFrameworkCore.EFCore.Linq;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Exceptions;
+using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.Mapping;
@@ -79,7 +80,7 @@ namespace DNTFrameworkCore.EFCore.Application
 
         public async Task<Maybe<TModel>> FindAsync(TKey id)
         {
-            var models = await FindAsync(BuildEqualityExpressionForId(id));
+            var models = await FindAsync(id.ToEqualityExpression<TEntity, TKey>());
 
             return models.SingleOrDefault();
         }
@@ -245,7 +246,7 @@ namespace DNTFrameworkCore.EFCore.Application
 
         public Task<bool> ExistsAsync(TKey id)
         {
-            return EntitySet.AnyAsync(BuildEqualityExpressionForId(id));
+            return EntitySet.AnyAsync(id.ToEqualityExpression<TEntity, TKey>());
         }
 
         protected abstract IQueryable<TReadModel> BuildReadQuery(TFilteredPagedQueryModel model);
@@ -354,18 +355,6 @@ namespace DNTFrameworkCore.EFCore.Application
                 var entity = entities[i++];
                 MapToEntity(model, entity);
             }
-        }
-
-        private Expression<Func<TEntity, bool>> BuildEqualityExpressionForId(TKey id)
-        {
-            var lambdaParam = Expression.Parameter(typeof(TEntity));
-
-            var lambdaBody = Expression.Equal(
-                Expression.PropertyOrField(lambdaParam, nameof(Entity<TKey>.Id)),
-                Expression.Constant(id, typeof(TKey))
-            );
-
-            return Expression.Lambda<Func<TEntity, bool>>(lambdaBody, lambdaParam);
         }
     }
 }

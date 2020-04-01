@@ -21,6 +21,8 @@ namespace DNTFrameworkCore.ReflectionToolkit
             var memberExpression = expression.Body as MemberExpression ??
                                    ((UnaryExpression) expression.Body).Operand as MemberExpression;
 
+            if (memberExpression == null) return model;
+
             var propertyName = memberExpression.Member.Name.ToLowerInvariant();
             var modelType = model.GetType();
             var field = modelType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
@@ -42,6 +44,8 @@ namespace DNTFrameworkCore.ReflectionToolkit
             var memberExpression = expression.Body as MemberExpression ??
                                    ((UnaryExpression) expression.Body).Operand as MemberExpression;
 
+            if (memberExpression == null) return model;
+
             var propertyName = memberExpression.Member.Name;
             var modelType = model.GetType();
             var property = modelType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
@@ -55,13 +59,29 @@ namespace DNTFrameworkCore.ReflectionToolkit
 
             return model;
         }
-        
+
+
+        public static TModel BindProperty<TModel, TProperty>(this TModel model, string propertyName, object value)
+        {
+            var modelType = model.GetType();
+            var property = modelType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .SingleOrDefault(x => x.Name == propertyName);
+            if (property == null)
+            {
+                return model;
+            }
+
+            property.SetValue(model, value);
+
+            return model;
+        }
+
         /// <summary>
         /// Checks whether <paramref name="givenType"/> implements/inherits <paramref name="genericType"/>.
         /// </summary>
         /// <param name="givenType">Type to check</param>
         /// <param name="genericType">Generic type</param>
-        public static bool IsAssignableToGenericType(Type givenType, Type genericType)     
+        public static bool IsAssignableToGenericType(Type givenType, Type genericType)
         {
             if (givenType.IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
             {
@@ -110,7 +130,8 @@ namespace DNTFrameworkCore.ReflectionToolkit
         /// <typeparam name="TAttribute">Type of the attribute</typeparam>
         /// <param name="memberInfo">MemberInfo</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
-        public static List<TAttribute> GetAttributesOfMemberAndDeclaringType<TAttribute>(MemberInfo memberInfo, bool inherit = true)
+        public static List<TAttribute> GetAttributesOfMemberAndDeclaringType<TAttribute>(MemberInfo memberInfo,
+            bool inherit = true)
             where TAttribute : Attribute
         {
             var attributeList = new List<TAttribute>();
@@ -124,12 +145,15 @@ namespace DNTFrameworkCore.ReflectionToolkit
             //Add attributes on the class
             if (memberInfo.DeclaringType != null && memberInfo.DeclaringType.IsDefined(typeof(TAttribute), inherit))
             {
-                attributeList.AddRange(memberInfo.DeclaringType.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
+                attributeList.AddRange(memberInfo.DeclaringType.GetCustomAttributes(typeof(TAttribute), inherit)
+                    .Cast<TAttribute>());
             }
 
             return attributeList;
         }
-        public static List<TAttribute> GetAttributesOfMemberAndType<TAttribute>(MemberInfo memberInfo, Type type, bool inherit = true)
+
+        public static List<TAttribute> GetAttributesOfMemberAndType<TAttribute>(MemberInfo memberInfo, Type type,
+            bool inherit = true)
             where TAttribute : Attribute
         {
             var attributeList = new List<TAttribute>();
@@ -141,11 +165,13 @@ namespace DNTFrameworkCore.ReflectionToolkit
 
             if (type.GetTypeInfo().IsDefined(typeof(TAttribute), inherit))
             {
-                attributeList.AddRange(type.GetTypeInfo().GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
+                attributeList.AddRange(type.GetTypeInfo().GetCustomAttributes(typeof(TAttribute), inherit)
+                    .Cast<TAttribute>());
             }
 
             return attributeList;
         }
+
         /// <summary>
         /// Gets a list of attributes defined for a class member and type including inherited attributes.
         /// </summary>
@@ -159,6 +185,7 @@ namespace DNTFrameworkCore.ReflectionToolkit
             attributeList.AddRange(type.GetTypeInfo().GetCustomAttributes(inherit));
             return attributeList;
         }
+
         /// <summary>
         /// Tries to gets an of attribute defined for a class member and it's declaring type including inherited attributes.
         /// Returns default value if it's not declared at all.
@@ -167,7 +194,8 @@ namespace DNTFrameworkCore.ReflectionToolkit
         /// <param name="memberInfo">MemberInfo</param>
         /// <param name="defaultValue">Default value (null as default)</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
-        public static TAttribute GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<TAttribute>(MemberInfo memberInfo, TAttribute defaultValue = default, bool inherit = true)
+        public static TAttribute GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<TAttribute>(MemberInfo memberInfo,
+            TAttribute defaultValue = default, bool inherit = true)
             where TAttribute : Attribute
         {
             //Get attribute on the member
@@ -179,7 +207,8 @@ namespace DNTFrameworkCore.ReflectionToolkit
             //Get attribute from class
             if (memberInfo.DeclaringType != null && memberInfo.DeclaringType.IsDefined(typeof(TAttribute), inherit))
             {
-                return memberInfo.DeclaringType.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>().First();
+                return memberInfo.DeclaringType.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>()
+                    .First();
             }
 
             return defaultValue;
@@ -193,7 +222,8 @@ namespace DNTFrameworkCore.ReflectionToolkit
         /// <param name="memberInfo">MemberInfo</param>
         /// <param name="defaultValue">Default value (null as default)</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
-        public static TAttribute GetSingleAttributeOrDefault<TAttribute>(MemberInfo memberInfo, TAttribute defaultValue = default(TAttribute), bool inherit = true)
+        public static TAttribute GetSingleAttributeOrDefault<TAttribute>(MemberInfo memberInfo,
+            TAttribute defaultValue = default(TAttribute), bool inherit = true)
             where TAttribute : Attribute
         {
             //Get attribute on the member
@@ -260,7 +290,7 @@ namespace DNTFrameworkCore.ReflectionToolkit
                 return;
             }
 
-            for (int i = 0; i < properties.Length - 1; i++)
+            for (var i = 0; i < properties.Length - 1; i++)
             {
                 property = currentType.GetProperty(properties[i]);
                 obj = property.GetValue(obj, null);

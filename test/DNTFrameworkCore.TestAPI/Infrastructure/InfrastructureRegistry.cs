@@ -1,11 +1,10 @@
 using System;
-using CacheManager.Core;
 using DNTFrameworkCore.EFCore;
 using DNTFrameworkCore.EFCore.SqlServer;
 using DNTFrameworkCore.Numbering;
 using DNTFrameworkCore.TestAPI.Domain.Tasks;
 using DNTFrameworkCore.TestAPI.Infrastructure.Context;
-using EFSecondLevelCache.Core;
+using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,6 +42,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure
 
             services.AddDbContext<ProjectDbContext>(builder =>
             {
+                builder.AddInterceptors(new SecondLevelCacheInterceptor());
                 builder.EnableSensitiveDataLogging();
                 builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
                         optionsBuilder =>
@@ -60,16 +60,8 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure
                 //.UseLoggerFactory(BuildLoggerFactory());
             });
 
-            services.AddEFSecondLevelCache();
-
-            // Add an in-memory cache service provider
-            services.AddSingleton(typeof(ICacheManager<>), typeof(BaseCacheManager<>));
-            services.AddSingleton(typeof(ICacheManagerConfiguration),
-                new CacheManager.Core.ConfigurationBuilder()
-                    .WithJsonSerializer()
-                    .WithMicrosoftMemoryCacheHandle("MemoryCache1")
-                    .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromMinutes(10))
-                    .Build());
+            services.AddEFSecondLevelCache(options =>
+                options.UseMemoryCacheProvider(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(10)));
         }
     }
 }

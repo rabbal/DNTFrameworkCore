@@ -1,11 +1,12 @@
-﻿using DNTFrameworkCore.TestWebApp.Application;
+﻿using DNTFrameworkCore.FluentValidation;
+using DNTFrameworkCore.TestWebApp.Application;
 using DNTFrameworkCore.TestWebApp.Infrastructure;
 using DNTFrameworkCore.TestWebApp.Resources;
-using DNTFrameworkCore.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace DNTFrameworkCore.TestWebApp
 {
@@ -21,10 +22,10 @@ namespace DNTFrameworkCore.TestWebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDNTFrameworkCore()
-                .AddModelValidation()
-                .AddFluentModelValidation();
-            services.AddWebApp();
+            services.AddFramework()
+                .WithModelValidation()
+                .WithFluentValidation();
+            
             services.AddInfrastructure(Configuration);
             services.AddApplication(Configuration);
             services.AddResources();
@@ -32,7 +33,7 @@ namespace DNTFrameworkCore.TestWebApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

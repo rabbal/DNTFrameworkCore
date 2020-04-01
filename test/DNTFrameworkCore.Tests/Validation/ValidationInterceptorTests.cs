@@ -21,6 +21,8 @@ namespace DNTFrameworkCore.Tests.Validation
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
+            services.AddLogging();
+            services.AddOptions();
             services.AddFramework()
                 .WithModelValidation();
 
@@ -29,7 +31,7 @@ namespace DNTFrameworkCore.Tests.Validation
             services.Decorate<IPartyService>((target, provider) =>
                 (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
                     target,
-                    provider.GetService<ValidationInterceptor>()));
+                    provider.GetRequiredService<ValidationInterceptor>()));
 
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
 
@@ -44,6 +46,8 @@ namespace DNTFrameworkCore.Tests.Validation
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
+            services.AddLogging();
+            services.AddOptions();
             services.AddFramework()
                 .WithModelValidation();
 
@@ -52,7 +56,7 @@ namespace DNTFrameworkCore.Tests.Validation
             services.Decorate<IPartyService>((target, provider) =>
                 (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
                     target,
-                    provider.GetService<ValidationInterceptor>()));
+                    provider.GetRequiredService<ValidationInterceptor>()));
 
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
 
@@ -67,6 +71,8 @@ namespace DNTFrameworkCore.Tests.Validation
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
+            services.AddLogging();
+            services.AddOptions();
             services.AddFramework()
                 .WithModelValidation();
 
@@ -75,7 +81,7 @@ namespace DNTFrameworkCore.Tests.Validation
             services.Decorate<IPartyService>((target, provider) =>
                 (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
                     target,
-                    provider.GetService<ValidationInterceptor>()));
+                    provider.GetRequiredService<ValidationInterceptor>()));
 
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
 
@@ -90,6 +96,8 @@ namespace DNTFrameworkCore.Tests.Validation
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
+            services.AddLogging();
+            services.AddOptions();
             services.AddFramework()
                 .WithModelValidation();
 
@@ -98,7 +106,7 @@ namespace DNTFrameworkCore.Tests.Validation
             services.Decorate<IPartyService>((target, provider) =>
                 (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
                     target,
-                    provider.GetService<ValidationInterceptor>()));
+                    provider.GetRequiredService<ValidationInterceptor>()));
 
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
 

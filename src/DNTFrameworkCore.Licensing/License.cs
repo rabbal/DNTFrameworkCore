@@ -9,7 +9,6 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.Functional;
-using DNTFrameworkCore.Timing;
 
 namespace DNTFrameworkCore.Licensing
 {
@@ -255,15 +254,15 @@ namespace DNTFrameworkCore.Licensing
             }
         }
 
-        public void Sign(string licensePrivateKey)
+        public void Sign(string licenseKey)
         {
-            if (string.IsNullOrWhiteSpace(licensePrivateKey))
-                throw new ArgumentNullException(nameof(licensePrivateKey));
+            if (string.IsNullOrWhiteSpace(licenseKey))
+                throw new ArgumentNullException(nameof(licenseKey));
 
             if (Signed) throw new InvalidOperationException("This license already is signed.");
 
             _document = this.ToXmlDocument();
-            _document.SignXml(licensePrivateKey);
+            _document.SignXml(licenseKey);
             Signed = true;
         }
 
