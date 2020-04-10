@@ -29,15 +29,28 @@ public class BlogService : CrudService<Blog, int, BlogModel>, IBlogService
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
-    protected override IQueryable<BlogModel> BuildReadQuery(FilteredPagedQueryModel model)
+    public override Task<IPagedResult<BlogModel>> ReadPagedListAsync(FilteredPagedRequestModel model,
+        CancellationToken cancellationToken = default)
     {
         return EntitySet.AsNoTracking()
-            .Select(b => new BlogModel { Id = b.Id, Url = b.Url, Title = b.Title });
+            .Select(b => new BlogModel
+            {
+                Id = b.Id,
+                Version = b.Version,
+                Url = b.Url,
+                Title = b.Title
+            }).ToPagedListAsync(model, cancellationToken);
     }
 
-    protected override void MapToEntity(BlogModel model, Blog blog) => _mapper.Map(model, blog);
+    protected override void MapToEntity(BlogModel model, Blog blog)
+    {
+        _mapper.Map(model, blog);
+    }
 
-    protected override BlogModel MapToModel(Blog blog) => _mapper.Map<BlogModel>(blog);
+    protected override BlogModel MapToModel(Blog blog)
+    {
+        return _mapper.Map<BlogModel>(blog);
+    }
 }
  ``` 
  
@@ -105,16 +118,16 @@ For more info about templates you can watch [DNTFrameworkCoreTemplate repository
 
 ## Features
 
-* Input Validation and Business Validation
+* Application Input Validation
 * Transaction Management
 * Eventing
-* Aggregate Update (Master-Detail)
+* EntityGraph Tracking (Master-Detail)
 * Numbering
 * Functional Programming Error Handling
 * Permission Authorization
 * CrudService
-* CrudController
-* DbLogger Provider
+* CrudController (API and MVC)
+* DbLogger Provider based on EFCore
 * ProtectionKey EFCore Store
 * Hooks
 * SoftDelete
@@ -123,6 +136,7 @@ For more info about templates you can watch [DNTFrameworkCoreTemplate repository
 * FluentValidation Integration
 * BackgroundTaskQueue
 * RowIntegrity
+* StartupTask mechanism
 * CQRS (coming soon)
 * EntityHistory (coming soon)
 
@@ -171,13 +185,6 @@ public class ProjectDbContext : DbContextCore
         modelBuilder.NormalizeDecimalPrecision();
             
         base.OnModelCreating(modelBuilder);
-    }
-
-    protected override void OnSaveCompleted(EntityChangeContext context)
-    {
-        //if you are using https://github.com/VahidN/EFSecondLevelCache.Core as SecondLevelCache library
-        this.GetService<IEFCacheServiceProvider>()
-            .InvalidateCacheDependencies(context.EntityNames.ToArray());
     }
 }
 ```
@@ -245,7 +252,8 @@ public class TaskService : CrudService<Task, int, TaskReadModel, TaskModel, Task
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper);
     }
 
-    protected override IQueryable<TaskReadModel> BuildReadQuery(TaskFilteredPagedQueryModel model)
+    public override Task<IPagedResult<TaskReadModel>> ReadPagedListAsync(TaskFilteredPagedRequestModel model,
+        CancellationToken cancellationToken = default)
     {
         return EntitySet.AsNoTracking()
             .WhereIf(model.State.HasValue, t => t.State == model.State)
@@ -255,7 +263,7 @@ public class TaskService : CrudService<Task, int, TaskReadModel, TaskModel, Task
                 Title = t.Title,
                 State = t.State,
                 Number = t.Number
-            });
+            }).ToPagedListAsync(model, cancellationToken);
     }
 
     protected override void MapToEntity(TaskModel model, Task task)

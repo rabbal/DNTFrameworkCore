@@ -22,8 +22,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
     }
 
     public class TaskService : EFCore.Application.CrudService<Task, int, TaskReadModel, TaskModel,
-            TaskFilteredPagedRequestModel>,
-        ITaskService
+        TaskFilteredPagedRequestModel>, ITaskService
     {
         private readonly IMapper _mapper;
 
