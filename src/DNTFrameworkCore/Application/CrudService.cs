@@ -18,7 +18,7 @@ using DNTFrameworkCore.Validation;
 
 namespace DNTFrameworkCore.Application
 {
-    public abstract class CrudService<TEntity, TKey, TReadModel, TModel,
+    public abstract class InternalCrudService<TEntity, TKey, TReadModel, TModel,
         TFilteredPagedRequestModel> : ApplicationService,
         ICrudService<TKey, TReadModel, TModel, TFilteredPagedRequestModel>
         where TEntity : Entity<TKey>, new()
@@ -29,7 +29,7 @@ namespace DNTFrameworkCore.Application
     {
         protected readonly IEventBus EventBus;
 
-        protected CrudService(IEventBus bus)
+        protected InternalCrudService(IEventBus bus)
         {
             EventBus = bus ?? throw new ArgumentNullException(nameof(bus));
         }

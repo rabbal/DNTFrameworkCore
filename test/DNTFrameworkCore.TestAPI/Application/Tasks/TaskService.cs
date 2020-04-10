@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DNTFrameworkCore.Application;
+using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Linq;
 using DNTFrameworkCore.Eventing;
@@ -21,7 +22,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
         bool TamperedTaskExists();
     }
 
-    public class TaskService : EFCore.Application.CrudService<Task, int, TaskReadModel, TaskModel,
+    public class TaskService : CrudService<Task, int, TaskReadModel, TaskModel,
         TaskFilteredPagedRequestModel>, ITaskService
     {
         private readonly IMapper _mapper;

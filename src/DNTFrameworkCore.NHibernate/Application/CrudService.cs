@@ -41,7 +41,7 @@ namespace DNTFrameworkCore.NHibernate.Application
     }
 
     public abstract class CrudService<TEntity, TKey, TReadModel, TModel,
-        TFilteredPagedRequestModel> : DNTFrameworkCore.Application.CrudService<TEntity, TKey, TReadModel,
+        TFilteredPagedRequestModel> : InternalCrudService<TEntity, TKey, TReadModel,
         TModel, TFilteredPagedRequestModel>
         where TEntity : Entity<TKey>, new()
         where TModel : MasterModel<TKey>
