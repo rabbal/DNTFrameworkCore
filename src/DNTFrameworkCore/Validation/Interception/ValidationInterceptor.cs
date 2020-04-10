@@ -39,6 +39,12 @@ namespace DNTFrameworkCore.Validation.Interception
                 method = invocation.GetConcreteMethod();
             }
 
+            if (method.ValidationIgnored())
+            {
+                invocation.Proceed();
+                return;
+            }
+                
             _logger.LogInformation(
                 $"Starting Validation: {invocation.TargetType?.FullName}.{method.Name}");
             

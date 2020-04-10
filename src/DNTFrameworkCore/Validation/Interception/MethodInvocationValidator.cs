@@ -9,6 +9,7 @@ using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.ReflectionToolkit;
 using Microsoft.Extensions.Options;
+using DNTFrameworkCore.Extensions;
 
 namespace DNTFrameworkCore.Validation.Interception
 {
@@ -38,22 +39,9 @@ namespace DNTFrameworkCore.Validation.Interception
             Guard.ArgumentNotNull(method, nameof(method));
             Guard.ArgumentNotNull(parameterValues, nameof(parameterValues));
 
+            if (method.ValidationIgnored()) return Enumerable.Empty<ValidationFailure>();
+
             var parameters = method.GetParameters();
-
-            if (parameters.IsNullOrEmpty())
-            {
-                return Enumerable.Empty<ValidationFailure>();
-            }
-
-            if (!method.IsPublic)
-            {
-                return Enumerable.Empty<ValidationFailure>();
-            }
-
-            if (IsValidationSkipped(method))
-            {
-                return Enumerable.Empty<ValidationFailure>();
-            }
 
             if (parameters.Length != parameterValues.Length)
             {
@@ -65,23 +53,7 @@ namespace DNTFrameworkCore.Validation.Interception
                 ValidateMethodParameter(parameters[i], parameterValues[i]);
             }
 
-            if (_failures.Any())
-            {
-                return _failures;
-            }
-
-            return Enumerable.Empty<ValidationFailure>();
-        }
-
-        private bool IsValidationSkipped(MethodInfo method)
-        {
-            if (method.IsDefined(typeof(EnableValidationAttribute), true))
-            {
-                return false;
-            }
-
-            return ReflectionHelper
-                       .GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<SkipValidationAttribute>(method) != null;
+            return _failures;
         }
 
         /// <summary>

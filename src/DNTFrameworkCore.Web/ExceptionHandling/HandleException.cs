@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using DNTFrameworkCore.Exceptions;
 using DNTFrameworkCore.Web.Extensions;
 using DNTFrameworkCore.Web.Results;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace DNTFrameworkCore.Web.Filters
+namespace DNTFrameworkCore.Web.ExceptionHandling
 {
     public static class MvcOptionsExtensions
     {
@@ -69,24 +71,28 @@ namespace DNTFrameworkCore.Web.Filters
             {
                 _logger.LogError(new EventId(context.Exception.HResult), context.Exception, context.Exception.Message);
 
+                var traceId = Activity.Current?.Id ?? context.HttpContext.TraceIdentifier;
+                
                 switch (context.Exception)
                 {
                     case DbException _:
                         context.Result = new InternalServerErrorObjectResult(new
                         {
-                            Message = _options.Value.DbException
+                            Message = _options.Value.DbException,
+                            TraceId = traceId
                         });
                         break;
                     default:
                         context.Result = new InternalServerErrorObjectResult(new
                         {
                             Message = _options.Value.InternalServerIssue,
-                            DeveloperMessage = context.Exception.ToStringFormat()
+                            DeveloperMessage = context.Exception.ToStringFormat(),
+                            TraceId = traceId
                         });
                         break;
                 }
 
-                context.HttpContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                context.HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
             }
 
             context.ExceptionHandled = true;

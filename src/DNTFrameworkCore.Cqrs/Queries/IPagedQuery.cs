@@ -1,12 +1,9 @@
-﻿using DNTFrameworkCore.Application.Models;
+﻿using DNTFrameworkCore.Querying;
 
 namespace DNTFrameworkCore.Cqrs.Queries
 {
-    public interface IPagedQuery<out TReadModel> : IQuery<IPagedQueryResult<TReadModel>>
+    public interface IPagedQuery<out TReadModel> : IQuery<IPagedResult<TReadModel>>, IPagedRequest
     {
-        int Page { get; set; }
-        int PageSize { get; set; }
-        string SortExpression { get; set; }
     }
 
     public class PagedQuery<TReadModel> : IPagedQuery<TReadModel>

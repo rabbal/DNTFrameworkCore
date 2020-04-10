@@ -1,7 +1,6 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using DNTFrameworkCore.Application.Services;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Configuration;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Functional;

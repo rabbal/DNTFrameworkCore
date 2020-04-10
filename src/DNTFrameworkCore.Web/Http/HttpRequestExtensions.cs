@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
-using Newtonsoft.Json;
 
 namespace DNTFrameworkCore.Web.Http
 {
@@ -184,7 +184,7 @@ namespace DNTFrameworkCore.Web.Http
             {
                 var body = await bodyReader.ReadToEndAsync();
                 request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
-                return JsonConvert.DeserializeObject<T>(body);
+                return JsonSerializer.Deserialize<T>(body);
             }
         }
 
@@ -214,7 +214,7 @@ namespace DNTFrameworkCore.Web.Http
             {
                 var body = await bodyReader.ReadToEndAsync();
                 request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
-                return JsonConvert.DeserializeObject<Dictionary<string, string>>(body);
+                return JsonSerializer.Deserialize<Dictionary<string, string>>(body);
             }
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Application.Events;
 using DNTFrameworkCore.Eventing;
@@ -17,9 +18,10 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks.Handlers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public Task<Result> Handle(EditingBusinessEvent<TaskModel, int> @event)
+        public Task<Result> Handle(EditingBusinessEvent<TaskModel, int> businessEvent,
+            CancellationToken cancellationToken)
         {
-            foreach (var model in @event.Models)
+            foreach (var model in businessEvent.Models)
             {
                 _logger.LogInformation($"Title changed from: {model.OriginalValue.Title} to: {model.NewValue.Title}");
             }

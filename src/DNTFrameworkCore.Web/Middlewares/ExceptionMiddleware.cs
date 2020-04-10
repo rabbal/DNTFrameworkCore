@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
@@ -6,12 +7,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 
 namespace DNTFrameworkCore.Web.Middlewares
 {
-    public class ExceptionMiddleware
+    internal class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionMiddleware> _logger;
@@ -34,20 +33,7 @@ namespace DNTFrameworkCore.Web.Middlewares
         {
             var feature = context.Features[typeof(IExceptionHandlerFeature)] as IExceptionHandlerFeature;
 
-            if (feature?.Error is SecurityTokenExpiredException tokenException)
-            {
-                var message = $"authentication token expired: {tokenException.Expires}";
-
-                _logger.LogInformation($"TokenExpiredException: {message}");
-
-                context.Response.StatusCode = 401;
-                context.Response.ContentType = "application/json";
-                await context.Response.WriteAsync(JsonConvert.SerializeObject(new
-                {
-                    Message = message
-                }));
-            }
-            else if (feature?.Error != null)
+            if (feature?.Error != null)
             {
                 _logger.LogError(feature.Error, $"InternalServerIssue: {feature.Error.Message}");
 
@@ -56,7 +42,7 @@ namespace DNTFrameworkCore.Web.Middlewares
 
                 if (_env.IsDevelopment())
                 {
-                    await context.Response.WriteAsync(JsonConvert.SerializeObject(new
+                    await context.Response.WriteAsync(JsonSerializer.Serialize(new
                     {
                         Message = _options.Value.InternalServerIssue,
                         DeveloperMessage = feature.Error.ToStringFormat()
@@ -64,7 +50,7 @@ namespace DNTFrameworkCore.Web.Middlewares
                 }
                 else
                 {
-                    await context.Response.WriteAsync(JsonConvert.SerializeObject(new
+                    await context.Response.WriteAsync(JsonSerializer.Serialize(new
                     {
                         Message = _options.Value.InternalServerIssue
                     }));

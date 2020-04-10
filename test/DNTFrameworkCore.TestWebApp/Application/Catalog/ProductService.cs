@@ -1,11 +1,15 @@
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Application.Models;
-using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
+using DNTFrameworkCore.EFCore.Linq;
 using DNTFrameworkCore.Eventing;
+using DNTFrameworkCore.Querying;
 using DNTFrameworkCore.TestWebApp.Application.Catalog.Models;
 using DNTFrameworkCore.TestWebApp.Domain.Catalog;
 using Microsoft.EntityFrameworkCore;
@@ -22,13 +26,14 @@ namespace DNTFrameworkCore.TestWebApp.Application.Catalog
 
         public ProductService(
             IUnitOfWork uow,
-             IEventBus bus,
-             IMapper mapper) : base(uow, bus)
+            IEventBus bus,
+            IMapper mapper) : base(uow, bus)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        protected override IQueryable<ProductModel> BuildReadQuery(FilteredPagedQueryModel model)
+        public override Task<IPagedResult<ProductModel>> ReadPagedListAsync(FilteredPagedRequestModel model,
+            CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking().Select(p => new ProductModel
             {
@@ -37,7 +42,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Catalog
                 Title = p.Title,
                 Price = p.Price,
                 Number = p.Number
-            });
+            }).ToPagedListAsync(model, cancellationToken);
         }
 
         protected override void MapToEntity(ProductModel model, Product product)

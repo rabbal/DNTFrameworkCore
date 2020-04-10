@@ -1,14 +1,13 @@
-using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Querying;
 
 namespace DNTFrameworkCore.Cqrs.Queries
 {
-    public interface IFilteredPagedQuery<out TReadModel> : IPagedQuery<TReadModel>
+    public interface IFilteredPagedQuery<out TReadModel> : IPagedQuery<TReadModel>, IFilteredPagedRequest
     {
-        Filter Filter { get; set; }
     }
 
     public class FilteredPagedQuery<TReadModel> : PagedQuery<TReadModel>, IFilteredPagedQuery<TReadModel>
     {
-        public Filter Filter { get; set; }
+        public FilteringCriteria Filtering { get; set; }
     }
 }

@@ -1,45 +1,46 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using DNTFrameworkCore.Application.Models;
-using DNTFrameworkCore.Linq;
+using DNTFrameworkCore.Querying;
 using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.EFCore.Linq
 {
     public static class QueryableExtensions
     {
-        public static Task<PagedQueryResult<T>> ToPagedQueryResultAsync<T>(this IQueryable<T> query,
-            IPagedQueryModel model)
+        public static Task<IPagedResult<T>> ToPagedListAsync<T>(this IQueryable<T> query, IPagedRequest request,
+            CancellationToken cancellationToken = default)
         {
-            var filter = model is IFilteredPagedQueryModel filteredQuery ? filteredQuery.Filter : null;
+            var filter = request is IFilteredPagedRequest filteredQuery ? filteredQuery.Filtering : null;
 
-            return query.ToPagedQueryResultAsync(model.Page, model.PageSize, model.SortExpression, filter);
+            return query.ToPagedListAsync(request.Page, request.PageSize, request.SortExpression, filter,
+                cancellationToken);
         }
 
-        public static Task<PagedQueryResult<T>> ToPagedQueryResultAsync<T>(this IQueryable<T> query,
+        public static Task<IPagedResult<T>> ToPagedListAsync<T>(this IQueryable<T> query,
             int page,
             int pageSize,
-            string sortExpression)
+            string sortExpression, CancellationToken cancellationToken = default)
         {
-            return query.ToPagedQueryResultAsync(page, pageSize, sortExpression, null);
+            return query.ToPagedListAsync(page, pageSize, sortExpression, null, cancellationToken);
         }
 
-        public static async Task<PagedQueryResult<T>> ToPagedQueryResultAsync<T>(this IQueryable<T> query,
+        public static async Task<IPagedResult<T>> ToPagedListAsync<T>(this IQueryable<T> query,
             int page,
             int pageSize,
             string sortExpression,
-            Filter filter)
+            FilteringCriteria filtering, CancellationToken cancellationToken = default)
         {
-            query = query.ApplyFiltering(filter);
+            query = query.ApplyFiltering(filtering);
 
-            var totalCount = await query.LongCountAsync();
+            var totalCount = await query.LongCountAsync(cancellationToken);
 
             query = query.ApplySorting(sortExpression);
             query = query.ApplyPaging(page, pageSize);
 
-            return new PagedQueryResult<T>
+            return new PagedResult<T>
             {
-                Items = await query.ToListAsync(),
+                ItemList = await query.ToListAsync(cancellationToken),
                 TotalCount = totalCount
             };
         }

@@ -3,6 +3,7 @@ using DNTFrameworkCore.Caching;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.Eventing;
+using DNTFrameworkCore.Tasks;
 using DNTFrameworkCore.Threading.BackgroundTasks;
 using DNTFrameworkCore.Timing;
 using DNTFrameworkCore.Validation;
@@ -23,6 +24,12 @@ namespace DNTFrameworkCore
             services.AddTransient(typeof(Lazy<>), typeof(LazyFactory<>));
 
             return new FrameworkBuilder(services);
+        }
+
+        public static IServiceCollection AddStartupTask<TStartupTask>(this IServiceCollection services)
+            where TStartupTask : class, IStartupTask
+        {
+            return services.AddScoped<IStartupTask, TStartupTask>();
         }
     }
 
@@ -72,6 +79,15 @@ namespace DNTFrameworkCore
         public FrameworkBuilder WithRandomNumber()
         {
             Services.AddSingleton<IRandomNumber, RandomNumber>();
+            return this;
+        }
+
+        /// <summary>
+        /// Register the ITaskEngine
+        /// </summary>
+        public FrameworkBuilder WithTaskEngine()
+        {
+            Services.AddScoped<ITaskEngine, TaskEngine>();
             return this;
         }
 

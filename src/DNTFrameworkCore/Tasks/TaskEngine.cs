@@ -1,70 +1,58 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Dependency;
-using DNTFrameworkCore.GuardToolkit;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.Tasks
 {
-    /// <summary>
-    /// Defines the required contract for implementing a task executor.
-    /// </summary>
-    public interface ITaskEngine : ISingletonDependency
+    public interface ITaskEngine : IScopedDependency
     {
-        /// <summary>
-        /// Executes any startup tasks.
-        /// </summary>
-        /// <param name="cancellationToken">[Optional] The cancellation token.</param>
-        /// <returns>The task instance.</returns>
-        Task RunShutdownTasksAsync(CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Executes any shutdown tasks.
-        /// </summary>
-        /// <param name="cancellationToken">[Optional] The cancellation token.</param>
-        /// <returns>The task instance.</returns>
-        Task RunStartupTasksAsync(CancellationToken cancellationToken = default);
+        Task RunOnStartup(CancellationToken cancellationToken = default);
+        Task RunOnEnd(CancellationToken cancellationToken = default);
+        Task RunOnException(Exception exception, CancellationToken cancellationToken = default);
+        Task RunOnBeginRequest(CancellationToken cancellationToken = default);
+        Task RunOnEndRequest(CancellationToken cancellationToken = default);
     }
 
-    /// <summary>
-    /// Executes lifetime tasks.
-    /// </summary>
     internal class TaskEngine : ITaskEngine
     {
-        private readonly IServiceProvider _provider;
+        private readonly IEnumerable<ITask> _tasks;
 
-        public TaskEngine(IServiceProvider provider)
+        public TaskEngine(IEnumerable<ITask> tasks)
         {
-            _provider = Ensure.IsNotNull(provider, nameof(provider));
+            _tasks = tasks.OrderBy(task => task.Order);
         }
 
-        /// <inheritdoc />
-        public async Task RunShutdownTasksAsync(CancellationToken cancellationToken = default)
+        public Task RunOnStartup(CancellationToken cancellationToken = default)
         {
-            using (var scope = _provider.CreateScope())
-            {
-                var tasks = scope.ServiceProvider.GetServices<IShutdownTask>();
-
-                foreach (var task in tasks)
-                {
-                    await task.RunAsync(cancellationToken);
-                }
-            }
+            var tasks = _tasks.OfType<IStartupTask>().Select(task => task.Run(cancellationToken));
+            return Task.WhenAll(tasks);
         }
 
-        /// <inheritdoc />
-        public async Task RunStartupTasksAsync(CancellationToken cancellationToken = default)
+        public Task RunOnEnd(CancellationToken cancellationToken = default)
         {
-            using (var scope = _provider.CreateScope())
-            {
-                var tasks = scope.ServiceProvider.GetServices<IStartupTask>();
+            var tasks = _tasks.OfType<IEndTask>().Select(task => task.Run(cancellationToken));
+            return Task.WhenAll(tasks);
+        }
 
-                foreach (var task in tasks)
-                {
-                    await task.RunAsync(cancellationToken);
-                }
-            }
+        public Task RunOnException(Exception exception, CancellationToken cancellationToken = default)
+        {
+            var tasks = _tasks.OfType<IExceptionTask>().Select(task => task.Run(exception, cancellationToken));
+            return Task.WhenAll(tasks);
+        }
+
+        public Task RunOnBeginRequest(CancellationToken cancellationToken = default)
+        {
+            var tasks = _tasks.OfType<IBeginRequestTask>().Select(task => task.Run(cancellationToken));
+            return Task.WhenAll(tasks);
+        }
+
+        public Task RunOnEndRequest(CancellationToken cancellationToken = default)
+        {
+            var tasks = _tasks.OfType<IEndRequestTask>().Select(task => task.Run(cancellationToken));
+            return Task.WhenAll(tasks);
         }
     }
 }

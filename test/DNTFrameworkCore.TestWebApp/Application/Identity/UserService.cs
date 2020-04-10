@@ -1,12 +1,16 @@
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Application.Models;
-using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
+using DNTFrameworkCore.EFCore.Linq;
 using DNTFrameworkCore.Eventing;
+using DNTFrameworkCore.Querying;
 using DNTFrameworkCore.TestWebApp.Application.Identity.Models;
 using DNTFrameworkCore.TestWebApp.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -32,14 +36,11 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
             _password = password ?? throw new ArgumentNullException(nameof(password));
         }
 
-        protected override IQueryable<User> BuildFindQuery()
-        {
-            return base.BuildFindQuery()
-                .Include(u => u.Roles)
-                .Include(u => u.Permissions);
-        }
+        protected override IQueryable<User> FindEntityQueryable => base.FindEntityQueryable.Include(u => u.Roles)
+            .Include(u => u.Permissions);
 
-        protected override IQueryable<UserReadModel> BuildReadQuery(FilteredPagedQueryModel model)
+        public override Task<IPagedResult<UserReadModel>> ReadPagedListAsync(FilteredPagedRequestModel model,
+            CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking()
                 .Select(u => new UserReadModel
@@ -49,7 +50,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
                     UserName = u.UserName,
                     DisplayName = u.DisplayName,
                     LastLoggedInDateTime = u.LastLoggedInDateTime
-                });
+                }).ToPagedListAsync(model, cancellationToken);
         }
 
         protected override void MapToEntity(UserModel model, User user)

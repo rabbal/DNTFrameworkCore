@@ -2,23 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
-using DNTFrameworkCore.Application.Events;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Application.Models;
-using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Context.Extensions;
 using DNTFrameworkCore.EFCore.Linq;
 using DNTFrameworkCore.Eventing;
-using DNTFrameworkCore.Exceptions;
-using DNTFrameworkCore.Extensions;
-using DNTFrameworkCore.Functional;
-using DNTFrameworkCore.GuardToolkit;
-using DNTFrameworkCore.Mapping;
-using DNTFrameworkCore.Transaction;
-using DNTFrameworkCore.Validation;
+using DNTFrameworkCore.Querying;
 using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.EFCore.Application
@@ -36,7 +29,7 @@ namespace DNTFrameworkCore.EFCore.Application
     }
 
     public abstract class CrudService<TEntity, TKey, TReadModel, TModel> :
-        CrudService<TEntity, TKey, TReadModel, TModel, FilteredPagedQueryModel>,
+        CrudService<TEntity, TKey, TReadModel, TModel, FilteredPagedRequestModel>,
         ICrudService<TKey, TReadModel, TModel>
         where TEntity : Entity<TKey>, new()
         where TModel : MasterModel<TKey>
@@ -49,312 +42,58 @@ namespace DNTFrameworkCore.EFCore.Application
     }
 
     public abstract class CrudService<TEntity, TKey, TReadModel, TModel,
-        TFilteredPagedQueryModel> : ApplicationService,
-        ICrudService<TKey, TReadModel, TModel, TFilteredPagedQueryModel>
+        TFilteredPagedRequestModel> : DNTFrameworkCore.Application.CrudService<TEntity, TKey, TReadModel,
+        TModel, TFilteredPagedRequestModel>
         where TEntity : Entity<TKey>, new()
         where TModel : MasterModel<TKey>
         where TReadModel : ReadModel<TKey>
-        where TFilteredPagedQueryModel : class, IFilteredPagedQueryModel
+        where TFilteredPagedRequestModel : class, IFilteredPagedRequest
         where TKey : IEquatable<TKey>
     {
         protected readonly DbSet<TEntity> EntitySet;
-        protected readonly IEventBus EventBus;
         protected readonly IUnitOfWork UnitOfWork;
 
-        protected CrudService(IUnitOfWork uow, IEventBus bus)
+        protected CrudService(IUnitOfWork uow, IEventBus bus) : base(bus)
         {
             UnitOfWork = uow ?? throw new ArgumentNullException(nameof(uow));
-            EventBus = bus ?? throw new ArgumentNullException(nameof(bus));
             EntitySet = UnitOfWork.Set<TEntity>();
         }
 
-        [SkipValidation]
-        public async Task<IPagedQueryResult<TReadModel>> ReadPagedListAsync(TFilteredPagedQueryModel model)
+        protected virtual IQueryable<TEntity> FindEntityQueryable => EntitySet.AsNoTracking();
+
+        protected sealed override async Task<IReadOnlyList<TEntity>> FindEntityListAsync(
+            Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         {
-            var result = await BuildReadQuery(model).ToPagedQueryResultAsync(model);
-
-            await AfterReadAsync(result);
-
-            return result;
+            return await FindEntityQueryable.Where(predicate).ToListAsync(cancellationToken);
         }
 
-        public async Task<Maybe<TModel>> FindAsync(TKey id)
+        protected sealed override Task<IPagedResult<TEntity>> FindEntityPagedListAsync(PagedRequestModel model,
+            CancellationToken cancellationToken = default)
         {
-            var models = await FindAsync(id.ToEqualityExpression<TEntity, TKey>());
-
-            return models.SingleOrDefault();
+            return FindEntityQueryable.ToPagedListAsync(model, cancellationToken);
         }
 
-        public Task<IReadOnlyList<TModel>> FindListAsync(IEnumerable<TKey> ids)
+        protected sealed override async Task CreateListAsync(IReadOnlyList<TEntity> entityList,
+            CancellationToken cancellationToken)
         {
-            return FindAsync(entity => ids.Contains(entity.Id));
-        }
-
-        public Task<IReadOnlyList<TModel>> FindListAsync()
-        {
-            return FindAsync(_ => true);
-        }
-
-        [SkipValidation]
-        public async Task<IPagedQueryResult<TModel>> FindPagedListAsync(PagedQueryModel model)
-        {
-            var pagedList = await BuildFindQuery().ToPagedQueryResultAsync(model);
-
-            var result = new PagedQueryResult<TModel>
-            {
-                Items = pagedList.Items.MapReadOnlyList(MapToModel),
-                TotalCount = pagedList.TotalCount
-            };
-
-            await AfterFindAsync(result.Items);
-
-            return result;
-        }
-
-        [Transactional]
-        public Task<Result> CreateAsync(TModel model)
-        {
-            Guard.ArgumentNotNull(model, nameof(model));
-
-            return CreateAsync(new[] {model});
-        }
-
-        [Transactional]
-        public async Task<Result> CreateAsync(IEnumerable<TModel> models)
-        {
-            var modelList = models.ToList();
-
-            var result = await BeforeCreateAsync(modelList);
-            if (result.Failed) return result;
-
-            var entityList = modelList.MapReadOnlyList<TModel, TEntity>(MapToEntity);
-
-            await AfterMappingAsync(modelList, entityList);
-
-            result = await EventBus.TriggerCreatingEventAsync<TModel, TKey>(modelList);
-            if (result.Failed) return result;
-
             EntitySet.AddRange(entityList);
-            await UnitOfWork.SaveChangesAsync();
+            await UnitOfWork.SaveChangesAsync(cancellationToken);
             UnitOfWork.MarkUnchanged(entityList);
-
-            MapToModel(entityList, modelList);
-
-            result = await AfterCreateAsync(modelList);
-            if (result.Failed) return result;
-
-            result = await EventBus.TriggerCreatedEventAsync<TModel, TKey>(modelList);
-
-            return result;
         }
 
-        [Transactional]
-        public Task<Result> EditAsync(TModel model)
+        protected sealed override async Task UpdateListAsync(IReadOnlyList<TEntity> entityList,
+            CancellationToken cancellationToken)
         {
-            Guard.ArgumentNotNull(model, nameof(model));
-
-            return EditAsync(new[] {model});
-        }
-
-        [Transactional]
-        public async Task<Result> EditAsync(IEnumerable<TModel> models)
-        {
-            var modelList = models.ToList();
-
-            var ids = modelList.Select(m => m.Id).ToList();
-            var entityList = await BuildFindQuery().Where(e => ids.Contains(e.Id)).ToListAsync();
-
-            var modifiedList = BuildModifiedModel(modelList, entityList);
-
-            var result = await BeforeEditAsync(modifiedList, entityList);
-            if (result.Failed) return result;
-
-            MapToEntity(modelList, entityList);
-
-            await AfterMappingAsync(modelList, entityList);
-
-            result = await EventBus.TriggerEditingEventAsync<TModel, TKey>(modifiedList);
-            if (result.Failed) return result;
-
             UnitOfWork.TrackChanges(entityList);
-            await UnitOfWork.SaveChangesAsync();
+            await UnitOfWork.SaveChangesAsync(cancellationToken);
             UnitOfWork.MarkUnchanged(entityList);
-
-            MapToModel(entityList, modelList);
-
-            result = await AfterEditAsync(modifiedList, entityList);
-            if (result.Failed) return result;
-
-            result = await EventBus.TriggerEditedEventAsync<TModel, TKey>(modifiedList);
-
-            return result;
         }
 
-        [Transactional]
-        [SkipValidation]
-        public Task<Result> DeleteAsync(TModel model)
+        protected sealed override Task RemoveListAsync(IReadOnlyList<TEntity> entityList,
+            CancellationToken cancellationToken)
         {
-            Guard.ArgumentNotNull(model, nameof(model));
-
-            return DeleteAsync(new[] {model});
-        }
-
-        [Transactional]
-        [SkipValidation]
-        public virtual async Task<Result> DeleteAsync(IEnumerable<TModel> models)
-        {
-            var modelList = models.ToList();
-
-            var result = await BeforeDeleteAsync(modelList);
-            if (result.Failed) return result;
-
-            var entityList = modelList.MapReadOnlyList<TModel, TEntity>(MapToEntity);
-
-            result = await EventBus.TriggerDeletingEventAsync<TModel, TKey>(modelList);
-            if (result.Failed) return result;
-
             EntitySet.RemoveRange(entityList);
-            await UnitOfWork.SaveChangesAsync();
-
-            result = await AfterDeleteAsync(modelList);
-            if (result.Failed) return result;
-
-            result = await EventBus.TriggerDeletedEventAsync<TModel, TKey>(modelList);
-
-            return result;
-        }
-
-        [Transactional]
-        [SkipValidation]
-        public async Task<Result> DeleteAsync(TKey id)
-        {
-            var model = await FindAsync(id);
-            if (model.HasValue) return await DeleteAsync(model.Value);
-
-            return Ok();
-        }
-
-        [Transactional]
-        [SkipValidation]
-        public async Task<Result> DeleteAsync(IEnumerable<TKey> ids)
-        {
-            var models = await FindListAsync(ids);
-            if (models.Any()) return await DeleteAsync(models);
-
-            return Ok();
-        }
-
-        public Task<bool> ExistsAsync(TKey id)
-        {
-            return EntitySet.AnyAsync(id.ToEqualityExpression<TEntity, TKey>());
-        }
-
-        protected abstract IQueryable<TReadModel> BuildReadQuery(TFilteredPagedQueryModel model);
-
-        protected async Task<IReadOnlyList<TModel>> FindAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            var entityList = await BuildFindQuery().Where(predicate).ToListAsync();
-
-            var modelList = entityList.MapReadOnlyList(MapToModel);
-
-            await AfterFindAsync(modelList);
-
-            return modelList;
-        }
-
-        protected virtual IQueryable<TEntity> BuildFindQuery()
-        {
-            return EntitySet.AsNoTracking();
-        }
-
-        protected virtual Task AfterReadAsync(PagedQueryResult<TReadModel> result)
-        {
-            return Task.CompletedTask;
-        }
-
-        protected virtual Task AfterFindAsync(IReadOnlyList<TModel> models)
-        {
-            return Task.CompletedTask;
-        }
-
-        protected virtual Task AfterMappingAsync(IReadOnlyList<TModel> models, IReadOnlyList<TEntity> entities)
-        {
-            return Task.CompletedTask;
-        }
-
-        protected virtual Task<Result> BeforeCreateAsync(IReadOnlyList<TModel> models)
-        {
-            return Task.FromResult(Ok());
-        }
-
-        protected virtual Task<Result> AfterCreateAsync(IReadOnlyList<TModel> models)
-        {
-            return Task.FromResult(Ok());
-        }
-
-        protected virtual Task<Result> BeforeEditAsync(
-            IReadOnlyList<ModifiedModel<TModel>> models, IReadOnlyList<TEntity> entities)
-        {
-            return Task.FromResult(Ok());
-        }
-
-        protected virtual Task<Result> AfterEditAsync(
-            IReadOnlyList<ModifiedModel<TModel>> models, IReadOnlyList<TEntity> entities)
-        {
-            return Task.FromResult(Ok());
-        }
-
-        protected virtual Task<Result> BeforeDeleteAsync(IReadOnlyList<TModel> models)
-        {
-            return Task.FromResult(Ok());
-        }
-
-        protected virtual Task<Result> AfterDeleteAsync(IReadOnlyList<TModel> models)
-        {
-            return Task.FromResult(Ok());
-        }
-
-        protected abstract void MapToEntity(TModel model, TEntity entity);
-
-        protected abstract TModel MapToModel(TEntity entity);
-
-        private IReadOnlyList<ModifiedModel<TModel>> BuildModifiedModel(IReadOnlyCollection<TModel> models,
-            IReadOnlyCollection<TEntity> entities)
-        {
-            if (models.Count != entities.Count) throw new DbConcurrencyException();
-
-            var modelList = entities.MapReadOnlyList(MapToModel);
-            var modelDictionary = modelList.ToDictionary(e => e.Id);
-
-            var result = models.Select(
-                model => new ModifiedModel<TModel>
-                    {NewValue = model, OriginalValue = modelDictionary[model.Id]}).ToList();
-
-            return result;
-        }
-
-        private void MapToModel(IReadOnlyList<TEntity> entities, IEnumerable<TModel> models)
-        {
-            var i = 0;
-            foreach (var model in models)
-            {
-                var entity = entities[i++];
-                var m = MapToModel(entity);
-
-                var properties = typeof(TModel).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(p => p.CanRead && p.CanWrite).ToList();
-                foreach (var property in properties) property.SetValue(model, property.GetValue(m));
-            }
-        }
-
-        private void MapToEntity(IEnumerable<TModel> models, IReadOnlyList<TEntity> entities)
-        {
-            var i = 0;
-            foreach (var model in models)
-            {
-                var entity = entities[i++];
-                MapToEntity(model, entity);
-            }
+            return UnitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

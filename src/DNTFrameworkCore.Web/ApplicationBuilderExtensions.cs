@@ -16,16 +16,6 @@ namespace DNTFrameworkCore.Web
             return builder.UseMiddleware<ContentSecurityPolicyMiddleware>();
         }
         
-        public static IApplicationBuilder UseExceptionHandling(this IApplicationBuilder app)
-        {
-            return app.UseExceptionHandler(appException => appException.UseMiddleware<ExceptionMiddleware>());
-        }
-
-        public static IApplicationBuilder UseSpaRouting(this IApplicationBuilder application)
-        {
-            return application.UseMiddleware<SpaRoutingMiddleware>();
-        }
-
         /// <summary>
         /// Executes the specified action if the specified <paramref name="condition"/> is <c>true</c> which can be
         /// used to conditionally add to the request execution pipeline.

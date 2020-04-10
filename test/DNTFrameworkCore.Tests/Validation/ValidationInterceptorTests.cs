@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Castle.DynamicProxy;
-using DNTFrameworkCore.Application.Services;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Validation.Interception;
 using Microsoft.Extensions.DependencyInjection;

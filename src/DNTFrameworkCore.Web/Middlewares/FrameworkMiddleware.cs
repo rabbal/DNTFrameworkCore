@@ -1,35 +1,34 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DNTFrameworkCore.Infrastructure;
+using DNTFrameworkCore.Tasks;
 using Microsoft.AspNetCore.Http;
 
 namespace DNTFrameworkCore.Web.Middlewares
 {
+    //Under Development
     public class FrameworkMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IServiceProvider _provider;
 
-        public FrameworkMiddleware(RequestDelegate next, IServiceProvider provider)
+        public FrameworkMiddleware(RequestDelegate next)
         {
             _next = next;
-            _provider = provider;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, ITaskEngine engine)
         {
             try
             {
-                await Bootstrapper.RunOnBeginRequest(_provider);
+                await engine.RunOnBeginRequest(context.RequestAborted);
 
                 await _next(context);
 
-                await Bootstrapper.RunOnEndRequest(_provider);
+                await engine.RunOnEndRequest(context.RequestAborted);
             }
             catch (Exception e)
             {
-                await Bootstrapper.RunOnError(_provider, e);
-                
+                await engine.RunOnException(e, context.RequestAborted);
+
                 throw;
             }
         }

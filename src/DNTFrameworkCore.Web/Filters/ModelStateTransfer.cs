@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Newtonsoft.Json;
 using static DNTFrameworkCore.Web.Extensions.ModelStateExtensions;
 
 namespace DNTFrameworkCore.Web.Filters
@@ -48,7 +48,7 @@ namespace DNTFrameworkCore.Web.Filters
         }
         private static ModelStateDictionary DeserializeModelState(string json)
         {
-            var values = JsonConvert.DeserializeObject<List<ModelStateTransferValue>>(json);
+            var values = JsonSerializer.Deserialize<List<ModelStateTransferValue>>(json);
             var modelState = new ModelStateDictionary();
 
             foreach (var item in values)

@@ -61,7 +61,8 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure
             });
 
             services.AddEFSecondLevelCache(options =>
-                options.UseMemoryCacheProvider(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(10)));
+                options.UseMemoryCacheProvider(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(10))
+                    .DisableLogging(true));
         }
     }
 }

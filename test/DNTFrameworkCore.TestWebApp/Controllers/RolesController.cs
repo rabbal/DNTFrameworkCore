@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Querying;
 using DNTFrameworkCore.TestWebApp.Application.Identity;
 using DNTFrameworkCore.TestWebApp.Application.Identity.Models;
 using DNTFrameworkCore.TestWebApp.Authorization;
@@ -15,7 +16,7 @@ using Microsoft.Extensions.Localization;
 namespace DNTFrameworkCore.TestWebApp.Controllers
 {
     public class
-        RolesController : CrudController<IRoleService, long, RoleReadModel, RoleModel, RoleFilteredPagedQueryModel>
+        RolesController : CrudController<IRoleService, long, RoleReadModel, RoleModel, RoleFilteredPagedRequest>
     {
         private readonly IMapper _mapper;
         private readonly IStringLocalizerFactory _localizerFactory;
@@ -35,11 +36,11 @@ namespace DNTFrameworkCore.TestWebApp.Controllers
         protected override string DeletePermissionName => PermissionNames.Roles_Delete;
         protected override string ViewName => "_RoleModal";
 
-        protected override IActionResult RenderIndex(IPagedQueryResult<RoleReadModel> model)
+        protected override IActionResult RenderIndex(IPagedResult<RoleReadModel> model)
         {
             var indexModel = new RoleIndexViewModel
             {
-                Items = model.Items,
+                ItemList = model.ItemList,
                 TotalCount = model.TotalCount,
                 Permissions = ReadPermissionList()
             };

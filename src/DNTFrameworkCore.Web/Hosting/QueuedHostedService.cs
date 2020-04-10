@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.Web.Hosting
 {
-    public sealed class QueuedHostedService : BackgroundService
+    internal sealed class QueuedHostedService : BackgroundService
     {
         private readonly IServiceScopeFactory _factory;
         private readonly ILogger _logger;
@@ -26,7 +26,6 @@ namespace DNTFrameworkCore.Web.Hosting
 
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
-
         {
             _logger.LogInformation("Queued Hosted Service is starting.");
 

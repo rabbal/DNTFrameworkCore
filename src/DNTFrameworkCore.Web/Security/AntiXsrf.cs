@@ -2,19 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
 namespace DNTFrameworkCore.Web.Security
 {
-    public interface IAntiforgeryService
+    public interface IAntiXsrf
     {
-        void AddTokenToResponse(IEnumerable<Claim> claims);
-        void RemoveTokenFromResponse();
+        /// <summary>
+        /// Add XsrfToken in Response.Cookies with 'XSRF-TOKEN' name
+        /// </summary>
+        void AddToken(IEnumerable<Claim> claims, string authenticationType);
+        /// <summary>
+        /// Remove XsrfToken in Response.Cookies with 'XSRF-TOKEN' name
+        /// </summary>
+        void RemoveToken();
     }
 
-    public class AntiforgeryService : IAntiforgeryService
+    internal class AntiXsrf : IAntiXsrf
     {
         private const string XsrfToken = "XSRF-TOKEN";
 
@@ -22,7 +27,7 @@ namespace DNTFrameworkCore.Web.Security
         private readonly IAntiforgery _antiforgery;
         private readonly IOptions<AntiforgeryOptions> _options;
 
-        public AntiforgeryService(
+        public AntiXsrf(
             IHttpContextAccessor context,
             IAntiforgery antiforgery,
             IOptions<AntiforgeryOptions> options)
@@ -32,10 +37,10 @@ namespace DNTFrameworkCore.Web.Security
             _options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
-        public void AddTokenToResponse(IEnumerable<Claim> claims)
+        public void AddToken(IEnumerable<Claim> claims, string authenticationType)
         {
             var httpContext = _context.HttpContext;
-            httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme));
+            httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(claims, authenticationType));
             var tokens = _antiforgery.GetAndStoreTokens(httpContext);
             httpContext.Response.Cookies.Append(
                 XsrfToken,
@@ -46,7 +51,7 @@ namespace DNTFrameworkCore.Web.Security
                 });
         }
 
-        public void RemoveTokenFromResponse()
+        public void RemoveToken()
         {
             var cookies = _context.HttpContext.Response.Cookies;
             cookies.Delete(_options.Value.Cookie.Name);

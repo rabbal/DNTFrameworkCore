@@ -1,11 +1,15 @@
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Application.Models;
-using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
+using DNTFrameworkCore.EFCore.Linq;
 using DNTFrameworkCore.Eventing;
+using DNTFrameworkCore.Querying;
 using DNTFrameworkCore.TestAPI.Application.Identity.Models;
 using DNTFrameworkCore.TestAPI.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -28,13 +32,11 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        protected override IQueryable<Role> BuildFindQuery()
-        {
-            return base.BuildFindQuery()
-                .Include(r => r.Permissions);
-        }
+        protected override IQueryable<Role> FindEntityQueryable =>
+            base.FindEntityQueryable.Include(r => r.Permissions);
 
-        protected override IQueryable<RoleReadModel> BuildReadQuery(FilteredPagedQueryModel model)
+        public override Task<IPagedResult<RoleReadModel>> ReadPagedListAsync(FilteredPagedRequestModel model,
+            CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking()
                 .Select(r => new RoleReadModel
@@ -42,7 +44,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
                     Id = r.Id,
                     Name = r.Name,
                     Description = r.Description
-                });
+                }).ToPagedListAsync(model, cancellationToken);
         }
 
         protected override void MapToEntity(RoleModel model, Role role)

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
+using DNTFrameworkCore.Querying;
 
 namespace DNTFrameworkCore.Data
 {
@@ -19,7 +19,7 @@ namespace DNTFrameworkCore.Data
         Task<Maybe<TEntity>> FindAsync(TKey id);
         Task<IReadOnlyList<TEntity>> FindListAsync(Expression<Func<TEntity, bool>> predicate);
         Task<IReadOnlyList<TEntity>> FindListAsync(IEnumerable<TKey> ids);
-        Task<IPagedQueryResult<TEntity>> FindPagedListAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<IPagedResult<TEntity>> FindPagedListAsync(Expression<Func<TEntity, bool>> predicate);
         Task UpdateAsync(TEntity entity);
         Task UpdateAsync(IEnumerable<TEntity> entityList);
         Task InsertAsync(TEntity entity);

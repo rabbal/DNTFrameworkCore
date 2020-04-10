@@ -1,5 +1,4 @@
 using System.Linq;
-using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.TestWebApp.Application.Identity.Models;
 using DNTFrameworkCore.TestWebApp.Domain.Identity;
@@ -7,16 +6,21 @@ using Microsoft.EntityFrameworkCore;
 using DNTFrameworkCore.Linq;
 using AutoMapper;
 using System;
-using DNTFrameworkCore.EFCore.Application;
+using System.Threading;
+using System.Threading.Tasks;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.EFCore.Context;
+using DNTFrameworkCore.EFCore.Linq;
+using DNTFrameworkCore.Querying;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Identity
 {
-    public interface IRoleService : ICrudService<long, RoleReadModel, RoleModel, RoleFilteredPagedQueryModel>
+    public interface IRoleService : ICrudService<long, RoleReadModel, RoleModel, RoleFilteredPagedRequest>
     {
     }
 
-    public class RoleService : CrudService<Role, long, RoleReadModel, RoleModel, RoleFilteredPagedQueryModel>,
+    public class RoleService :
+        EFCore.Application.CrudService<Role, long, RoleReadModel, RoleModel, RoleFilteredPagedRequest>,
         IRoleService
     {
         private readonly IMapper _mapper;
@@ -29,13 +33,10 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        protected override IQueryable<Role> BuildFindQuery()
-        {
-            return base.BuildFindQuery()
-                .Include(r => r.Permissions);
-        }
+        protected override IQueryable<Role> FindEntityQueryable => base.FindEntityQueryable.Include(r => r.Permissions);
 
-        protected override IQueryable<RoleReadModel> BuildReadQuery(RoleFilteredPagedQueryModel model)
+        public override Task<IPagedResult<RoleReadModel>> ReadPagedListAsync(RoleFilteredPagedRequest model,
+            CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking()
                 .WhereIf(model.Permissions != null && model.Permissions.Any(),
@@ -45,7 +46,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
                     Id = r.Id,
                     Name = r.Name,
                     Description = r.Description
-                });
+                }).ToPagedListAsync(model, cancellationToken);
         }
 
         protected override void MapToEntity(RoleModel model, Role role)

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -14,8 +13,10 @@ using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.TestAPI.Domain.Identity;
 using DNTFrameworkCore.TestAPI.Resources;
 using DNTFrameworkCore.Web.Security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace DNTFrameworkCore.TestAPI.Authentication
 {
@@ -29,7 +30,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
     {
         private readonly ITokenService _token;
         private readonly IUnitOfWork _uow;
-        private readonly IAntiforgeryService _antiforgery;
+        private readonly IAntiXsrf _antiforgery;
         private readonly IOptionsSnapshot<TokenOptions> _options;
         private readonly IMessageLocalizer _localizer;
         private readonly IUserPasswordHashAlgorithm _password;
@@ -40,7 +41,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
         public AuthenticationService(
             ITokenService token,
             IUnitOfWork uow,
-            IAntiforgeryService antiforgery,
+            IAntiXsrf antiforgery,
             IOptionsSnapshot<TokenOptions> options,
             IMessageLocalizer localizer,
             IUserPasswordHashAlgorithm password,
@@ -82,7 +83,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
             var claims = await BuildClaimsAsync(userId);
             var token = await _token.NewTokenAsync(userId, claims);
-            _antiforgery.AddTokenToResponse(claims);
+            _antiforgery.AddToken(claims,JwtBearerDefaults.AuthenticationScheme);
 
             return SignInResult.Ok(token);
         }
@@ -95,7 +96,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
         {
             await _token.RevokeTokensAsync(_session.UserId.FromString<long>());
 
-            _antiforgery.RemoveTokenFromResponse();
+            _antiforgery.RemoveToken();
         }
 
         private async Task<IList<Claim>> BuildClaimsAsync(long userId)

@@ -1,11 +1,14 @@
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
-using DNTFrameworkCore.Application.Services;
-using DNTFrameworkCore.EFCore.Application;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.EFCore.Context;
+using DNTFrameworkCore.EFCore.Linq;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Linq;
+using DNTFrameworkCore.Querying;
 using DNTFrameworkCore.TestAPI.Application.Tasks.Models;
 using DNTPersianUtils.Core;
 using Microsoft.EntityFrameworkCore;
@@ -13,12 +16,13 @@ using Task = DNTFrameworkCore.TestAPI.Domain.Tasks.Task;
 
 namespace DNTFrameworkCore.TestAPI.Application.Tasks
 {
-    public interface ITaskService : ICrudService<int, TaskReadModel, TaskModel, TaskFilteredPagedQueryModel>
+    public interface ITaskService : ICrudService<int, TaskReadModel, TaskModel, TaskFilteredPagedRequestModel>
     {
         bool TamperedTaskExists();
     }
 
-    public class TaskService : CrudService<Task, int, TaskReadModel, TaskModel, TaskFilteredPagedQueryModel>,
+    public class TaskService : EFCore.Application.CrudService<Task, int, TaskReadModel, TaskModel,
+            TaskFilteredPagedRequestModel>,
         ITaskService
     {
         private readonly IMapper _mapper;
@@ -37,7 +41,8 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
             return tasks.Any(task => task.Hash != UnitOfWork.EntityHash(task));
         }
 
-        protected override IQueryable<TaskReadModel> BuildReadQuery(TaskFilteredPagedQueryModel model)
+        public override Task<IPagedResult<TaskReadModel>> ReadPagedListAsync(TaskFilteredPagedRequestModel model,
+            CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking()
                 .WhereIf(model.State.HasValue, t => t.State == model.State)
@@ -50,7 +55,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
                     LocalDateTime = t.LocalDateTime,
                     CreatedDateTime = t.CreatedDateTime,
                     NullableDateTime = t.NullableDateTime
-                });
+                }).ToPagedListAsync(model, cancellationToken);
         }
 
         protected override void MapToEntity(TaskModel model, Task task)

@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace DNTFrameworkCore.Web.Caching
 {
     using System;
@@ -5,7 +7,6 @@ namespace DNTFrameworkCore.Web.Caching
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Caching.Distributed;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// <see cref="IDistributedCache"/> extension methods.
@@ -285,7 +286,8 @@ namespace DNTFrameworkCore.Web.Caching
         /// <param name="encoding">The encoding of the <see cref="string"/> value or <c>null</c> to use UTF-8.</param>
         /// <returns>The <see cref="string"/> value or <c>null</c> if the key was not found.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="cache"/> or <paramref name="key"/> is <c>null</c>.</exception>
-        public static async Task<string> ReadStringAsync(this IDistributedCache cache, string key, Encoding encoding = null)
+        public static async Task<string> ReadStringAsync(this IDistributedCache cache, string key,
+            Encoding encoding = null)
         {
             if (cache == null)
             {
@@ -340,12 +342,7 @@ namespace DNTFrameworkCore.Web.Caching
             }
 
             var json = await ReadStringAsync(cache, key, encoding).ConfigureAwait(false);
-            if (json == null)
-            {
-                return null;
-            }
-
-            return JsonConvert.DeserializeObject<T>(json);
+            return json == null ? null : JsonSerializer.Deserialize<T>(json);
         }
 
         /// <summary>
@@ -792,7 +789,7 @@ namespace DNTFrameworkCore.Web.Caching
                 options = new DistributedCacheEntryOptions();
             }
 
-            var json = JsonConvert.SerializeObject(value, Formatting.None);
+            var json = JsonSerializer.Serialize(value, new JsonSerializerOptions {WriteIndented = false});
             return SetAsync(cache, key, json, encoding, options);
         }
     }

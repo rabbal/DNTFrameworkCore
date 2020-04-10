@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Events;
@@ -23,7 +25,6 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 
         public Title Title { get; }
         public IReadOnlyList<ProductPrice> Prices => _prices.AsReadOnly();
-        public string Number { get; private set; }
 
         public static Result<Product> New(Title title, IProductPolicy policy)
         {
@@ -81,5 +82,10 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
             var price = _prices.Find(p => p.PriceType == priceType);
             return price?.Price ?? DefaultPrice.Price;
         }
+
+        public string Number { get; set; }
+        public byte[] Version { get; set; }
+        public DateTime CreatedDateTime { get; set; }
+        public DateTime? ModifiedDateTime { get; set; }
     }
 }

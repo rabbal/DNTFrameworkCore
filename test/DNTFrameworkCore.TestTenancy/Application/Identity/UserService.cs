@@ -26,7 +26,7 @@ namespace DNTFrameworkCore.TestTenancy.Application.Identity
 
         protected override IQueryable<User> BuildFindQuery()
         {
-            return base.BuildFindQuery()
+            return base.FindEntityQuery()
                 .Include(u => u.Roles)
                 .Include(u => u.Permissions);
         }

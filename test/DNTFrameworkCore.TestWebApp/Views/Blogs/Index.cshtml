@@ -1,4 +1,4 @@
-@model IPagedQueryResult<BlogModel>
+@model DNTFrameworkCore.Querying.IPagedResult<BlogModel>
 
 @{
     LocalizationResourceLocation = "DNTFrameworkCore.TestWebApp";
@@ -19,7 +19,7 @@
 
 <div class="row" id="BlogsList">
 
-    @foreach (var item in Model.Items)
+    @foreach (var item in Model.ItemList)
     {
         <div class="col-md-6">
             <div class="card mb-lg-4">

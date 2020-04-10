@@ -1,45 +1,48 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using DNTFrameworkCore.Application.Models;
-using DNTFrameworkCore.Linq;
+using DNTFrameworkCore.Querying;
 using NHibernate.Linq;
 
 namespace DNTFrameworkCore.NHibernate.Linq
 {
     public static class QueryableExtensions
     {
-        public static Task<PagedQueryResult<T>> ToPagedQueryResultAsync<T>(this IQueryable<T> query,
-            IPagedQueryModel model)
+        public static Task<IPagedResult<T>> ToPagedListAsync<T>(this IQueryable<T> query,
+            IPagedRequest request, CancellationToken cancellationToken = default)
         {
-            var filter = model is IFilteredPagedQueryModel filteredQuery ? filteredQuery.Filter : null;
+            var filtering = request is IFilteredPagedRequest q ? q.Filtering : null;
 
-            return query.ToPagedQueryResultAsync(model.Page, model.PageSize, model.SortExpression, filter);
+            return query.ToPagedListAsync(request.Page, request.PageSize, request.SortExpression, filtering,
+                cancellationToken);
         }
 
-        public static Task<PagedQueryResult<T>> ToPagedQueryResultAsync<T>(this IQueryable<T> query,
-            int page,
-            int pageSize,
-            string sortExpression)
-        {
-            return query.ToPagedQueryResultAsync(page, pageSize, sortExpression, null);
-        }
-
-        public static async Task<PagedQueryResult<T>> ToPagedQueryResultAsync<T>(this IQueryable<T> query,
+        public static Task<IPagedResult<T>> ToPagedListAsync<T>(this IQueryable<T> query,
             int page,
             int pageSize,
             string sortExpression,
-            Filter filter)
+            CancellationToken cancellationToken = default)
         {
-            query = query.ApplyFiltering(filter);
+            return query.ToPagedListAsync(page, pageSize, sortExpression, null, cancellationToken);
+        }
 
-            var totalCount = await query.LongCountAsync();
+        public static async Task<IPagedResult<T>> ToPagedListAsync<T>(this IQueryable<T> query,
+            int page,
+            int pageSize,
+            string sortExpression,
+            FilteringCriteria filtering,
+            CancellationToken cancellationToken = default)
+        {
+            query = query.ApplyFiltering(filtering);
+
+            var totalCount = await query.LongCountAsync(cancellationToken);
 
             query = query.ApplySorting(sortExpression);
             query = query.ApplyPaging(page, pageSize);
 
-            return new PagedQueryResult<T>
+            return new PagedResult<T>
             {
-                Items = await query.ToListAsync(),
+                ItemList = await query.ToListAsync(cancellationToken),
                 TotalCount = totalCount
             };
         }

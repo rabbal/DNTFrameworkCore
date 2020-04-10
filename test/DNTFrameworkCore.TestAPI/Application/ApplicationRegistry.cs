@@ -1,7 +1,7 @@
 using System.Linq;
 using AutoMapper;
 using Castle.DynamicProxy;
-using DNTFrameworkCore.Application.Services;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EFCore.Transaction;
 using DNTFrameworkCore.Eventing;

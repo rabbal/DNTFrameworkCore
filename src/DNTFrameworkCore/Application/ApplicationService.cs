@@ -1,9 +1,9 @@
-﻿using DNTFrameworkCore.Functional;
-using DNTFrameworkCore.Validation;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DNTFrameworkCore.Dependency;
+using DNTFrameworkCore.Functional;
+using DNTFrameworkCore.Validation;
 
-namespace DNTFrameworkCore.Application.Services
+namespace DNTFrameworkCore.Application
 {
     public interface IApplicationService : IScopedDependency
     {

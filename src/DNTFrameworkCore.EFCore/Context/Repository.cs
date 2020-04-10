@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Data;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
+using DNTFrameworkCore.Querying;
 using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.EFCore.Context
@@ -50,7 +50,7 @@ namespace DNTFrameworkCore.EFCore.Context
             throw new NotImplementedException();
         }
 
-        public Task<IPagedQueryResult<TEntity>> FindPagedListAsync(Expression<Func<TEntity, bool>> predicate)
+        public Task<IPagedResult<TEntity>> FindPagedListAsync(Expression<Func<TEntity, bool>> predicate)
         {
             throw new NotImplementedException();
         }

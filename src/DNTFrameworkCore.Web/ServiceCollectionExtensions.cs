@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.Web
 
             services.AddHttpContextAccessor();
             services.AddScoped<IUserSession, UserSession>();
-
+            
             return new WebFrameworkBuilder(services);
         }
     }
@@ -38,7 +38,7 @@ namespace DNTFrameworkCore.Web
             Services = services;
         }
 
-        public WebFrameworkBuilder WithProtectionService()
+        public WebFrameworkBuilder WithProtection()
         {
             Services.AddSingleton<IProtectionService, ProtectionService>();
             return this;
@@ -50,9 +50,9 @@ namespace DNTFrameworkCore.Web
             return this;
         }
 
-        public WebFrameworkBuilder WithAntiforgeryService()
+        public WebFrameworkBuilder WithAntiXsrf()
         {
-            Services.AddScoped<IAntiforgeryService, AntiforgeryService>();
+            Services.AddScoped<IAntiXsrf, AntiXsrf>();
             return this;
         }
 
@@ -68,9 +68,24 @@ namespace DNTFrameworkCore.Web
             return this;
         }
         
+        public WebFrameworkBuilder WithTaskHostedService()
+        {
+            Services.AddHostedService<TaskHostedService>();
+            return this;
+        }
+        
         public WebFrameworkBuilder WithEnvironmentPath()
         {
             Services.AddSingleton<IEnvironmentPath, EnvironmentPath>();
+            return this;
+        }
+
+        /// <summary>
+        /// Adds IFileNameSanitizer to IServiceCollection.
+        /// </summary>
+        public WebFrameworkBuilder WithSafeFileSanitizer()
+        {
+            Services.AddTransient<IFileNameSanitizer, FileNameSanitizer>();
             return this;
         }
     }

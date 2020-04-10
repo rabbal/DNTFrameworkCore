@@ -7,6 +7,7 @@ using DNTFrameworkCore.TestAPI.Application.Tasks.Models;
 using DNTFrameworkCore.TestAPI.Authentication;
 using DNTFrameworkCore.TestAPI.Infrastructure.Context;
 using DNTFrameworkCore.Web.EFCore.Cryptography;
+using DNTFrameworkCore.Web.ExceptionHandling;
 using DNTFrameworkCore.Web.Filters;
 using DNTFrameworkCore.Web.ModelBinders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -38,8 +39,8 @@ namespace DNTFrameworkCore.TestAPI
             services.AddLocalization(setup => setup.ResourcesPath = "Resources");
             services.AddControllers(options =>
                 {
-                    options.UseDefaultFilteredPagedQueryModelBinder();
-                    options.UseFilteredPagedQueryModelBinder<TaskFilteredPagedQueryModel>();
+                    options.UseDefaultFilteredPagedRequestModelBinder();
+                    options.UseFilteredPagedRequestModelBinder<TaskFilteredPagedRequestModel>();
                     options.UseExceptionHandling();
                 }).AddDataAnnotationsLocalization(o =>
                 {

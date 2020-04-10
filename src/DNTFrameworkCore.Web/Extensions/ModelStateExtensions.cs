@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using DNTFrameworkCore.Functional;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Newtonsoft.Json;
 
 namespace DNTFrameworkCore.Web.Extensions
 {
@@ -112,7 +111,7 @@ namespace DNTFrameworkCore.Web.Extensions
                     ErrorMessages = kvp.Value.Errors.Select(err => err.ErrorMessage).ToList(),
                 });
 
-            return JsonConvert.SerializeObject(values);
+            return JsonSerializer.Serialize(values);
         }
 
         public class ModelStateTransferValue

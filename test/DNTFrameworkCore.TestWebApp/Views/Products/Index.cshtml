@@ -1,5 +1,5 @@
 @using DNTFrameworkCore.TestWebApp.Application.Catalog.Models;
-@model PagedListModel<ProductModel, FilteredPagedQueryModel>
+@model PagedListModel<ProductModel, FilteredPagedRequestModel>
 
 @{
     LocalizationResourceLocation = "DNTFrameworkCore.TestWebApp";
@@ -61,7 +61,7 @@
 
 <div class="row">
     <div class="col-md-12" id="UsersList">
-        @foreach (var item in Model.Result.Items)
+        @foreach (var item in Model.Result.ItemList)
         {
             <a href="#" class="btn btn-secondary" modal-link="@Url.Action("Edit", "Products", new {id = item.Id})" has-permission="@PermissionNames.Products_Edit">
                 <i class="fa fa-pencil"></i>

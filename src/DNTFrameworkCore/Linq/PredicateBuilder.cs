@@ -15,13 +15,13 @@ namespace DNTFrameworkCore.Linq
         /// </summary>
         private class RebindParameterVisitor : ExpressionVisitor
         {
-            private readonly Dictionary<ParameterExpression, ParameterExpression> map;
+            private readonly Dictionary<ParameterExpression, ParameterExpression> _map;
 
             public RebindParameterVisitor(
                 Dictionary<ParameterExpression,
                 ParameterExpression> map)
             {
-                this.map = map ?? new Dictionary<ParameterExpression, ParameterExpression>();
+                _map = map ?? new Dictionary<ParameterExpression, ParameterExpression>();
             }
 
             public static Expression ReplaceParameters(
@@ -34,7 +34,7 @@ namespace DNTFrameworkCore.Linq
 
             protected override Expression VisitParameter(ParameterExpression p)
             {
-                if (map.TryGetValue(p, out var replacement))
+                if (_map.TryGetValue(p, out var replacement))
                 {
                     p = replacement;
                 }

@@ -1,3 +1,4 @@
+using System;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Events;
@@ -27,5 +28,6 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
         }
 
         public Title Title { get; private set; }
+        public byte[] Version { get; set; }
     }
 }

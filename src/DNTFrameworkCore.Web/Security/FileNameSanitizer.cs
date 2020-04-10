@@ -6,24 +6,9 @@ using Microsoft.Extensions.Logging;
 namespace DNTFrameworkCore.Web.Security
 {
     /// <summary>
-    /// SafeFile Download Service Extensions
-    /// </summary>
-    public static class FileNameSanitizerServiceExtensions
-    {
-        /// <summary>
-        /// Adds IFileNameSanitizerService to IServiceCollection.
-        /// </summary>
-        public static IServiceCollection AddFileNameSanitizerService(this IServiceCollection services)
-        {
-            services.AddTransient<IFileNameSanitizerService, FileNameSanitizerService>();
-            return services;
-        }
-    }
-
-    /// <summary>
     /// SafeFile Download Service
     /// </summary>
-    public interface IFileNameSanitizerService
+    public interface IFileNameSanitizer
     {
         /// <summary>
         /// Determines whether the requested file is safe to download.
@@ -55,14 +40,14 @@ namespace DNTFrameworkCore.Web.Security
     /// <summary>
     /// SafeFile Download Service
     /// </summary>
-    public class FileNameSanitizerService : IFileNameSanitizerService
+    internal class FileNameSanitizer : IFileNameSanitizer
     {
-        private readonly ILogger<FileNameSanitizerService> _logger;
+        private readonly ILogger<FileNameSanitizer> _logger;
 
         /// <summary>
         /// SafeFile Download Service
         /// </summary>
-        public FileNameSanitizerService(ILogger<FileNameSanitizerService> logger)
+        public FileNameSanitizer(ILogger<FileNameSanitizer> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -92,7 +77,7 @@ namespace DNTFrameworkCore.Web.Security
                 return new SafeFile();
             }
 
-            if (isOutsideOfRootPath(filePath, folderPath))
+            if (IsOutsideOfRootPath(filePath, folderPath))
             {
                 _logger.LogWarning(
                     $"Bad file request. The requested file path `{filePath}` is outside of the root path `{folderPath}`.");
@@ -102,7 +87,7 @@ namespace DNTFrameworkCore.Web.Security
             return new SafeFile {IsSafeToDownload = true, SafeFileName = fileName, SafeFilePath = filePath};
         }
 
-        private static bool isOutsideOfRootPath(string filePath, string folder)
+        private static bool IsOutsideOfRootPath(string filePath, string folder)
         {
             return !filePath.StartsWith(folder, StringComparison.OrdinalIgnoreCase);
         }

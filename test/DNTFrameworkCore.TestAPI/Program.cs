@@ -23,6 +23,7 @@ namespace DNTFrameworkCore.TestAPI
                 .UseDefaultServiceProvider((context, options) =>
                 {
                     options.ValidateScopes = context.HostingEnvironment.IsDevelopment();
+                    options.ValidateOnBuild = true;
                 })
                 .ConfigureLogging((hostingContext, logging) =>
                 {
@@ -31,13 +32,12 @@ namespace DNTFrameworkCore.TestAPI
                     logging.AddEFCore<ProjectDbContext>();
                     logging.AddFile();
 
-                    if (hostingContext.HostingEnvironment.IsDevelopment())
-                    {
-                        logging.AddConsole();
-                        logging.AddDebug();
-                        logging.AddEventSourceLogger();
-                        logging.AddEventLog();
-                    }
+                    if (!hostingContext.HostingEnvironment.IsDevelopment()) return;
+                    
+                    logging.AddConsole();
+                    logging.AddDebug();
+                    logging.AddEventSourceLogger();
+                    logging.AddEventLog();
                 });
     }
 }

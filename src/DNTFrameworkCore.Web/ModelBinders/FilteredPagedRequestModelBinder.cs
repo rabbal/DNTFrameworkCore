@@ -1,21 +1,22 @@
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Querying;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Newtonsoft.Json;
 
 namespace DNTFrameworkCore.Web.ModelBinders
 {
-    public static class FilteredPagedQueryModelBinderExtensions
+    public static class FilteredPagedRequestModelBinderExtensions
     {
-        public static MvcOptions UseDefaultFilteredPagedQueryModelBinder(this MvcOptions options)
+        public static MvcOptions UseDefaultFilteredPagedRequestModelBinder(this MvcOptions options)
         {
-            return options.UseFilteredPagedQueryModelBinder<FilteredPagedQueryModel>();
+            return options.UseFilteredPagedRequestModelBinder<FilteredPagedRequestModel>();
         }
 
-        public static MvcOptions UseFilteredPagedQueryModelBinder<TFilteredPagedQueryModel>(this MvcOptions options)
-            where TFilteredPagedQueryModel : IFilteredPagedQueryModel
+        public static MvcOptions UseFilteredPagedRequestModelBinder<TFilteredPagedRequestModel>(this MvcOptions options)
+            where TFilteredPagedRequestModel : IFilteredPagedRequest
         {
             if (options == null)
             {
@@ -23,14 +24,14 @@ namespace DNTFrameworkCore.Web.ModelBinders
             }
 
             options.ModelBinderProviders.Insert(0,
-                new FilteredPagedQueryModelBinderProvider<TFilteredPagedQueryModel>());
+                new FilteredPagedRequestModelBinderProvider<TFilteredPagedRequestModel>());
 
             return options;
         }
     }
 
-    public class FilteredPagedQueryModelBinderProvider<TFilteredPagedQueryModel> : IModelBinderProvider
-        where TFilteredPagedQueryModel : IFilteredPagedQueryModel
+    public class FilteredPagedRequestModelBinderProvider<TFilteredPagedRequestModel> : IModelBinderProvider
+        where TFilteredPagedRequestModel : IFilteredPagedRequest
     {
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
@@ -41,17 +42,17 @@ namespace DNTFrameworkCore.Web.ModelBinders
 
             if (context.Metadata == null) return null;
 
-            if (context.Metadata.IsComplexType && context.Metadata.ModelType == typeof(TFilteredPagedQueryModel))
+            if (context.Metadata.IsComplexType && context.Metadata.ModelType == typeof(TFilteredPagedRequestModel))
             {
-                return new FilteredPagedQueryModelBinder<TFilteredPagedQueryModel>();
+                return new FilteredPagedRequestModelBinder<TFilteredPagedRequestModel>();
             }
 
             return null;
         }
     }
 
-    public class FilteredPagedQueryModelBinder<TFilteredPagedQueryModel> : IModelBinder
-        where TFilteredPagedQueryModel : IFilteredPagedQueryModel
+    public class FilteredPagedRequestModelBinder<TFilteredPagedRequestModel> : IModelBinder
+        where TFilteredPagedRequestModel : IFilteredPagedRequest
     {
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
@@ -74,7 +75,7 @@ namespace DNTFrameworkCore.Web.ModelBinders
                 return Task.CompletedTask;
             }
 
-            var model = JsonConvert.DeserializeObject<TFilteredPagedQueryModel>(jsonString);
+            var model = JsonSerializer.Deserialize<TFilteredPagedRequestModel>(jsonString);
 
             bindingContext.Result = ModelBindingResult.Success(model);
             return Task.CompletedTask;

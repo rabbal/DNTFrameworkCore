@@ -8,7 +8,7 @@ namespace DNTFrameworkCore.TestAPI.Controllers
 {
     [Route("api/[controller]")]
     public class
-        TasksController : CrudController<ITaskService, int, TaskReadModel, TaskModel, TaskFilteredPagedQueryModel>
+        TasksController : CrudController<ITaskService, int, TaskReadModel, TaskModel, TaskFilteredPagedRequestModel>
     {
         public TasksController(ITaskService service) : base(service)
         {

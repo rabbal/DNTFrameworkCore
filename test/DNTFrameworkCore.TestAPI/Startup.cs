@@ -5,6 +5,7 @@ using DNTFrameworkCore.TestAPI.Hubs;
 using DNTFrameworkCore.TestAPI.Infrastructure;
 using DNTFrameworkCore.TestAPI.Resources;
 using DNTFrameworkCore.Web;
+using DNTFrameworkCore.Web.ExceptionHandling;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -35,10 +36,10 @@ namespace DNTFrameworkCore.TestAPI
 
             services.AddWebFramework()
                 .WithPermissionAuthorization()
-                .WithProtectionService()
+                .WithProtection()
                 .WithPasswordHashAlgorithm()
                 .WithQueuedHostedService()
-                .WithAntiforgeryService()
+                .WithAntiXsrf()
                 .WithEnvironmentPath();
 
             services.AddInfrastructure(Configuration);
@@ -68,10 +69,12 @@ namespace DNTFrameworkCore.TestAPI
             else
             {
                 app.UseExceptionHandling();
+
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
+            
             app.UseHttpsRedirection();
 
             app.UseSwagger();

@@ -16,6 +16,7 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <ProjectReference Include="..\DNTFrameworkCore.Web\DNTFrameworkCore.Web.csproj" />
     <ProjectReference Include="..\DNTFrameworkCore\DNTFrameworkCore.csproj" />
   </ItemGroup>

@@ -19,7 +19,7 @@
 
 <div class="row">
     <div class="col-md-12" id="RolesList">
-        @foreach (var item in Model.Items)
+        @foreach (var item in Model.ItemList)
         {
             <a class="btn btn-secondary" asp-modal-link
                asp-controller="Roles" asp-action="Edit" asp-route-id="@item.Id" asp-permission="@PermissionNames.Roles_Edit">

@@ -1,11 +1,15 @@
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Application.Models;
-using DNTFrameworkCore.Application.Services;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
+using DNTFrameworkCore.EFCore.Linq;
 using DNTFrameworkCore.Eventing;
+using DNTFrameworkCore.Querying;
 using DNTFrameworkCore.TestWebApp.Application.Invoices.Models;
 using DNTFrameworkCore.TestWebApp.Domain.Invoices;
 using Microsoft.EntityFrameworkCore;
@@ -28,19 +32,17 @@ namespace DNTFrameworkCore.TestWebApp.Application.Invoices
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        protected override IQueryable<Invoice> BuildFindQuery()
-        {
-            return base.BuildFindQuery().Include(i => i.Items);
-        }
+        protected override IQueryable<Invoice> FindEntityQueryable => base.FindEntityQueryable.Include(i => i.Items);
 
-        protected override IQueryable<InvoiceReadModel> BuildReadQuery(FilteredPagedQueryModel model)
+        public override Task<IPagedResult<InvoiceReadModel>> ReadPagedListAsync(FilteredPagedRequestModel model,
+            CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking().Select(i => new InvoiceReadModel
             {
                 Id = i.Id,
                 Number = i.Number,
-                CreationDateTime = EF.Property<DateTimeOffset>(i, EFCore.Context.EFCore.CreatedDateTime)
-            });
+                CreatedDateTime = i.CreatedDateTime
+            }).ToPagedListAsync(model, cancellationToken);
         }
 
         protected override void MapToEntity(InvoiceModel model, Invoice invoice)

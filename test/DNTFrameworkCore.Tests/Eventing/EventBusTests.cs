@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Functional;
@@ -43,7 +44,7 @@ namespace DNTFrameworkCore.Tests.Eventing
         {
             public static int HandleCount { get; set; }
 
-            public Task<Result> Handle(SimpleBusinessEvent @event)
+            public Task<Result> Handle(SimpleBusinessEvent @event, CancellationToken cancellationToken)
             {
                 ++HandleCount;
                 return Task.FromResult(Result.Ok());
@@ -54,7 +55,7 @@ namespace DNTFrameworkCore.Tests.Eventing
         {
             public static int HandleCount { get; set; }
 
-            public Task<Result> Handle(SimpleBusinessEvent @event)
+            public Task<Result> Handle(SimpleBusinessEvent @event, CancellationToken cancellationToken)
             {
                 ++HandleCount;
                 return Task.FromResult(Result.Ok());
@@ -65,7 +66,7 @@ namespace DNTFrameworkCore.Tests.Eventing
         {
             public static int HandleCount { get; set; }
 
-            public Task<Result> Handle(SimpleBusinessEvent @event)
+            public Task<Result> Handle(SimpleBusinessEvent @event, CancellationToken cancellationToken)
             {
                 ++HandleCount;
                 return Task.FromResult(Result.Fail(nameof(FailedSimpleBusinessEventHandler)));

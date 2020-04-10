@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DNTFrameworkCore.Application.Models
+namespace DNTFrameworkCore.Querying
 {
-    public class Filter
+    public class FilteringCriteria
     {
         private static readonly IDictionary<string, string> Operators = new Dictionary<string, string>
         {
@@ -31,21 +31,21 @@ namespace DNTFrameworkCore.Application.Models
         /// <summary>
         ///     Gets or sets the child filter expressions. Set to <c>null</c> if there are no child expressions.
         /// </summary>
-        public IEnumerable<Filter> Filters { get; set; }
+        public IEnumerable<FilteringCriteria> Filters { get; set; }
 
         /// <summary>
         ///     Get a flattened list of all child filter expressions.
         /// </summary>
-        public IList<Filter> List()
+        public IList<FilteringCriteria> ToFlatList()
         {
-            var filters = new List<Filter>();
+            var flatList = new List<FilteringCriteria>();
 
-            Collect(filters);
+            Collect(flatList);
 
-            return filters;
+            return flatList;
         }
 
-        private void Collect(ICollection<Filter> filters)
+        private void Collect(ICollection<FilteringCriteria> filters)
         {
             if (Filters != null && Filters.Any())
             {
@@ -66,11 +66,12 @@ namespace DNTFrameworkCore.Application.Models
         ///     Converts the filter expression to a predicate suitable for Dynamic Linq e.g. "Field1 = @1 and Field2.Contains(@2)"
         /// </summary>
         /// <param name="filters">A list of flattened filters.</param>
-        public string ToExpression(IList<Filter> filters)
+        public string ToExpression(IList<FilteringCriteria> filters)
         {
             if (Filters != null && Filters.Any())
             {
-                return "(" + string.Join(" " + Logic + " ", Filters.Select(filter => filter.ToExpression(filters)).ToArray()) + ")";
+                return "(" + string.Join(" " + Logic + " ",
+                           Filters.Select(filter => filter.ToExpression(filters)).ToArray()) + ")";
             }
 
             var index = filters.IndexOf(this);

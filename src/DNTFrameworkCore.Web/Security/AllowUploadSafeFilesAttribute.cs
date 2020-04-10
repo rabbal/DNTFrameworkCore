@@ -27,15 +27,15 @@ namespace DNTFrameworkCore.Web.Security
         /// <summary>
         /// Disallows uploading dangerous files such as .aspx, web.config and .asp files.
         /// </summary>
-        /// <param name="extentionsToFilter">Disallowed file extensions such as .asp</param>
+        /// <param name="extensionsToFilter">Disallowed file extensions such as .asp</param>
         /// <param name="namesToFilter">Disallowed names such as web.config</param>
         public AllowUploadSafeFilesAttribute(
-            string[] extentionsToFilter = null,
+            string[] extensionsToFilter = null,
             string[] namesToFilter = null)
         {
-            if (extentionsToFilter != null)
+            if (extensionsToFilter != null)
             {
-                foreach (var item in extentionsToFilter)
+                foreach (var item in extensionsToFilter)
                 {
                     _extentionsToFilter.Add(item);
                 }
