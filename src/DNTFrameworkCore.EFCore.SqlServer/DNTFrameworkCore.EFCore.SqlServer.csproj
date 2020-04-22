@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Title>DNTFrameworkCore.EFCore.SqlServer</Title>
         <Description>This Library Contains Infrastructures Like Resource Locking or Numbering that They are Related to EFCore and SqlServer</Description>
-        <VersionPrefix>4.5.3</VersionPrefix>
+        <VersionPrefix>4.6.0</VersionPrefix>
         <Authors>GholamReza Rabbal</Authors>
         <TargetFramework>netstandard2.0</TargetFramework>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
