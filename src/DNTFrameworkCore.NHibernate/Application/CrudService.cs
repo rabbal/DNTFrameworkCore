@@ -73,19 +73,19 @@ namespace DNTFrameworkCore.NHibernate.Application
             return await FindEntityQueryable.ToPagedListAsync(model, cancellationToken);
         }
 
-        protected sealed override Task CreateListAsync(IReadOnlyList<TEntity> entityList,
+        protected sealed override Task CreateEntityListAsync(IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken)
         {
             return Session.SaveAsync(entityList, cancellationToken);
         }
 
-        protected sealed override Task UpdateListAsync(IReadOnlyList<TEntity> entityList,
+        protected sealed override Task UpdateEntityListAsync(IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken)
         {
             return Session.UpdateAsync(entityList, cancellationToken);
         }
 
-        protected sealed override Task RemoveListAsync(IReadOnlyList<TEntity> entityList,
+        protected sealed override Task RemoveEntityListAsync(IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken)
         {
             return Session.DeleteAsync(entityList, cancellationToken);

@@ -22,7 +22,7 @@ namespace DNTFrameworkCore.TestAPI.Controllers
         [HttpGet("[action]")]
         public IActionResult TamperedFromOutside()
         {
-            return Ok(Service.TamperedTaskExists());
+            return Ok(CrudService.TamperedTaskExists());
         }
     }
 }

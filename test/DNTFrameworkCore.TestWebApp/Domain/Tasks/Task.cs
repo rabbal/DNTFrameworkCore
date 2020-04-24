@@ -2,7 +2,7 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestWebApp.Domain.Tasks
 {
-    public class Task : TrackableEntity, IHasRowVersion, INumberedEntity
+    public class Task : Entity, IHasRowVersion, INumberedEntity
     {
         public const int MaxTitleLength = 256;
         public const int MaxDescriptionLength = 1024;

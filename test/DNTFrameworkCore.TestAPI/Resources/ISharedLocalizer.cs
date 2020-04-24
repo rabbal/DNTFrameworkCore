@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.Extensions.Localization;
 
@@ -29,6 +30,7 @@ namespace DNTFrameworkCore.TestAPI.Resources
             return _localizer.GetAllStrings(includeParentCultures);
         }
 
+        [Obsolete("This method is obsolete. Use `CurrentCulture` and `CurrentUICulture` instead.")]
         public IStringLocalizer WithCulture(CultureInfo culture)
         {
             return _localizer.WithCulture(culture);

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Domain;
+using DNTFrameworkCore.Extensibility;
 using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -122,17 +123,17 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
         /// Begins tracking a collection of entity and any entities that are reachable by traversing their navigation properties.
         /// This method is designed for use in disconnected scenarios.
         /// </summary>
-        public static void TrackChanges(this IUnitOfWork uow, IEnumerable<object> rootEntities)
+        internal static void UpdateGraph(this IUnitOfWork uow, IEnumerable<object> rootEntities)
         {
             foreach (var rootEntity in rootEntities)
-                uow.TrackChanges(rootEntity);
+                uow.UpdateGraph(rootEntity);
         }
 
         /// <summary>
         /// Begins tracking an entity and any entities that are reachable by traversing it's navigation properties.
         /// This method is designed for use in disconnected scenarios.
         /// </summary>
-        public static void TrackChanges(this IUnitOfWork uow, object rootEntity)
+        internal static void UpdateGraph(this IUnitOfWork uow, object rootEntity)
         {
             uow.Entry(rootEntity).State = EntityState.Detached;
 
@@ -149,13 +150,13 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
             });
         }
 
-        private static void SetEntityState(EntityEntryGraphNode node, ITrackable trackable)
+        private static void SetEntityState(this EntityEntryGraphNode node, ITrackable trackable)
         {
             node.Entry.State = EntityState.Detached;
 
             if (node.SourceEntry != null)
             {
-                var relationship = node.InboundNavigation?.GetRelationshipType();
+                var relationship = node.InboundNavigation?.ToRelationshipType();
                 switch (relationship)
                 {
                     case RelationshipType.OneToOne:
@@ -264,9 +265,9 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
         /// <summary>
         ///     Traverse an object graph to set TrackingState to Unchanged.
         /// </summary>
-        public static void MarkUnchanged(this IUnitOfWork uow, object entity)
+        public static void MarkUnchanged(this IUnitOfWork uow, object rootEntity)
         {
-            uow.TraverseGraph(entity, n =>
+            uow.TraverseGraph(rootEntity, n =>
             {
                 if (n.Entry.Entity is ITrackable trackable)
                 {
@@ -288,7 +289,7 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
         /// <summary>
         /// Traverse an object graph executing a callback on each node.
         /// </summary>
-        internal static void TraverseGraph(this IUnitOfWork context, object entity,
+        private static void TraverseGraph(this IUnitOfWork context, object entity,
             Action<EntityEntryGraphNode> callback)
         {
 #pragma warning disable EF1001 // Internal EF Core API usage.
@@ -318,7 +319,7 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
         /// <summary>
         /// Traverse an object graph asynchronously executing a callback on each node.
         /// </summary>
-        internal static async Task TraverseGraphAsync(this IUnitOfWork context, object item,
+        private static async Task TraverseGraphAsync(this IUnitOfWork context, object item,
             Func<EntityEntryGraphNode, Task> callback)
         {
 #pragma warning disable EF1001 // Internal EF Core API usage.

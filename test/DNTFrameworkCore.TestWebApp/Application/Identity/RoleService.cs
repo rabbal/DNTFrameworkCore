@@ -9,6 +9,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Application;
+using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Linq;
 using DNTFrameworkCore.Querying;
@@ -20,7 +21,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
     }
 
     public class RoleService :
-        EFCore.Application.CrudService<Role, long, RoleReadModel, RoleModel, RoleFilteredPagedRequest>,
+        CrudService<Role, long, RoleReadModel, RoleModel, RoleFilteredPagedRequest>,
         IRoleService
     {
         private readonly IMapper _mapper;

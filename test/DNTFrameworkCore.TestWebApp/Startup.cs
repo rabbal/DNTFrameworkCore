@@ -2,6 +2,7 @@
 using DNTFrameworkCore.TestWebApp.Application;
 using DNTFrameworkCore.TestWebApp.Infrastructure;
 using DNTFrameworkCore.TestWebApp.Resources;
+using DNTFrameworkCore.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,12 +25,25 @@ namespace DNTFrameworkCore.TestWebApp
         {
             services.AddFramework()
                 .WithModelValidation()
-                .WithFluentValidation();
+                .WithFluentValidation()
+                .WithMemoryCache()
+                .WithSecurityService()
+                .WithBackgroundTaskQueue()
+                .WithRandomNumber();
             
+            services.AddWebFramework()
+                .WithPermissionAuthorization()
+                .WithProtection()
+                .WithPasswordHashAlgorithm()
+                .WithQueuedHostedService()
+                .WithAntiXsrf()
+                .WithEnvironmentPath();
+
             services.AddInfrastructure(Configuration);
             services.AddApplication(Configuration);
             services.AddResources();
             services.AddWeb();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,8 +61,10 @@ namespace DNTFrameworkCore.TestWebApp
                 app.UseHsts();
             }
 
-            app.UseAuthentication();
+            app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseHttpsRedirection();
             app.UseFileServer(new FileServerOptions
             {
@@ -57,11 +73,11 @@ namespace DNTFrameworkCore.TestWebApp
             });
             app.UseCookiePolicy();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(routes =>
             {
-                routes.MapRoute(
+                routes.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

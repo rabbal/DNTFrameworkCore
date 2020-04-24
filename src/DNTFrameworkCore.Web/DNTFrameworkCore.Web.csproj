@@ -21,6 +21,7 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Controllers" />
     <Folder Include="Mvc\Navigation" />
   </ItemGroup>
 </Project>

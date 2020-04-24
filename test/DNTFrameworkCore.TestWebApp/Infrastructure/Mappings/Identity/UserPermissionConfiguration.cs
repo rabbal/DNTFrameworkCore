@@ -8,7 +8,6 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Mappings.Identity
     {
         public void Configure(EntityTypeBuilder<UserPermission> builder)
         {           
-            builder.ToTable(nameof(Permission));
         }
     }
 }

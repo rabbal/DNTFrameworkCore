@@ -36,17 +36,17 @@ namespace DNTFrameworkCore.Web.Mvc
         {
         }
 
-        protected internal FormValueRequiredAttribute(
+        protected FormValueRequiredAttribute(
             FormValueRequirement requirement,
             FormValueRequirementRule rule,
             bool inverse,
             params string[] submitButtonNames)
         {
             // at least one submit button should be found (or being absent if 'inverse')
-            this._submitButtonNames = submitButtonNames;
-            this._requirement = requirement;
-            this._rule = rule;
-            this._inverse = inverse;
+            _submitButtonNames = submitButtonNames;
+            _requirement = requirement;
+            _rule = rule;
+            _inverse = inverse;
         }
 
         public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
@@ -55,7 +55,7 @@ namespace DNTFrameworkCore.Web.Mvc
         }
 
 
-        protected internal virtual bool IsValidForRequest(RouteContext routeContext)
+        protected virtual bool IsValidForRequest(RouteContext routeContext)
         {
             var logger = routeContext.HttpContext.RequestServices.GetRequiredService<ILogger<FormValueRequiredAttribute>>();
             var form = routeContext.HttpContext.Request.Form;

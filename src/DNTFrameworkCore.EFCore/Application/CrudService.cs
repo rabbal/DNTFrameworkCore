@@ -73,7 +73,7 @@ namespace DNTFrameworkCore.EFCore.Application
             return FindEntityQueryable.ToPagedListAsync(model, cancellationToken);
         }
 
-        protected sealed override async Task CreateListAsync(IReadOnlyList<TEntity> entityList,
+        protected sealed override async Task CreateEntityListAsync(IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken)
         {
             EntitySet.AddRange(entityList);
@@ -81,15 +81,15 @@ namespace DNTFrameworkCore.EFCore.Application
             UnitOfWork.MarkUnchanged(entityList);
         }
 
-        protected sealed override async Task UpdateListAsync(IReadOnlyList<TEntity> entityList,
+        protected sealed override async Task UpdateEntityListAsync(IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken)
         {
-            UnitOfWork.TrackChanges(entityList);
+            UnitOfWork.UpdateGraph(entityList);
             await UnitOfWork.SaveChangesAsync(cancellationToken);
             UnitOfWork.MarkUnchanged(entityList);
         }
 
-        protected sealed override Task RemoveListAsync(IReadOnlyList<TEntity> entityList,
+        protected sealed override Task RemoveEntityListAsync(IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken)
         {
             EntitySet.RemoveRange(entityList);

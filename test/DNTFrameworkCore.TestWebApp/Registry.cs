@@ -1,9 +1,10 @@
 using System;
+using Castle.Core.Internal;
+using DNTFrameworkCore.Localization;
 using DNTFrameworkCore.TestWebApp.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -67,7 +68,16 @@ namespace DNTFrameworkCore.TestWebApp
             services.AddMvc()
                 .AddMvcLocalization()
                 .AddViewLocalization()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .AddDataAnnotationsLocalization(o =>
+                {
+                    o.DataAnnotationLocalizerProvider = (type, factory) =>
+                    {
+                        var localizationResource = type.GetTypeAttribute<LocalizationResourceAttribute>();
+                        return localizationResource == null
+                            ? factory.Create(type)
+                            : factory.Create(localizationResource.Name, localizationResource.Location);
+                    };
+                });
         }
     }
 }

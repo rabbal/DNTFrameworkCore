@@ -13,15 +13,14 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
         /// </summary>
         /// <param name="nav">Navigation property which can be used to navigate a relationship.</param>
         /// <returns>Type of relationship between entities; null if INavigation is null.</returns>
-        public static RelationshipType? GetRelationshipType(this INavigation nav)
+        public static RelationshipType ToRelationshipType(this INavigation nav)
         {
-            if (nav == null) return null;
-            if (nav.ForeignKey.IsUnique)
-                return RelationshipType.OneToOne;
+            if (nav.ForeignKey.IsUnique) return RelationshipType.OneToOne;
+            
             return nav.IsDependentToPrincipal() ? RelationshipType.OneToMany : RelationshipType.ManyToOne;
         }
     }
-    
+
     /// <summary>
     /// Type of relationship between entities.
     /// </summary>

@@ -3,7 +3,7 @@ using DNTFrameworkCore.TestWebApp.Application.Catalog.Models;
 using DNTFrameworkCore.TestWebApp.Authorization;
 using DNTFrameworkCore.Web.Mvc;
 
-namespace DNTFrameworkCore.TestWebApp
+namespace DNTFrameworkCore.TestWebApp.Controllers
 {
     public class ProductsController : CrudController<IProductService, long, ProductModel>
     {

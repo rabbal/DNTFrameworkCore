@@ -96,7 +96,7 @@ namespace DNTFrameworkCore.Application
             result = await EventBus.TriggerCreatingEventAsync<TModel, TKey>(modelList, cancellationToken);
             if (result.Failed) return result;
 
-            await CreateListAsync(entityList, cancellationToken);
+            await CreateEntityListAsync(entityList, cancellationToken);
 
             MappingExtensions.Map(entityList, modelList, MapToModel);
 
@@ -136,7 +136,7 @@ namespace DNTFrameworkCore.Application
             result = await EventBus.TriggerEditingEventAsync<TModel, TKey>(modifiedList, cancellationToken);
             if (result.Failed) return result;
 
-            await UpdateListAsync(entityList, cancellationToken);
+            await UpdateEntityListAsync(entityList, cancellationToken);
 
             MappingExtensions.Map(entityList, modelList, MapToModel);
 
@@ -172,7 +172,7 @@ namespace DNTFrameworkCore.Application
             result = await EventBus.TriggerDeletingEventAsync<TModel, TKey>(modelList, cancellationToken);
             if (result.Failed) return result;
 
-            await RemoveListAsync(entityList, cancellationToken);
+            await RemoveEntityListAsync(entityList, cancellationToken);
 
             result = await AfterDeleteAsync(modelList, cancellationToken);
             if (result.Failed) return result;
@@ -272,13 +272,13 @@ namespace DNTFrameworkCore.Application
         protected abstract Task<IPagedResult<TEntity>> FindEntityPagedListAsync(PagedRequestModel model,
             CancellationToken cancellationToken = default);
 
-        protected abstract Task UpdateListAsync(IReadOnlyList<TEntity> entityList,
+        protected abstract Task UpdateEntityListAsync(IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken);
 
-        protected abstract Task CreateListAsync(IReadOnlyList<TEntity> entityList,
+        protected abstract Task CreateEntityListAsync(IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken);
 
-        protected abstract Task RemoveListAsync(IReadOnlyList<TEntity> entityList,
+        protected abstract Task RemoveEntityListAsync(IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken);
     }
 }

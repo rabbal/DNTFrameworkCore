@@ -67,7 +67,7 @@ namespace DNTFrameworkCore.Extensibility
             return instance.ExtensionProperty<object>(name);
         }
 
-        public static IEnumerable<ExtensionPropertyDescriptor<T>> ExtraPropertyList<T>(this object instance) where T : class
+        public static IEnumerable<ExtensionPropertyDescriptor<T>> ExtensionPropertyList<T>(this object instance) where T : class
         {
             if (!PropertyCache.TryGetValue(instance, out var properties))
                 throw new KeyNotFoundException($"key: {instance.GetType().Name} was not found in dictionary");

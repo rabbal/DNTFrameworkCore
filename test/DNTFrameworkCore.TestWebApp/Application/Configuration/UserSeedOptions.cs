@@ -1,6 +1,6 @@
 namespace DNTFrameworkCore.TestWebApp.Application.Configuration
 {
-    public class UserSeed
+    public class UserSeedOptions
     {
         public string UserName { get; set; }
         public string Password { get; set; }

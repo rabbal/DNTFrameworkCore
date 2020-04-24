@@ -29,7 +29,7 @@ namespace DNTFrameworkCore.Extensibility
             public ExtensionPropertyCustomTypeDescriptor(ICustomTypeDescriptor defaultDescriptor, object instance)
                 : base(defaultDescriptor)
             {
-                _instanceExtraProperties = instance.ExtraPropertyList<T>();
+                _instanceExtraProperties = instance.ExtensionPropertyList<T>();
             }
 
             public override PropertyDescriptorCollection GetProperties(Attribute[] attributes)

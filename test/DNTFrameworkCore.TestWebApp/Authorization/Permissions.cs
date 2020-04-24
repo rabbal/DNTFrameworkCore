@@ -74,7 +74,7 @@ namespace DNTFrameworkCore.TestWebApp.Authorization
 
         private static ILocalizableString L(string name)
         {
-            return new LocalizableString(name, "PermissionsResource", "Resources");
+            return new LocalizableString(name, "SharedResource", "DNTFrameworkCore.TestWebApp");
         }
     }
 }

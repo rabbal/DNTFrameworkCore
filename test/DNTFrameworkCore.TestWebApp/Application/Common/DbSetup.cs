@@ -13,17 +13,17 @@ using Microsoft.Extensions.Options;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Common
 {
-    public class DbSeed : IDbSetup
+    public class DbSetup : IDbSetup
     {
         private readonly IUnitOfWork _uow;
-        private readonly IOptionsSnapshot<ProjectSetting> _settings;
+        private readonly IOptionsSnapshot<ProjectOptions> _settings;
         private readonly IUserPasswordHashAlgorithm _password;
-        private readonly ILogger<DbSeed> _logger;
+        private readonly ILogger<DbSetup> _logger;
 
-        public DbSeed(IUnitOfWork uow,
-            IOptionsSnapshot<ProjectSetting> settings,
+        public DbSetup(IUnitOfWork uow,
+            IOptionsSnapshot<ProjectOptions> settings,
             IUserPasswordHashAlgorithm password,
-            ILogger<DbSeed> logger)
+            ILogger<DbSetup> logger)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));

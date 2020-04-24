@@ -27,8 +27,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddEFCore<ProjectDbContext>()
-                .WithTrackingHook<long>()
-                .WithTenancyHook<long>()
+                .WithTrackingHook<long>()    
                 .WithRowLevelSecurityHook<long>()
                 .WithNumberingHook(options =>
                 {

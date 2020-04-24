@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.TestWebApp.Application
 
         public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<ProjectSetting>(configuration.Bind);
+            services.Configure<ProjectOptions>(configuration.Bind);
 
             services.AddAutoMapper(typeof(ApplicationRegistry));
             services.AddValidatorsFromAssemblyContaining(typeof(ApplicationRegistry));

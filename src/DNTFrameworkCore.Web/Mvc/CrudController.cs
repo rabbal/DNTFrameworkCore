@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Application.Models;
-using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Mapping;
 using DNTFrameworkCore.Querying;
@@ -12,7 +11,6 @@ using DNTFrameworkCore.Web.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.Web.Mvc
 {
@@ -156,9 +154,6 @@ namespace DNTFrameworkCore.Web.Mvc
         private const string ContinueEditingParameterName = "continueEditing";
         private const string ContinueEditingFormName = "save-continue";
 
-        private IAuthorizationService AuthorizationService =>
-            HttpContext.RequestServices.GetRequiredService<IAuthorizationService>();
-
         protected abstract string CreatePermissionName { get; }
         protected abstract string EditPermissionName { get; }
         protected abstract string ViewPermissionName { get; }
@@ -176,7 +171,7 @@ namespace DNTFrameworkCore.Web.Mvc
         [HttpGet]
         public async Task<IActionResult> Index(TFilteredPagedRequestModel query, CancellationToken cancellationToken)
         {
-            if (!await HasPermission(ViewPermissionName)) return Forbid();
+            if (!await this.HasPermission(ViewPermissionName)) return Forbid();
 
             query ??= Factory<TFilteredPagedRequestModel>.CreateInstance();
             var model = await ReadPagedListAsync(query, cancellationToken);
@@ -191,7 +186,7 @@ namespace DNTFrameworkCore.Web.Mvc
         public async Task<IActionResult> ReadPagedList(TFilteredPagedRequestModel model,
             CancellationToken cancellationToken)
         {
-            if (!await HasPermission(ViewPermissionName)) return Forbid();
+            if (!await this.HasPermission(ViewPermissionName)) return Forbid();
 
             model ??= Factory<TFilteredPagedRequestModel>.CreateInstance();
             var result = await ReadPagedListAsync(model, cancellationToken);
@@ -205,9 +200,9 @@ namespace DNTFrameworkCore.Web.Mvc
         [NoResponseCache]
         public async Task<IActionResult> List(TFilteredPagedRequestModel query, CancellationToken cancellationToken)
         {
-            if (!await HasPermission(ViewPermissionName)) return Forbid();
+            if (!await this.HasPermission(ViewPermissionName)) return Forbid();
 
-            query = query ?? Factory<TFilteredPagedRequestModel>.CreateInstance();
+            query ??= Factory<TFilteredPagedRequestModel>.CreateInstance();
             var result = await ReadPagedListAsync(query, cancellationToken);
 
             var model = new PagedListModel<TReadModel, TFilteredPagedRequestModel>
@@ -236,7 +231,7 @@ namespace DNTFrameworkCore.Web.Mvc
         [AjaxOnly]
         public async Task<IActionResult> Create()
         {
-            if (!await HasPermission(CreatePermissionName)) return Forbid();
+            if (!await this.HasPermission(CreatePermissionName)) return Forbid();
 
             var model = Factory<TModel>.CreateInstance();
             return RenderView(model);
@@ -248,7 +243,7 @@ namespace DNTFrameworkCore.Web.Mvc
         [ParameterBasedOnFormName(ContinueEditingFormName, ContinueEditingParameterName)]
         public async Task<IActionResult> Create(TModel model, bool continueEditing, CancellationToken cancellationToken)
         {
-            if (!await HasPermission(CreatePermissionName)) return Forbid();
+            if (!await this.HasPermission(CreatePermissionName)) return Forbid();
 
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -268,7 +263,7 @@ namespace DNTFrameworkCore.Web.Mvc
         [AjaxOnly]
         public async Task<IActionResult> Edit([BindRequired] TKey id, CancellationToken cancellationToken)
         {
-            if (!await HasPermission(EditPermissionName)) return Forbid();
+            if (!await this.HasPermission(EditPermissionName)) return Forbid();
 
             var model = await FindAsync(id, cancellationToken);
 
@@ -281,7 +276,7 @@ namespace DNTFrameworkCore.Web.Mvc
         [ParameterBasedOnFormName(ContinueEditingFormName, ContinueEditingParameterName)]
         public async Task<IActionResult> Edit(TModel model, bool continueEditing, CancellationToken cancellationToken)
         {
-            if (!await HasPermission(EditPermissionName)) return Forbid();
+            if (!await this.HasPermission(EditPermissionName)) return Forbid();
 
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -302,7 +297,7 @@ namespace DNTFrameworkCore.Web.Mvc
         [NoResponseCache]
         public async Task<IActionResult> Delete([BindRequired] TKey id, CancellationToken cancellationToken)
         {
-            if (!await HasPermission(DeletePermissionName)) return Forbid();
+            if (!await this.HasPermission(DeletePermissionName)) return Forbid();
 
             var model = await FindAsync(id, cancellationToken);
             if (!model.HasValue) return NotFound();
@@ -312,12 +307,6 @@ namespace DNTFrameworkCore.Web.Mvc
 
             ModelState.AddResult(result);
             return BadRequest(ModelState);
-        }
-
-        private async Task<bool> HasPermission(string permissionName)
-        {
-            var policyName = PermissionConstant.PolicyPrefix + permissionName;
-            return (await AuthorizationService.AuthorizeAsync(User, policyName)).Succeeded;
         }
     }
 }
