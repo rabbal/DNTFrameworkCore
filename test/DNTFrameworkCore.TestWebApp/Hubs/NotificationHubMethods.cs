@@ -1,4 +1,4 @@
-namespace DNTFrameworkCore.TestAPI.Hubs
+namespace DNTFrameworkCore.TestWebApp.Hubs
 {
     public static class NotificationHubMethods
     {

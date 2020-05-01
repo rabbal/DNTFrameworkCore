@@ -34,4 +34,7 @@
     <data name="Roles_Delete" xml:space="preserve">
         <value>Delete Role</value>
     </data>
+    <data name="Administration.Views.Role.Index.Title">
+        <value>گروه‌های کاربری</value>
+    </data>
 </root>

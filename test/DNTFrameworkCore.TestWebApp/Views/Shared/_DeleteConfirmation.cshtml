@@ -9,7 +9,7 @@
 <form action="@Model.Url" asp-antiforgery="true" asp-modal-form="delete-confirmation">
 
     <div class="modal-body">
-        <input name="Id" value="@Model.ModelId" type="hidden"/>  
+        <input asp-for="Id" type="hidden"/>  
         @Model.Body  
     </div>
     <div class="modal-footer">

@@ -65,7 +65,7 @@ namespace DNTFrameworkCore.TestWebApp
                 var urlHelperFactory = serviceProvider.GetService<IUrlHelperFactory>();
                 return urlHelperFactory?.GetUrlHelper(actionContext);
             });
-            services.AddMvc()
+            services.AddControllersWithViews()
                 .AddMvcLocalization()
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization(o =>
@@ -78,6 +78,7 @@ namespace DNTFrameworkCore.TestWebApp
                             : factory.Create(localizationResource.Name, localizationResource.Location);
                     };
                 });
+            
         }
     }
 }

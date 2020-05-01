@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
         }
     }
 
-    public class HandleException : IExceptionFilter
+    public sealed class HandleException : IExceptionFilter
     {
         private readonly ILogger<HandleException> _logger;
         private readonly IOptions<ExceptionOptions> _options;
@@ -72,25 +72,20 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
                 _logger.LogError(new EventId(context.Exception.HResult), context.Exception, context.Exception.Message);
 
                 var traceId = Activity.Current?.Id ?? context.HttpContext.TraceIdentifier;
-                
-                switch (context.Exception)
+
+                context.Result = context.Exception switch
                 {
-                    case DbException _:
-                        context.Result = new InternalServerErrorObjectResult(new
-                        {
-                            Message = _options.Value.DbException,
-                            TraceId = traceId
-                        });
-                        break;
-                    default:
-                        context.Result = new InternalServerErrorObjectResult(new
-                        {
-                            Message = _options.Value.InternalServerIssue,
-                            DeveloperMessage = context.Exception.ToStringFormat(),
-                            TraceId = traceId
-                        });
-                        break;
-                }
+                    DbException _ => new InternalServerErrorObjectResult(new
+                    {
+                        Message = _options.Value.DbException, TraceId = traceId
+                    }),
+                    _ => new InternalServerErrorObjectResult(new
+                    {
+                        Message = _options.Value.InternalServerIssue,
+                        DeveloperMessage = context.Exception.ToStringFormat(),
+                        TraceId = traceId
+                    })
+                };
 
                 context.HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
             }

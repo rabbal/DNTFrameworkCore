@@ -231,6 +231,24 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.ToTable("Blog");
                 });
 
+            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Catalog.PriceType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("NormalizedTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PriceType");
+                });
+
             modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Catalog.Product", b =>
                 {
                     b.Property<long>("Id")
@@ -269,9 +287,6 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.Property<string>("Number")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
@@ -285,6 +300,34 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Catalog.ProductPrice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("PriceTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PriceTypeId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductPrice");
                 });
 
             modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Identity.Permission", b =>
@@ -599,89 +642,6 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.ToTable("UserRole");
                 });
 
-            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Invoices.Invoice", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasColumnType("nvarchar(1024)")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("CreatedByIP")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<long?>("CreatedByUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(1024)")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasColumnType("nvarchar(1024)")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("ModifiedByIP")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<long?>("ModifiedByUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Number")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Invoice");
-                });
-
-            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Invoices.InvoiceItem", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("InvoiceId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("ProductId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("UnitDiscount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InvoiceId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("InvoiceItem");
-                });
-
             modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Tasks.Task", b =>
                 {
                     b.Property<int>("Id")
@@ -747,6 +707,21 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("UserPermission");
                 });
 
+            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Catalog.ProductPrice", b =>
+                {
+                    b.HasOne("DNTFrameworkCore.TestWebApp.Domain.Catalog.PriceType", "PriceType")
+                        .WithMany()
+                        .HasForeignKey("PriceTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DNTFrameworkCore.TestWebApp.Domain.Catalog.Product", "Product")
+                        .WithMany("Prices")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Identity.RoleClaim", b =>
                 {
                     b.HasOne("DNTFrameworkCore.TestWebApp.Domain.Identity.Role", "Role")
@@ -776,21 +751,6 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.HasOne("DNTFrameworkCore.TestWebApp.Domain.Identity.User", "User")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Invoices.InvoiceItem", b =>
-                {
-                    b.HasOne("DNTFrameworkCore.TestWebApp.Domain.Invoices.Invoice", "Invoice")
-                        .WithMany("Items")
-                        .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DNTFrameworkCore.TestWebApp.Domain.Catalog.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

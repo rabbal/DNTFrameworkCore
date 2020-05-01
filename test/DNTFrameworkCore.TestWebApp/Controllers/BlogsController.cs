@@ -15,6 +15,6 @@ namespace DNTFrameworkCore.TestWebApp.Controllers
         protected override string EditPermissionName => PermissionNames.Blogs_Edit;
         protected override string ViewPermissionName => PermissionNames.Blogs_View;
         protected override string DeletePermissionName => PermissionNames.Blogs_Delete;
-        protected override string ViewName => "_BlogModal";
+        protected override string ViewName => "_BlogPartial";
     }
 }

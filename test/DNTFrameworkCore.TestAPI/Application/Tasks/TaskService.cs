@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using DNTFrameworkCore.Application;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
@@ -11,7 +10,6 @@ using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Linq;
 using DNTFrameworkCore.Querying;
 using DNTFrameworkCore.TestAPI.Application.Tasks.Models;
-using DNTPersianUtils.Core;
 using Microsoft.EntityFrameworkCore;
 using Task = DNTFrameworkCore.TestAPI.Domain.Tasks.Task;
 
@@ -25,14 +23,8 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
     public class TaskService : CrudService<Task, int, TaskReadModel, TaskModel,
         TaskFilteredPagedRequestModel>, ITaskService
     {
-        private readonly IMapper _mapper;
-
-        public TaskService(
-            IUnitOfWork uow,
-            IEventBus bus,
-            IMapper mapper) : base(uow, bus)
+        public TaskService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
         {
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public bool TamperedTaskExists()
@@ -60,18 +52,31 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
 
         protected override void MapToEntity(TaskModel model, Task task)
         {
-            _mapper.Map(model, task);
-            if (task.IsTransient())
-            {
-                task.BranchId = 3;
-                task.LocalDateTime = DateTime.UtcNow.ToIranTimeZoneDateTime();
-                task.NullableDateTime = DateTime.UtcNow;
-            }
+            task.Title = model.Title;
+            task.Number = model.Number;
+            task.Description = model.Description;
+            task.State = model.State;
+            task.Version = model.Version;
+            task.NormalizedTitle = model.Title.ToUpperInvariant();
+            
+            if (!task.IsTransient()) return;
+
+            task.BranchId = 3;
+            task.LocalDateTime = DateTime.UtcNow.ToLocalTime();
+            task.NullableDateTime = DateTime.UtcNow;
         }
 
         protected override TaskModel MapToModel(Task task)
         {
-            return _mapper.Map<TaskModel>(task);
+            return new TaskModel
+            {
+                Title = task.Title,
+                Number = task.Number,
+                Description = task.Description,
+                State = task.State,
+                Version = task.Version,
+                Id = task.Id
+            };
         }
     }
 }

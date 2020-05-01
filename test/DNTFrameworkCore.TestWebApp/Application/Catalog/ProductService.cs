@@ -40,7 +40,6 @@ namespace DNTFrameworkCore.TestWebApp.Application.Catalog
                 Id = p.Id,
                 Version = p.Version,
                 Title = p.Title,
-                Price = p.Price,
                 Number = p.Number
             }).ToPagedListAsync(model, cancellationToken);
         }

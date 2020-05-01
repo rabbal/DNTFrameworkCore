@@ -35,7 +35,7 @@ namespace DNTFrameworkCore.Mapping
                 throw new ArgumentNullException(nameof(source));
             }
 
-            var destination = Factory<TDestination>.CreateInstance();
+            var destination = Factory<TDestination>.New();
             mapper.Map(source, destination);
             return destination;
         }
@@ -73,7 +73,7 @@ namespace DNTFrameworkCore.Mapping
             var i = 0;
             foreach (var item in sourceCollection)
             {
-                var destination = Factory<TDestination>.CreateInstance();
+                var destination = Factory<TDestination>.New();
                 mapper.Map(item, destination);
                 destinationCollection[i] = destination;
                 ++i;
@@ -112,7 +112,7 @@ namespace DNTFrameworkCore.Mapping
             for (var i = 0; i < source.Count; ++i)
             {
                 var sourceItem = source[i];
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper.Map(sourceItem, destinationItem);
                 destination[i] = destinationItem;
             }
@@ -150,7 +150,7 @@ namespace DNTFrameworkCore.Mapping
             for (var i = 0; i < source.Count; ++i)
             {
                 var sourceItem = source[i];
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper.Map(sourceItem, destinationItem);
                 destination[i] = destinationItem;
             }
@@ -188,7 +188,7 @@ namespace DNTFrameworkCore.Mapping
             for (var i = 0; i < source.Length; ++i)
             {
                 var sourceItem = source[i];
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper.Map(sourceItem, destinationItem);
                 destination[i] = destinationItem;
             }
@@ -226,7 +226,7 @@ namespace DNTFrameworkCore.Mapping
             var i = 0;
             foreach (var sourceItem in source)
             {
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper.Map(sourceItem, destinationItem);
                 destination[i] = destinationItem;
                 ++i;
@@ -271,7 +271,7 @@ namespace DNTFrameworkCore.Mapping
 
             foreach (var item in sourceCollection)
             {
-                var destination = Factory<TDestination>.CreateInstance();
+                var destination = Factory<TDestination>.New();
                 mapper.Map(item, destination);
                 destinationCollection.Add(destination);
             }
@@ -309,7 +309,7 @@ namespace DNTFrameworkCore.Mapping
             for (var i = 0; i < source.Count; ++i)
             {
                 var sourceItem = source[i];
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper.Map(sourceItem, destinationItem);
                 destination.Insert(i, destinationItem);
             }
@@ -347,7 +347,7 @@ namespace DNTFrameworkCore.Mapping
             for (var i = 0; i < source.Count; ++i)
             {
                 var sourceItem = source[i];
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper.Map(sourceItem, destinationItem);
                 destination.Insert(i, destinationItem);
             }
@@ -385,7 +385,7 @@ namespace DNTFrameworkCore.Mapping
             for (var i = 0; i < source.Length; ++i)
             {
                 var sourceItem = source[i];
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper.Map(sourceItem, destinationItem);
                 destination.Insert(i, destinationItem);
             }
@@ -422,7 +422,7 @@ namespace DNTFrameworkCore.Mapping
             var destination = new Collection<TDestination>();
             foreach (var sourceItem in source)
             {
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper.Map(sourceItem, destinationItem);
                 destination.Add(destinationItem);
             }
@@ -460,7 +460,7 @@ namespace DNTFrameworkCore.Mapping
             for (var i = 0; i < source.Count; ++i)
             {
                 var sourceItem = source[i];
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper.Map(sourceItem, destinationItem);
                 destination.Insert(i, destinationItem);
             }
@@ -498,7 +498,7 @@ namespace DNTFrameworkCore.Mapping
             for (var i = 0; i < source.Count; ++i)
             {
                 var sourceItem = source[i];
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper.Map(sourceItem, destinationItem);
                 destination.Insert(i, destinationItem);
             }
@@ -536,7 +536,7 @@ namespace DNTFrameworkCore.Mapping
             for (var i = 0; i < source.Length; ++i)
             {
                 var sourceItem = source[i];
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper.Map(sourceItem, destinationItem);
                 destination.Insert(i, destinationItem);
             }
@@ -573,7 +573,7 @@ namespace DNTFrameworkCore.Mapping
             var destination = new List<TDestination>(source.Count());
             foreach (var sourceItem in source)
             {
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper.Map(sourceItem, destinationItem);
                 destination.Add(destinationItem);
             }
@@ -611,7 +611,7 @@ namespace DNTFrameworkCore.Mapping
             for (var i = 0; i < source.Count; ++i)
             {
                 var sourceItem = source[i];
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper.Map(sourceItem, destinationItem);
                 destination.Insert(i, destinationItem);
             }
@@ -649,7 +649,7 @@ namespace DNTFrameworkCore.Mapping
             for (var i = 0; i < source.Count; ++i)
             {
                 var sourceItem = source[i];
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper.Map(sourceItem, destinationItem);
                 destination.Insert(i, destinationItem);
             }
@@ -687,7 +687,7 @@ namespace DNTFrameworkCore.Mapping
             for (var i = 0; i < source.Length; ++i)
             {
                 var sourceItem = source[i];
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper.Map(sourceItem, destinationItem);
                 destination.Insert(i, destinationItem);
             }
@@ -724,7 +724,7 @@ namespace DNTFrameworkCore.Mapping
             var destination = new ObservableCollection<TDestination>();
             foreach (var sourceItem in source)
             {
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper.Map(sourceItem, destinationItem);
                 destination.Add(destinationItem);
             }

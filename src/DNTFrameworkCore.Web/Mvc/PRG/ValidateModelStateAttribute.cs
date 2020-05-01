@@ -1,10 +1,10 @@
 using System;
-using System.Net;
 using DNTFrameworkCore.Web.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace DNTFrameworkCore.Web.Filters
+namespace DNTFrameworkCore.Web.Mvc.PRG
 {
     /// <summary>
     /// An ActionFilter for automatically validating ModelState before a controller action is executed.
@@ -33,17 +33,16 @@ namespace DNTFrameworkCore.Web.Filters
         protected virtual void ProcessNormal(ActionExecutingContext filterContext)
         {
             // Export ModelState to TempData so it's available on next request
-            ExportModelStateToTempData(filterContext);
+            ExportModelState(filterContext);
 
-            // redirect back to GET action
+            // Redirect back to GET action
             filterContext.Result = new RedirectToRouteResult(filterContext.RouteData.Values);
         }
 
         protected virtual void ProcessAjax(ActionExecutingContext filterContext)
         {
-            // send 400 status code (Bad Request)
             filterContext.Result = new BadRequestObjectResult(filterContext.ModelState);
-            filterContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            filterContext.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
         }
     }
 }

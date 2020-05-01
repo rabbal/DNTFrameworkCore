@@ -1,4 +1,5 @@
-﻿using DNTFrameworkCore.FluentValidation;
+﻿using DNTFrameworkCore.Dependency;
+using DNTFrameworkCore.FluentValidation;
 using DNTFrameworkCore.TestWebApp.Application;
 using DNTFrameworkCore.TestWebApp.Infrastructure;
 using DNTFrameworkCore.TestWebApp.Resources;
@@ -30,7 +31,7 @@ namespace DNTFrameworkCore.TestWebApp
                 .WithSecurityService()
                 .WithBackgroundTaskQueue()
                 .WithRandomNumber();
-            
+
             services.AddWebFramework()
                 .WithPermissionAuthorization()
                 .WithProtection()
@@ -43,7 +44,6 @@ namespace DNTFrameworkCore.TestWebApp
             services.AddApplication(Configuration);
             services.AddResources();
             services.AddWeb();
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

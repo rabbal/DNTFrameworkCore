@@ -16,12 +16,4 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks.Validators
             }
         }
     }
-
-    // FluentValidation Library can be used 
-    // public class TaskFluentValidator : FluentModelValidator<TaskModel>
-    //{
-    //  public TaskFluentValidator()
-    //  {
-    //  }
-    //}
 }

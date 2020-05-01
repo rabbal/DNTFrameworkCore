@@ -1,0 +1,41 @@
+@inherits EntityFormRazorPage<dynamic>
+@{
+    Layout = null;
+}
+<div class="modal-header">
+    <h4 class="modal-title" asp-if="IsNew">Create New @EntityDisplayName</h4>
+    <h4 class="modal-title" asp-if="!IsNew">Edit @EntityDisplayName</h4>
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+</div>
+<form asp-action="@(IsNew ? CreateActionName : EditActionName)" asp-modal-form="@FormId">
+    <div class="modal-body">
+        <input type="hidden" name="continue-editing" value="true" asp-permission="@EditPermission"/>
+        <input asp-for="@Version" type="hidden"/>
+        <input asp-for="@Id" type="hidden"/>
+        @RenderBody()
+    </div>
+    <div class="modal-footer">
+
+        <a class="btn btn-light btn-circle" asp-modal-delete-link asp-model-id="@Id" asp-modal-toggle="false"
+           asp-action="@DeleteActionName" asp-if="!IsNew" asp-permission="@DeletePermission"
+           title="Delete Role">
+            <i class="fa fa-trash text-danger"></i>
+        </a>
+
+        <a class="btn btn-light btn-circle" title="Refresh Role" asp-if="!IsNew" asp-modal-link asp-modal-toggle="false"
+           asp-action="@EditActionName" asp-route-id="@Id">
+            <i class="fa fa-repeat"></i>
+        </a>
+        <a class="btn btn-light btn-circle mr-auto" title="New Role" asp-modal-link asp-modal-toggle="false"
+           asp-permission="@CreatePermission"
+           asp-action="@CreateActionName">
+            <i class="fa fa-plus"></i>
+        </a>
+        <button type="button" class="btn btn-light" data-dismiss="modal">
+            <i class="fa fa-ban"></i>&nbsp; Cancel
+        </button>
+        <button type="submit" class="btn btn-outline-primary">
+            <i class="fa fa-save"></i>&nbsp;Save Changes
+        </button>
+    </div>
+</form>

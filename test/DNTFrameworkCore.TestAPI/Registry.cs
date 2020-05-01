@@ -8,7 +8,6 @@ using DNTFrameworkCore.TestAPI.Authentication;
 using DNTFrameworkCore.TestAPI.Infrastructure.Context;
 using DNTFrameworkCore.Web.EFCore.Cryptography;
 using DNTFrameworkCore.Web.ExceptionHandling;
-using DNTFrameworkCore.Web.Filters;
 using DNTFrameworkCore.Web.ModelBinders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

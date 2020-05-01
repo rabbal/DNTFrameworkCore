@@ -15,6 +15,6 @@ namespace DNTFrameworkCore.TestWebApp.Controllers
         protected override string EditPermissionName => PermissionNames.Products_Edit;
         protected override string ViewPermissionName => PermissionNames.Products_View;
         protected override string DeletePermissionName => PermissionNames.Products_Delete;
-        protected override string ViewName => "_ProductModal";
+        protected override string ViewName => "_ProductPartial";
     }
 }

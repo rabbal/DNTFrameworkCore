@@ -66,11 +66,11 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
             return _mapper.Map<UserModel>(user);
         }
 
-        private void MapSerialNumber(User user, UserModel model)
+        private static void MapSerialNumber(User user, UserModel model)
         {
             if (!model.ShouldMapSerialNumber()) return;
 
-            user.SerialNumber = user.NewSerialNumber();
+            user.SerialNumber = User.NewSerialNumber();
         }
 
         private void MapPasswordHash(User user, UserModel model)

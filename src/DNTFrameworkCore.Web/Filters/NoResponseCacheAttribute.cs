@@ -10,12 +10,12 @@ namespace DNTFrameworkCore.Web.Filters
     public class NoResponseCacheAttribute : ResponseCacheAttribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NoCacheAttribute"/> class.
+        /// Initializes a new instance of the <see cref="NoResponseCacheAttribute"/> class.
         /// </summary>
         public NoResponseCacheAttribute()
         {
-            this.NoStore = true;
-            this.Location = ResponseCacheLocation.None;
+            NoStore = true;
+            Location = ResponseCacheLocation.None;
         }
     }
 }

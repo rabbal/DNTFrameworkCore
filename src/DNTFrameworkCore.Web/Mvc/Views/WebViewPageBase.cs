@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using DNTFrameworkCore.Extensions;
-using DNTFrameworkCore.Runtime;
+﻿using DNTFrameworkCore.Extensions;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.Internal;
@@ -10,12 +8,11 @@ namespace DNTFrameworkCore.Web.Mvc.Views
     public abstract class WebViewPageBase<TModel> : RazorPage<TModel>
     {
         [RazorInject] public IHtmlLocalizerFactory HtmlLocalizerFactory { get; set; }
-        [RazorInject] public IUserSession UserSession { get; set; }
 
         private IHtmlLocalizer HtmlLocalizer =>
             HtmlLocalizerFactory.Create(LocalizationResourceName, LocalizationResourceLocation);
 
-        protected bool IsAuthenticated => UserSession.IsAuthenticated;
+        protected bool IsAuthenticated => Context.User.Identity.IsAuthenticated;
 
         protected string ApplicationPath
         {
@@ -50,13 +47,13 @@ namespace DNTFrameworkCore.Web.Mvc.Views
 
         /// <summary>
         /// The name of the resource to load strings from
-        /// It must be set in order to use <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
+        /// It must be set in order to use <see cref="L(string)"/> and <see cref="L(string)"/> methods.
         /// </summary>
         protected string LocalizationResourceName { get; set; } = "SharedResource";
 
         /// <summary>
         /// The location to load resources from
-        /// It must be set in order to use <see cref="L(string)"/> and <see cref="L(string,CultureInfo)"/> methods.
+        /// It must be set in order to use <see cref="L(string)"/> and <see cref="L(string)"/> methods.
         /// </summary>
         protected string LocalizationResourceLocation { get; set; }
 
@@ -69,14 +66,5 @@ namespace DNTFrameworkCore.Web.Mvc.Views
         /// Gets localized string for given key name and current language with formatting strings.
         /// </summary>
         protected string L(string name, params object[] args) => HtmlLocalizer.GetString(name, args);
-
-        /// <summary>
-        /// Checks if current user is granted for a permission.
-        /// </summary>
-        /// <param name="permissionName">Name of the permission</param>
-        protected bool HasPermission(string permissionName)
-        {
-            return UserSession.IsGranted(permissionName);
-        }
     }
 }

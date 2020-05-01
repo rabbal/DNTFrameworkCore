@@ -10,7 +10,7 @@ namespace DNTFrameworkCore.Extensions
 {
     public static class StringExtensions
     {
-        static readonly Regex MatchArabicHebrew = new Regex(@"[\u0600-\u06FF,\u0590-\u05FF]",
+        private static readonly Regex MatchArabicHebrew = new Regex(@"[\u0600-\u06FF,\u0590-\u05FF]",
             RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         /// <summary>
@@ -39,89 +39,73 @@ namespace DNTFrameworkCore.Extensions
         /// <summary>
         /// Adds a char to end of given string if it does not ends with the char.
         /// </summary>
-        public static string EnsureEndsWith(this string str, char c)
+        public static string EnsureEndsWith(this string text, char c, StringComparison comparisonType = StringComparison.Ordinal)
         {
-            return EnsureEndsWith(str, c, StringComparison.Ordinal);
+            if (text == null)
+            {
+                throw new ArgumentNullException(nameof(text));
+            }
+
+            if (text.EndsWith(c.ToString(), comparisonType))
+            {
+                return text;
+            }
+
+            return text + c;
         }
 
         /// <summary>
         /// Adds a char to end of given string if it does not ends with the char.
         /// </summary>
-        public static string EnsureEndsWith(this string str, char c, StringComparison comparisonType)
+        public static string EnsureEndsWith(this string text, char symbol, bool ignoreCase, CultureInfo culture)
         {
-            if (str == null)
+            if (text == null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(text));
             }
 
-            if (str.EndsWith(c.ToString(), comparisonType))
+            if (text.EndsWith(symbol.ToString(culture), ignoreCase, culture))
             {
-                return str;
+                return text;
             }
 
-            return str + c;
-        }
-
-        /// <summary>
-        /// Adds a char to end of given string if it does not ends with the char.
-        /// </summary>
-        public static string EnsureEndsWith(this string str, char c, bool ignoreCase, CultureInfo culture)
-        {
-            if (str == null)
-            {
-                throw new ArgumentNullException(nameof(str));
-            }
-
-            if (str.EndsWith(c.ToString(culture), ignoreCase, culture))
-            {
-                return str;
-            }
-
-            return str + c;
+            return text + symbol;
         }
 
         /// <summary>
         /// Adds a char to beginning of given string if it does not starts with the char.
         /// </summary>
-        public static string EnsureStartsWith(this string str, char c)
+        public static string EnsureStartsWith(this string text, char symbol, StringComparison comparisonType = StringComparison.Ordinal)
         {
-            return EnsureStartsWith(str, c, StringComparison.Ordinal);
+            if (text == null)
+            {
+                throw new ArgumentNullException(nameof(text));
+            }
+
+            if (text.StartsWith(symbol.ToString(), comparisonType))
+            {
+                return text;
+            }
+
+            return symbol + text;
         }
 
         /// <summary>
         /// Adds a char to beginning of given string if it does not starts with the char.
         /// </summary>
-        public static string EnsureStartsWith(this string str, char c, StringComparison comparisonType)
+        public static string EnsureStartsWith(this string text, char symbol, bool ignoreCase, CultureInfo culture)
         {
-            if (str == null)
+            if (text == null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(text));
             }
 
-            if (str.StartsWith(c.ToString(), comparisonType))
+            if (text.StartsWith(symbol.ToString(culture), ignoreCase, culture))
             {
-                return str;
+                return text;
             }
 
-            return c + str;
-        }
-
-        /// <summary>
-        /// Adds a char to beginning of given string if it does not starts with the char.
-        /// </summary>
-        public static string EnsureStartsWith(this string str, char c, bool ignoreCase, CultureInfo culture)
-        {
-            if (str == null)
-            {
-                throw new ArgumentNullException("str");
-            }
-
-            if (str.StartsWith(c.ToString(culture), ignoreCase, culture))
-            {
-                return str;
-            }
-
-            return c + str;
+            return symbol + text;
         }
 
         /// <summary>
@@ -143,29 +127,29 @@ namespace DNTFrameworkCore.Extensions
         /// <summary>
         /// Gets a substring of a string from beginning of the string.
         /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="text"/> is null</exception>
         /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length</exception>
-        public static string Left(this string str, int len)
+        public static string Left(this string text, int len)
         {
-            if (str == null)
+            if (text == null)
             {
-                throw new ArgumentNullException("str");
+                throw new ArgumentNullException(nameof(text));
             }
 
-            if (str.Length < len)
+            if (text.Length < len)
             {
                 throw new ArgumentException("len argument can not be bigger than given string's length!");
             }
 
-            return str.Substring(0, len);
+            return text.Substring(0, len);
         }
 
         /// <summary>
         /// Converts line endings in the string to <see cref="Environment.NewLine"/>.
         /// </summary>
-        public static string NormalizeLineEndings(this string str)
+        public static string NormalizeLineEndings(this string text)
         {
-            return str.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", Environment.NewLine);
+            return text.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", Environment.NewLine);
         }
 
         /// <summary>

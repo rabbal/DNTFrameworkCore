@@ -74,7 +74,7 @@ namespace DNTFrameworkCore.Mapping
             var destination = new List<TDestination>(sourceList.Count);
             foreach (var sourceItem in sourceList)
             {
-                var destinationItem = Factory<TDestination>.CreateInstance();
+                var destinationItem = Factory<TDestination>.New();
                 mapper(sourceItem, destinationItem);
                 destination.Add(destinationItem);
             }

@@ -4,7 +4,7 @@ using DNTFrameworkCore.Runtime;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
-namespace DNTFrameworkCore.TestAPI.Hubs
+namespace DNTFrameworkCore.TestWebApp.Hubs
 {
     [Authorize]
     public class NotificationHub : Hub

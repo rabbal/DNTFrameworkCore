@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.TestWebApp.Application.Identity.Models;
 
-namespace DNTFrameworkCore.TestWebApp.Models
+namespace DNTFrameworkCore.TestWebApp.Models.Users
 {
     // public class UserModalViewModel : UserModel
     // {

@@ -17,7 +17,7 @@ namespace DNTFrameworkCore.TestWebApp.Helpers
         }
 
         [HtmlAttributeName(ModelIdAttributeName)]
-        public string ModelId { get; set; }
+        public string Id { get; set; }
         [HtmlAttributeName("asp-modal-toggle")]
         public bool ModalToggle { get; set; } = true;
         [HtmlAttributeName("asp-title")]
@@ -30,7 +30,7 @@ namespace DNTFrameworkCore.TestWebApp.Helpers
             var href = output.Attributes["href"].Value;
             var query = new DeleteConfirmationModel
             {
-                ModelId = ModelId,
+                Id = Id,
                 Url = href.ToString(),
                 Title = string.IsNullOrEmpty(Title) ? "Are you sure?" : Title,
                 Body = string.IsNullOrEmpty(Body) ? "Are you sure you want to delete this item?" : Body

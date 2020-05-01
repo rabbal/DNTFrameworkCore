@@ -22,12 +22,12 @@ namespace DNTFrameworkCore.Web.Mvc
         /// <summary>
         /// Returns the list of all of the controllers and action methods of an MVC application.
         /// </summary>
-        ICollection<MvcControllerMetadata> MvcControllers { get; }
+        ICollection<ControllerMetadata> Controllers { get; }
 
         /// <summary>
         /// Returns the list of all of the controllers and action methods of an MVC application which have AuthorizeAttribute and the specified policyName.
         /// </summary>
-        ICollection<MvcControllerMetadata> FindSecuredControllerActionsWithPolicy(string policyName);
+        ICollection<ControllerMetadata> FindSecuredControllersWithPolicy(string policyName);
     }
 
     /// <summary>
@@ -52,8 +52,8 @@ namespace DNTFrameworkCore.Web.Mvc
     {
         private readonly IActionDescriptorCollectionProvider _actionProvider;
 
-        private readonly LazyConcurrentDictionary<string, ICollection<MvcControllerMetadata>>
-            _actionsWithPolicy = new LazyConcurrentDictionary<string, ICollection<MvcControllerMetadata>>();
+        private readonly LazyConcurrentDictionary<string, ICollection<ControllerMetadata>>
+            _actionsWithPolicy = new LazyConcurrentDictionary<string, ICollection<ControllerMetadata>>();
 
         public MvcService(IActionDescriptorCollectionProvider actionProvider)
         {
@@ -61,10 +61,10 @@ namespace DNTFrameworkCore.Web.Mvc
                               throw new ArgumentNullException(
                                   nameof(actionProvider));
 
-            MvcControllers = new List<MvcControllerMetadata>();
+            Controllers = new List<ControllerMetadata>();
 
             var lastControllerName = string.Empty;
-            MvcControllerMetadata currentController = null;
+            ControllerMetadata currentController = null;
 
             var actionDescriptors = actionProvider.ActionDescriptors.Items;
             foreach (var actionDescriptor in actionDescriptors)
@@ -79,7 +79,7 @@ namespace DNTFrameworkCore.Web.Mvc
 
                 if (lastControllerName != descriptor.ControllerName)
                 {
-                    currentController = new MvcControllerMetadata
+                    currentController = new ControllerMetadata
                     {
                         AreaName = controllerTypeInfo.GetCustomAttribute<AreaAttribute>()?.RouteValue,
                         Attributes = GetAttributes(controllerTypeInfo),
@@ -87,12 +87,12 @@ namespace DNTFrameworkCore.Web.Mvc
                             controllerTypeInfo.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName,
                         Name = descriptor.ControllerName,
                     };
-                    MvcControllers.Add(currentController);
+                    Controllers.Add(currentController);
 
                     lastControllerName = descriptor.ControllerName;
                 }
 
-                currentController?.Actions.Add(new MvcActionMetadata
+                currentController?.Actions.Add(new ActionMetadata
                 {
                     ControllerId = currentController.Id,
                     Name = descriptor.ActionName,
@@ -106,16 +106,16 @@ namespace DNTFrameworkCore.Web.Mvc
         /// <summary>
         /// Returns the list of all of the controllers and action methods of an MVC application.
         /// </summary>
-        public ICollection<MvcControllerMetadata> MvcControllers { get; }
+        public ICollection<ControllerMetadata> Controllers { get; }
 
         /// <summary>
         /// Returns the list of all of the controllers and action methods of an MVC application which have AuthorizeAttribute and the specified policyName.
         /// </summary>
-        public ICollection<MvcControllerMetadata> FindSecuredControllerActionsWithPolicy(string policyName)
+        public ICollection<ControllerMetadata> FindSecuredControllersWithPolicy(string policyName)
         {
             var result = _actionsWithPolicy.GetOrAdd(policyName, y =>
             {
-                var controllers = new List<MvcControllerMetadata>(MvcControllers);
+                var controllers = new List<ControllerMetadata>(Controllers);
                 foreach (var controller in controllers)
                 {
                     controller.Actions = controller.Actions.Where(
@@ -174,7 +174,7 @@ namespace DNTFrameworkCore.Web.Mvc
         }
     }
 
-    public class MvcActionMetadata
+    public class ActionMetadata
     {
         /// <summary>
         /// It's set to `{ControllerId}:{ActionName}`
@@ -218,7 +218,7 @@ namespace DNTFrameworkCore.Web.Mvc
         }
     }
 
-    public class MvcControllerMetadata
+    public class ControllerMetadata
     {
         /// <summary>
         /// It's set to `{AreaName}:{ControllerName}`
@@ -248,7 +248,7 @@ namespace DNTFrameworkCore.Web.Mvc
         /// <summary>
         /// Returns the list of the Controller's action methods.
         /// </summary>
-        public IList<MvcActionMetadata> Actions { get; set; } = new List<MvcActionMetadata>();
+        public IList<ActionMetadata> Actions { get; set; } = new List<ActionMetadata>();
 
         /// <summary>
         /// Returns `[{Attributes}]{AreaName}.{ControllerName}`

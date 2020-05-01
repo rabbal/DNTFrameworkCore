@@ -10,13 +10,6 @@ namespace DNTFrameworkCore.Web.Extensions
 {
     public static class ControllerExtensions
     {
-        public static async Task<bool> HasPermission(this ControllerBase controllerBase, string permissionName)
-        {
-            var policyName = PermissionConstant.PolicyPrefix + permissionName;
-            var authorization = controllerBase.HttpContext.RequestServices.GetRequiredService<IAuthorizationService>();
-            return (await authorization.AuthorizeAsync(controllerBase.User, policyName)).Succeeded;
-        }
-
         /// <summary>
         /// Gets the Controller's Name
         /// </summary>

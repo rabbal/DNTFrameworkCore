@@ -4,7 +4,6 @@ using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.FluentValidation;
 using DNTFrameworkCore.TestAPI.Application.Identity.Models;
 using DNTFrameworkCore.TestAPI.Domain.Identity;
-using DNTFrameworkCore.TestAPI.Helpers;
 using DNTFrameworkCore.TestAPI.Resources;
 using FluentValidation;
 
@@ -71,7 +70,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity.Validators
 
         private bool CheckDuplicateDisplayName(string displayName, long id)
         {
-            var normalizedDisplayName = displayName.NormalizePersianTitle();
+            var normalizedDisplayName = displayName.ToUpperInvariant();
             return _uow.Set<User>().Any(u => u.NormalizedDisplayName == normalizedDisplayName && u.Id != id);
         }
 

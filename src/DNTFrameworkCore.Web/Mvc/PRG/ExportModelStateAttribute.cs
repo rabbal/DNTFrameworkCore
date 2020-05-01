@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace DNTFrameworkCore.Web.Filters
+namespace DNTFrameworkCore.Web.Mvc.PRG
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public sealed class ExportModelStateAttribute : ModelStateTransfer
@@ -15,9 +15,9 @@ namespace DNTFrameworkCore.Web.Filters
                     || filterContext.Result is RedirectToRouteResult
                     || filterContext.Result is RedirectToActionResult)
                 {
-                    if (filterContext.Controller is Controller && filterContext.ModelState != null)
+                    if (filterContext.Controller is Controller controller && filterContext.ModelState != null)
                     {
-                        ExportModelStateToTempData(filterContext);
+                        ExportModelState(filterContext);
                     }
                 }
             }

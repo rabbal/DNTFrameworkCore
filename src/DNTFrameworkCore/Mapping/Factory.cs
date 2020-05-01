@@ -10,13 +10,13 @@ namespace DNTFrameworkCore.Mapping
     public static class Factory<T>
         where T : new()
     {
-        private static readonly Func<T> CreateInstanceFunc =
+        private static readonly Func<T> FactoryFunc =
             Expression.Lambda<Func<T>>(Expression.New(typeof(T))).Compile();
 
         /// <summary>
         /// Creates an instance of type <typeparamref name="T"/> by calling it's parameterless constructor.
         /// </summary>
         /// <returns>An instance of type <typeparamref name="T"/>.</returns>
-        public static T CreateInstance() => CreateInstanceFunc();
+        public static T New() => FactoryFunc();
     }
 }

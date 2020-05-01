@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace RFrameworkCore.TestWebApp.Data.Mappings.Tasks
+namespace DNTFrameworkCore.TestWebApp.Infrastructure.Mappings.Tasks
 {
     public class TaskConfiguration : IEntityTypeConfiguration<Task>
     {

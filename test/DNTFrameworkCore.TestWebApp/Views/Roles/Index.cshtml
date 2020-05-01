@@ -1,9 +1,8 @@
-@model DNTFrameworkCore.TestWebApp.Models.Roles.RoleIndexViewModel
+@model IPagedResult<RoleReadModel>
 
 @{
     LocalizationResourceLocation = "DNTFrameworkCore.TestWebApp";
-    ViewData["Title"] = L("Administration.Views.User.Index.Title");
-    // ViewBag["ActiveMenu"] = AdministrationMenuNames.UserManagement;
+    ViewData["Title"] = L("Administration.Views.Role.Index.Title");
 }
 
 <div class="row margin-bottom-5">
@@ -32,5 +31,4 @@
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial"></partial>
-
 }

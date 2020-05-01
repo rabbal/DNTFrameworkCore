@@ -39,7 +39,7 @@ namespace DNTFrameworkCore.Web.Mvc.HtmlHelpers
 
             var itemIndex = htmlHelper.ViewData.ContainsKey(JQueryTemplatingEnabledKey)
                 ? "${index}"
-                : BuildCollectionItemIndex(htmlHelper.ViewContext.HttpContext, collectionIndexFieldName);
+                : CreateCollectionItemIndex(htmlHelper.ViewContext.HttpContext, collectionIndexFieldName);
 
             htmlHelper.ViewContext.Writer.WriteLine(
                 $"<input type=\"hidden\" name=\"{collectionIndexFieldName}\" autocomplete=\"off\" value=\"{htmlHelper.Encode(itemIndex)}\" />");
@@ -86,7 +86,7 @@ namespace DNTFrameworkCore.Web.Mvc.HtmlHelpers
         /// <param name="httpContext"></param>
         /// <param name="collectionIndexFieldName"></param>
         /// <returns>a GUID string</returns>
-        private static string BuildCollectionItemIndex(HttpContext httpContext, string collectionIndexFieldName)
+        private static string CreateCollectionItemIndex(HttpContext httpContext, string collectionIndexFieldName)
         {
             var previousIndexes = (Queue<string>) httpContext.Items[collectionIndexFieldName];
             if (previousIndexes != null)

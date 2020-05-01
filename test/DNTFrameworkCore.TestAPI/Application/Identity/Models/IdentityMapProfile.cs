@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DNTFrameworkCore.TestAPI.Domain.Identity;
-using DNTFrameworkCore.TestAPI.Helpers;
 
 namespace DNTFrameworkCore.TestAPI.Application.Identity.Models
 {
@@ -10,13 +9,13 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity.Models
         {
             //Required for ModifiedProperties collection of TrackableEntity and Model
             AllowNullCollections = true;
-            
+
             CreateMap<Role, RoleModel>(MemberList.None).ReverseMap()
                 .ForMember(d => d.NormalizedName, m => m.MapFrom(s => s.Name.ToUpperInvariant()));
 
             CreateMap<User, UserModel>(MemberList.None)
                 .ReverseMap()
-                .ForMember(d => d.NormalizedDisplayName, m => m.MapFrom(s => s.DisplayName.NormalizePersianTitle()))
+                .ForMember(d => d.NormalizedDisplayName, m => m.MapFrom(s => s.DisplayName.ToUpperInvariant()))
                 .ForMember(d => d.NormalizedUserName, m => m.MapFrom(s => s.UserName.ToUpperInvariant()));
 
             CreateMap<UserRole, UserRoleModel>(MemberList.None).ReverseMap();

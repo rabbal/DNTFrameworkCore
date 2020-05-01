@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Mapping;
 using DNTFrameworkCore.Querying;
 using DNTFrameworkCore.Web.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.Web.API
 {
@@ -186,38 +188,41 @@ namespace DNTFrameworkCore.Web.API
         protected abstract Task<Result> DeleteAsync(IEnumerable<TKey> ids, CancellationToken cancellationToken);
 
         [HttpGet]
-        [ProducesResponseType((int) HttpStatusCode.OK)]
-        [ProducesResponseType((int) HttpStatusCode.Forbidden)]
-        public async Task<IActionResult> Get(TFilteredPagedRequestModel model, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> Get(TFilteredPagedRequestModel model,
+            CancellationToken cancellationToken)
         {
-            if (!await this.HasPermission(ViewPermissionName)) return Forbid();
+            if (!await HasPermission(ViewPermissionName)) return Forbid();
 
-            var result = await ReadPagedListAsync(model ?? Factory<TFilteredPagedRequestModel>.CreateInstance(),
+            var result = await ReadPagedListAsync(model ?? Factory<TFilteredPagedRequestModel>.New(),
                 cancellationToken);
 
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType((int) HttpStatusCode.OK)]
-        [ProducesResponseType((int) HttpStatusCode.Forbidden)]
-        [ProducesResponseType((int) HttpStatusCode.NotFound)]
-        public async Task<ActionResult<TModel>> Get([BindRequired] TKey id, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Get([BindRequired] TKey id, CancellationToken cancellationToken)
         {
-            if (!await this.HasPermission(EditPermissionName)) return Forbid();
+            if (!await HasPermission(EditPermissionName)) return Forbid();
 
             var model = await FindAsync(id, cancellationToken);
 
-            return model.HasValue ? (ActionResult) Ok(model.Value) : NotFound();
+            if (!model.HasValue) return NotFound();
+
+            return Ok(model.Value);
         }
 
         [HttpPost]
-        [ProducesResponseType((int) HttpStatusCode.Created)]
-        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int) HttpStatusCode.Forbidden)]
-        public async Task<ActionResult<TModel>> Post(TModel model, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> Post(TModel model, CancellationToken cancellationToken)
         {
-            if (!await this.HasPermission(CreatePermissionName)) return Forbid();
+            if (!await HasPermission(CreatePermissionName)) return Forbid();
 
             var result = await CreateAsync(model, cancellationToken);
             if (!result.Failed) return Created("", model);
@@ -227,14 +232,14 @@ namespace DNTFrameworkCore.Web.API
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType((int) HttpStatusCode.OK)]
-        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int) HttpStatusCode.Forbidden)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Put([BindRequired] TKey id, TModel model, CancellationToken cancellationToken)
         {
             if (!model.Id.Equals(id)) return BadRequest();
 
-            if (!await this.HasPermission(EditPermissionName)) return Forbid();
+            if (!await HasPermission(EditPermissionName)) return Forbid();
 
             model.Id = id;
 
@@ -246,13 +251,13 @@ namespace DNTFrameworkCore.Web.API
         }
 
         [HttpDelete("{id}")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
-        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int) HttpStatusCode.Forbidden)]
-        [ProducesResponseType((int) HttpStatusCode.NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete([BindRequired] TKey id, CancellationToken cancellationToken)
         {
-            if (!await this.HasPermission(DeletePermissionName)) return Forbid();
+            if (!await HasPermission(DeletePermissionName)) return Forbid();
 
             var model = await FindAsync(id, cancellationToken);
             if (!model.HasValue) return NotFound();
@@ -265,11 +270,12 @@ namespace DNTFrameworkCore.Web.API
         }
 
         [HttpPost("[action]")]
-        [ProducesResponseType((int) HttpStatusCode.NoContent)]
-        [ProducesResponseType((int) HttpStatusCode.Forbidden)]
-        public async Task<IActionResult> Delete(IEnumerable<TKey> ids, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> BulkDelete(IEnumerable<TKey> ids, CancellationToken cancellationToken)
         {
-            if (!await this.HasPermission(DeletePermissionName))
+            if (!await HasPermission(DeletePermissionName))
             {
                 return Forbid();
             }
@@ -283,6 +289,13 @@ namespace DNTFrameworkCore.Web.API
 
             ModelState.AddResult(result);
             return BadRequest(ModelState);
+        }
+
+        protected async Task<bool> HasPermission(string permissionName)
+        {
+            var policyName = PermissionConstant.PolicyPrefix + permissionName;
+            var authorization = HttpContext.RequestServices.GetRequiredService<IAuthorizationService>();
+            return (await authorization.AuthorizeAsync(User, policyName)).Succeeded;
         }
     }
 }

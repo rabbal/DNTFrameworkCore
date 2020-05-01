@@ -23,7 +23,7 @@ namespace DNTFrameworkCore.Web.Mvc.TagHelpers.Authorization
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            if (!_session.IsAuthenticated || (!string.IsNullOrEmpty(PermissionName) && !_session.IsGranted(PermissionName)))
+            if (!_session.IsAuthenticated || !string.IsNullOrEmpty(PermissionName) && !_session.IsGranted(PermissionName))
             {
                 output.SuppressOutput();
             }
