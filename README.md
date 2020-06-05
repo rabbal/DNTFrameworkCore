@@ -82,10 +82,38 @@ public class BlogsController : CrudController<IBlogService, int, BlogModel>
     protected override string EditPermissionName => PermissionNames.Blogs_Edit;
     protected override string ViewPermissionName => PermissionNames.Blogs_View;
     protected override string DeletePermissionName => PermissionNames.Blogs_Delete;
-    protected override string ViewName => "_BlogModal";
+    protected override string ViewName => "_BlogPartial";
 }
  ```
  
+ _BlogPartial.cshtml
+ ```razor
+@inherits EntityFormRazorPage<BlogModel>
+@{
+    Layout = "_EntityFormLayout";
+    EntityName = "Blog";
+    DeletePermission = PermissionNames.Blogs_Delete;
+    CreatePermission = PermissionNames.Blogs_Create;
+    EditPermission = PermissionNames.Blogs_Edit;
+    EntityDisplayName = "Blog";
+}
+
+<div class="form-group row">
+    <div class="col col-md-8">
+        <label asp-for="Title" class="col-form-label text-md-left"></label>
+        <input asp-for="Title" autocomplete="off" class="form-control"/>
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col">
+        <label asp-for="Url" class="col-form-label text-md-left"></label>
+        <input asp-for="Url" class="form-control" type="url"/>
+        <span asp-validation-for="Url" class="text-danger"></span>
+    </div>
+</div>
+
+```
  ![Role Modal MVC](https://github.com/rabbal/DNTFrameworkCore/blob/master/docs/role-modal-edit.JPG)
 ## Installation
 
