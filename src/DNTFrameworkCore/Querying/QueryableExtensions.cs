@@ -1,75 +1,110 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using DNTFrameworkCore.GuardToolkit;
+using System.Linq.Expressions;
 
 namespace DNTFrameworkCore.Querying
 {
     public static class QueryableExtensions
     {
-        public static IQueryable<T> ApplyFiltering<T>(this IQueryable<T> query, IFilteredPagedRequest request)
+        public static IQueryable<T> Filter<T>(this IQueryable<T> query, IEnumerable<FilterExpression> filters)
         {
-            Guard.ArgumentNotNull(query, nameof(query));
-            Guard.ArgumentNotNull(request, nameof(request));
+            if (query == null) throw new ArgumentNullException(nameof(query));
+            if (filters == null) throw new ArgumentNullException(nameof(filters));
 
-            return query.ApplyFiltering(request.Filtering);
-        }
-
-        public static IQueryable<T> ApplySorting<T>(this IQueryable<T> query, IPagedRequest request)
-        {
-            Guard.ArgumentNotNull(query, nameof(query));
-            Guard.ArgumentNotNull(request, nameof(request));
-
-            return query.ApplySorting(request.SortExpression);
-        }
-
-        public static IQueryable<T> ApplyPaging<T>(this IQueryable<T> query, IPagedRequest request)
-        {
-            Guard.ArgumentNotNull(query, nameof(query));
-            Guard.ArgumentNotNull(request, nameof(request));
-
-            if (request.Page < 1) request.Page = 1;
-
-            if (request.PageSize < 1) request.PageSize = 10;
-
-            return query.ApplyPaging(request.Page, request.PageSize);
-        }
-
-        public static IQueryable<T> ApplyFiltering<T>(this IQueryable<T> query, FilteringCriteria filtering)
-        {
-            Guard.ArgumentNotNull(query, nameof(query));
-
-            if (filtering?.Logic == null) return query;
-
-            var filters = filtering.ToFlatList();
-
-            // Get all filter values as array (needed by the Where method of Dynamic Linq)
-            var values = filters.Select(f => f.Value).ToArray();
-
-            // Create a predicate expression e.g. Field1 = @0 And Field2 > @1
-            var predicate = filtering.ToExpression(filters);
-
-            // Use the Where method of Dynamic Linq to filter the data
-            query = query.Where(predicate, values);
-
+            //todo:return query.Where(filters.ToLambdaExpression<T>());
             return query;
         }
 
-        public static IQueryable<T> ApplySorting<T>(this IQueryable<T> query, string expression)
+        /// <summary>
+        /// Applies sorting over IQueryable using Dynamic Linq.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="sorts"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static IQueryable<T> Sort<T>(this IQueryable<T> query, IEnumerable<SortExpression> sorts)
         {
-            Guard.ArgumentNotNull(query, nameof(query));
-            Guard.ArgumentNotEmpty(expression, nameof(expression));
+            if (query == null) throw new ArgumentNullException(nameof(query));
+            if (sorts == null) throw new ArgumentNullException(nameof(sorts));
 
-            return query.OrderBy(expression.Replace('_', ' '));
+            var ordering = string.Join(",", sorts);
+            return query.OrderBy(ordering);
         }
 
-        public static IQueryable<T> ApplyPaging<T>(this IQueryable<T> query, int page, int pageSize)
+        /// <summary>
+        /// Applies paging over IQueryable using Dynamic Linq.
+        /// </summary>
+        /// <param name="query">The IQueryable which should be processed.</param>
+        /// <param name="page">Specify the pageIndex</param>
+        /// <param name="pageSize"></param>
+        /// <typeparam name="T">The type of IQueryable.</typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static IQueryable<T> Page<T>(this IQueryable<T> query, int page, int pageSize)
         {
-            Guard.ArgumentNotNull(query, nameof(query));
+            if (query == null) throw new ArgumentNullException(nameof(query));
 
             var skip = (page - 1) * pageSize;
             var take = pageSize;
 
             return query.Skip(skip).Take(take);
         }
+
+        private static Expression<Func<TElement, bool>> ToLambdaExpression<TElement>(
+            this FilterExpression filterExpression)
+        {
+            var flattenList = filterExpression.ToFlattenList();
+            var predicate = filterExpression.ToExpression((item) => flattenList.IndexOf(item));
+            var values = flattenList.Select(f => f.Value).ToArray();
+
+            return DynamicExpressionParser.ParseLambda<TElement, bool>(new ParsingConfig(), false, predicate, values);
+        }
+
+        /// <summary>
+        /// Converts the filter expression to a predicate suitable for Dynamic Linq e.g. "Field1 = @1 and Field2.Contains(@2)"
+        /// </summary>
+        private static string ToExpression(this FilterExpression filterExpression,
+            Func<FilterExpression, int> indexFactory)
+        {
+            if (filterExpression.Filters != null && filterExpression.Filters.Any())
+            {
+                return "(" + string.Join(" " + filterExpression.Logic + " ",
+                           filterExpression.Filters.Select(filter => filter.ToExpression(indexFactory)).ToArray()) +
+                       ")";
+            }
+
+            var index = indexFactory(filterExpression);
+
+            var comparison = _operators[filterExpression.OperatorName];
+
+            if (filterExpression.OperatorName == "doesnotcontain")
+            {
+                return $"!{filterExpression.Field}.{comparison}(@{index})";
+            }
+
+            if (comparison == "StartsWith" || comparison == "EndsWith" || comparison == "Contains")
+            {
+                return $"{filterExpression.Field}.{comparison}(@{index})";
+            }
+
+            return $"{filterExpression.Field} {comparison} @{index}";
+        }
+
+        private static readonly IDictionary<string, string> _operators = new Dictionary<string, string>
+        {
+            {"eq", "="},
+            {"neq", "!="},
+            {"lt", "<"},
+            {"lte", "<="},
+            {"gt", ">"},
+            {"gte", ">="},
+            {"startswith", "StartsWith"},
+            {"endswith", "EndsWith"},
+            {"contains", "Contains"},
+            {"doesnotcontain", "Contains"}
+        };
     }
 }
