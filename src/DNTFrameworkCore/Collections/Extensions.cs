@@ -24,6 +24,11 @@ namespace DNTFrameworkCore.Collections
 
         public static bool IsNullOrEmpty<T>(this ICollection<T> source)
         {
+            return source == null || source.Count == 0;
+        }
+
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> source)
+        {
             return source == null || !source.Any();
         }
 

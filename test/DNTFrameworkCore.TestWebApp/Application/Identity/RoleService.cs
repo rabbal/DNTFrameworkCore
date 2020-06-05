@@ -9,6 +9,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Application;
+using DNTFrameworkCore.Collections;
+using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Linq;
@@ -16,12 +18,12 @@ using DNTFrameworkCore.Querying;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Identity
 {
-    public interface IRoleService : ICrudService<long, RoleReadModel, RoleModel, RoleFilteredPagedRequestModel>
+    public interface IRoleService : ICrudService<long, RoleReadModel, RoleModel, RoleFilteredPagedRequest>
     {
     }
 
     public class RoleService :
-        CrudService<Role, long, RoleReadModel, RoleModel, RoleFilteredPagedRequestModel>,
+        CrudService<Role, long, RoleReadModel, RoleModel, RoleFilteredPagedRequest>,
         IRoleService
     {
         private readonly IMapper _mapper;
@@ -36,7 +38,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
 
         protected override IQueryable<Role> FindEntityQueryable => base.FindEntityQueryable.Include(r => r.Permissions);
 
-        public override Task<IPagedResult<RoleReadModel>> ReadPagedListAsync(RoleFilteredPagedRequestModel model,
+        public override Task<IPagedResult<RoleReadModel>> ReadPagedListAsync(RoleFilteredPagedRequest model,
             CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking()
@@ -53,6 +55,26 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
         protected override void MapToEntity(RoleModel model, Role role)
         {
             _mapper.Map(model, role);
+            MapPermissions(model, role);
+        }
+
+        private static void MapPermissions(RoleModel model, Role role)
+        {
+            var addedPermissions = model.Permissions.Where(permissionName =>
+                    !role.Permissions.Select(_ => _.Name).Contains(permissionName))
+                .Select(permissionName => new RolePermission
+                {
+                    Name = permissionName,
+                    IsGranted = true,
+                    TrackingState = TrackingState.Added
+                });
+            role.Permissions.AddRange(addedPermissions);
+
+            var removedPermissions = role.Permissions.Where(p => !model.Permissions.Contains(p.Name));
+            foreach (var removedPermission in removedPermissions)
+            {
+                removedPermission.TrackingState = TrackingState.Deleted;
+            }
         }
 
         protected override RoleModel MapToModel(Role role)

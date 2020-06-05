@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
 
         public static Result<Address> Create(string street, int number)
         {
-            street = street ?? string.Empty;
+            street ??= string.Empty;
 
             if (street.Length == 0)
             {

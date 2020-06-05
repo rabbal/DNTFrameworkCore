@@ -5,9 +5,9 @@ using DNTFrameworkCore.Localization;
 
 namespace DNTFrameworkCore.TestWebApp.Authorization
 {
- public static class Permissions
+    public static class Permissions
     {
-        public static IReadOnlyList<Permission> List()
+        public static IEnumerable<Permission> List()
         {
             return new List<Permission>
             {
@@ -46,24 +46,24 @@ namespace DNTFrameworkCore.TestWebApp.Authorization
                     L(PermissionNames.Tasks_Edit)),
                 Permission.CreatePermission(PermissionNames.Tasks_Delete,
                     L(PermissionNames.Tasks_Delete)),
-                
-                 Permission.CreatePermission(PermissionNames.Products_View,
-                L(PermissionNames.Products_View)),
-                 Permission.CreatePermission(PermissionNames.Products_Create,
-                L(PermissionNames.Products_Create)),
-                 Permission.CreatePermission(PermissionNames.Products_Edit,
-                L(PermissionNames.Products_Edit)),
-                 Permission.CreatePermission(PermissionNames.Products_Delete,
-                L(PermissionNames.Products_Delete)),
 
-                 Permission.CreatePermission(PermissionNames.Invoices_View,
-                L(PermissionNames.Invoices_View)),
-                 Permission.CreatePermission(PermissionNames.Invoices_Create,
-                L(PermissionNames.Invoices_Create)),
-                 Permission.CreatePermission(PermissionNames.Invoices_Edit,
-                L(PermissionNames.Invoices_Edit)),
-                 Permission.CreatePermission(PermissionNames.Invoices_Delete,
-                L(PermissionNames.Invoices_Delete))
+                Permission.CreatePermission(PermissionNames.Products_View,
+                    L(PermissionNames.Products_View)),
+                Permission.CreatePermission(PermissionNames.Products_Create,
+                    L(PermissionNames.Products_Create)),
+                Permission.CreatePermission(PermissionNames.Products_Edit,
+                    L(PermissionNames.Products_Edit)),
+                Permission.CreatePermission(PermissionNames.Products_Delete,
+                    L(PermissionNames.Products_Delete)),
+
+                Permission.CreatePermission(PermissionNames.Invoices_View,
+                    L(PermissionNames.Invoices_View)),
+                Permission.CreatePermission(PermissionNames.Invoices_Create,
+                    L(PermissionNames.Invoices_Create)),
+                Permission.CreatePermission(PermissionNames.Invoices_Edit,
+                    L(PermissionNames.Invoices_Edit)),
+                Permission.CreatePermission(PermissionNames.Invoices_Delete,
+                    L(PermissionNames.Invoices_Delete))
             };
         }
 

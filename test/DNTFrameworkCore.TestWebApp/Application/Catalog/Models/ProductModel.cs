@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.TestWebApp.Domain.Catalog;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Catalog.Models

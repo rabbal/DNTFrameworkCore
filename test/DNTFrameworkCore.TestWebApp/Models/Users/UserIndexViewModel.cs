@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Common;
 
 namespace DNTFrameworkCore.TestWebApp.Models.Users
 {

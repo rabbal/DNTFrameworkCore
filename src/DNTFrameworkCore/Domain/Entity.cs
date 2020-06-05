@@ -30,7 +30,7 @@ namespace DNTFrameworkCore.Domain
             return _hashCode.Value;
         }
 
-        public bool IsTransient()
+        public virtual bool IsTransient()
         {
             if (EqualityComparer<TKey>.Default.Equals(Id, default)) return true;
 
@@ -44,15 +44,15 @@ namespace DNTFrameworkCore.Domain
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !(obj is Entity<TKey> other)) return false;
+            if (obj == null || !(obj is Entity<TKey> instance)) return false;
 
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(this, instance)) return true;
 
-            if (GetRealType() != other.GetRealType()) return false;
+            if (GetRealType() != instance.GetRealType()) return false;
 
-            if (IsTransient() || other.IsTransient()) return false;
+            if (IsTransient() || instance.IsTransient()) return false;
 
-            return Id.Equals(other.Id);
+            return Id.Equals(instance.Id);
         }
 
         public override string ToString()

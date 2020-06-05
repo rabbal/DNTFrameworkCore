@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Common;
 using DNTFrameworkCore.Querying;
 using DNTFrameworkCore.TestWebApp.Application.Identity.Models;
 

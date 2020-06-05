@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Functional;
 
-namespace DNTFrameworkCore.Application.Events
+namespace DNTFrameworkCore.Application
 {
     public static class EventBusExtensions
     {

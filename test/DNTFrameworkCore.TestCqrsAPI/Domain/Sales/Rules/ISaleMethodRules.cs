@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 

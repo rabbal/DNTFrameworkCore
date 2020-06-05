@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using DNTFrameworkCore.Domain;
 
-namespace DNTFrameworkCore.Application.Models
+namespace DNTFrameworkCore.Application
 {
     public abstract class Model : Model<int>
     {

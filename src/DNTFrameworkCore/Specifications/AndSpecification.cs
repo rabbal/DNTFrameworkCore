@@ -16,7 +16,7 @@ namespace DNTFrameworkCore.Specifications
         /// </summary>
         /// <param name="left">The first specification.</param>
         /// <param name="right">The second specification.</param>
-        public AndSpecification(ISpecification<T> left, ISpecification<T> right) : base(left, right)
+        public AndSpecification(Specification<T> left, Specification<T> right) : base(left, right)
         {
         }
 

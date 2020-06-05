@@ -1,8 +1,12 @@
-﻿using DNTFrameworkCore.Domain;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Parties;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Sales;
 using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
+using DNTFrameworkCore.Timing;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
 {
@@ -12,7 +16,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
         public SaleMethod SaleMethod { get; private set; }
         public Customer Customer { get; private set; }
         public Address ShippingAddress { get; private set; }
-        public DateTimeOffset DateTime { get; private set; }
+        public DateTime DateTime { get; private set; }
         private List<OrderLine> _lines;
         public IReadOnlyCollection<OrderLine> Lines => _lines.AsReadOnly();
         private List<OrderNote> _notes;
@@ -25,6 +29,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
         {
             _lines = new List<OrderLine>();
             _notes = new List<OrderNote>();
+            _histories = new List<OrderHistory>();
         }
 
         public static Result<Order> Create(SaleMethod saleMethod, Customer customer, Address address)
@@ -36,7 +41,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
             var order = new Order
             {
                 Status = OrderStatus.Pending,
-                DateTime = DateTimeOffset.UtcNow,
+                DateTime = SystemTime.Now(),
                 Customer = customer,
                 ShippingAddress = address,
                 SaleMethod = saleMethod
@@ -91,7 +96,6 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
 
         public Result Clear()
         {
-            
             if (!Equals(Status, OrderStatus.Paid) && !Equals(Status, OrderStatus.Shipped))
             {
                 return Fail(

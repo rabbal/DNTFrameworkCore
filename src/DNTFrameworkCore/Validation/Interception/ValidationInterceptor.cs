@@ -12,9 +12,6 @@ using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.Validation.Interception
 {
-    /// <summary>
-    /// This interceptor is used intercept method calls for classes with methods must be validated.
-    /// </summary>
     public sealed class ValidationInterceptor : IInterceptor
     {
         private readonly MethodInvocationValidator _validator;

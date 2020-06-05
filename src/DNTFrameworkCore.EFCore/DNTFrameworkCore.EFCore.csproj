@@ -5,6 +5,7 @@
         <VersionPrefix>4.6.0</VersionPrefix>
         <Authors>GholamReza Rabbal</Authors>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <LangVersion>latest</LangVersion>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageTags>.NETCore;EFCore;CRUD;Transaction;Logging</PackageTags>
@@ -24,7 +25,6 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.3" />
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.3" />
     </ItemGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

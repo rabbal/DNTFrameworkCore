@@ -36,13 +36,13 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure
                     options.NumberedEntityMap[typeof(Task)] = new NumberedEntityOption
                     {
                         Prefix = "Task",
-                        FieldNames = new[] {nameof(Task.BranchId)}
+                        Fields = new[] {nameof(Task.BranchId)}
                     };
                 });
 
-            services.AddDbContext<ProjectDbContext>(builder =>
+            services.AddDbContext<ProjectDbContext>((provider,builder) =>
             {
-                builder.AddInterceptors(new SecondLevelCacheInterceptor());
+                builder.AddInterceptors(provider.GetRequiredService<SecondLevelCacheInterceptor>());
                 builder.EnableSensitiveDataLogging();
                 builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
                         optionsBuilder =>

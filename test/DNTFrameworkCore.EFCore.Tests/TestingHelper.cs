@@ -1,4 +1,7 @@
-namespace DNTFrameworkCore.EntityFramework.Tests
+using System;
+using System.Threading.Tasks;
+
+namespace DNTFrameworkCore.EFCore.Tests
 {
     public static class TestingHelper
     {

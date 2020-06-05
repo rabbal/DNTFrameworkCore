@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Exceptions;
 

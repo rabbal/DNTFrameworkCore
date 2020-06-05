@@ -188,6 +188,9 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte[]>("LogoImage")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("ModifiedByBrowserName")
                         .HasColumnType("nvarchar(1024)")
                         .HasMaxLength(1024);
@@ -640,47 +643,6 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRole");
-                });
-
-            modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Tasks.Task", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(1024)")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("NormalizedTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("Number")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte>("State")
-                        .HasColumnType("tinyint");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<byte[]>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedTitle")
-                        .IsUnique()
-                        .HasName("UIX_Task_NormalizedTitle");
-
-                    b.ToTable("Task");
                 });
 
             modelBuilder.Entity("DNTFrameworkCore.TestWebApp.Domain.Identity.RolePermission", b =>

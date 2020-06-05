@@ -1,4 +1,4 @@
-namespace DNTFrameworkCore.Tests.Transaction
+namespace DNTFrameworkCore.EFCore.Tests.Transaction
 {
     [TestFixture]
     public class TransactionInterceptorTests

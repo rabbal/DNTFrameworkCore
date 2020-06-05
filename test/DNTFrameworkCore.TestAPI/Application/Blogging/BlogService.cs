@@ -2,11 +2,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Application;
-using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Linq;
 using DNTFrameworkCore.Eventing;
+using DNTFrameworkCore.Linq;
 using DNTFrameworkCore.Querying;
 using DNTFrameworkCore.TestAPI.Application.Blogging.Models;
 using DNTFrameworkCore.TestAPI.Domain.Blogging;
@@ -24,7 +24,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Blogging
         {
         }
 
-        public override Task<IPagedResult<BlogModel>> ReadPagedListAsync(FilteredPagedRequestModel model,
+        public override Task<IPagedResult<BlogModel>> ReadPagedListAsync(FilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking()
@@ -33,7 +33,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Blogging
                     Id = b.Id,
                     Url = b.Url,
                     Title = b.Title
-                }).ToPagedListAsync(model, cancellationToken);
+                }).ToPagedListAsync(request, cancellationToken);
         }
 
         protected override void MapToEntity(BlogModel model, Blog blog)

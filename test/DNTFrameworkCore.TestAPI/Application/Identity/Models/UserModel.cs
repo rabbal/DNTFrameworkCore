@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Extensions;
 
 namespace DNTFrameworkCore.TestAPI.Application.Identity.Models

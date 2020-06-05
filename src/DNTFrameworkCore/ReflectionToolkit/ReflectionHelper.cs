@@ -61,7 +61,7 @@ namespace DNTFrameworkCore.ReflectionToolkit
         }
 
 
-        public static TModel BindProperty<TModel, TProperty>(this TModel model, string propertyName, object value)
+        public static TModel BindProperty<TModel>(this TModel model, string propertyName, object value)
         {
             var modelType = model.GetType();
             var property = modelType.GetProperties(BindingFlags.Instance | BindingFlags.Public)

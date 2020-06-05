@@ -1,6 +1,6 @@
-using static DNTFrameworkCore.EntityFramework.Tests.TestingHelper;
+using static DNTFrameworkCore.EFCore.Tests.TestingHelper;
 
-namespace DNTFrameworkCore.EntityFramework.Tests.Numbering
+namespace DNTFrameworkCore.EFCore.Tests.Numbering
 {
     [TestFixture]
     public class NumberingTests

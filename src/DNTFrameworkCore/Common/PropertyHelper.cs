@@ -18,7 +18,7 @@ namespace DNTFrameworkCore.Common
         /// <returns>The name of the property as a string</returns>
         public static string Name<TEntity>(Expression<Func<TEntity, object>> expression)
         {
-            return GetNestedPropertyName(expression);
+            return NestedPropertyName(expression);
         }
 
         /// <summary>
@@ -77,11 +77,10 @@ namespace DNTFrameworkCore.Common
         /// </summary>
         /// <param name="expression">LambdaExpression</param>
         /// <returns></returns>
-        public static string GetNestedPropertyName(LambdaExpression expression)
+        private static string NestedPropertyName(LambdaExpression expression)
         {
             var bodyExpression = expression.Body;
-            var body = bodyExpression as UnaryExpression;
-            if (body != null)
+            if (bodyExpression is UnaryExpression body)
             {
                 if (body.NodeType == ExpressionType.Convert)
                 {
@@ -169,13 +168,11 @@ namespace DNTFrameworkCore.Common
                 return ((Enum) value).GetStringValue();
             }
 
-            if (value == null)
-            {
-                var nullDisplayText = propertyInfo.GetNullDisplayTextAttribute();
-                if (!string.IsNullOrEmpty(nullDisplayText)) return nullDisplayText;
-            }
+            if (value != null) return value;
 
-            return value;
+            var nullDisplayText = propertyInfo.GetNullDisplayTextAttribute();
+            
+            return !string.IsNullOrEmpty(nullDisplayText) ? nullDisplayText : default;
         }
     }
 }

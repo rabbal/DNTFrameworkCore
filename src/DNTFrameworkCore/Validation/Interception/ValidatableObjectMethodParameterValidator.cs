@@ -1,42 +1,38 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using DNTFrameworkCore.Collections;
 
 namespace DNTFrameworkCore.Validation.Interception
 {
     internal sealed class ValidatableObjectMethodParameterValidator : IMethodParameterValidator
     {
-        public IEnumerable<ValidationFailure> Validate(object parameter)
+        public IEnumerable<ValidationFailure> Validate(object validatingObject)
         {
-            if (parameter == null || !(parameter is IValidatableObject validatable))
+            if (!(validatingObject is IValidatableObject validatable))
             {
                 return Enumerable.Empty<ValidationFailure>();
             }
 
-            var failures = validatable.Validate(new ValidationContext(parameter));
+            var results = validatable.Validate(new ValidationContext(validatingObject));
+            var failures = new List<ValidationFailure>();
 
-            return ToModelValidationResult(failures);
-        }
-
-        private static IEnumerable<ValidationFailure> ToModelValidationResult(
-            IEnumerable<ValidationResult> failures)
-        {
-            foreach (var result in failures)
+            foreach (var result in results)
             {
                 if (result == ValidationResult.Success) continue;
 
-                if (result.MemberNames == null || !result.MemberNames.Any())
+                if (!result.MemberNames.IsNullOrEmpty())
                 {
-                    yield return new ValidationFailure(memberName: null, message: result.ErrorMessage);
+                    failures.AddRange(result.MemberNames.Select(memberName =>
+                        new ValidationFailure(memberName, result.ErrorMessage)));
                 }
                 else
                 {
-                    foreach (var memberName in result.MemberNames)
-                    {
-                        yield return new ValidationFailure(memberName, result.ErrorMessage);
-                    }
+                    failures.Add(new ValidationFailure(string.Empty, result.ErrorMessage));
                 }
             }
+
+            return failures;
         }
     }
 }

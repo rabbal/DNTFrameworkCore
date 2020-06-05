@@ -10,13 +10,13 @@
         <PackageReference Include="DNTPersianUtils.Core" Version="3.6.5" />
         <PackageReference Include="EFCoreSecondLevelCacheInterceptor" Version="1.5.5" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.3" />
+        <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.76" />
         <PackageReference Include="Scrutor" Version="3.2.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.3" />
         <PackageReference Include="MappingGenerator" Version="1.14.356" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\DNTFrameworkCore.Cqrs\DNTFrameworkCore.Cqrs.csproj" />
         <ProjectReference Include="..\..\src\DNTFrameworkCore.EFCore.SqlServer\DNTFrameworkCore.EFCore.SqlServer.csproj" />
         <ProjectReference Include="..\..\src\DNTFrameworkCore.EFCore\DNTFrameworkCore.EFCore.csproj" />
         <ProjectReference Include="..\..\src\DNTFrameworkCore.FluentValidation\DNTFrameworkCore.FluentValidation.csproj" />
@@ -29,6 +29,11 @@
       <_ContentIncludedByDefault Remove="Views\Invoices\_InvoiceItem.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Invoices\_InvoiceModal.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Invoices\_List.cshtml" />
+      <_ContentIncludedByDefault Remove="wwwroot\view-resources\Views\Roles\_RoleModal.js" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\lib\gijgo" />
     </ItemGroup>
 
 </Project>

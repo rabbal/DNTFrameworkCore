@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Dynamic;
 using System.Text.Json;
 using DNTFrameworkCore.Exceptions;
 using Microsoft.AspNetCore.Builder;
@@ -34,17 +34,19 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
 
                     var traceId = Activity.Current?.Id ?? context.TraceIdentifier;
 
-                    dynamic value = new ExpandoObject();
-                    value.TraceId = traceId;
-                    value.Message = options.Value.InternalServerIssue;
+                    var result = new Dictionary<string, string>
+                    {
+                        {"traceId", traceId},
+                        {"message", options.Value.InternalServerIssue}
+                    };
 
                     if (env.IsDevelopment())
                     {
-                        value.DeveloperMessage = feature.Error.ToStringFormat();
+                        result.Add("development_message", feature.Error.ToStringFormat());
                     }
 
                     var stream = context.Response.Body;
-                    await JsonSerializer.SerializeAsync(stream, value);
+                    await JsonSerializer.SerializeAsync(stream, result);
                 }
             }));
         }

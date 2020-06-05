@@ -9,13 +9,13 @@ namespace DNTFrameworkCore.Specifications
     /// <typeparam name="T">The type of the object to which the specification is applied.</typeparam>
     public class NotSpecification<T> : Specification<T>
     {
-        private readonly ISpecification<T> _specification;
+        private readonly Specification<T> _specification;
 
         /// <summary>
         /// Initializes a new instance of <see cref="NotSpecification{T}"/> class.
         /// </summary>
         /// <param name="specification">The specification to be reversed.</param>
-        public NotSpecification(ISpecification<T> specification)
+        public NotSpecification(Specification<T> specification)
         {
             _specification = specification;
         }

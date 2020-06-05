@@ -7,6 +7,6 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Parties
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public byte[] Version { get; set; }
-        public string Number { get; private set; }
+        public string Number { get; set; }
     }
 }

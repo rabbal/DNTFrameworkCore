@@ -8,7 +8,7 @@ namespace DNTFrameworkCore.Exceptions
 {
     public class ExceptionOptions
     {
-        // ReSharper disable once ReturnTypeCanBeEnumerable.Global
+        private static readonly Regex _regex = new Regex(@"\W", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         public List<ExceptionMapItem> Mappings { get; } = new List<ExceptionMapItem>();
         [Required] public string DbException { get; set; }
 
@@ -20,7 +20,7 @@ namespace DNTFrameworkCore.Exceptions
         {
             mapping = null;
 
-            var words = new HashSet<string>(Regex.Split(dbException.ToStringFormat(), @"\W"));
+            var words = new HashSet<string>(_regex.Split(dbException.ToStringFormat()));
 
             var mappingItem = Mappings.FirstOrDefault(a => a.Keywords.IsProperSubsetOf(words));
             if (mappingItem == null)

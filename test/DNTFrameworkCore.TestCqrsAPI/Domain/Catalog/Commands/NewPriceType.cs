@@ -6,7 +6,6 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Commands
     {
         public string Title { get; }
 
-        [JsonConstructor]
         public NewPriceType(string title) => Title = title;
     }
 }

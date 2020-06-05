@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DNTFrameworkCore.Application;
-using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Linq;
@@ -35,7 +34,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
         protected override IQueryable<Role> FindEntityQueryable =>
             base.FindEntityQueryable.Include(r => r.Permissions);
 
-        public override Task<IPagedResult<RoleReadModel>> ReadPagedListAsync(FilteredPagedRequestModel model,
+        public override Task<IPagedResult<RoleReadModel>> ReadPagedListAsync(FilteredPagedRequest model,
             CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking()

@@ -9,10 +9,10 @@ namespace DNTFrameworkCore.Extensibility
     /// </summary>
     public class ExtensionPropertyTypeDescriptionProvider<T> : TypeDescriptionProvider where T : class
     {
-        private static readonly TypeDescriptionProvider Default =
+        private static readonly TypeDescriptionProvider _default =
             TypeDescriptor.GetProvider(typeof(T));
 
-        public ExtensionPropertyTypeDescriptionProvider() : base(Default)
+        public ExtensionPropertyTypeDescriptionProvider() : base(_default)
         {
         }
 

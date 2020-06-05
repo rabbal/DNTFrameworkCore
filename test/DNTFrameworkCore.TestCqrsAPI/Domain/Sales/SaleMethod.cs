@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Sales.Events;
@@ -36,5 +38,9 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales
 
             return Ok(saleMethod);
         }
+
+        public DateTime CreatedDateTime { get; set; }
+        public DateTime? ModifiedDateTime { get; set; }
+        public byte[] Version { get; set; }
     }
 }

@@ -11,10 +11,6 @@ namespace DNTFrameworkCore.Web.Mvc.PRG
         {
             if (!(filterContext.Controller is Controller controller) || filterContext.ModelState == null) return;
 
-            var jsonValue = controller.TempData[Key] as string;
-
-            if (string.IsNullOrEmpty(jsonValue)) return;
-
             if (filterContext.Result is ViewResult)
             {
                 ImportModelState(filterContext);

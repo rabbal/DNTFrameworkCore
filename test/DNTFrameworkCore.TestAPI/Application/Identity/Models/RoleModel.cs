@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Application;
 
 namespace DNTFrameworkCore.TestAPI.Application.Identity.Models
 {

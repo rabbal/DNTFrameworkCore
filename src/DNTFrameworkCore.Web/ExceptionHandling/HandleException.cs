@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using DNTFrameworkCore.Exceptions;
@@ -7,6 +8,7 @@ using DNTFrameworkCore.Web.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -25,11 +27,14 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
     {
         private readonly ILogger<HandleException> _logger;
         private readonly IOptions<ExceptionOptions> _options;
+        private readonly IHostEnvironment _environment;
 
-        public HandleException(ILogger<HandleException> logger, IOptions<ExceptionOptions> options)
+        public HandleException(ILogger<HandleException> logger, IOptions<ExceptionOptions> options,
+            IHostEnvironment environment)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _options = options ?? throw new ArgumentNullException(nameof(options));
+            _environment = environment;
         }
 
         public void OnException(ExceptionContext context)
@@ -72,20 +77,22 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
                 _logger.LogError(new EventId(context.Exception.HResult), context.Exception, context.Exception.Message);
 
                 var traceId = Activity.Current?.Id ?? context.HttpContext.TraceIdentifier;
+                var message = context.Exception is DbException
+                    ? _options.Value.DbException
+                    : _options.Value.InternalServerIssue;
 
-                context.Result = context.Exception switch
+                var result = new Dictionary<string, string>
                 {
-                    DbException _ => new InternalServerErrorObjectResult(new
-                    {
-                        Message = _options.Value.DbException, TraceId = traceId
-                    }),
-                    _ => new InternalServerErrorObjectResult(new
-                    {
-                        Message = _options.Value.InternalServerIssue,
-                        DeveloperMessage = context.Exception.ToStringFormat(),
-                        TraceId = traceId
-                    })
+                    {"traceId", traceId},
+                    {"message", message}
                 };
+
+                if (_environment.IsDevelopment())
+                {
+                    result.Add("development_message", context.Exception.ToStringFormat());
+                }
+
+                context.Result = new InternalServerErrorObjectResult(result);
 
                 context.HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
             }

@@ -14,6 +14,7 @@ namespace DNTFrameworkCore.Collections
         }
     }
 
+    //TODO: improve with ObservableCollection
     public class TrackedCollection<T> : Collection<T> where T : ITrackable
     {
         private readonly IEnumerable<T> _items;
@@ -22,17 +23,17 @@ namespace DNTFrameworkCore.Collections
         {
             _items = items;
         }
-
-        public IReadOnlyList<T> RemovedItems =>
+        
+        public IReadOnlyList<T> RemovedList =>
             _items.Where(item => item.TrackingState == TrackingState.Deleted).ToList().AsReadOnly();
 
-        public IReadOnlyList<T> NewItems =>
+        public IReadOnlyList<T> AddedList =>
             _items.Where(item => item.TrackingState == TrackingState.Added).ToList().AsReadOnly();
 
-        public IReadOnlyList<T> ModifiedItems =>
+        public IReadOnlyList<T> ModifiedList =>
             _items.Where(item => item.TrackingState == TrackingState.Modified).ToList().AsReadOnly();
 
-        public IReadOnlyList<T> UnchangedItems =>
+        public IReadOnlyList<T> UnchangedList =>
             _items.Where(item => item.TrackingState == TrackingState.Unchanged).ToList().AsReadOnly();
     }
 }

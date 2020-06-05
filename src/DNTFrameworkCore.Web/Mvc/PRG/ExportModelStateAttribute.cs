@@ -13,9 +13,10 @@ namespace DNTFrameworkCore.Web.Mvc.PRG
             {
                 if (filterContext.Result is RedirectResult
                     || filterContext.Result is RedirectToRouteResult
+                    || filterContext.Result is LocalRedirectResult
                     || filterContext.Result is RedirectToActionResult)
                 {
-                    if (filterContext.Controller is Controller controller && filterContext.ModelState != null)
+                    if (filterContext.Controller is Controller && filterContext.ModelState != null)
                     {
                         ExportModelState(filterContext);
                     }

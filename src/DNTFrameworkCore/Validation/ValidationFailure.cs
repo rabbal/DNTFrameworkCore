@@ -1,3 +1,4 @@
+
 namespace DNTFrameworkCore.Validation
 {
     public class ValidationFailure
@@ -7,7 +8,7 @@ namespace DNTFrameworkCore.Validation
             MemberName = memberName ?? string.Empty;
             Message = message ?? string.Empty;
         }
-
+        
         public string MemberName { get; }
         public string Message { get; }    
 

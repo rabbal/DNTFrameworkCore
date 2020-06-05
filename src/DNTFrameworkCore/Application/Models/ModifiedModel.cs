@@ -1,4 +1,4 @@
-namespace DNTFrameworkCore.Application.Models
+namespace DNTFrameworkCore.Application
 {
     public class ModifiedModel<TValue>
     {

@@ -3,12 +3,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
 using DNTFrameworkCore.Localization;
-using DNTFrameworkCore.TestAPI.Application.Tasks.Models;
 using DNTFrameworkCore.TestAPI.Authentication;
 using DNTFrameworkCore.TestAPI.Infrastructure.Context;
 using DNTFrameworkCore.Web.EFCore.Cryptography;
 using DNTFrameworkCore.Web.ExceptionHandling;
-using DNTFrameworkCore.Web.ModelBinders;
+using DNTFrameworkCore.Web.ModelBinding;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -38,9 +37,8 @@ namespace DNTFrameworkCore.TestAPI
             services.AddLocalization(setup => setup.ResourcesPath = "Resources");
             services.AddControllers(options =>
                 {
-                    options.UseDefaultFilteredPagedRequestModelBinder();
-                    options.UseFilteredPagedRequestModelBinder<TaskFilteredPagedRequestModel>();
-                    options.UseExceptionHandling();
+                    //options.UseFilteredPagedRequestModelBinder();
+                    //options.UseExceptionHandling();
                 }).AddDataAnnotationsLocalization(o =>
                 {
                     o.DataAnnotationLocalizerProvider = (type, factory) =>

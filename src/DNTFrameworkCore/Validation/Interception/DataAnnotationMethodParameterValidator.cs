@@ -16,56 +16,44 @@ namespace DNTFrameworkCore.Validation.Interception
             _provider = provider ?? throw new ArgumentNullException();
         }
 
-        public IEnumerable<ValidationFailure> Validate(object parameter)
+        public IEnumerable<ValidationFailure> Validate(object validatingObject)
         {
-            var properties = TypeDescriptor.GetProperties(parameter).Cast<PropertyDescriptor>();
+            var failures = new List<ValidationFailure>();
+
+            var properties = TypeDescriptor.GetProperties(validatingObject).Cast<PropertyDescriptor>();
             foreach (var property in properties)
             {
-                var validationAttributes = property.Attributes.OfType<ValidationAttribute>().ToArray();
-                if (validationAttributes.IsNullOrEmpty())
+                var attributes = property.Attributes.OfType<ValidationAttribute>().ToArray();
+                if (attributes.IsNullOrEmpty())
                 {
                     continue;
                 }
 
-                var validationContext = new ValidationContext(parameter,
-                    _provider,
-                    null)
+                var context = new ValidationContext(validatingObject, _provider, null)
                 {
                     DisplayName = property.DisplayName,
                     MemberName = property.Name
                 };
 
-                foreach (var attribute in validationAttributes)
+                foreach (var attribute in attributes)
                 {
-                    var failures = new List<ValidationFailure>();
+                    var result = attribute.GetValidationResult(property.GetValue(validatingObject), context);
 
-                    var result = attribute.GetValidationResult(property.GetValue(parameter), validationContext);
+                    if (result == null) continue;
 
-                    if (result == ValidationResult.Success) continue;
-
-                    var message = result.ErrorMessage;
-
-                    if (result.MemberNames != null)
+                    if (!result.MemberNames.IsNullOrEmpty())
                     {
-                        foreach (var memberName in result.MemberNames)
-                        {
-                            var failure = new ValidationFailure(memberName, message);
-
-                            failures.Add(failure);
-                        }
+                        failures.AddRange(result.MemberNames.Select(memberName =>
+                            new ValidationFailure(memberName, result.ErrorMessage)));
                     }
-
-                    if (failures.Count == 0)
+                    else
                     {
-                        // result.MemberNames was null or empty.
-                        failures.Add(new ValidationFailure(string.Empty, message));
+                        failures.Add(new ValidationFailure(string.Empty, result.ErrorMessage));
                     }
-
-                    return failures;
                 }
             }
 
-            return Enumerable.Empty<ValidationFailure>();
+            return failures;
         }
     }
 }

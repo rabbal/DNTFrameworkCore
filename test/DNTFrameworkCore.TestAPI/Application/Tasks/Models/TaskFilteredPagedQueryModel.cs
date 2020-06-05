@@ -1,9 +1,9 @@
-using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Querying;
 using DNTFrameworkCore.TestAPI.Domain.Tasks;
 
 namespace DNTFrameworkCore.TestAPI.Application.Tasks.Models
 {
-    public class TaskFilteredPagedRequestModel : FilteredPagedRequestModel
+    public class TaskFilteredPagedRequestModel : FilteredPagedRequest
     {
         public TaskState? State { get; set; }
     }

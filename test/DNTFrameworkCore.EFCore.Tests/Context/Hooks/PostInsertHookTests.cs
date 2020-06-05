@@ -1,4 +1,4 @@
-namespace DNTFrameworkCore.EntityFramework.Tests.Context.Hooks
+namespace DNTFrameworkCore.EFCore.Tests.Context.Hooks
 {
     [TestFixture]
     public class PostInsertHookTests

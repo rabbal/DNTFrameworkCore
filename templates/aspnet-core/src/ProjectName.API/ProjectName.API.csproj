@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="DNTFrameworkCore.Web" Version="4.6.0" />
+        <PackageReference Include="DNTFrameworkCore.Web.EFCore" Version="4.6.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ProjectName.Application\ProjectName.Application.csproj" />
+      <ProjectReference Include="..\ProjectName.Infrastructure\ProjectName.Infrastructure.csproj" />
+      <ProjectReference Include="..\ProjectName.Resources\ProjectName.Resources.csproj" />
+    </ItemGroup>
+</Project>

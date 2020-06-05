@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Localization;
 using DNTFrameworkCore.TestAPI.Domain.Tasks;
 

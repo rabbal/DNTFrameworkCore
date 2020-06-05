@@ -9,7 +9,7 @@ namespace DNTFrameworkCore.Tenancy.Options
     /// </summary>
     /// <typeparam name="TOptions"></typeparam>
     internal sealed class
-        TenantOptionsDictionary<TOptions> : LazyConcurrentDictionary<string, IOptionsMonitorCache<TOptions>>
+        TenantOptionsDictionary<TOptions> : ThreadSafeDictionary<string, IOptionsMonitorCache<TOptions>>
         where TOptions : class
     {
         public TenantOptionsDictionary() : base(StringComparer.OrdinalIgnoreCase)

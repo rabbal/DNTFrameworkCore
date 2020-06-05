@@ -4,7 +4,6 @@ using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.FluentValidation;
 using DNTFrameworkCore.TestWebApp.Application.Identity.Models;
 using DNTFrameworkCore.TestWebApp.Domain.Identity;
-using DNTFrameworkCore.TestWebApp.Helpers;
 using DNTFrameworkCore.TestWebApp.Resources;
 using FluentValidation;
 
@@ -58,9 +57,9 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity.Validators
                 .MaximumLength(User.MaxPasswordLength)
                 .WithMessage(localizer["User.Fields.Password.MaximumLength"]);
 
-            RuleFor(m => m).Must(model => !CheckDuplicateRoles(model))
-                .WithMessage(localizer["User.Fields.Roles.Unique"])
-                .When(m => m.Roles != null && m.Roles.Any(r => !r.IsDeleted()));
+//            RuleFor(m => m).Must(model => !CheckDuplicateRoles(model))
+//                .WithMessage(localizer["User.Fields.Roles.Unique"])
+//                .When(m => m.Roles != null && m.Roles.Any(r => !r.IsDeleted()));
         }
 
         private bool CheckDuplicateUserName(string userName, long id)
@@ -71,14 +70,14 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity.Validators
 
         private bool CheckDuplicateDisplayName(string displayName, long id)
         {
-            var normalizedDisplayName = displayName.NormalizePersianTitle();
+            var normalizedDisplayName = displayName.ToUpperInvariant();
             return _uow.Set<User>().Any(u => u.NormalizedDisplayName == normalizedDisplayName && u.Id != id);
         }
 
-        private bool CheckDuplicateRoles(UserModel model)
-        {
-            var roles = model.Roles.Where(a => !a.IsDeleted());
-            return roles.GroupBy(r => r.RoleId).Any(r => r.Count() > 1);
-        }
+//        private bool CheckDuplicateRoles(UserModel model)
+//        {
+//            var roles = model.Roles.Where(a => !a.IsDeleted());
+//            return roles.GroupBy(r => r.RoleId).Any(r => r.Count() > 1);
+//        }
     }
 }

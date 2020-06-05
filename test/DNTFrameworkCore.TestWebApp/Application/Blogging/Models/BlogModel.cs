@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Localization;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Blogging.Models
@@ -8,6 +8,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Blogging.Models
     [LocalizationResource(Name = "SharedResource", Location = "DNTFrameworkCore.TestWebApp")]
     public class BlogModel : MasterModel, IValidatableObject
     {
+        [Required] public byte[] LogoImage { get; set; }
         [Required] public string Title { get; set; }
 
         [MaxLength(50, ErrorMessage = "Maximum length is 50")]

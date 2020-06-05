@@ -8,8 +8,8 @@ namespace DNTFrameworkCore.Web.Tenancy.Internal
 {
     internal sealed class TenantContainerFactory : ITenantContainerFactory
     {
-        private readonly LazyConcurrentDictionary<string, IServiceProvider> _providers =
-            new LazyConcurrentDictionary<string, IServiceProvider>(StringComparer.OrdinalIgnoreCase);
+        private readonly ThreadSafeDictionary<string, IServiceProvider> _providers =
+            new ThreadSafeDictionary<string, IServiceProvider>(StringComparer.OrdinalIgnoreCase);
 
         private readonly IServiceProvider _provider;
         private readonly IServiceCollection _services;

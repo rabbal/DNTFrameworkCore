@@ -125,11 +125,11 @@ namespace DNTFrameworkCore.Validation.Interception
             }
         }
 
-        private void SetValidationErrors(object parameter)
+        private void SetValidationErrors(object validatingObject)
         {
             foreach (var validator in _validators)
             {
-                var failures = validator.Validate(parameter);
+                var failures = validator.Validate(validatingObject);
                 _failures.AddRange(failures);
             }
         }

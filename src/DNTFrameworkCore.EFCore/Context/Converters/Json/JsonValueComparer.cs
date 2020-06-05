@@ -1,7 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Newtonsoft.Json;
-
+using System.Text.Json;
 namespace DNTFrameworkCore.EFCore.Context.Converters.Json
 {
     /// <summary>
@@ -18,7 +17,7 @@ namespace DNTFrameworkCore.EFCore.Context.Converters.Json
     {
         private static string Json(T instance)
         {
-            return JsonConvert.SerializeObject(instance);
+            return JsonSerializer.Serialize(instance);
         }
 
         private static T TakeSnapshot(T instance)
@@ -26,7 +25,7 @@ namespace DNTFrameworkCore.EFCore.Context.Converters.Json
             if (instance is ICloneable cloneable)
                 return (T) cloneable.Clone();
 
-            return (T) JsonConvert.DeserializeObject(Json(instance), typeof(T));
+            return (T) JsonSerializer.Deserialize(Json(instance), typeof(T));
         }
 
         private static int HashCode(T instance)

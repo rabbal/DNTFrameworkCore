@@ -85,14 +85,12 @@ namespace DNTFrameworkCore.Extensions
 
         public static bool IsHeadTenant(this ClaimsPrincipal principal)
         {
-            return principal.Claims.Any(c =>
-                c.Type == UserClaimTypes.IsHeadTenant && c.Value == "true");
+            return principal.HasClaim(UserClaimTypes.IsHeadTenant, "true");
         }
-        
+
         public static bool IsHeadOffice(this ClaimsPrincipal principal)
         {
-            return principal.Claims.Any(c =>
-                c.Type == UserClaimTypes.IsHeadOffice && c.Value == "true");
+            return principal.HasClaim(UserClaimTypes.IsHeadOffice, "true");
         }
 
         public static string FindImpersonatorTenantId(this ClaimsPrincipal principal)

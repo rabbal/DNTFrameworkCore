@@ -4,11 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using DNTFrameworkCore.Application.Events;
-using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Eventing;
-using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.Mapping;
@@ -19,12 +16,12 @@ using DNTFrameworkCore.Validation;
 namespace DNTFrameworkCore.Application
 {
     public abstract class InternalCrudService<TEntity, TKey, TReadModel, TModel,
-        TFilteredPagedRequestModel> : ApplicationService,
-        ICrudService<TKey, TReadModel, TModel, TFilteredPagedRequestModel>
+        TFilteredPagedRequest> : ApplicationService,
+        ICrudService<TKey, TReadModel, TModel, TFilteredPagedRequest>
         where TEntity : Entity<TKey>, new()
         where TModel : MasterModel<TKey>
         where TReadModel : ReadModel<TKey>
-        where TFilteredPagedRequestModel : class, IFilteredPagedRequest
+        where TFilteredPagedRequest : IFilteredPagedRequest
         where TKey : IEquatable<TKey>
     {
         protected readonly IEventBus EventBus;
@@ -35,12 +32,12 @@ namespace DNTFrameworkCore.Application
         }
 
         [SkipValidation]
-        public abstract Task<IPagedResult<TReadModel>> ReadPagedListAsync(TFilteredPagedRequestModel model,
+        public abstract Task<IPagedResult<TReadModel>> ReadPagedListAsync(TFilteredPagedRequest request,
             CancellationToken cancellationToken = default);
 
         public async Task<Maybe<TModel>> FindAsync(TKey id, CancellationToken cancellationToken = default)
         {
-            var models = await FindAsync(id.ToEqualityExpression<TEntity, TKey>(), cancellationToken);
+            var models = await FindAsync(IdEqualityExpression(id), cancellationToken);
 
             return models.SingleOrDefault();
         }
@@ -57,10 +54,10 @@ namespace DNTFrameworkCore.Application
         }
 
         [SkipValidation]
-        public async Task<IPagedResult<TModel>> FindPagedListAsync(PagedRequestModel model,
+        public async Task<IPagedResult<TModel>> FindPagedListAsync(IPagedRequest request,
             CancellationToken cancellationToken = default)
         {
-            var pagedList = await FindEntityPagedListAsync(model, cancellationToken);
+            var pagedList = await FindEntityPagedListAsync(request, cancellationToken);
 
             var result = new PagedResult<TModel>
             {
@@ -269,7 +266,7 @@ namespace DNTFrameworkCore.Application
         protected abstract Task<IReadOnlyList<TEntity>> FindEntityListAsync(Expression<Func<TEntity, bool>> predicate,
             CancellationToken cancellationToken);
 
-        protected abstract Task<IPagedResult<TEntity>> FindEntityPagedListAsync(PagedRequestModel model,
+        protected abstract Task<IPagedResult<TEntity>> FindEntityPagedListAsync(IPagedRequest request,
             CancellationToken cancellationToken = default);
 
         protected abstract Task UpdateEntityListAsync(IReadOnlyList<TEntity> entityList,
@@ -280,5 +277,17 @@ namespace DNTFrameworkCore.Application
 
         protected abstract Task RemoveEntityListAsync(IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken);
+
+        private Expression<Func<TEntity, bool>> IdEqualityExpression(TKey id)
+        {
+            var lambdaParam = Expression.Parameter(typeof(TEntity));
+
+            var lambdaBody = Expression.Equal(
+                Expression.PropertyOrField(lambdaParam, nameof(Entity<TKey>.Id)),
+                Expression.Constant(id, typeof(TKey))
+            );
+
+            return Expression.Lambda<Func<TEntity, bool>>(lambdaBody, lambdaParam);
+        }
     }
 }

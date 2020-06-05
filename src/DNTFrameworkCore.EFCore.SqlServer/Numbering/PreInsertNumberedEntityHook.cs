@@ -40,12 +40,13 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             uow.Entry(entity).Property(nameof(INumberedEntity.Number)).CurrentValue = number;
         }
 
-        private static bool IsUniqueNumber(INumberedEntity entity, string number, NumberedEntityOption option, IUnitOfWork uow)
+        private static bool IsUniqueNumber(INumberedEntity entity, string number, NumberedEntityOption option,
+            IUnitOfWork uow)
         {
             using (var command = uow.Connection.CreateCommand())
             {
-                var parameterNames = option.FieldNames.Aggregate(string.Empty,
-                    (current, fieldName) => current + $"AND [t0].[{fieldName}] = @{fieldName} ");
+                var parameterNames = option.Fields.Aggregate(string.Empty,
+                    (current, fieldName) => $"{current} AND [t0].[{fieldName}] = @{fieldName} ");
 
                 var tableName = uow.Entry(entity).Metadata.GetTableName();
                 command.CommandText = $@"SELECT
@@ -64,22 +65,13 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
                 parameter.DbType = DbType.String;
                 command.Parameters.Add(parameter);
 
-                foreach (var fieldName in option.FieldNames)
+                foreach (var fieldName in option.Fields)
                 {
                     var p = command.CreateParameter();
 
                     var value = uow.Entry(entity).Property(fieldName).CurrentValue;
-                    switch (value)
-                    {
-                        case DateTimeOffset clockOffset:
-                            value = clockOffset.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
-                            break;
-                        case DateTime clock:
-                            value = clock.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
-                            break;
-                    }
 
-                    p.Value = value;
+                    p.Value = NormalizeValue(value);
                     p.ParameterName = $"@{fieldName}";
                     p.DbType = SqlHelper.TypeMap[value.GetType()];
 
@@ -100,22 +92,22 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
 
             uow.AcquireDistributedLock(key);
 
-            var number = option.Start.ToString();
+            var number = option.Start.ToString(CultureInfo.InvariantCulture);
 
             var numberedEntity = uow.Set<NumberedEntity>().AsNoTracking().FirstOrDefault(a => a.EntityName == key);
             if (numberedEntity == null)
             {
                 uow.ExecuteSqlRawCommand(
-                    "INSERT INTO [dbo].[NumberedEntity]([EntityName], [NextNumber]) VALUES(@p0,@p1)",
+                    "INSERT INTO [dbo].[NumberedEntity]([EntityName], [NextValue]) VALUES(@p0,@p1)",
                     key,
                     option.Start + option.IncrementBy);
             }
             else
             {
-                number = numberedEntity.NextNumber.ToString();
+                number = numberedEntity.NextValue.ToString(CultureInfo.InvariantCulture);
                 uow.ExecuteSqlRawCommand(
-                    "UPDATE [dbo].[NumberedEntity] SET [NextNumber] = @p0 WHERE [Id] = @p1 ",
-                    numberedEntity.NextNumber + option.IncrementBy, numberedEntity.Id);
+                    "UPDATE [dbo].[NumberedEntity] SET [NextValue] = @p0 WHERE [Id] = @p1 ",
+                    numberedEntity.NextValue + option.IncrementBy, numberedEntity.Id);
             }
 
             if (!string.IsNullOrEmpty(option.Prefix))
@@ -130,23 +122,30 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
 
             var key = type.FullName;
 
-            foreach (var fieldName in option.FieldNames)
+            foreach (var fieldName in option.Fields)
             {
                 var value = uow.Entry(entity).Property(fieldName).CurrentValue;
-                switch (value)
-                {
-                    case DateTimeOffset dateTimeOffset:
-                        value = dateTimeOffset.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
-                        break;
-                    case DateTime dateTime:
-                        value = dateTime.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
-                        break;
-                }
+                value = NormalizeValue(value);
 
                 key += $"_{fieldName}_{value}";
             }
 
             return key;
+        }
+
+        private static object NormalizeValue(object value)
+        {
+            switch (value)
+            {
+                case DateTimeOffset dateTimeOffset:
+                    value = dateTimeOffset.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
+                    break;
+                case DateTime dateTime:
+                    value = dateTime.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
+                    break;
+            }
+
+            return value;
         }
     }
 }

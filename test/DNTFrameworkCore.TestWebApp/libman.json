@@ -44,6 +44,15 @@
         "dist/jquery.unobtrusive-ajax.js",
         "dist/jquery.unobtrusive-ajax.min.js"
       ]
+    },
+    {
+      "provider": "unpkg",
+      "library": "gijgo@1.9.13",
+      "destination": "wwwroot/lib/gijgo/dist",
+      "files": [
+        "js/gijgo.min.js",
+        "css/gijgo.min.css"
+      ]
     }
   ]
 }

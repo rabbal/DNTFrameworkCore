@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Application;
-using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.NHibernate.Linq;
@@ -28,7 +27,7 @@ namespace DNTFrameworkCore.NHibernate.Application
     }
 
     public abstract class CrudService<TEntity, TKey, TReadModel, TModel> :
-        CrudService<TEntity, TKey, TReadModel, TModel, FilteredPagedRequestModel>,
+        CrudService<TEntity, TKey, TReadModel, TModel, FilteredPagedRequest>,
         ICrudService<TKey, TReadModel, TModel>
         where TEntity : Entity<TKey>, new()
         where TModel : MasterModel<TKey>
@@ -67,10 +66,10 @@ namespace DNTFrameworkCore.NHibernate.Application
             return await FindEntityQueryable.Where(predicate).ToListAsync(cancellationToken);
         }
 
-        protected sealed override async Task<IPagedResult<TEntity>> FindEntityPagedListAsync(PagedRequestModel model,
+        protected sealed override async Task<IPagedResult<TEntity>> FindEntityPagedListAsync(IPagedRequest request,
             CancellationToken cancellationToken = default)
         {
-            return await FindEntityQueryable.ToPagedListAsync(model, cancellationToken);
+            return await FindEntityQueryable.ToPagedListAsync(request, cancellationToken);
         }
 
         protected sealed override Task CreateEntityListAsync(IReadOnlyList<TEntity> entityList,

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
 using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.Localization;
 using DNTFrameworkCore.Tenancy;
@@ -59,7 +58,7 @@ namespace DNTFrameworkCore.Authorization
         /// <summary>
         /// List of child permissions. A child permission can be granted only if parent is granted.
         /// </summary>
-        public IReadOnlyList<Permission> Children => _children.ToImmutableList();
+        public IReadOnlyList<Permission> Children => _children.AsReadOnly();
 
         private readonly List<Permission> _children;
 

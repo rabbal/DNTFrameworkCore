@@ -1,5 +1,5 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Newtonsoft.Json;
 
 namespace DNTFrameworkCore.EFCore.Context.Converters.Json
 {
@@ -15,14 +15,14 @@ namespace DNTFrameworkCore.EFCore.Context.Converters.Json
         {
         }
 
-        private static T Deserialize(string json)
+        private static T Deserialize(string jsonString)
         {
-            return string.IsNullOrWhiteSpace(json) ? null : JsonConvert.DeserializeObject<T>(json);
+            return string.IsNullOrWhiteSpace(jsonString) ? null : JsonSerializer.Deserialize<T>(jsonString);
         }
 
         private static string Serialize(T obj)
         {
-            return obj == null ? null : JsonConvert.SerializeObject(obj);
+            return obj == null ? null : JsonSerializer.Serialize(obj);
         }
     }
 }

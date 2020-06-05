@@ -5,8 +5,9 @@ namespace DNTFrameworkCore.Domain
 {
     public interface IAggregateRoot : IEntity
     {
-        IReadOnlyCollection<IDomainEvent> Events { get; }
-        void ClearEvents();
+        IReadOnlyList<IDomainEvent> Events { get; }
+        int VersionId { get; }
+        void IncreaseVersion();
     }
 
     public abstract class AggregateRoot : AggregateRoot<int>
@@ -17,16 +18,17 @@ namespace DNTFrameworkCore.Domain
         where TKey : IEquatable<TKey>
     {
         private readonly List<IDomainEvent> _events = new List<IDomainEvent>();
-        public IReadOnlyCollection<IDomainEvent> Events => _events.AsReadOnly();
+        public IReadOnlyList<IDomainEvent> Events => _events.AsReadOnly();
+        public virtual int VersionId { get; protected set; }
 
         protected virtual void AddDomainEvent(IDomainEvent newEvent)
         {
             _events.Add(newEvent);
         }
 
-        public virtual void ClearEvents()
+        public void IncreaseVersion()
         {
-            _events.Clear();
+            VersionId++;
         }
     }
 }

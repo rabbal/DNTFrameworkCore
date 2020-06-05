@@ -6,10 +6,7 @@ namespace DNTFrameworkCore.Cqrs.Queries
     {
     }
 
-    public class PagedQuery<TReadModel> : IPagedQuery<TReadModel>
+    public class PagedQuery<TReadModel> : PagedRequest, IPagedQuery<TReadModel>
     {
-        public int Page { get; set; }
-        public int PageSize { get; set; }
-        public string SortExpression { get; set; }
     }
 }

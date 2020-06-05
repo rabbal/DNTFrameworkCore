@@ -172,6 +172,7 @@ namespace DNTFrameworkCore.Caching
 
         private static class TypeLock<T>
         {
+            // ReSharper disable once StaticMemberInGenericType
             public static object Lock { get; } = new object();
         }
     }

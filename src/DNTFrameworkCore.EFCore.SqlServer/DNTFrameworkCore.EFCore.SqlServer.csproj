@@ -5,6 +5,7 @@
         <VersionPrefix>4.6.0</VersionPrefix>
         <Authors>GholamReza Rabbal</Authors>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageTags>.NETCore;EFCore;SqlServer;Numbering</PackageTags>

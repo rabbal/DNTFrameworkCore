@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,37 +9,32 @@ namespace DNTFrameworkCore.NHibernate.Linq
 {
     public static class QueryableExtensions
     {
-        public static Task<IPagedResult<T>> ToPagedListAsync<T>(this IQueryable<T> query,
-            IPagedRequest request, CancellationToken cancellationToken = default)
+        public static Task<IPagedResult<T>> ToPagedListAsync<T>(this IQueryable<T> query, IPagedRequest request,
+            CancellationToken cancellationToken = default)
         {
-            var filtering = request is IFilteredPagedRequest q ? q.Filtering : null;
-
-            return query.ToPagedListAsync(request.Page, request.PageSize, request.SortExpression, filtering,
+            return query.ToPagedListAsync(request.Page, request.PageSize, request.ParsedSorting, null,
                 cancellationToken);
         }
 
-        public static Task<IPagedResult<T>> ToPagedListAsync<T>(this IQueryable<T> query,
-            int page,
-            int pageSize,
-            string sortExpression,
+        public static Task<IPagedResult<T>> ToPagedListAsync<T>(this IQueryable<T> query, IFilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
-            return query.ToPagedListAsync(page, pageSize, sortExpression, null, cancellationToken);
+            return query.ToPagedListAsync(request.Page, request.PageSize, request.ParsedSorting,
+                request.ParsedFiltering, cancellationToken);
         }
 
         public static async Task<IPagedResult<T>> ToPagedListAsync<T>(this IQueryable<T> query,
             int page,
             int pageSize,
-            string sortExpression,
-            FilteringCriteria filtering,
-            CancellationToken cancellationToken = default)
+            IEnumerable<SortExpression> sorts,
+            IEnumerable<FilterExpression> filters, CancellationToken cancellationToken = default)
         {
-            query = query.ApplyFiltering(filtering);
+            if (filters != null) query = query.Filter(filters);
 
             var totalCount = await query.LongCountAsync(cancellationToken);
 
-            query = query.ApplySorting(sortExpression);
-            query = query.ApplyPaging(page, pageSize);
+            query = query.Sort(sorts);
+            query = query.Page(page, pageSize);
 
             return new PagedResult<T>
             {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Common;
 using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.TestAPI.Domain.Identity;

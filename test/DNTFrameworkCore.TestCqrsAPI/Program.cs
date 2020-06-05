@@ -1,4 +1,7 @@
-﻿namespace DNTFrameworkCore.TestCqrsAPI
+﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+
+namespace DNTFrameworkCore.TestCqrsAPI
 {
     public class Program
     {

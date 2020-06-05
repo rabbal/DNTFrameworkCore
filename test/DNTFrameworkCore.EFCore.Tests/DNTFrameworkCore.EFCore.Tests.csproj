@@ -1,31 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
 
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
-        <PackageReference Include="Moq" Version="4.10.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
+        <PackageReference Include="Moq" Version="4.14.1" />
         <PackageReference Include="nunit" Version="3.12.0" />
-        <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
         <PackageReference Include="Shouldly" Version="3.0.2" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\DNTFrameworkCore.EntityFramework.SqlServer\DNTFrameworkCore.EntityFramework.SqlServer.csproj" />
-      <ProjectReference Include="..\..\src\DNTFrameworkCore.EntityFramework\DNTFrameworkCore.EntityFramework.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Application" />
-      <Folder Include="Auditing" />
-      <Folder Include="Caching" />
-      <Folder Include="Configuration" />
-      <Folder Include="Logging" />
+      <ProjectReference Include="..\..\src\DNTFrameworkCore.EFCore.SqlServer\DNTFrameworkCore.EFCore.SqlServer.csproj" />
+      <ProjectReference Include="..\..\src\DNTFrameworkCore.EFCore\DNTFrameworkCore.EFCore.csproj" />
     </ItemGroup>
 
 </Project>

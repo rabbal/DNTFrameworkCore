@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DNTFrameworkCore.Application;
-using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
@@ -39,7 +38,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
         protected override IQueryable<User> FindEntityQueryable => base.FindEntityQueryable.Include(u => u.Roles)
             .Include(u => u.Permissions);
 
-        public override Task<IPagedResult<UserReadModel>> ReadPagedListAsync(FilteredPagedRequestModel model,
+        public override Task<IPagedResult<UserReadModel>> ReadPagedListAsync(FilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking()
@@ -50,7 +49,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
                     UserName = u.UserName,
                     DisplayName = u.DisplayName,
                     LastLoggedInDateTime = u.LastLoggedInDateTime
-                }).ToPagedListAsync(model, cancellationToken);
+                }).ToPagedListAsync(request, cancellationToken);
         }
 
         protected override void MapToEntity(UserModel model, User user)
@@ -68,7 +67,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
 
         private static void MapSerialNumber(User user, UserModel model)
         {
-            if (!model.ShouldMapSerialNumber()) return;
+            //if (!model.ShouldMapSerial(user)) return;
 
             user.SerialNumber = User.NewSerialNumber();
         }

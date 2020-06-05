@@ -10,8 +10,8 @@ namespace DNTFrameworkCore.Web.Authorization
 {
     public class AuthorizationPolicyProvider : DefaultAuthorizationPolicyProvider
     {
-        private readonly LazyConcurrentDictionary<string, AuthorizationPolicy> _policies =
-            new LazyConcurrentDictionary<string, AuthorizationPolicy>(StringComparer.OrdinalIgnoreCase);
+        private readonly ThreadSafeDictionary<string, AuthorizationPolicy> _policies =
+            new ThreadSafeDictionary<string, AuthorizationPolicy>(StringComparer.OrdinalIgnoreCase);
 
         public AuthorizationPolicyProvider(IOptions<AuthorizationOptions> options)
             : base(options)

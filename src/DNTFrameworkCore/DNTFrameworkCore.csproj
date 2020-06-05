@@ -5,6 +5,7 @@
         <VersionPrefix>4.6.0</VersionPrefix>
         <Authors>GholamReza Rabbal</Authors>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <LangVersion>latest</LangVersion>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageTags>.NETCore;EFCore;Tenancy;Validation;Transaction;Logging</PackageTags>
@@ -25,8 +26,9 @@
         </Content>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Castle.Core" Version="4.4.0" />
-        <PackageReference Include="System.Data.Common" Version="4.3.0" />
+        <PackageReference Include="Castle.Core" Version="4.4.1" />
+        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.1.0" />
+        <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
         <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.1.3" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.3" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.3" />
@@ -34,8 +36,5 @@
         <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="3.1.3" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.3" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.3" />
-        <PackageReference Include="System.Collections.Immutable" Version="1.7.0" />
-        <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
-        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.23" />
     </ItemGroup>
 </Project>

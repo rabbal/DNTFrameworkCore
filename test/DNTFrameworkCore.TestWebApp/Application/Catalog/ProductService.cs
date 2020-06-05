@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DNTFrameworkCore.Application;
-using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Linq;
@@ -32,7 +31,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Catalog
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public override Task<IPagedResult<ProductModel>> ReadPagedListAsync(FilteredPagedRequestModel model,
+        public override Task<IPagedResult<ProductModel>> ReadPagedListAsync(FilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking().Select(p => new ProductModel
@@ -41,7 +40,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Catalog
                 Version = p.Version,
                 Title = p.Title,
                 Number = p.Number
-            }).ToPagedListAsync(model, cancellationToken);
+            }).ToPagedListAsync(request, cancellationToken);
         }
 
         protected override void MapToEntity(ProductModel model, Product product)

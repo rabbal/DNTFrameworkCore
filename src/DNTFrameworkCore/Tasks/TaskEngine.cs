@@ -22,37 +22,47 @@ namespace DNTFrameworkCore.Tasks
 
         public TaskEngine(IEnumerable<ITask> tasks)
         {
-            _tasks = tasks.OrderBy(task => task.Order);
+            _tasks = tasks.OrderBy(task => task.Order).ToList();
         }
 
-        public Task RunOnStartup(CancellationToken cancellationToken = default)
+        public async Task RunOnStartup(CancellationToken cancellationToken = default)
         {
-            var tasks = _tasks.OfType<IStartupTask>().Select(task => task.Run(cancellationToken));
-            return Task.WhenAll(tasks);
+            foreach (var task in _tasks.OfType<IStartupTask>())
+            {
+                await task.Run(cancellationToken);
+            }
         }
 
-        public Task RunOnEnd(CancellationToken cancellationToken = default)
+        public async Task RunOnEnd(CancellationToken cancellationToken = default)
         {
-            var tasks = _tasks.OfType<IEndTask>().Select(task => task.Run(cancellationToken));
-            return Task.WhenAll(tasks);
+            foreach (var task in _tasks.OfType<IEndTask>())
+            {
+                await task.Run(cancellationToken);
+            }
         }
 
-        public Task RunOnException(Exception exception, CancellationToken cancellationToken = default)
+        public async Task RunOnException(Exception exception, CancellationToken cancellationToken = default)
         {
-            var tasks = _tasks.OfType<IExceptionTask>().Select(task => task.Run(exception, cancellationToken));
-            return Task.WhenAll(tasks);
+            foreach (var task in _tasks.OfType<IExceptionTask>())
+            {
+                await task.Run(exception, cancellationToken);
+            }
         }
 
-        public Task RunOnBeginRequest(CancellationToken cancellationToken = default)
+        public async Task RunOnBeginRequest(CancellationToken cancellationToken = default)
         {
-            var tasks = _tasks.OfType<IBeginRequestTask>().Select(task => task.Run(cancellationToken));
-            return Task.WhenAll(tasks);
+            foreach (var task in _tasks.OfType<IBeginRequestTask>())
+            {
+                await task.Run(cancellationToken);
+            }
         }
 
-        public Task RunOnEndRequest(CancellationToken cancellationToken = default)
+        public async Task RunOnEndRequest(CancellationToken cancellationToken = default)
         {
-            var tasks = _tasks.OfType<IEndRequestTask>().Select(task => task.Run(cancellationToken));
-            return Task.WhenAll(tasks);
+            foreach (var task in _tasks.OfType<IEndRequestTask>())
+            {
+                await task.Run(cancellationToken);
+            }
         }
     }
 }

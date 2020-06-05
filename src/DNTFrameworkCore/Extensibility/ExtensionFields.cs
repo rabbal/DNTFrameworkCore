@@ -5,12 +5,12 @@ namespace DNTFrameworkCore.Extensibility
 {
     public static class ExtensionFields
     {
-        private static readonly ConditionalWeakTable<object, Dictionary<string, object>> FieldCache =
+        private static readonly ConditionalWeakTable<object, Dictionary<string, object>> _fields =
             new ConditionalWeakTable<object, Dictionary<string, object>>();
 
         public static void ExtensionField<T>(this T instance, string name, object value) where T : class
         {
-            var fields = FieldCache.GetOrCreateValue(instance);
+            var fields = _fields.GetOrCreateValue(instance);
 
             if (fields.ContainsKey(name))
                 fields[name] = value;
@@ -25,7 +25,7 @@ namespace DNTFrameworkCore.Extensibility
 
         public static TValue ExtensionField<TValue>(this object instance, string name)
         {
-            if (FieldCache.TryGetValue(instance, out var fields) && fields.ContainsKey(name))
+            if (_fields.TryGetValue(instance, out var fields) && fields.ContainsKey(name))
                 return (TValue) fields[name];
             return default;
         }

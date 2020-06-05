@@ -1,4 +1,4 @@
-using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Application;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Identity.Models
 {

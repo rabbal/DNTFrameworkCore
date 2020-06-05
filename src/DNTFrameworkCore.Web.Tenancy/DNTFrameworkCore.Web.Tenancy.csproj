@@ -5,6 +5,7 @@
     <VersionPrefix>4.6.0</VersionPrefix>
     <Authors>GholamReza Rabbal</Authors>
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
     <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageTags>.NETCore;Tenancy;ASP.NET Core</PackageTags>

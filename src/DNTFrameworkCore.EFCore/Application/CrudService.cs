@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Application;
-using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Context.Extensions;
@@ -29,7 +28,7 @@ namespace DNTFrameworkCore.EFCore.Application
     }
 
     public abstract class CrudService<TEntity, TKey, TReadModel, TModel> :
-        CrudService<TEntity, TKey, TReadModel, TModel, FilteredPagedRequestModel>,
+        CrudService<TEntity, TKey, TReadModel, TModel, FilteredPagedRequest>,
         ICrudService<TKey, TReadModel, TModel>
         where TEntity : Entity<TKey>, new()
         where TModel : MasterModel<TKey>
@@ -42,12 +41,12 @@ namespace DNTFrameworkCore.EFCore.Application
     }
 
     public abstract class CrudService<TEntity, TKey, TReadModel, TModel,
-        TFilteredPagedRequestModel> : InternalCrudService<TEntity, TKey, TReadModel,
-        TModel, TFilteredPagedRequestModel>
+        TFilteredPagedRequest> : InternalCrudService<TEntity, TKey, TReadModel,
+        TModel, TFilteredPagedRequest>
         where TEntity : Entity<TKey>, new()
         where TModel : MasterModel<TKey>
         where TReadModel : ReadModel<TKey>
-        where TFilteredPagedRequestModel : class, IFilteredPagedRequest
+        where TFilteredPagedRequest : IFilteredPagedRequest
         where TKey : IEquatable<TKey>
     {
         protected readonly DbSet<TEntity> EntitySet;
@@ -67,10 +66,10 @@ namespace DNTFrameworkCore.EFCore.Application
             return await FindEntityQueryable.Where(predicate).ToListAsync(cancellationToken);
         }
 
-        protected sealed override Task<IPagedResult<TEntity>> FindEntityPagedListAsync(PagedRequestModel model,
+        protected sealed override Task<IPagedResult<TEntity>> FindEntityPagedListAsync(IPagedRequest request,
             CancellationToken cancellationToken = default)
         {
-            return FindEntityQueryable.ToPagedListAsync(model, cancellationToken);
+            return FindEntityQueryable.ToPagedListAsync(request, cancellationToken);
         }
 
         protected sealed override async Task CreateEntityListAsync(IReadOnlyList<TEntity> entityList,

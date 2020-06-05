@@ -1,4 +1,4 @@
-namespace DNTFrameworkCore.EntityFramework.Tests.Numbering
+namespace DNTFrameworkCore.EFCore.Tests.Numbering
 {
     public class TestTask : Entity<int>, INumberedEntity, ITenantEntity
     {

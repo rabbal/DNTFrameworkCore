@@ -91,17 +91,9 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
             return SignInResult.Ok();
         }
 
-        /// <summary>
-        /// The Jwt implementation does not support "revoke OAuth token" (logout) by design.
-        /// Delete the user's tokens from the database (revoke its bearer token)
-        /// </summary>
         public async Task SignOutAsync()
         {
-            if (_session.IsAuthenticated)
-            {
-                // await UpdateSerialNumberAsync(_session.UserId.Value);
-                _logger.LogInformation($"{_session.UserName} logged out.");
-            }
+            _logger.LogInformation($"{_session.UserName} logged out.");
 
             await _httpContext.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }

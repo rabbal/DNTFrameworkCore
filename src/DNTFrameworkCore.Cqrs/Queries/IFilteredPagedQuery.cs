@@ -6,8 +6,7 @@ namespace DNTFrameworkCore.Cqrs.Queries
     {
     }
 
-    public class FilteredPagedQuery<TReadModel> : PagedQuery<TReadModel>, IFilteredPagedQuery<TReadModel>
+    public class FilteredPagedQuery<TReadModel> : FilteredPagedRequest, IFilteredPagedQuery<TReadModel>
     {
-        public FilteringCriteria Filtering { get; set; }
     }
 }

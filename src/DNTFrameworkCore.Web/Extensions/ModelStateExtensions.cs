@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using DNTFrameworkCore.Exceptions;
 using DNTFrameworkCore.Functional;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -87,44 +86,6 @@ namespace DNTFrameworkCore.Web.Extensions
             }
 
             return builder.ToString();
-        }
-
-        public static string SerializeModelState(this ModelStateDictionary modelState)
-        {
-            var values = modelState
-                .Select(kvp => new ModelStateItemValue
-                {
-                    Key = kvp.Key,
-                    AttemptedValue = kvp.Value.AttemptedValue,
-                    RawValue = kvp.Value.RawValue,
-                    Errors = kvp.Value.Errors.Select(err => err.ErrorMessage).ToList(),
-                });
-
-            return JsonSerializer.Serialize(values);
-        }
-        
-        public static ModelStateDictionary DeserializeModelState(string jsonValue)
-        {
-            var itemList = JsonSerializer.Deserialize<List<ModelStateItemValue>>(jsonValue);
-            var modelState = new ModelStateDictionary();
-
-            foreach (var item in itemList)
-            {
-                modelState.SetModelValue(item.Key, item.RawValue, item.AttemptedValue);
-                foreach (var error in item.Errors)
-                {
-                    modelState.AddModelError(item.Key, error);
-                }
-            }
-            return modelState;
-        }
-
-        public class ModelStateItemValue
-        {
-            public string Key { get; set; }
-            public string AttemptedValue { get; set; }
-            public object RawValue { get; set; }
-            public ICollection<string> Errors { get; set; } = new List<string>();
         }
     }
 }

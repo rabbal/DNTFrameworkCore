@@ -5,7 +5,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
 {
     public class OrderNote : Entity
     {
-        public const int ContentMaximumLength = 1024;
+        public const int MaxContentLength = 1024;
         public string Content { get; private set; }
 
         private OrderNote()
@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
                 return Result.Fail<OrderNote>("content should not be empty");
             }
 
-            if (content.Length > ContentMaximumLength)
+            if (content.Length > MaxContentLength)
             {
                 return Result.Fail<OrderNote>("content is too long");
             }

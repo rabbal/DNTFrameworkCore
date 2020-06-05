@@ -7,7 +7,7 @@ namespace DNTFrameworkCore.Extensibility
 {
     public static class ExtensionProperties
     {
-        private static readonly ConditionalWeakTable<object, List<ExtraPropertyInfo>> PropertyCache =
+        private static readonly ConditionalWeakTable<object, List<ExtraPropertyInfo>> _properties =
             new ConditionalWeakTable<object, List<ExtraPropertyInfo>>();
 
         private sealed class ExtraPropertyInfo
@@ -28,7 +28,7 @@ namespace DNTFrameworkCore.Extensibility
             Type propertyType, Action<T, object> setPropertyValueFunc = null, Attribute[] attributes = null)
             where T : class
         {
-            var properties = PropertyCache.GetOrCreateValue(instance);
+            var properties = _properties.GetOrCreateValue(instance);
 
             var property = properties.Find(p => p.PropertyName == propertyName);
             if (property != null)
@@ -54,7 +54,7 @@ namespace DNTFrameworkCore.Extensibility
 
         public static TValue ExtensionProperty<TValue>(this object instance, string name)
         {
-            if (!PropertyCache.TryGetValue(instance, out var properties)) return default;
+            if (!_properties.TryGetValue(instance, out var properties)) return default;
 
             var property = properties.Find(p => p.PropertyName == name);
             if (property == null) return default;
@@ -69,7 +69,7 @@ namespace DNTFrameworkCore.Extensibility
 
         public static IEnumerable<ExtensionPropertyDescriptor<T>> ExtensionPropertyList<T>(this object instance) where T : class
         {
-            if (!PropertyCache.TryGetValue(instance, out var properties))
+            if (!_properties.TryGetValue(instance, out var properties))
                 throw new KeyNotFoundException($"key: {instance.GetType().Name} was not found in dictionary");
 
             return properties.Select(p =>

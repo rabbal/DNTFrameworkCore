@@ -1,8 +1,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using DNTFrameworkCore.Application;
-using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Linq;
@@ -20,37 +20,33 @@ namespace DNTFrameworkCore.TestWebApp.Application.Blogging
 
     public class BlogService : CrudService<Blog, int, BlogModel>, IBlogService
     {
-        public BlogService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
+        private readonly IMapper _mapper;
+
+        public BlogService(IUnitOfWork uow, IEventBus bus, IMapper mapper) : base(uow, bus)
         {
+            _mapper = mapper;
         }
 
-        public override Task<IPagedResult<BlogModel>> ReadPagedListAsync(FilteredPagedRequestModel model,
+        public override Task<IPagedResult<BlogModel>> ReadPagedListAsync(FilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking()
                 .Select(b => new BlogModel
                 {
-                    Id = b.Id, Version = b.Version, Url = b.Url, Title = b.Title
-                }).ToPagedListAsync(model, cancellationToken);
+                    Id = b.Id,
+                    Url = b.Url,
+                    Title = b.Title
+                }).ToPagedListAsync(request, cancellationToken);
         }
 
         protected override void MapToEntity(BlogModel model, Blog blog)
         {
-            blog.Title = model.Title;
-            blog.Url = model.Url;
-            blog.Version = model.Version;
-            blog.NormalizedTitle = model.Title.ToUpperInvariant();
+            _mapper.Map(model, blog);
         }
 
         protected override BlogModel MapToModel(Blog blog)
         {
-            return new BlogModel
-            {
-                Title = blog.Title,
-                Url = blog.Url,
-                Version = blog.Version,
-                Id = blog.Id
-            };
+            return _mapper.Map<BlogModel>(blog);
         }
     }
 }

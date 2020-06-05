@@ -8,6 +8,6 @@ namespace DNTFrameworkCore.Validation.Interception
     /// </summary>
     public interface IMethodParameterValidator : ITransientDependency
     {
-        IEnumerable<ValidationFailure> Validate(object parameter);
+        IEnumerable<ValidationFailure> Validate(object validatingObject);
     }
 }

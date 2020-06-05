@@ -60,32 +60,28 @@ namespace DNTFrameworkCore.Web.EFCore.Cryptography
         /// <inheritdoc />
         public virtual IReadOnlyCollection<XElement> GetAllElements()
         {
-            using (var scope = _provider.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<TContext>();
-                var logger = _logger;
-                return context.Set<ProtectionKey>().AsNoTracking().Select(key => TryParseKeyXml(key.XmlValue, logger))
-                    .ToList()
-                    .AsReadOnly();
-            }
+            using var scope = _provider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<TContext>();
+            var logger = _logger;
+            return context.Set<ProtectionKey>().AsNoTracking().Select(key => TryParseKeyXml(key.XmlValue, logger))
+                .ToList()
+                .AsReadOnly();
         }
 
         /// <inheritdoc />
         public void StoreElement(XElement element, string friendlyName)
         {
-            using (var scope = _provider.CreateScope())
+            using var scope = _provider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<TContext>();
+            var key = new ProtectionKey
             {
-                var context = scope.ServiceProvider.GetRequiredService<TContext>();
-                var key = new ProtectionKey
-                {
-                    FriendlyName = friendlyName,
-                    XmlValue = element.ToString(SaveOptions.DisableFormatting)
-                };
+                FriendlyName = friendlyName,
+                XmlValue = element.ToString(SaveOptions.DisableFormatting)
+            };
 
-                context.Set<ProtectionKey>().Add(key);
-                _logger.LogSavingKeyToDbContext(friendlyName, typeof(TContext).Name);
-                context.SaveChanges();
-            }
+            context.Set<ProtectionKey>().Add(key);
+            _logger.LogSavingKeyToDbContext(friendlyName, typeof(TContext).Name);
+            context.SaveChanges();
         }
 
         private static XElement TryParseKeyXml(string xml, ILogger logger)

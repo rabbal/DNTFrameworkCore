@@ -1,5 +1,5 @@
 using System;
-using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.TestAPI.Domain.Tasks;
 
 namespace DNTFrameworkCore.TestAPI.Application.Tasks.Models

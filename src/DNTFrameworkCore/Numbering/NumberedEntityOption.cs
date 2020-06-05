@@ -9,8 +9,8 @@ namespace DNTFrameworkCore.Numbering
         public string Prefix { get; set; }
 
         /// <summary>
-        /// Name of fields that used for reset next-number
+        /// Name of fields that used for reset next-value
         /// </summary>
-        public IEnumerable<string> FieldNames { get; set; } = new List<string>();
+        public IEnumerable<string> Fields { get; set; } = new List<string>();
     }
 }

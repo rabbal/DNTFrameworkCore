@@ -6,7 +6,7 @@ namespace DNTFrameworkCore.Extensibility
 {
     public static class UniqueIdExtensions<T> where T : class
     {
-        private static readonly ConditionalWeakTable<T, string> Ids =
+        private static readonly ConditionalWeakTable<T, string> _ids =
             new ConditionalWeakTable<T, string>();
 
         // A static field is shared across all instances of the `same` type or T here.
@@ -15,13 +15,13 @@ namespace DNTFrameworkCore.Extensibility
 
         public static string UniqueId(T instance)
         {
-            return Ids.GetValue(instance,
+            return _ids.GetValue(instance,
                 o => Interlocked.Increment(ref _uniqueId).ToString(CultureInfo.InvariantCulture));
         }
 
         public static string UniqueId(T instance, string key)
         {
-            return Ids.GetValue(instance, o => key);
+            return _ids.GetValue(instance, o => key);
         }
     }
 }

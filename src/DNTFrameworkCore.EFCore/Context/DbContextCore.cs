@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.EFCore.Context.Extensions;
@@ -14,8 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
-using Newtonsoft.Json;
 using DbException = DNTFrameworkCore.Exceptions.DbException;
+
 
 namespace DNTFrameworkCore.EFCore.Context
 {
@@ -114,7 +115,7 @@ namespace DNTFrameworkCore.EFCore.Context
 
         protected virtual string EntityHash<TEntity>(Dictionary<string, object> row) where TEntity : class
         {
-            var json = JsonConvert.SerializeObject(row, Formatting.Indented);
+            var json = JsonSerializer.Serialize(row, new JsonSerializerOptions {WriteIndented = true});
             using (var hashAlgorithm = SHA256.Create())
             {
                 var byteValue = Encoding.UTF8.GetBytes(json);

@@ -6,7 +6,6 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Commands
     {
         public int Id { get; }
 
-        [JsonConstructor]
         public RemovePriceType(int id) => Id = id;
     }
 }

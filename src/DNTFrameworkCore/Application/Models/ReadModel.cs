@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DNTFrameworkCore.Application.Models
+namespace DNTFrameworkCore.Application
 {
     public abstract class ReadModel : ReadModel<int>
     {

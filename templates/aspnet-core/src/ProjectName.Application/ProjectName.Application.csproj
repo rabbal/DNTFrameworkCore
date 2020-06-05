@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="DNTFrameworkCore.EFCore" Version="4.6.0" />
+      <PackageReference Include="DNTFrameworkCore.FluentValidation" Version="4.6.0" />
+      <PackageReference Include="Scrutor" Version="3.2.1" />
+      <PackageReference Include="AutoMapper" Version="9.0.0" />
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ProjectName.Domain\ProjectName.Domain.csproj" />
+      <ProjectReference Include="..\ProjectName.Resources\ProjectName.Resources.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Identity\Handlers" />
+    </ItemGroup>
+
+</Project>

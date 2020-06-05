@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using DNTFrameworkCore.Application.Models;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Querying;
 
@@ -14,27 +13,27 @@ namespace DNTFrameworkCore.Application
     }
 
     public interface
-        ICrudService<in TKey, TReadModel, TModel> : ICrudService<TKey, TReadModel, TModel, FilteredPagedRequestModel>
+        ICrudService<in TKey, TReadModel, TModel> : ICrudService<TKey, TReadModel, TModel, FilteredPagedRequest>
         where TModel : MasterModel<TKey>
         where TReadModel : ReadModel<TKey>
         where TKey : IEquatable<TKey>
     {
     }
 
-    public interface ICrudService<in TKey, TReadModel, TModel, in TFilteredPagedRequestModel> : IApplicationService
+    public interface ICrudService<in TKey, TReadModel, TModel, in TFilteredPagedRequest> : IApplicationService
         where TModel : MasterModel<TKey>
         where TReadModel : ReadModel<TKey>
-        where TFilteredPagedRequestModel : IFilteredPagedRequest
+        where TFilteredPagedRequest : IFilteredPagedRequest
         where TKey : IEquatable<TKey>
     {
-        Task<IPagedResult<TReadModel>> ReadPagedListAsync(TFilteredPagedRequestModel model,
+        Task<IPagedResult<TReadModel>> ReadPagedListAsync(TFilteredPagedRequest request,
             CancellationToken cancellationToken = default);
 
         Task<Maybe<TModel>> FindAsync(TKey id, CancellationToken cancellationToken = default);
         Task<IReadOnlyList<TModel>> FindListAsync(IEnumerable<TKey> ids, CancellationToken cancellationToken = default);
         Task<IReadOnlyList<TModel>> FindListAsync(CancellationToken cancellationToken = default);
 
-        Task<IPagedResult<TModel>> FindPagedListAsync(PagedRequestModel model,
+        Task<IPagedResult<TModel>> FindPagedListAsync(IPagedRequest request,
             CancellationToken cancellationToken = default);
 
         Task<Result> CreateAsync(TModel model, CancellationToken cancellationToken = default);
