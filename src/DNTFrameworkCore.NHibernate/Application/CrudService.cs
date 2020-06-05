@@ -40,12 +40,12 @@ namespace DNTFrameworkCore.NHibernate.Application
     }
 
     public abstract class CrudService<TEntity, TKey, TReadModel, TModel,
-        TFilteredPagedRequestModel> : InternalCrudService<TEntity, TKey, TReadModel,
-        TModel, TFilteredPagedRequestModel>
+        TFilteredPagedRequest> : InternalCrudService<TEntity, TKey, TReadModel,
+        TModel, TFilteredPagedRequest>
         where TEntity : Entity<TKey>, new()
         where TModel : MasterModel<TKey>
         where TReadModel : ReadModel<TKey>
-        where TFilteredPagedRequestModel : class, IFilteredPagedRequest
+        where TFilteredPagedRequest : class, IFilteredPagedRequest
         where TKey : IEquatable<TKey>
     {
         protected ISession Session { get; }

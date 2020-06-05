@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DNTFrameworkCore.Web.ModelBinding
 {
-    public static class FilteredPagedRequestModelBinderExtensions
+    public static class FilteredPagedRequestBinderExtensions
     {
         public static MvcOptions UseFilteredPagedRequestModelBinder(this MvcOptions options)
         {

@@ -189,12 +189,12 @@ namespace DNTFrameworkCore.Web.Mvc
         private protected abstract Task<Result> DeleteAsync(IEnumerable<TKey> ids, CancellationToken cancellationToken);
 
         [HttpGet]
-        public async Task<IActionResult> Index(TFilteredPagedRequest query, CancellationToken cancellationToken)
+        public async Task<IActionResult> Index(TFilteredPagedRequest request, CancellationToken cancellationToken)
         {
             if (!await HasPermission(ViewPermissionName)) return Forbid();
 
-            query ??= Factory<TFilteredPagedRequest>.New();
-            var model = await ReadPagedListAsync(query, cancellationToken);
+            request ??= Factory<TFilteredPagedRequest>.New();
+            var model = await ReadPagedListAsync(request, cancellationToken);
 
             return RenderIndex(model);
         }
@@ -203,13 +203,13 @@ namespace DNTFrameworkCore.Web.Mvc
         [AjaxOnly]
         [ValidateAntiForgeryToken]
         [NoResponseCache]
-        public async Task<IActionResult> PagedList(TFilteredPagedRequest query,
+        public async Task<IActionResult> PagedList(TFilteredPagedRequest request,
             CancellationToken cancellationToken)
         {
             if (!await HasPermission(ViewPermissionName)) return Forbid();
 
-            query ??= Factory<TFilteredPagedRequest>.New();
-            var model = await ReadPagedListAsync(query, cancellationToken);
+            request ??= Factory<TFilteredPagedRequest>.New();
+            var model = await ReadPagedListAsync(request, cancellationToken);
 
             return Ok(model);
         }

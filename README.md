@@ -29,7 +29,7 @@ public class BlogService : CrudService<Blog, int, BlogModel>, IBlogService
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
-    public override Task<IPagedResult<BlogModel>> ReadPagedListAsync(FilteredPagedRequestModel model,
+    public override Task<IPagedResult<BlogModel>> ReadPagedListAsync(FilteredPagedRequest request,
         CancellationToken cancellationToken = default)
     {
         return EntitySet.AsNoTracking()
@@ -39,7 +39,7 @@ public class BlogService : CrudService<Blog, int, BlogModel>, IBlogService
                 Version = b.Version,
                 Url = b.Url,
                 Title = b.Title
-            }).ToPagedListAsync(model, cancellationToken);
+            }).ToPagedListAsync(request, cancellationToken);
     }
 
     protected override void MapToEntity(BlogModel model, Blog blog)
@@ -95,9 +95,11 @@ PM> Install-Package DNTFrameworkCore
 PM> Install-Package DNTFrameworkCore.EFCore
 PM> Install-Package DNTFrameworkCore.EFCore.SqlServer
 PM> Install-Package DNTFrameworkCore.Web
-PM> Install-Package DNTFrameworkCore.FluentValidation
 PM> Install-Package DNTFrameworkCore.Web.Tenancy
+PM> Install-Package DNTFrameworkCore.Web.EFCore
 PM> Install-Package DNTFrameworkCore.Licensing
+PM> Install-Package DNTFrameworkCore.FluentValidation
+
 ```
 
 OR
@@ -239,11 +241,11 @@ public class TaskReadModel : ReadModel<int>
 **Implement Service**
  
 ```c#
-public interface ITaskService : ICrudService<int, TaskReadModel, TaskModel, TaskFilteredPagedQueryModel>
+public interface ITaskService : ICrudService<int, TaskReadModel, TaskModel, TaskFilteredPagedRequest>
 {
 }
 
-public class TaskService : CrudService<Task, int, TaskReadModel, TaskModel, TaskFilteredPagedQueryModel>,
+public class TaskService : CrudService<Task, int, TaskReadModel, TaskModel, TaskFilteredPagedRequest>,
     ITaskService
 {
     private readonly IMapper _mapper;
@@ -252,7 +254,7 @@ public class TaskService : CrudService<Task, int, TaskReadModel, TaskModel, Task
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper);
     }
 
-    public override Task<IPagedResult<TaskReadModel>> ReadPagedListAsync(TaskFilteredPagedRequestModel model,
+    public override Task<IPagedResult<TaskReadModel>> ReadPagedListAsync(TaskFilteredPagedRequest request,
         CancellationToken cancellationToken = default)
     {
         return EntitySet.AsNoTracking()
@@ -263,7 +265,7 @@ public class TaskService : CrudService<Task, int, TaskReadModel, TaskModel, Task
                 Title = t.Title,
                 State = t.State,
                 Number = t.Number
-            }).ToPagedListAsync(model, cancellationToken);
+            }).ToPagedListAsync(request, cancellationToken);
     }
 
     protected override void MapToEntity(TaskModel model, Task task)
@@ -284,7 +286,7 @@ In DNTFrameworkCore.EFCore [there is no dependency to AutoMapper](https://cezary
 ```c#
 [Route("api/[controller]")]
 public class
-    TasksController : CrudController<ITaskService, int, TaskReadModel, TaskModel, TaskFilteredPagedQueryModel>
+    TasksController : CrudController<ITaskService, int, TaskReadModel, TaskModel, TaskFilteredPagedRequest>
 {
     public TasksController(ITaskService service) : base(service)
     {

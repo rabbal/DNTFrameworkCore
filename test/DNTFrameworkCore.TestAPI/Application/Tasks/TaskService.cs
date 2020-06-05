@@ -15,13 +15,13 @@ using Task = DNTFrameworkCore.TestAPI.Domain.Tasks.Task;
 
 namespace DNTFrameworkCore.TestAPI.Application.Tasks
 {
-    public interface ITaskService : ICrudService<int, TaskReadModel, TaskModel, TaskFilteredPagedRequestModel>
+    public interface ITaskService : ICrudService<int, TaskReadModel, TaskModel, TaskFilteredPagedRequest>
     {
         bool TamperedTaskExists();
     }
 
     public class TaskService : CrudService<Task, int, TaskReadModel, TaskModel,
-        TaskFilteredPagedRequestModel>, ITaskService
+        TaskFilteredPagedRequest>, ITaskService
     {
         public TaskService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
         {
@@ -33,7 +33,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
             return tasks.Any(task => task.Hash != UnitOfWork.EntityHash(task));
         }
 
-        public override Task<IPagedResult<TaskReadModel>> ReadPagedListAsync(TaskFilteredPagedRequestModel model,
+        public override Task<IPagedResult<TaskReadModel>> ReadPagedListAsync(TaskFilteredPagedRequest model,
             CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking()

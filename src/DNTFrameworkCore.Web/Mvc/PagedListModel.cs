@@ -2,9 +2,9 @@
 
 namespace DNTFrameworkCore.Web.Mvc
 {
-    public class PagedListModel<TModel, TPagedRequestModel> where TPagedRequestModel : IPagedRequest
+    public class PagedListModel<TModel, TPagedRequest> where TPagedRequest : IPagedRequest
     {
-        public TPagedRequestModel Request { get; set; }
+        public TPagedRequest Request { get; set; }
         public IPagedResult<TModel> Result { get; set; }
     }
 }

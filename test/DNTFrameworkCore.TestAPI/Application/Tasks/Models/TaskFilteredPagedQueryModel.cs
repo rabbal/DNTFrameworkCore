@@ -3,7 +3,7 @@ using DNTFrameworkCore.TestAPI.Domain.Tasks;
 
 namespace DNTFrameworkCore.TestAPI.Application.Tasks.Models
 {
-    public class TaskFilteredPagedRequestModel : FilteredPagedRequest
+    public class TaskFilteredPagedRequest : FilteredPagedRequest
     {
         public TaskState? State { get; set; }
     }
