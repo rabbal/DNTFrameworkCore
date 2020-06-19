@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 
 namespace DNTFrameworkCore.EFCore.Configuration
 {
-    // ReSharper disable once InconsistentNaming
     public class EFConfigurationProvider : ConfigurationProvider
     {
         private readonly IServiceProvider _provider;

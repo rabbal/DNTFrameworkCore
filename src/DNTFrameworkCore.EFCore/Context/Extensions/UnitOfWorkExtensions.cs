@@ -5,7 +5,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Domain;
-using DNTFrameworkCore.Extensibility;
 using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -17,18 +16,39 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 {
     public static class UnitOfWorkExtensions
     {
+        public static void EntityVersion(this IUnitOfWork uow, IRowVersion versionedEntity, byte[] version)
+        {
+            uow.PropertyValue(versionedEntity, EFCore.Version, version);
+        }
+
+        public static byte[] EntityVersion(this IUnitOfWork uow, IRowVersion versionedEntity)
+        {
+            return (byte[]) uow.PropertyValue(versionedEntity, EFCore.Version);
+        }
+
+        public static string EntityHash(this IUnitOfWork uow, IRowIntegrity entity)
+        {
+            return uow.PropertyValue<string>(entity, EFCore.Hash);
+        }
+
+        public static bool IsTampered<TEntity>(this IUnitOfWork uow, TEntity entity)
+            where TEntity : class, IRowIntegrity
+        {
+            return uow.EntityHash(entity) != uow.PropertyValue<string>(entity, EFCore.Hash);
+        }
+
         public static async Task<bool> IsTamperedAsync<TEntity, TKey>(this IUnitOfWork uow, TKey id)
-            where TEntity : Entity<TKey>, IHasRowIntegrity
+            where TEntity : Entity<TKey>, IRowIntegrity
             where TKey : IEquatable<TKey>
 
         {
             var entity = await uow.Set<TEntity>().FindAsync(id);
-            return uow.EntityHash(entity) != entity.Hash;
+            return uow.EntityHash(entity) != uow.PropertyValue<string>(entity, EFCore.Hash);
         }
 
         public static async Task<bool> HasTamperedEntryAsync<TEntity>(this IUnitOfWork uow,
             Expression<Func<TEntity, bool>> predicate = null)
-            where TEntity : class, IHasRowIntegrity
+            where TEntity : class, IRowIntegrity
         {
             var tamperedEntryList = await uow.TamperedEntryListAsync(predicate);
             return tamperedEntryList.Any();
@@ -36,14 +56,16 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 
         public static async Task<IReadOnlyList<TEntity>> TamperedEntryListAsync<TEntity>(this IUnitOfWork uow,
             Expression<Func<TEntity, bool>> predicate = null)
-            where TEntity : class, IHasRowIntegrity
+            where TEntity : class, IRowIntegrity
         {
             var entityList = await uow.Set<TEntity>()
-                .AsNoTracking()
+                //.AsNoTracking() todo: shadow-property (Hash)
                 .WhereIf(predicate != null, predicate)
                 .ToListAsync();
 
-            return entityList.Where(entity => uow.EntityHash(entity) != entity.Hash).ToList();
+            return entityList
+                .Where(entity => uow.EntityHash(entity) != uow.PropertyValue<string>(entity, EFCore.Hash))
+                .ToList();
         }
 
         public static void IgnoreRowIntegrityHook(this IUnitOfWork uow)
@@ -62,19 +84,19 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
             uow.IgnoreHook(HookNames.ModificationTracking);
         }
 
-        public static T ShadowPropertyValue<T>(this IUnitOfWork uow, object entity, string propertyName)
+        public static T PropertyValue<T>(this IUnitOfWork uow, object entity, string propertyName)
             where T : IConvertible
         {
             var value = uow.Entry(entity).Property(propertyName).CurrentValue;
             return value != null ? value.To<T>() : default;
         }
 
-        public static object ShadowPropertyValue(this IUnitOfWork uow, object entity, string propertyName)
+        public static object PropertyValue(this IUnitOfWork uow, object entity, string propertyName)
         {
             return uow.Entry(entity).Property(propertyName).CurrentValue;
         }
 
-        public static void ShadowPropertyValue(this IUnitOfWork uow, object entity, string propertyName,
+        public static void PropertyValue(this IUnitOfWork uow, object entity, string propertyName,
             object propertyValue)
         {
             uow.Entry(entity).Property(propertyName).CurrentValue = propertyValue;

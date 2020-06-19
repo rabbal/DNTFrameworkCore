@@ -8,6 +8,5 @@ namespace DNTFrameworkCore.Configuration
     {
         Task SetValueAsync(string key, string value);
         Task<Maybe<string>> LoadValueAsync(string key);
-        Task<bool> IsTamperedAsync(string key);
     }
 }

@@ -49,12 +49,6 @@ namespace DNTFrameworkCore.EFCore.Configuration
             return keyValue == null ? Maybe<string>.None : keyValue.Value;
         }
 
-        public async Task<bool> IsTamperedAsync(string key)
-        {
-            var keyValue = await _values.SingleAsync(v => v.Key == key);
-            return _uow.EntityHash(keyValue) != keyValue.Hash;
-        }
-
         private void ReloadConfiguration()
         {
             ((IConfigurationRoot) _configuration).Reload();

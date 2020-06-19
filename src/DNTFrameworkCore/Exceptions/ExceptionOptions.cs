@@ -18,19 +18,11 @@ namespace DNTFrameworkCore.Exceptions
 
         public bool TryFindMapping(DbException dbException, out ExceptionMapItem mapping)
         {
-            mapping = null;
-
             var words = new HashSet<string>(_regex.Split(dbException.ToStringFormat()));
 
-            var mappingItem = Mappings.FirstOrDefault(a => a.Keywords.IsProperSubsetOf(words));
-            if (mappingItem == null)
-            {
-                return false;
-            }
-
-            mapping = mappingItem;
-
-            return true;
+            mapping = Mappings.FirstOrDefault(a => a.Keywords.IsProperSubsetOf(words));
+            
+            return mapping != null;
         }
     }
 

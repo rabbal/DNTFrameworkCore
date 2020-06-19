@@ -11,23 +11,29 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Orders\Commands\" />
-    <Folder Include="Application\Orders\Handlers\" />
-    <Folder Include="Application\Orders\Queries\" />
-    <Folder Include="Application\Sales\Queries" />
-    <Folder Include="Application\Sales\Rules" />
-    <Folder Include="Domain\Sales\Handlers" />
-    <Folder Include="Infrastructure\" />
-    <Folder Include="Authentication\" />
-    <Folder Include="Authorization\" />
-    <Folder Include="Resources\" />
+    <PackageReference Include="EFCoreSecondLevelCacheInterceptor" Version="1.7.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4" />
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="3.1.4" />
+    <PackageReference Include="Scrutor" Version="3.2.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.4.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
+    <PackageReference Include="MappingGenerator" Version="1.16.405" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DNTFrameworkCore.Cqrs\DNTFrameworkCore.Cqrs.csproj" />
+    <ProjectReference Include="..\..\src\DNTFrameworkCore.EFCore.SqlServer\DNTFrameworkCore.EFCore.SqlServer.csproj" />
     <ProjectReference Include="..\..\src\DNTFrameworkCore.EFCore\DNTFrameworkCore.EFCore.csproj" />
+    <ProjectReference Include="..\..\src\DNTFrameworkCore.FluentValidation\DNTFrameworkCore.FluentValidation.csproj" />
+    <ProjectReference Include="..\..\src\DNTFrameworkCore.Web.EFCore\DNTFrameworkCore.Web.EFCore.csproj" />
     <ProjectReference Include="..\..\src\DNTFrameworkCore.Web\DNTFrameworkCore.Web.csproj" />
-    <ProjectReference Include="..\..\src\DNTFrameworkCore\DNTFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\src\DNTFrameworkCore.Cqrs\DNTFrameworkCore.Cqrs.csproj" />
+    <ProjectReference Include="..\..\src\DNTFrameworkCore.Cqrs.EFCore\DNTFrameworkCore.Cqrs.EFCore.csproj" />
   </ItemGroup>
+
 
 </Project>

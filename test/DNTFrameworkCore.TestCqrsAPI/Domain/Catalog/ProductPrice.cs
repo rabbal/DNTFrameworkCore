@@ -5,11 +5,11 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 {
     public class ProductPrice : Entity
     {
-        private ProductPrice() //ORM
+        protected ProductPrice() //ORM 
         {
         }
 
-        internal ProductPrice(Product product, PriceType priceType, Price price)
+        internal ProductPrice(Product product, PriceType priceType, Price price) : this()
         {
             Product = product;
             PriceType = priceType;
@@ -25,7 +25,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
         {
             IsDefault = true;
         }
-        
+
         internal void UnmarkIsDefault()
         {
             IsDefault = false;

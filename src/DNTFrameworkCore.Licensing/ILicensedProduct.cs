@@ -4,6 +4,6 @@ namespace DNTFrameworkCore.Licensing
     {
         string ProductName { get; }
         string ProductVersion { get; }
-        string SerialNumber { get; }
+        string SecurityStamp { get; }
     }
 }

@@ -7,7 +7,7 @@ using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales
 {
-    public class SaleMethod : AggregateRoot, ICreationTracking, IModificationTracking, IHasRowVersion
+    public class SaleMethod : AggregateRoot, ICreationTracking, IModificationTracking, IRowVersion
     {
         public Title Title { get; private set; }
         public SaleNature Nature { get; private set; }
@@ -34,7 +34,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales
                 Title = title
             };
 
-            saleMethod.AddDomainEvent(new SaleMethodCreated(saleMethod.Id));
+            saleMethod.RaiseDomainEvent(new SaleMethodCreated(saleMethod.Id));
 
             return Ok(saleMethod);
         }

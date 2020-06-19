@@ -17,7 +17,6 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 using DbException = DNTFrameworkCore.Exceptions.DbException;
 
-
 namespace DNTFrameworkCore.EFCore.Context
 {
     public abstract class DbContextCore : DbContext, IUnitOfWork

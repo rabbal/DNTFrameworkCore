@@ -7,7 +7,7 @@ using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 {
-    public class PriceType : AggregateRoot, IHasRowVersion
+    public class PriceType : AggregateRoot<long>, IRowVersion, IRowIntegrity, ICreationTracking, IModificationTracking
     {
         private PriceType(Title title)
         {
@@ -21,13 +21,12 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 
             var priceType = new PriceType(title);
             if (!policy.IsUnique(priceType)) return Fail<PriceType>("PriceType Title Should Be Unique");
-                
-            priceType.AddDomainEvent(new PriceTypeCreated(priceType));
-            
+
+            priceType.RaiseDomainEvent(new PriceTypeCreated(priceType));
+
             return Ok(priceType);
         }
 
         public Title Title { get; private set; }
-        public byte[] Version { get; set; }
     }
 }

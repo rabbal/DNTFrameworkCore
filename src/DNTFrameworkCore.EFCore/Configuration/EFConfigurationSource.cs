@@ -1,6 +1,5 @@
 using System;
 using Microsoft.Extensions.Configuration;
-// ReSharper disable InconsistentNaming
 
 namespace DNTFrameworkCore.EFCore.Configuration
 {

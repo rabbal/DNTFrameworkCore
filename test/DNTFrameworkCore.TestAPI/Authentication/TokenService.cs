@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.Dependency;
@@ -10,6 +9,7 @@ using DNTFrameworkCore.TestAPI.Domain.Identity;
 using DNTFrameworkCore.Timing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Claim = System.Security.Claims.Claim;
 
 namespace DNTFrameworkCore.TestAPI.Authentication
 {
@@ -89,12 +89,11 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
         private async Task AddUserTokenAsync(long userId, string token)
         {
-            var now = _clock.Now;
             var userToken = new UserToken
             {
                 UserId = userId,
                 TokenHash = ComputeHash(token),
-                TokenExpirationDateTime = now.Add(_options.Value.TokenExpiration)
+                TokenExpirationDateTime = _clock.Now.Add(_options.Value.TokenExpiration)
             };
 
             await AddUserTokenAsync(userToken);
@@ -102,8 +101,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
         private async Task DeleteExpiredTokensAsync()
         {
-            var now = _clock.Now;
-            await _tokens.Where(x => x.TokenExpirationDateTime < now)
+            await _tokens.Where(x => x.TokenExpirationDateTime < _clock.Now)
                 .ForEachAsync(userToken => { _tokens.Remove(userToken); });
         }
 

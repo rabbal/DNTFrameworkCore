@@ -8,9 +8,4 @@ namespace DNTFrameworkCore.Domain
     {
         Task Handle(T domainEvent);
     }
-
-    public abstract class DomainEventHandler<T> : IDomainEventHandler<T> where T : IDomainEvent
-    {
-        public abstract Task Handle(T domainEvent);
-    }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using DNTFrameworkCore.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -7,15 +6,14 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DNTFrameworkCore.EFCore.Context
 {
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class EFCore
     {
-        public const string CreatedDateTime = nameof(ICreationTracking.CreatedDateTime);
+        public const string CreatedDateTime = nameof(CreatedDateTime);
         public const string CreatedByUserId = nameof(CreatedByUserId);
         public const string CreatedByBrowserName = nameof(CreatedByBrowserName);
         public const string CreatedByIP = nameof(CreatedByIP);
-        
-        public const string ModifiedDateTime = nameof(IModificationTracking.ModifiedDateTime);
+
+        public const string ModifiedDateTime = nameof(ModifiedDateTime);
         public const string ModifiedByUserId = nameof(ModifiedByUserId);
         public const string ModifiedByBrowserName = nameof(ModifiedByBrowserName);
         public const string ModifiedByIP = nameof(ModifiedByIP);
@@ -23,8 +21,8 @@ namespace DNTFrameworkCore.EFCore.Context
         public const string UserId = nameof(UserId);
         public const string TenantId = nameof(TenantId);
         public const string IsDeleted = nameof(IsDeleted);
-        public const string Version = nameof(IHasRowVersion.Version);
-        public const string Hash = nameof(IHasRowIntegrity.Hash);
+        public const string Version = nameof(Version);
+        public const string Hash = nameof(Hash);
 
         public static readonly Func<object, string> PropertyCreatedByBrowserName =
             entity => EF.Property<string>(entity, CreatedByBrowserName);
@@ -99,7 +97,7 @@ namespace DNTFrameworkCore.EFCore.Context
 
                 builder.Entity(entityType.ClrType)
                     .HasIndex(TenantId)
-                    .HasName($"IX_{entityType.ClrType.Name}_{TenantId}");
+                    .HasName($"IX_{entityType.ClrType.Name}_TenantId");
             }
         }
 
@@ -119,7 +117,7 @@ namespace DNTFrameworkCore.EFCore.Context
         {
             var types = builder.Model.GetEntityTypes().ToList();
 
-            foreach (var entityType in types.Where(e => typeof(IHasRowLevelSecurity).IsAssignableFrom(e.ClrType)))
+            foreach (var entityType in types.Where(e => typeof(IRowLevelSecurity).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
                     .Property(typeof(TUserId), UserId)
@@ -131,7 +129,7 @@ namespace DNTFrameworkCore.EFCore.Context
         {
             var types = builder.Model.GetEntityTypes().ToList();
 
-            foreach (var entityType in types.Where(e => typeof(IHasRowVersion).IsAssignableFrom(e.ClrType)))
+            foreach (var entityType in types.Where(e => typeof(IRowVersion).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
                     .Property<byte[]>(Version)
@@ -143,7 +141,7 @@ namespace DNTFrameworkCore.EFCore.Context
         {
             var types = builder.Model.GetEntityTypes().ToList();
 
-            foreach (var entityType in types.Where(e => typeof(IHasRowIntegrity).IsAssignableFrom(e.ClrType)))
+            foreach (var entityType in types.Where(e => typeof(IRowIntegrity).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
                     .Property<string>(Hash)

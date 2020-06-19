@@ -402,7 +402,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(256);
 
-                    b.Property<string>("SerialNumber")
+                    b.Property<string>("SecurityStamp")
                         .IsRequired()
                         .HasMaxLength(128);
 

@@ -1,9 +1,6 @@
-﻿using System;
-
-namespace DNTFrameworkCore.Domain
+﻿namespace DNTFrameworkCore.Domain
 {
     public interface IModificationTracking
     {
-        DateTime? ModifiedDateTime { get; set; }
     }
 }

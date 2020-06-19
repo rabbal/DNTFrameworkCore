@@ -30,6 +30,8 @@ namespace DNTFrameworkCore.Web.Authentication
 
         public Task RenewAsync(string key, AuthenticationTicket ticket)
         {
+            // NOTE: Using `services.enableImmediateLogout();` will cause this method to be called per each request.
+            
             var options = new DistributedCacheEntryOptions();
 
             var expiresUtc = ticket.Properties.ExpiresUtc;

@@ -35,9 +35,10 @@ namespace DNTFrameworkCore.Querying
 
         public IReadOnlyList<FilterExpression> ParsedFiltering => _parsedFiltering;
 
+        //TODO: implement default parsing mechanism
         protected virtual List<FilterExpression> ParseFiltering(string filtering)
         {
-            return null;
+            throw new NotImplementedException();
         }
     }
 }

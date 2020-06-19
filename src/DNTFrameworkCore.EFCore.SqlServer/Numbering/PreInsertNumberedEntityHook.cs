@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.EFCore.Context;
+using DNTFrameworkCore.EFCore.Context.Extensions;
 using DNTFrameworkCore.EFCore.Context.Hooks;
 using DNTFrameworkCore.Numbering;
 using Microsoft.EntityFrameworkCore;
@@ -25,27 +27,30 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
 
         protected override void Hook(INumberedEntity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            if (!string.IsNullOrEmpty(entity.Number)) return;
-
-            var option = _options.Value.NumberedEntityMap[entity.GetType()];
-
-            bool retry;
-            string number;
-            do
+            var options = _options.Value[entity.GetType()].ToList();
+            foreach (var option in options)
             {
-                number = NewNumber(entity, option, uow);
-                retry = !IsUniqueNumber(entity, number, option, uow);
-            } while (retry);
+                if (!string.IsNullOrEmpty(uow.PropertyValue<string>(entity, option.FieldName))) return;
 
-            uow.Entry(entity).Property(nameof(INumberedEntity.Number)).CurrentValue = number;
+                bool retry;
+                string number;
+                do
+                {
+                    number = NewNumber(entity, option, uow);
+                    retry = !IsUniqueNumber(entity, number, option.Fields, uow);
+                } while (retry);
+
+                uow.Entry(entity).Property(option.FieldName).CurrentValue = number;
+            }
         }
 
-        private static bool IsUniqueNumber(INumberedEntity entity, string number, NumberedEntityOption option,
+        private static bool IsUniqueNumber(INumberedEntity entity, string number, IEnumerable<string> fields,
             IUnitOfWork uow)
         {
+            fields = fields.ToList();
             using (var command = uow.Connection.CreateCommand())
             {
-                var parameterNames = option.Fields.Aggregate(string.Empty,
+                var parameterNames = fields.Aggregate(string.Empty,
                     (current, fieldName) => $"{current} AND [t0].[{fieldName}] = @{fieldName} ");
 
                 var tableName = uow.Entry(entity).Metadata.GetTableName();
@@ -65,14 +70,14 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
                 parameter.DbType = DbType.String;
                 command.Parameters.Add(parameter);
 
-                foreach (var fieldName in option.Fields)
+                foreach (var field in fields)
                 {
                     var p = command.CreateParameter();
 
-                    var value = uow.Entry(entity).Property(fieldName).CurrentValue;
+                    var value = uow.Entry(entity).Property(field).CurrentValue;
 
                     p.Value = NormalizeValue(value);
-                    p.ParameterName = $"@{fieldName}";
+                    p.ParameterName = $"@{field}";
                     p.DbType = SqlHelper.TypeMap[value.GetType()];
 
                     command.Parameters.Add(p);
@@ -88,7 +93,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
 
         private static string NewNumber(INumberedEntity entity, NumberedEntityOption option, IUnitOfWork uow)
         {
-            var key = CreateEntityKey(entity, option, uow);
+            var key = CreateEntityKey(entity, option.Fields, uow);
 
             uow.AcquireDistributedLock(key);
 
@@ -116,18 +121,18 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             return number;
         }
 
-        private static string CreateEntityKey(INumberedEntity entity, NumberedEntityOption option, IUnitOfWork uow)
+        private static string CreateEntityKey(INumberedEntity entity, IEnumerable<string> fields, IUnitOfWork uow)
         {
             var type = entity.GetType();
 
             var key = type.FullName;
 
-            foreach (var fieldName in option.Fields)
+            foreach (var field in fields)
             {
-                var value = uow.Entry(entity).Property(fieldName).CurrentValue;
+                var value = uow.Entry(entity).Property(field).CurrentValue;
                 value = NormalizeValue(value);
 
-                key += $"_{fieldName}_{value}";
+                key += $"_{field}_{value}";
             }
 
             return key;

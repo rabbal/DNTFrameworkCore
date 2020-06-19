@@ -7,7 +7,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales
         public static readonly ActivityType PreparationPrint = new ActivityType(1, nameof(PreparationPrint));
         public static readonly ActivityType PrintInvoice = new ActivityType(2, nameof(PrintInvoice));
         public static readonly ActivityType SendEmail = new ActivityType(3, nameof(SendEmail));
-        public static readonly ActivityType SendNote = new ActivityType(4, nameof(SendEmail));
+        public static readonly ActivityType SendNote = new ActivityType(4, nameof(SendNote));
 
         private ActivityType() //Required for ORM
         {

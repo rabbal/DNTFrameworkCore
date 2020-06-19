@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <License Id="aac859ee-0f27-465e-ae00-7d7ae3e32948" ProductName="DNTFrameworkCore" ProductVersion="1.1.1-beta" CustomerName="GitHub" 
-         SerialNumber="4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9" CreationTime="2019-07-09T00:00:00" ExpirationTime="Infinite">
+         SecurityStamp="4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9" CreationTime="2019-07-09T00:00:00" ExpirationTime="Infinite">
     <Features>
         <Feature Name="Feature1" Value="100" DisplayName="Feature1DisplayName" />
     </Features>

@@ -3,7 +3,7 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Events
 {
-    public sealed class PriceTypeCreated : DomainEvent
+    public sealed class PriceTypeCreated : IDomainEvent
     {
         public PriceTypeCreated(PriceType priceType)
         {

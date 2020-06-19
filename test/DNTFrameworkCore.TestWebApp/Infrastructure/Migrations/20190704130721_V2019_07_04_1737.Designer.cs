@@ -393,7 +393,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
-                    b.Property<string>("SerialNumber")
+                    b.Property<string>("SecurityStamp")
                         .IsRequired()
                         .HasMaxLength(128);
 

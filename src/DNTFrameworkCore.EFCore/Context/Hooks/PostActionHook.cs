@@ -11,10 +11,10 @@ namespace DNTFrameworkCore.EFCore.Context.Hooks
         /// <summary>
         /// Implements the interface.  This causes the hook to only run for objects that are assignable to TEntity.
         /// </summary>
-        public void Hook(object entity, HookEntityMetadata metadata, IUnitOfWork context)
+        public void Hook(object entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
             if (entity is TEntity typedEntity)
-                Hook(typedEntity, metadata, context);
+                Hook(typedEntity, metadata, uow);
         }
 
         public abstract string Name { get; }

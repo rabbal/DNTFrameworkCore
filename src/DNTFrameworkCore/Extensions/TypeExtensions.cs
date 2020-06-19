@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 
 namespace DNTFrameworkCore.Extensions
 {
     public static class TypeExtensions
     {
+        public static bool HasAttribute<TAttribute>(this Type type, bool inherited = false)
+        {
+            return type.GetTypeInfo().GetCustomAttributes(true).OfType<TAttribute>().Any();
+        }
+
         public static string GetGenericTypeName(this Type type)
         {
-            var typeName = string.Empty;
+            string typeName;
 
             if (type.IsGenericType)
             {

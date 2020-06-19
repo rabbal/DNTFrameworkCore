@@ -6,7 +6,6 @@ using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Linq;
 using DNTFrameworkCore.Eventing;
-using DNTFrameworkCore.Linq;
 using DNTFrameworkCore.Querying;
 using DNTFrameworkCore.TestAPI.Application.Blogging.Models;
 using DNTFrameworkCore.TestAPI.Domain.Blogging;

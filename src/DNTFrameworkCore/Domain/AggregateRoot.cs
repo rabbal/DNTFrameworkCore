@@ -6,8 +6,7 @@ namespace DNTFrameworkCore.Domain
     public interface IAggregateRoot : IEntity
     {
         IReadOnlyList<IDomainEvent> Events { get; }
-        int VersionId { get; }
-        void IncreaseVersion();
+        void EmptyEvents();
     }
 
     public abstract class AggregateRoot : AggregateRoot<int>
@@ -19,16 +18,13 @@ namespace DNTFrameworkCore.Domain
     {
         private readonly List<IDomainEvent> _events = new List<IDomainEvent>();
         public IReadOnlyList<IDomainEvent> Events => _events.AsReadOnly();
-        public virtual int VersionId { get; protected set; }
+        public virtual void EmptyEvents() => _events.Clear();
+        protected virtual void RaiseDomainEvent(IDomainEvent domainEvent) => _events.Add(domainEvent);
+    }
 
-        protected virtual void AddDomainEvent(IDomainEvent newEvent)
-        {
-            _events.Add(newEvent);
-        }
-
-        public void IncreaseVersion()
-        {
-            VersionId++;
-        }
+    public interface IAggregateRootRowVersion
+    {
+        int Version { get; }
+        void IncreaseVersion();
     }
 }

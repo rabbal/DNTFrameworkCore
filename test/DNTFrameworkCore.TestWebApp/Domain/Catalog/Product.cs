@@ -4,7 +4,7 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestWebApp.Domain.Catalog
 {
-    public class Product : Entity<long>, IHasRowVersion, ICreationTracking, IModificationTracking,
+    public class Product : Entity<long>, IRowVersion, ICreationTracking, IModificationTracking,
         INumberedEntity
     {
         public const int MaxTitleLength = 50;

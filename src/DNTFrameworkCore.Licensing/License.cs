@@ -30,7 +30,7 @@ namespace DNTFrameworkCore.Licensing
         public ExpirationTime ExpirationTime { get; private set; }
         public string CustomerName { get; private set; }
         public DateTime CreationTime { get; private set; }
-        public string SerialNumber { get; private set; }
+        public string SecurityStamp { get; private set; }
         public bool Signed { get; private set; }
         public IReadOnlyCollection<LicenseFeature> Features => _features.AsReadOnly();
         public IReadOnlyDictionary<string, string> Attributes => _attributes.AsReadOnly();
@@ -56,7 +56,7 @@ namespace DNTFrameworkCore.Licensing
             CustomerName = reader.GetAttribute(nameof(CustomerName)) ??
                            throw new InvalidOperationException("This license is invalid.");
 
-            SerialNumber = reader.GetAttribute(nameof(SerialNumber)) ??
+            SecurityStamp = reader.GetAttribute(nameof(SecurityStamp)) ??
                            throw new InvalidOperationException("This license is invalid.");
 
             CreationTime = DateTime.Parse(reader.GetAttribute(nameof(CreationTime)) ??
@@ -103,7 +103,7 @@ namespace DNTFrameworkCore.Licensing
             writer.WriteAttributeString(nameof(ProductName), ProductName);
             writer.WriteAttributeString(nameof(ProductVersion), ProductVersion);
             writer.WriteAttributeString(nameof(CustomerName), CustomerName);
-            writer.WriteAttributeString(nameof(SerialNumber), SerialNumber);
+            writer.WriteAttributeString(nameof(SecurityStamp), SecurityStamp);
             writer.WriteAttributeString(nameof(CreationTime), CreationTime.ToString("s", CultureInfo.InvariantCulture));
             writer.WriteAttributeString(nameof(ExpirationTime), ExpirationTime.ToString());
 
@@ -161,7 +161,7 @@ namespace DNTFrameworkCore.Licensing
                 ProductVersion = productVersion,
                 CustomerName = customerName,
                 ExpirationTime = ExpirationTime.Infinite,
-                SerialNumber = serialNumber
+                SecurityStamp = serialNumber
             };
 
             return license;
@@ -280,7 +280,7 @@ namespace DNTFrameworkCore.Licensing
             if (!ProductVersion.Equals(licensedProduct.ProductVersion, StringComparison.Ordinal))
                 return Result.Fail("This license is not for this product.");
 
-            if (!SerialNumber.Equals(licensedProduct.SerialNumber, StringComparison.Ordinal))
+            if (!SecurityStamp.Equals(licensedProduct.SecurityStamp, StringComparison.Ordinal))
                 return Result.Fail("This license is not for this machine.");
 
             return Result.Ok();

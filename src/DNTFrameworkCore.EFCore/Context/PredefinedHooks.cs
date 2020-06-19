@@ -1,6 +1,7 @@
 using System;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.EFCore.Context.Hooks;
+using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.Tenancy;
@@ -13,12 +14,31 @@ namespace DNTFrameworkCore.EFCore.Context
     {
         public const string CreationTracking = nameof(CreationTracking);
         public const string ModificationTracking = nameof(ModificationTracking);
-        public const string Tenancy = nameof(Tenancy);
         public const string RowLevelSecurity = nameof(RowLevelSecurity);
         public const string DeletedEntity = nameof(DeletedEntity);
         public const string RowVersion = nameof(RowVersion);
         public const string RowIntegrity = nameof(RowIntegrity);
         public const string Numbering = nameof(Numbering);
+        public const string Tenancy = nameof(Tenancy);
+        public const string DomainEvent = nameof(DomainEvent);
+    }
+
+    //Under development
+    internal sealed class DomainEventHook : PostActionHook<IAggregateRoot>
+    {
+        private readonly IEventBus _bus;
+        public override string Name => HookNames.DomainEvent;
+        public override EntityState HookState => EntityState.Unchanged;
+
+        public DomainEventHook(IEventBus bus)
+        {
+            _bus = bus;
+        }
+
+        protected override void Hook(IAggregateRoot entity, HookEntityMetadata metadata, IUnitOfWork context)
+        {
+            //todo: async issue
+        }
     }
 
     internal sealed class PreInsertCreationTrackingHook<TUserId> : PreInsertHook<ICreationTracking>
@@ -85,7 +105,7 @@ namespace DNTFrameworkCore.EFCore.Context
         }
     }
 
-    internal sealed class PreInsertRowLevelSecurityHook<TUserId> : PreInsertHook<IHasRowLevelSecurity>
+    internal sealed class PreInsertRowLevelSecurityHook<TUserId> : PreInsertHook<IRowLevelSecurity>
         where TUserId : IEquatable<TUserId>
     {
         private readonly IUserSession _session;
@@ -97,7 +117,7 @@ namespace DNTFrameworkCore.EFCore.Context
 
         public override string Name => HookNames.RowLevelSecurity;
 
-        protected override void Hook(IHasRowLevelSecurity entity, HookEntityMetadata metadata, IUnitOfWork uow)
+        protected override void Hook(IRowLevelSecurity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
             metadata.Entry.Property(EFCore.UserId).CurrentValue = _session.UserId.To<TUserId>();
         }
@@ -114,27 +134,24 @@ namespace DNTFrameworkCore.EFCore.Context
         }
     }
 
-    /// <summary>
-    /// For connected scenarios when we want 
-    /// </summary>
-    internal sealed class PreUpdateRowVersionHook : PreUpdateHook<IHasRowVersion>
+    internal sealed class PreUpdateRowVersionHook : PreUpdateHook<IRowVersion>
     {
         public override string Name => HookNames.RowVersion;
 
-        protected override void Hook(IHasRowVersion entity, HookEntityMetadata metadata, IUnitOfWork uow)
+        protected override void Hook(IRowVersion entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
             metadata.Entry.Property(EFCore.Version).OriginalValue =
                 metadata.Entry.Property(EFCore.Version).CurrentValue;
         }
     }
 
-    internal sealed class RowIntegrityHook : PostActionHook<IHasRowIntegrity>
+    internal sealed class RowIntegrityHook : PostActionHook<IRowIntegrity>
     {
         public override string Name => HookNames.RowIntegrity;
         public override int Order => int.MaxValue;
         public override EntityState HookState => EntityState.Unchanged;
 
-        protected override void Hook(IHasRowIntegrity entity, HookEntityMetadata metadata, IUnitOfWork uow)
+        protected override void Hook(IRowIntegrity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
             metadata.Entry.Property(EFCore.Hash).CurrentValue = uow.EntityHash(entity);
         }

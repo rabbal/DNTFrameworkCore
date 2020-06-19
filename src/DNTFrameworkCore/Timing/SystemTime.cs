@@ -6,7 +6,7 @@ namespace DNTFrameworkCore.Timing
     {
         public static Func<DateTime> Now = () => DateTime.UtcNow;
 
-        public static Func<DateTime, DateTime> Normalize = (dateTime) =>
+        public static Func<DateTime, DateTime> Normalize = dateTime =>
             DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
     }
 }

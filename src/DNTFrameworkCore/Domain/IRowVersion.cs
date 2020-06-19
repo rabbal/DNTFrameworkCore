@@ -1,6 +1,6 @@
 ﻿namespace DNTFrameworkCore.Domain
 {
-    public interface IHasRowLevelSecurity
+    public interface IRowVersion
     {
     }
 }

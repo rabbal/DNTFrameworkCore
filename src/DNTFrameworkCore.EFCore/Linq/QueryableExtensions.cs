@@ -4,11 +4,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Querying;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace DNTFrameworkCore.EFCore.Linq
 {
     public static class QueryableExtensions
     {
+        public static IQueryable<TEntity> IncludePaths<TEntity>(this IQueryable<TEntity> source,
+            params string[] paths) where TEntity : class
+        {
+            return !(source.Provider is EntityQueryProvider)
+                ? source
+                : source.Include(string.Join(".", paths));
+        }
+
         public static Task<IPagedResult<T>> ToPagedListAsync<T>(this IQueryable<T> query, IPagedRequest request,
             CancellationToken cancellationToken = default)
         {

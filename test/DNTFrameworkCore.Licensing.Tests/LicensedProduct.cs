@@ -5,12 +5,12 @@ namespace DNTFrameworkCore.Licensing.Tests
         public LicensedProduct(string productVersion, string serialNumber, string productName)
         {
             ProductVersion = productVersion;
-            SerialNumber = serialNumber;
+            SecurityStamp = serialNumber;
             ProductName = productName;
         }
 
         public string ProductName { get; }
         public string ProductVersion { get; }
-        public string SerialNumber { get; }
+        public string SecurityStamp { get; }
     }
 }

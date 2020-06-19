@@ -129,7 +129,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     IsActive = table.Column<bool>(nullable: false),
                     LastLoggedInDateTime = table.Column<DateTimeOffset>(nullable: true),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                    SerialNumber = table.Column<string>(maxLength: 128, nullable: false),
+                    SecurityStamp = table.Column<string>(maxLength: 128, nullable: false),
                     CreationDateTime = table.Column<DateTimeOffset>(nullable: false),
                     CreatorBrowserName = table.Column<string>(maxLength: 1024, nullable: true),
                     CreatorIp = table.Column<string>(maxLength: 256, nullable: true),

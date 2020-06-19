@@ -4,7 +4,7 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Tasks
 {
-    public class Task : Entity, IHasRowVersion, IHasRowIntegrity, ICreationTracking, IModificationTracking,
+    public class Task : Entity, IRowVersion, IRowIntegrity, ICreationTracking, IModificationTracking,
         INumberedEntity
     {
         public const int MaxTitleLength = 256;
@@ -25,6 +25,5 @@ namespace DNTFrameworkCore.TestAPI.Domain.Tasks
         public byte[] Version { get; set; }
         public string Hash { get; set; }
         public DateTime CreatedDateTime { get; set; }
-        public DateTime? ModifiedDateTime { get; set; }
     }
 }

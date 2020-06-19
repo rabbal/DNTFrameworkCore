@@ -40,7 +40,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
                 return;
             }
 
-            var serialNumberClaim = claimsIdentity.FindFirst(UserClaimTypes.SerialNumber);
+            var serialNumberClaim = claimsIdentity.FindFirst(UserClaimTypes.SecurityStamp);
             if (serialNumberClaim == null)
             {
                 context.Fail("This is not our issued token. It has no serial-number.");
@@ -55,7 +55,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
             }
 
             var user = await FindUserAsync(userId);
-            if (!user.HasValue || user.Value.SerialNumber != serialNumberClaim.Value || !user.Value.IsActive)
+            if (!user.HasValue || user.Value.SecurityStamp != serialNumberClaim.Value || !user.Value.IsActive)
             {
                 // user has changed his/her password/permissions/roles/stat/IsActive
                 context.Fail("This token is expired. Please login again.");

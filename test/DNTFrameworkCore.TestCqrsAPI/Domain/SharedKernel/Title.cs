@@ -24,7 +24,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel
 
         public static Result<Title> New(string title)
         {
-            title = title ?? string.Empty;
+            title ??= string.Empty;
 
             if (title.Length == 0) return Fail<Title>("title should not be empty");
 

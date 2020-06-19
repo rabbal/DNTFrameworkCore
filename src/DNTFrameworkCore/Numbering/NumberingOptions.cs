@@ -5,7 +5,13 @@ namespace DNTFrameworkCore.Numbering
 {
     public class NumberingOptions
     {
-        public IDictionary<Type, NumberedEntityOption> NumberedEntityMap { get; } =
-            new Dictionary<Type, NumberedEntityOption>();
+        private readonly IDictionary<Type, IEnumerable<NumberedEntityOption>> _mappings =
+            new Dictionary<Type, IEnumerable<NumberedEntityOption>>();
+
+        public IEnumerable<NumberedEntityOption> this[Type type]
+        {
+            get => _mappings[type];
+            set => _mappings[type] = value;
+        }
     }
 }

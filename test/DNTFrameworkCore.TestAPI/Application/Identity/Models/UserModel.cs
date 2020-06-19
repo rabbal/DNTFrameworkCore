@@ -15,11 +15,11 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity.Models
         public ICollection<PermissionModel> Permissions { get; set; } = new HashSet<PermissionModel>();
         public ICollection<PermissionModel> IgnoredPermissions { get; set; } = new HashSet<PermissionModel>();
 
-        public bool ShouldMapSerialNumber() =>
+        public bool ShouldMapSecurityStamp() =>
             IsNew() || !IsActive || !Password.IsEmpty() ||
-                Roles.Any(a => a.IsNew() || a.IsDeleted()) ||
-                IgnoredPermissions.Any(p => p.IsDeleted() || p.IsNew()) ||
-                Permissions.Any(p => p.IsDeleted() || p.IsNew());
+            Roles.Any(a => a.IsNew() || a.IsDeleted()) ||
+            IgnoredPermissions.Any(p => p.IsDeleted() || p.IsNew()) ||
+            Permissions.Any(p => p.IsDeleted() || p.IsNew());
 
         public bool ShouldMapPasswordHash() =>
             IsNew() || !Password.IsEmpty();

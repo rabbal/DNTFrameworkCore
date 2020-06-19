@@ -8,22 +8,11 @@ using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.TestAPI.Infrastructure
 {
     public static class InfrastructureRegistry
     {
-        private static ILoggerFactory BuildLoggerFactory()
-        {
-            IServiceCollection serviceCollection = new ServiceCollection();
-            serviceCollection.AddLogging(builder =>
-                builder.AddConsole()
-                    //.AddFilter(category: DbLoggerCategory.Database.Command.Name, level: LogLevel.Information));
-                    .AddFilter(level => true)); // log everything
-            return serviceCollection.BuildServiceProvider().GetRequiredService<ILoggerFactory>();
-        }
-
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddEFCore<ProjectDbContext>()
@@ -33,14 +22,17 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure
                 .WithRowIntegrityHook()
                 .WithNumberingHook(options =>
                 {
-                    options.NumberedEntityMap[typeof(Task)] = new NumberedEntityOption
+                    options[typeof(Task)] = new[]
                     {
-                        Prefix = "Task",
-                        Fields = new[] {nameof(Task.BranchId)}
+                        new NumberedEntityOption
+                        {
+                            Prefix = "Task",
+                            Fields = new[] {nameof(Task.BranchId)}
+                        }
                     };
                 });
 
-            services.AddDbContext<ProjectDbContext>((provider,builder) =>
+            services.AddDbContext<ProjectDbContext>((provider, builder) =>
             {
                 builder.AddInterceptors(provider.GetRequiredService<SecondLevelCacheInterceptor>());
                 builder.EnableSensitiveDataLogging();
@@ -57,7 +49,6 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure
                     {
                         //...
                     });
-                //.UseLoggerFactory(BuildLoggerFactory());
             });
 
             services.AddEFSecondLevelCache(options =>

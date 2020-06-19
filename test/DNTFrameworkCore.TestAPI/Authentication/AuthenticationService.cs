@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
+using Claim = System.Security.Claims.Claim;
 
 namespace DNTFrameworkCore.TestAPI.Authentication
 {
@@ -26,7 +27,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
         Task SignOutAsync();
     }
 
-    public class AuthenticationService : IAuthenticationService
+    public sealed class AuthenticationService : IAuthenticationService
     {
         private readonly ITokenService _token;
         private readonly IUnitOfWork _uow;
@@ -120,13 +121,13 @@ namespace DNTFrameworkCore.TestAPI.Authentication
                     _options.Value.Issuer),
                 new Claim(UserClaimTypes.DisplayName, user.DisplayName, ClaimValueTypes.String,
                     _options.Value.Issuer),
-                new Claim(UserClaimTypes.SerialNumber, user.SerialNumber, ClaimValueTypes.String,
+                new Claim(UserClaimTypes.SecurityStamp, user.SecurityStamp, ClaimValueTypes.String,
                     _options.Value.Issuer)
             };
 
             foreach (var claim in user.Claims)
             {
-                claims.Add(new Claim(claim.ClaimType, claim.ClaimValue, ClaimValueTypes.String,
+                claims.Add(new Claim(claim.Type, claim.Value, ClaimValueTypes.String,
                     _options.Value.Issuer));
             }
 
@@ -140,7 +141,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
             var roleClaims = roles.SelectMany(a => a.Claims);
             foreach (var claim in roleClaims)
             {
-                claims.Add(new Claim(claim.ClaimType, claim.ClaimValue, ClaimValueTypes.String,
+                claims.Add(new Claim(claim.Type, claim.Value, ClaimValueTypes.String,
                     _options.Value.Issuer));
             }
 

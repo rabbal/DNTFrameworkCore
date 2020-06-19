@@ -4,13 +4,13 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestWebApp.Domain.Identity
 {
-    public class User : Entity<long>, IHasRowVersion, ICreationTracking, IModificationTracking
+    public class User : Entity<long>, IRowVersion, ICreationTracking, IModificationTracking
     {
         public const int MaxUserNameLength = 256;
         public const int MaxDisplayNameLength = 50;
         public const int MaxPasswordHashLength = 256;
         public const int MaxPasswordLength = 128;
-        public const int MaxSerialNumberLength = 128;
+        public const int MaxSecurityStampLength = 128;
 
         public string UserName { get; set; }
         public string NormalizedUserName { get; set; }
@@ -24,7 +24,7 @@ namespace DNTFrameworkCore.TestWebApp.Domain.Identity
         /// <summary>
         /// A random value that must change whenever a users credentials change (password,roles or permissions)
         /// </summary>
-        public string SerialNumber { get; set; }
+        public string SecurityStamp { get; set; }
 
         public ICollection<UserRole> Roles { get; set; } = new HashSet<UserRole>();
         public ICollection<UserPermission> Permissions { get; set; } = new HashSet<UserPermission>();
@@ -32,7 +32,7 @@ namespace DNTFrameworkCore.TestWebApp.Domain.Identity
 
         public override string ToString() => UserName;
 
-        public static string NewSerialNumber()
+        public static string NewSecurityStamp()
         {
             return Guid.NewGuid().ToString("N");
         }

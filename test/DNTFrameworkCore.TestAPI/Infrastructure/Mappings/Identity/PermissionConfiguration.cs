@@ -8,10 +8,11 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Mappings.Identity
     {
         public void Configure(EntityTypeBuilder<Permission> builder)
         {
+            builder.HasDiscriminator<string>("EntityName");
             builder.Property(a => a.Name).HasMaxLength(Permission.MaxNameLength).IsRequired();
-            builder.Property<string>("Discriminator").HasMaxLength(50);
+            builder.Property<string>("EntityName").HasMaxLength(50);
 
-            builder.HasIndex("Discriminator").HasName("IX_Permission_Discriminator");
+            builder.HasIndex("EntityName").HasName("IX_Permission_EntityName");
 
             builder.ToTable(nameof(Permission));
         }

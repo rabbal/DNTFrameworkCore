@@ -34,7 +34,8 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 
             var propertyList = builder.Model.GetEntityTypes().SelectMany(t => t.GetProperties())
                 .Where(property => property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
-                .Where(property => !property.PropertyInfo.GetCustomAttributes<SkipNormalizationAttribute>().Any());
+                .Where(property => property.IsShadowProperty() ||
+                                   !property.PropertyInfo.GetCustomAttributes<SkipNormalizationAttribute>().Any());
 
             foreach (var property in propertyList)
             {

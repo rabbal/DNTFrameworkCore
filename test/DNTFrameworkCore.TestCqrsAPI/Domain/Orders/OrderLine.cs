@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
@@ -40,7 +41,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
         {
             if (discount > Price.Value)
                 return Result.Fail("discount should not  ");
-
+            
             Discount = discount;
             
             return Result.Ok();

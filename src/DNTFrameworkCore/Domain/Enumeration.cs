@@ -15,7 +15,7 @@ namespace DNTFrameworkCore.Domain
         {
         }
 
-        protected Enumeration(int value, string name)
+        protected Enumeration(int value, string name) : this()
         {
             Value = value;
             Name = name;

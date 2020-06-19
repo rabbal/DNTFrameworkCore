@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using DNTFrameworkCore.Exceptions;
 using DNTFrameworkCore.Functional;
+using DNTFrameworkCore.Validation;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DNTFrameworkCore.Web.Extensions
@@ -23,23 +24,15 @@ namespace DNTFrameworkCore.Web.Extensions
         /// <summary>
         /// Stores the errors in a ValidationException object to the specified modelstate dictionary.
         /// </summary>
+        /// /// <param name="exception">The validation exception to store</param>
+        /// <param name="modelState">The ModelStateDictionary to store the errors in.</param>
+        /// <param name="prefix">An optional prefix. If ommitted, the property names will be the keys. If specified, the prefix will be concatenatd to the property name with a period. Eg "user.Name"</param>
         public static void AddValidationException(this ModelStateDictionary modelState,
-            ValidationException exception)
+            ValidationException exception, string prefix = null)
         {
-            if (!string.IsNullOrEmpty(exception.Message))
-            {
-                modelState.AddModelError(string.Empty, exception.Message);
-            }
+            if (exception == null) return;
 
-            foreach (var failure in exception.Failures)
-            {
-                var key = failure.MemberName;
-
-                if (!modelState.ContainsKey(key) || modelState[key].Errors.All(i => i.ErrorMessage != failure.Message))
-                {
-                    modelState.AddModelError(key, failure.Message);
-                }
-            }
+            AddValidation(modelState, exception.Message, exception.Failures, prefix);
         }
 
         /// <summary>
@@ -52,12 +45,18 @@ namespace DNTFrameworkCore.Web.Extensions
         {
             if (!result.Failed) return;
 
-            if (!string.IsNullOrEmpty(result.Message))
+            AddValidation(modelState, result.Message, result.Failures, prefix);
+        }
+
+        private static void AddValidation(ModelStateDictionary modelState, string message,
+            IEnumerable<ValidationFailure> failures, string prefix)
+        {
+            if (!string.IsNullOrEmpty(message))
             {
-                modelState.AddModelError(prefix ?? string.Empty, result.Message);
+                modelState.AddModelError(prefix ?? string.Empty, message);
             }
 
-            foreach (var failure in result.Failures)
+            foreach (var failure in failures)
             {
                 var key = string.IsNullOrEmpty(prefix) || string.IsNullOrEmpty(failure.MemberName)
                     ? failure.MemberName

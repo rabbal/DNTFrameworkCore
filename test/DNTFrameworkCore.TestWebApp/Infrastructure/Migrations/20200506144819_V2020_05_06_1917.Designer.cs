@@ -543,7 +543,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<string>("SerialNumber")
+                    b.Property<string>("SecurityStamp")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);

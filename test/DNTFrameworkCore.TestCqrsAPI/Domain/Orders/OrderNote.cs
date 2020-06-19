@@ -14,7 +14,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
 
         public static Result<OrderNote> Create(string content)
         {
-            content = content ?? string.Empty;
+            content ??= string.Empty;
             
             if (content.Length == 0)
             {

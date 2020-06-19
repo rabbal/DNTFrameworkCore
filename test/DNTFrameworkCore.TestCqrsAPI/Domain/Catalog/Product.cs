@@ -8,21 +8,20 @@ using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 {
-    public class Product : AggregateRoot, IHasRowVersion, INumberedEntity, ICreationTracking, IModificationTracking
+    public class Product : AggregateRoot<long>
     {
         private readonly List<ProductPrice> _prices = new List<ProductPrice>();
 
-        private Product()
+        protected Product() //ORM
         {
         }
 
-        private Product(Title title)
+        private Product(Title title) : this()
         {
             Title = title;
         }
 
-        private ProductPrice DefaultPrice => _prices.Find(p => p.IsDefault);
-
+        private ProductPrice Price => _prices.Find(p => p.IsDefault);
         public Title Title { get; }
         public IReadOnlyList<ProductPrice> Prices => _prices.AsReadOnly();
 
@@ -34,7 +33,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
             var product = new Product(title);
             if (!policy.IsUnique(product)) return Fail<Product>("Product Title Should Be Unique");
 
-            product.AddDomainEvent(new ProductCreated(product));
+            product.RaiseDomainEvent(new ProductCreated(product));
 
             return Ok(product);
         }
@@ -55,11 +54,11 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 
         public Result ChangeDefaultPrice(ProductPrice price)
         {
-            if (price == DefaultPrice) return Ok();
+            if (price == Price) return Ok();
 
             if (!_prices.Contains(price)) return Fail("Price Not Found");
 
-            DefaultPrice.UnmarkIsDefault();
+            Price.UnmarkIsDefault();
             price.MarkIsDefault();
 
             return Ok();
@@ -70,7 +69,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
             if (!_prices.Contains(price))
                 return Fail($"Price With PriceType: {price.PriceType.Title} Not Found");
 
-            if (price == DefaultPrice) return Fail("Can Not Remove Default Price");
+            if (price == Price) return Fail("Can Not Remove Default Price");
 
             _prices.Remove(price);
 
@@ -80,7 +79,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
         public Price FindPrice(PriceType priceType)
         {
             var price = _prices.Find(p => p.PriceType == priceType);
-            return price?.Price ?? DefaultPrice.Price;
+            return price?.Price ?? Price.Price;
         }
 
         public string Number { get; set; }

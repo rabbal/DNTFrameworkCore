@@ -10,7 +10,7 @@ using DNTFrameworkCore.Timing;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
 {
-    public class Order : AggregateRoot<long>
+    public class Order : AggregateRoot<long>, IRowVersion, IRowIntegrity, ICreationTracking, IModificationTracking
     {
         public OrderStatus Status { get; private set; }
         public SaleMethod SaleMethod { get; private set; }
@@ -58,13 +58,13 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
             }
 
             return OrderLine.Create(productId, unitPrice, quantity, discount)
-                .OnSuccess(line => _lines.Add(line));
+                .Then(line => _lines.Add(line));
         }
 
         public Result AddOrderNote(string content)
         {
             return OrderNote.Create(content)
-                .OnSuccess(note => _notes.Add(note));
+                .Then(note => _notes.Add(note));
         }
 
         public Result Prepare()

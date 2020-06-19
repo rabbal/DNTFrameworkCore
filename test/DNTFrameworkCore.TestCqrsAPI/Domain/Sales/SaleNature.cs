@@ -10,6 +10,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales
         public static readonly SaleNature Restaurant = new RestaurantSaleNature();
         public static readonly SaleNature FastFood = new FastFoodSaleNature();
         public static readonly SaleNature Delivery = new DeliverySaleNature();
+        public static readonly SaleNature Supermarket = new SupermarketSaleNature();
 
         private SaleNature() //Required for ORM
         {
@@ -88,6 +89,28 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales
             private readonly IList<Action> _commands;
 
             public DeliverySaleNature() : base(3, nameof(Delivery))
+            {
+//                _commands = new List<Action>
+//                {
+//                    new Action("Save", ActionType.Save),
+//                    new Action("Print For Kitchen", ActionType.Print),
+//                    new Action("Print For Customer", ActionType.Print),
+//                    new Action("Ship", ActionType.Ship)
+//                };
+            }
+
+            public override bool ShipmentEnabled => true;
+
+            public override IReadOnlyList<Action> Commands { get; }
+            public override IReadOnlyList<State> States { get; }
+            public override IReadOnlyList<Transition> Transitions { get; }
+        }
+
+        private class SupermarketSaleNature : SaleNature
+        {
+            private readonly IList<Action> _commands;
+
+            public SupermarketSaleNature() : base(4, nameof(Supermarket))
             {
 //                _commands = new List<Action>
 //                {

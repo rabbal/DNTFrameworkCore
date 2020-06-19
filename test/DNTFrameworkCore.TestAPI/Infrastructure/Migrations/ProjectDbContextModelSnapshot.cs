@@ -4,6 +4,7 @@ using DNTFrameworkCore.TestAPI.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
 {
@@ -14,7 +15,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.1")
+                .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -154,7 +155,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                         .HasMaxLength(256)
                         .IsUnicode(false);
 
-                    b.Property<long>("NextNumber")
+                    b.Property<long>("NextValue")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -234,6 +235,69 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                     b.ToTable("Blog");
                 });
 
+            modelBuilder.Entity("DNTFrameworkCore.TestAPI.Domain.Identity.Claim", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedByBrowserName")
+                        .HasColumnType("nvarchar(1024)")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("CreatedByIP")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<long?>("CreatedByUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EntityName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Hash")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("ModifiedByBrowserName")
+                        .HasColumnType("nvarchar(1024)")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("ModifiedByIP")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<long?>("ModifiedByUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("ModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EntityName")
+                        .HasName("IX_Claim_EntityName");
+
+                    b.ToTable("Claim");
+
+                    b.HasDiscriminator<string>("EntityName").HasValue("Claim");
+                });
+
             modelBuilder.Entity("DNTFrameworkCore.TestAPI.Domain.Identity.Permission", b =>
                 {
                     b.Property<int>("Id")
@@ -255,7 +319,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Discriminator")
+                    b.Property<string>("EntityName")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
@@ -288,12 +352,12 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Discriminator")
-                        .HasName("IX_Permission_Discriminator");
+                    b.HasIndex("EntityName")
+                        .HasName("IX_Permission_EntityName");
 
                     b.ToTable("Permission");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Permission");
+                    b.HasDiscriminator<string>("EntityName").HasValue("Permission");
                 });
 
             modelBuilder.Entity("DNTFrameworkCore.TestAPI.Domain.Identity.Role", b =>
@@ -363,64 +427,6 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                     b.ToTable("Role");
                 });
 
-            modelBuilder.Entity("DNTFrameworkCore.TestAPI.Domain.Identity.RoleClaim", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ClaimType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("ClaimValue")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasColumnType("nvarchar(1024)")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("CreatedByIP")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<long?>("CreatedByUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Hash")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasColumnType("nvarchar(1024)")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("ModifiedByIP")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<long?>("ModifiedByUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("RoleId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("RoleClaim");
-                });
-
             modelBuilder.Entity("DNTFrameworkCore.TestAPI.Domain.Identity.User", b =>
                 {
                     b.Property<long>("Id")
@@ -486,7 +492,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<string>("SerialNumber")
+                    b.Property<string>("SecurityStamp")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
@@ -512,64 +518,6 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                         .HasName("UIX_User_NormalizedUserName");
 
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("DNTFrameworkCore.TestAPI.Domain.Identity.UserClaim", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ClaimType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("ClaimValue")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasColumnType("nvarchar(1024)")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("CreatedByIP")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<long?>("CreatedByUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Hash")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasColumnType("nvarchar(1024)")
-                        .HasMaxLength(1024);
-
-                    b.Property<string>("ModifiedByIP")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<long?>("ModifiedByUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserClaim");
                 });
 
             modelBuilder.Entity("DNTFrameworkCore.TestAPI.Domain.Identity.UserRole", b =>
@@ -665,8 +613,8 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTimeOffset>("TokenExpirationDateTime")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("TokenExpirationDateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("TokenHash")
                         .IsRequired()
@@ -779,6 +727,30 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                     b.ToTable("Task");
                 });
 
+            modelBuilder.Entity("DNTFrameworkCore.TestAPI.Domain.Identity.RoleClaim", b =>
+                {
+                    b.HasBaseType("DNTFrameworkCore.TestAPI.Domain.Identity.Claim");
+
+                    b.Property<long>("RoleId")
+                        .HasColumnType("bigint");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasDiscriminator().HasValue("RoleClaim");
+                });
+
+            modelBuilder.Entity("DNTFrameworkCore.TestAPI.Domain.Identity.UserClaim", b =>
+                {
+                    b.HasBaseType("DNTFrameworkCore.TestAPI.Domain.Identity.Claim");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasIndex("UserId");
+
+                    b.HasDiscriminator().HasValue("UserClaim");
+                });
+
             modelBuilder.Entity("DNTFrameworkCore.TestAPI.Domain.Identity.RolePermission", b =>
                 {
                     b.HasBaseType("DNTFrameworkCore.TestAPI.Domain.Identity.Permission");
@@ -803,24 +775,6 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("UserPermission");
                 });
 
-            modelBuilder.Entity("DNTFrameworkCore.TestAPI.Domain.Identity.RoleClaim", b =>
-                {
-                    b.HasOne("DNTFrameworkCore.TestAPI.Domain.Identity.Role", "Role")
-                        .WithMany("Claims")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DNTFrameworkCore.TestAPI.Domain.Identity.UserClaim", b =>
-                {
-                    b.HasOne("DNTFrameworkCore.TestAPI.Domain.Identity.User", "User")
-                        .WithMany("Claims")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("DNTFrameworkCore.TestAPI.Domain.Identity.UserRole", b =>
                 {
                     b.HasOne("DNTFrameworkCore.TestAPI.Domain.Identity.Role", "Role")
@@ -840,6 +794,24 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
                 {
                     b.HasOne("DNTFrameworkCore.TestAPI.Domain.Identity.User", "User")
                         .WithMany("Tokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DNTFrameworkCore.TestAPI.Domain.Identity.RoleClaim", b =>
+                {
+                    b.HasOne("DNTFrameworkCore.TestAPI.Domain.Identity.Role", "Role")
+                        .WithMany("Claims")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DNTFrameworkCore.TestAPI.Domain.Identity.UserClaim", b =>
+                {
+                    b.HasOne("DNTFrameworkCore.TestAPI.Domain.Identity.User", "User")
+                        .WithMany("Claims")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

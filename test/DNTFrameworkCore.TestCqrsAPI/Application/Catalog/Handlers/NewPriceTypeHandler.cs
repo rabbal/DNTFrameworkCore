@@ -28,13 +28,13 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
         public override async Task<Result> Handle(NewPriceType command, CancellationToken cancellationToken)
         {
             var titleResult = Title.New(command.Title);
-            if (titleResult.Failed) return Fail(titleResult.Message);
+            if (titleResult.Failed) return titleResult;
 
             var title = titleResult.Value;
 
             var priceTypeResult = PriceType.New(title, _policy);
 
-            if (priceTypeResult.Failed) return Fail(priceTypeResult.Message);
+            if (priceTypeResult.Failed) return priceTypeResult;
 
             var priceType = priceTypeResult.Value;
             _uow.Set<PriceType>().Add(priceType);

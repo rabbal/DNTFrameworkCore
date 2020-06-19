@@ -14,8 +14,6 @@ namespace DNTFrameworkCore.Functional
         protected Result(bool failed, string message) : this(failed, message,
             Enumerable.Empty<ValidationFailure>())
         {
-            Failed = failed;
-            Message = message;
         }
 
         protected Result(bool failed, string message, IEnumerable<ValidationFailure> failures)
@@ -53,13 +51,13 @@ namespace DNTFrameworkCore.Functional
         public static Result<T> Ok<T>(T value) => new Result<T>(value, false, string.Empty);
 
         [DebuggerStepThrough]
-        public static Result Combine(string seperator, params Result[] results)
+        public static Result Combine(string symbol, params Result[] results)
         {
             var failedList = results.Where(x => !x.Failed).ToList();
 
             if (!failedList.Any()) return Ok();
 
-            var message = string.Join(seperator, failedList.Select(x => x.Message).ToArray());
+            var message = string.Join(symbol, failedList.Select(x => x.Message).ToArray());
             var failures = failedList.SelectMany(r => r.Failures).ToList();
 
             return Fail(message, failures);
@@ -72,10 +70,10 @@ namespace DNTFrameworkCore.Functional
         public static Result Combine<T>(params Result<T>[] results) => Combine(", ", results);
 
         [DebuggerStepThrough]
-        public static Result Combine<T>(string seperator, params Result<T>[] results)
+        public static Result Combine<T>(string symbol, params Result<T>[] results)
         {
             var untyped = results.Select(result => (Result) result).ToArray();
-            return Combine(seperator, untyped);
+            return Combine(symbol, untyped);
         }
 
         public override string ToString()

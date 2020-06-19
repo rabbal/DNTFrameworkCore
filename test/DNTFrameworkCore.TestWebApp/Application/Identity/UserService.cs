@@ -56,7 +56,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
         {
             _mapper.Map(model, user);
 
-            MapSerialNumber(user, model);
+            MapSecurityStamp(user, model);
             MapPasswordHash(user, model);
         }
 
@@ -65,11 +65,11 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
             return _mapper.Map<UserModel>(user);
         }
 
-        private static void MapSerialNumber(User user, UserModel model)
+        private static void MapSecurityStamp(User user, UserModel model)
         {
             //if (!model.ShouldMapSerial(user)) return;
 
-            user.SerialNumber = User.NewSerialNumber();
+            user.SecurityStamp = User.NewSecurityStamp();
         }
 
         private void MapPasswordHash(User user, UserModel model)
