@@ -175,7 +175,7 @@ For more info about templates you can watch [DNTFrameworkCoreTemplate repository
 
 **Create Entity**
 ```c#
-public class Task : Entity<int>, INumberedEntity, IHasRowVersion, IHasRowIntegrity, ICreationTracking, IModificationTracking
+public class Task : Entity<int>, INumberedEntity, IRowVersion, IRowIntegrity, ICreationTracking, IModificationTracking
 {
     public const int MaxTitleLength = 256;
     public const int MaxDescriptionLength = 1024;
