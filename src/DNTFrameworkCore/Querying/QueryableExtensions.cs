@@ -56,7 +56,7 @@ namespace DNTFrameworkCore.Querying
         private static Expression<Func<TElement, bool>> ToLambdaExpression<TElement>(
             this FilterExpression filterExpression)
         {
-            var flattenList = filterExpression.ToFlattenList();
+            var flattenList = filterExpression.ToFlatList();
             var predicate = filterExpression.ToExpression((item) => flattenList.IndexOf(item));
             var values = flattenList.Select(f => f.Value).ToArray();
 
@@ -78,9 +78,9 @@ namespace DNTFrameworkCore.Querying
 
             var index = indexFactory(filterExpression);
 
-            var comparison = _operators[filterExpression.OperatorName];
+            var comparison = _operators[filterExpression.Operator];
 
-            if (filterExpression.OperatorName == "doesnotcontain")
+            if (filterExpression.Operator == "doesnotcontain")
             {
                 return $"!{filterExpression.Field}.{comparison}(@{index})";
             }

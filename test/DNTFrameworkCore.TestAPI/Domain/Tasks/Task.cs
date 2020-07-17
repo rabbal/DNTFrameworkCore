@@ -4,7 +4,7 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Tasks
 {
-    public class Task : Entity, IRowVersion, IRowIntegrity, ICreationTracking, IModificationTracking,
+    public class Task : Entity, IHasRowVersion, IHasRowIntegrity, ICreationTracking, IModificationTracking,
         INumberedEntity
     {
         public const int MaxTitleLength = 256;

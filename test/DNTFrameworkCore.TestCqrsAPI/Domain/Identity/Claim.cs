@@ -2,7 +2,7 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Identity
 {
-    public abstract class Claim : TrackableEntity<long>, IRowIntegrity, ICreationTracking, IModificationTracking
+    public abstract class Claim : TrackableEntity<long>, IHasRowIntegrity, ICreationTracking, IModificationTracking
     {
         public const int MaxTypeLength = 256;
 

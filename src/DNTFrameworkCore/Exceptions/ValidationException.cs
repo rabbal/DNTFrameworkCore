@@ -8,7 +8,7 @@ namespace DNTFrameworkCore.Exceptions
     [Serializable]
     public class ValidationException : FrameworkException
     {
-        public IReadOnlyList<ValidationFailure> Failures { get; }
+        private readonly List<ValidationFailure> _failures;
 
         public ValidationException(string message) : this(message, Enumerable.Empty<ValidationFailure>())
         {
@@ -16,7 +16,15 @@ namespace DNTFrameworkCore.Exceptions
 
         public ValidationException(string message, IEnumerable<ValidationFailure> failures) : base(message)
         {
-            Failures = failures.ToList();
+            _failures = failures.ToList();
+        }
+
+        public IReadOnlyList<ValidationFailure> Failures => _failures;
+
+        public ValidationException WithFailure(string memberName, string message)
+        {
+            _failures.Add(new ValidationFailure(memberName, message));
+            return this;
         }
     }
 }

@@ -16,29 +16,29 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 {
     public static class UnitOfWorkExtensions
     {
-        public static void EntityVersion(this IUnitOfWork uow, IRowVersion versionedEntity, byte[] version)
+        public static void EntityVersion(this IUnitOfWork uow, IHasRowVersion versionedEntity, byte[] version)
         {
             uow.PropertyValue(versionedEntity, EFCore.Version, version);
         }
 
-        public static byte[] EntityVersion(this IUnitOfWork uow, IRowVersion versionedEntity)
+        public static byte[] EntityVersion(this IUnitOfWork uow, IHasRowVersion versionedEntity)
         {
             return (byte[]) uow.PropertyValue(versionedEntity, EFCore.Version);
         }
 
-        public static string EntityHash(this IUnitOfWork uow, IRowIntegrity entity)
+        public static string EntityHash(this IUnitOfWork uow, IHasRowIntegrity entity)
         {
             return uow.PropertyValue<string>(entity, EFCore.Hash);
         }
 
         public static bool IsTampered<TEntity>(this IUnitOfWork uow, TEntity entity)
-            where TEntity : class, IRowIntegrity
+            where TEntity : class, IHasRowIntegrity
         {
             return uow.EntityHash(entity) != uow.PropertyValue<string>(entity, EFCore.Hash);
         }
 
         public static async Task<bool> IsTamperedAsync<TEntity, TKey>(this IUnitOfWork uow, TKey id)
-            where TEntity : Entity<TKey>, IRowIntegrity
+            where TEntity : Entity<TKey>, IHasRowIntegrity
             where TKey : IEquatable<TKey>
 
         {
@@ -48,7 +48,7 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 
         public static async Task<bool> HasTamperedEntryAsync<TEntity>(this IUnitOfWork uow,
             Expression<Func<TEntity, bool>> predicate = null)
-            where TEntity : class, IRowIntegrity
+            where TEntity : class, IHasRowIntegrity
         {
             var tamperedEntryList = await uow.TamperedEntryListAsync(predicate);
             return tamperedEntryList.Any();
@@ -56,7 +56,7 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 
         public static async Task<IReadOnlyList<TEntity>> TamperedEntryListAsync<TEntity>(this IUnitOfWork uow,
             Expression<Func<TEntity, bool>> predicate = null)
-            where TEntity : class, IRowIntegrity
+            where TEntity : class, IHasRowIntegrity
         {
             var entityList = await uow.Set<TEntity>()
                 //.AsNoTracking() todo: shadow-property (Hash)

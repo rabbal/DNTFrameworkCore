@@ -117,7 +117,7 @@ namespace DNTFrameworkCore.EFCore.Context
         {
             var types = builder.Model.GetEntityTypes().ToList();
 
-            foreach (var entityType in types.Where(e => typeof(IRowLevelSecurity).IsAssignableFrom(e.ClrType)))
+            foreach (var entityType in types.Where(e => typeof(IHasRowLevelSecurity).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
                     .Property(typeof(TUserId), UserId)
@@ -129,7 +129,7 @@ namespace DNTFrameworkCore.EFCore.Context
         {
             var types = builder.Model.GetEntityTypes().ToList();
 
-            foreach (var entityType in types.Where(e => typeof(IRowVersion).IsAssignableFrom(e.ClrType)))
+            foreach (var entityType in types.Where(e => typeof(IHasRowVersion).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
                     .Property<byte[]>(Version)
@@ -141,7 +141,7 @@ namespace DNTFrameworkCore.EFCore.Context
         {
             var types = builder.Model.GetEntityTypes().ToList();
 
-            foreach (var entityType in types.Where(e => typeof(IRowIntegrity).IsAssignableFrom(e.ClrType)))
+            foreach (var entityType in types.Where(e => typeof(IHasRowIntegrity).IsAssignableFrom(e.ClrType)))
             {
                 builder.Entity(entityType.ClrType)
                     .Property<string>(Hash)

@@ -16,7 +16,6 @@ namespace DNTFrameworkCore.Querying
     public class PagedRequest : IPagedRequest
     {
         private const string EscapedCommaPattern = @"(?<!($|[^\\])(\\\\)*?\\),";
-        private const string NamedSortingPrefix = "named";
 
         private static readonly Regex _regex = new Regex(EscapedCommaPattern,
             RegexOptions.Compiled | RegexOptions.IgnoreCase, TimeSpan.FromSeconds(2));
@@ -40,17 +39,11 @@ namespace DNTFrameworkCore.Querying
             }
         }
 
-        public IReadOnlyList<SortExpression> ParsedSorting => _parsedSorting;
-
-        public bool HasNamedSorting(string name)
-        {
-            return _sorting.IndexOf($"{NamedSortingPrefix}{name}", StringComparison.OrdinalIgnoreCase) > -1;
-        }
+        public IReadOnlyList<SortExpression> ParsedSorting => _parsedSorting.AsReadOnly();
 
         protected virtual List<SortExpression> ParseSorting(string sorting)
         {
-            return _regex.Split(sorting).Where(sort =>
-                    !string.IsNullOrWhiteSpace(sort) && !sort.StartsWith(NamedSortingPrefix))
+            return _regex.Split(sorting).Where(sort => !string.IsNullOrWhiteSpace(sort))
                 .Select(SortExpression.FromString).ToList();
         }
     }

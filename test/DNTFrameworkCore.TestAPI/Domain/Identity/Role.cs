@@ -3,7 +3,7 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Identity
 {
-    public class Role : Entity<long>, IRowVersion, IRowIntegrity, ICreationTracking, IModificationTracking
+    public class Role : Entity<long>, IHasRowVersion, IHasRowIntegrity, ICreationTracking, IModificationTracking
     {
         public const int MaxNameLength = 50;
         public const int MaxDescriptionLength = 1024;

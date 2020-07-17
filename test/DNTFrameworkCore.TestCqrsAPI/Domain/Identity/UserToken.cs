@@ -3,7 +3,7 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Identity
 {
-    public class UserToken : Entity<long>, IRowIntegrity, ICreationTracking, IModificationTracking
+    public class UserToken : Entity<long>, IHasRowIntegrity, ICreationTracking, IModificationTracking
     {
         public const int MaxTokenHashLength = 256;
         public string TokenHash { get; set; }

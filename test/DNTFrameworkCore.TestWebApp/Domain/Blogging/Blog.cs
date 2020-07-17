@@ -3,7 +3,7 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestWebApp.Domain.Blogging
 {
-    public class Blog : Entity, IRowVersion, ICreationTracking, IModificationTracking
+    public class Blog : Entity, IHasRowVersion, ICreationTracking, IModificationTracking
     {
         public const int MaxTitleLength = 50;
         public const int MaxUrlLength = 50;

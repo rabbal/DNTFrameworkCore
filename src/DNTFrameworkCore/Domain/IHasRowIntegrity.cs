@@ -1,6 +1,6 @@
 namespace DNTFrameworkCore.Domain
 {
-    public interface IRowIntegrity
+    public interface IHasRowIntegrity
     {
     }
 }

@@ -1,17 +1,30 @@
-﻿using DNTFrameworkCore.Cqrs.Commands;
-using MediatR;
+﻿using MediatR;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.Cqrs.Behaviors
 {
     public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : ICommand
     {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        private readonly ILogger _logger;
+        public PerformanceBehavior(ILoggerFactory loggerFactory)
         {
-            throw new NotImplementedException();
+            _logger = loggerFactory.CreateLogger("PerformanceBehavior");
+        }
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        {
+            var stopwatch = Stopwatch.StartNew();
+            
+            var response = await next();
+
+            stopwatch.Stop();
+
+            _logger.LogInformation($"{request}: {stopwatch.ElapsedMilliseconds} ms");
+            
+            return response;
         }
     }
 }

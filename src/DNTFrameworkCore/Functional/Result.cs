@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using DNTFrameworkCore.Validation;
 
@@ -27,30 +26,52 @@ namespace DNTFrameworkCore.Functional
         public string Message { get; }
         public IEnumerable<ValidationFailure> Failures => _failures.AsReadOnly();
 
-        [DebuggerStepThrough]
-        public static Result Ok() => _ok;
+        public Result WithFailure(string memberName, string message)
+        {
+            _failures.Add(new ValidationFailure(memberName, message));
+            return this;
+        }
 
-        [DebuggerStepThrough]
+        public static Result Ok()
+        {
+            return _ok;
+        }
+
+        public static Result Ok(string message)
+        {
+            return new Result(false, message);
+        }
+
         public static Result Fail(string message)
         {
             return new Result(true, message);
         }
 
-        [DebuggerStepThrough]
-        public static Result Fail(string message, IEnumerable<ValidationFailure> failures) =>
-            new Result(true, message, failures);
+        public static Result Fail(string message, IEnumerable<ValidationFailure> failures)
+        {
+            return new Result(true, message, failures);
+        }
 
-        [DebuggerStepThrough]
-        public static Result<T> Fail<T>(string message) => new Result<T>(default, true, message);
+        public static Result<T> Fail<T>(string message)
+        {
+            return new Result<T>(default, true, message);
+        }
 
-        [DebuggerStepThrough]
-        public static Result<T> Fail<T>(string message, IEnumerable<ValidationFailure> failures) =>
-            new Result<T>(default, true, message, failures);
+        public static Result<T> Fail<T>(string message, IEnumerable<ValidationFailure> failures)
+        {
+            return new Result<T>(default, true, message, failures);
+        }
 
-        [DebuggerStepThrough]
-        public static Result<T> Ok<T>(T value) => new Result<T>(value, false, string.Empty);
+        public static Result<T> Ok<T>(T value)
+        {
+            return new Result<T>(value, false, string.Empty);
+        }
 
-        [DebuggerStepThrough]
+        public static Result<T> Ok<T>(string message, T value)
+        {
+            return new Result<T>(value, false, message);
+        }
+
         public static Result Combine(string symbol, params Result[] results)
         {
             var failedList = results.Where(x => !x.Failed).ToList();
@@ -63,13 +84,19 @@ namespace DNTFrameworkCore.Functional
             return Fail(message, failures);
         }
 
-        [DebuggerStepThrough]
-        public static Result Combine(params Result[] results) => Combine(", ", results);
 
-        [DebuggerStepThrough]
-        public static Result Combine<T>(params Result<T>[] results) => Combine(", ", results);
+        public static Result Combine(params Result[] results)
+        {
+            return Combine(", ", results);
+        }
 
-        [DebuggerStepThrough]
+
+        public static Result Combine<T>(params Result<T>[] results)
+        {
+            return Combine(", ", results);
+        }
+
+
         public static Result Combine<T>(string symbol, params Result<T>[] results)
         {
             var untyped = results.Select(result => (Result) result).ToArray();

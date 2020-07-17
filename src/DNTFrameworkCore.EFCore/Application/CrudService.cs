@@ -8,7 +8,7 @@ using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Context.Extensions;
-using DNTFrameworkCore.EFCore.Linq;
+using DNTFrameworkCore.EFCore.Querying;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Querying;
 using Microsoft.EntityFrameworkCore;

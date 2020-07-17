@@ -17,7 +17,7 @@ namespace DNTFrameworkCore.FluentValidation
 
         public override IEnumerable<ValidationFailure> Validate(T model)
         {
-            var fvValidator = _factory.GetValidator(model.GetType());
+            var fvValidator = _factory.GetValidator<T>();
 
             if (fvValidator == null) return Enumerable.Empty<ValidationFailure>();
 

@@ -2,7 +2,7 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Identity
 {
-    public class UserRole : TrackableEntity, IRowIntegrity, ICreationTracking, IModificationTracking
+    public class UserRole : TrackableEntity, IHasRowIntegrity, ICreationTracking, IModificationTracking
     {
         public long UserId { get; set; }
         public User User { get; set; }
