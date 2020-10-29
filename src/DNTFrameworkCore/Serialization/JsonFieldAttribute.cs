@@ -6,5 +6,5 @@ namespace DNTFrameworkCore.Serialization
     /// Marks the property to be serialized into database as JSON.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class JsonFieldAttribute : Attribute {}
+    public sealed class JsonFieldAttribute : Attribute {}
 }

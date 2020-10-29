@@ -42,9 +42,9 @@ namespace DNTFrameworkCore.EFCore.Logging
         {
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
-        protected override async Task WriteMessagesAsync(IEnumerable<LogMessage> messages, CancellationToken token)
+        protected override async Task WriteLogsAsync(IEnumerable<LogItem> items, CancellationToken token)
         {
-            var logs = messages.Where(m => !string.IsNullOrEmpty(m.Message))
+            var logs = items.Where(m => !string.IsNullOrEmpty(m.Message))
                 .Select(m => new Log
                 {
                     Level = m.Level.ToString(),
@@ -56,17 +56,17 @@ namespace DNTFrameworkCore.EFCore.Logging
                     UserBrowserName = m.UserBrowserName,
                     UserDisplayName = m.UserDisplayName,
                     UserName = m.UserName,
-                    CreationTime = m.CreationTime
+                    CreationTime = m.CreationTime,
+                    ImpersonatorUserId = m.ImpersonatorUserId,
+                    TenantId = m.TenantId,
+                    TenantName = m.TenantName,
+                    ImpersonatorTenantId = m.ImpersonatorTenantId
                 });
 
-            using (var scope = _provider.CreateScope())
-            {
-                using (var context = scope.ServiceProvider.GetRequiredService<TContext>())
-                {
-                    context.Set<Log>().AddRange(logs);
-                    await context.SaveChangesAsync(token);
-                }
-            }
+            using var scope = _provider.CreateScope();
+            await using var context = scope.ServiceProvider.GetRequiredService<TContext>();
+            context.Set<Log>().AddRange(logs);
+            await context.SaveChangesAsync(token);
         }
     }
 }

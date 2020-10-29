@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.Web.Runtime
 
         private HttpContext HttpContext => _context.HttpContext;
         private ClaimsPrincipal Principal => HttpContext?.User;
-        
+
         public bool IsAuthenticated => Principal?.Identity.IsAuthenticated ?? false;
         public string UserId => Principal?.FindUserId();
         public string UserName => Principal?.FindUserName();
@@ -35,6 +35,7 @@ namespace DNTFrameworkCore.Web.Runtime
         public string UserBrowserName => HttpContext?.FindUserAgent();
         public string UserIP => HttpContext?.FindUserIP();
         public string ImpersonatorUserId => Principal?.FindImpersonatorUserId();
+        public IDictionary<string, object> Properties { get; } = new Dictionary<string, object>();
 
         public bool IsInRole(string role)
         {

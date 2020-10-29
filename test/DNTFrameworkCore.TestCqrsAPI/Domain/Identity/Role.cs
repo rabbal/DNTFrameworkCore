@@ -8,7 +8,6 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Identity
     {
         public const int MaxNameLength = 50;
         public const int MaxDescriptionLength = 1024;
-
         public string Name { get; set; }
         public string NormalizedName { get; set; }
         public string Description { get; set; }

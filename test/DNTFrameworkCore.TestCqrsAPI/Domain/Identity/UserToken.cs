@@ -10,5 +10,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Identity
         public DateTime TokenExpirationDateTime { get; set; }
         public long UserId { get; set; }
         public User User { get; set; }
+        
+        
     }
 }

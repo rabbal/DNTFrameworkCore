@@ -12,8 +12,6 @@ namespace DNTFrameworkCore.TestWebApp.Domain.Catalog
         public string Title { get; set; }
         public string Number { get; set; }
         public byte[] Version { get; set; }
-        public DateTime CreatedDateTime { get; set; }
-        public DateTime? ModifiedDateTime { get; set; }
 
         public ICollection<ProductPrice> Prices { get; set; }
     }

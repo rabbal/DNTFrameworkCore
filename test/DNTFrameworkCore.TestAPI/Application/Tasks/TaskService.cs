@@ -5,14 +5,13 @@ using System.Threading.Tasks;
 using DNTFrameworkCore.Application;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
-using DNTFrameworkCore.EFCore.Linq;
+using DNTFrameworkCore.EFCore.Querying;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Linq;
 using DNTFrameworkCore.Querying;
 using DNTFrameworkCore.TestAPI.Application.Tasks.Models;
 using Microsoft.EntityFrameworkCore;
 using Task = DNTFrameworkCore.TestAPI.Domain.Tasks.Task;
-
 namespace DNTFrameworkCore.TestAPI.Application.Tasks
 {
     public interface ITaskService : ICrudService<int, TaskReadModel, TaskModel, TaskFilteredPagedRequest>
@@ -30,7 +29,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
         public bool TamperedTaskExists()
         {
             var tasks = EntitySet.ToList();
-            return tasks.Any(task => task.Hash != UnitOfWork.EntityHash(task));
+            return tasks.Any(task => EFCoreShadow.PropertyHash(task) != UnitOfWork.EntityHash(task));
         }
 
         public override Task<IPagedResult<TaskReadModel>> ReadPagedListAsync(TaskFilteredPagedRequest model,
@@ -45,7 +44,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
                     State = t.State,
                     Number = t.Number,
                     LocalDateTime = t.LocalDateTime,
-                    CreatedDateTime = t.CreatedDateTime,
+                    CreatedDateTime = EFCoreShadow.PropertyCreatedDateTime(t),
                     NullableDateTime = t.NullableDateTime
                 }).ToPagedListAsync(model, cancellationToken);
         }

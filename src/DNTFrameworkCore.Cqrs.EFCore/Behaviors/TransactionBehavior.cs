@@ -17,7 +17,7 @@ namespace DNTFrameworkCore.Cqrs.EFCore.Behaviors
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
             RequestHandlerDelegate<TResponse> next)
         {
             //If there is a running transaction, just run the method

@@ -1,3 +1,4 @@
+using System;
 using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Identity
@@ -8,5 +9,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Identity
 
         public string Type { get; set; }
         public string Value { get; set; }
+        
+        
     }
 }

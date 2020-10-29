@@ -15,7 +15,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.3")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -155,7 +155,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                         .HasMaxLength(256)
                         .IsUnicode(false);
 
-                    b.Property<long>("NextNumber")
+                    b.Property<long>("NextValue")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -541,7 +541,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<string>("SecurityStamp")
+                    b.Property<string>("SecurityToken")
                         .IsRequired()
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);

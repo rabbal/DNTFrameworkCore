@@ -106,7 +106,7 @@ namespace DNTFrameworkCore.EFCore.Context
 
         public string EntityHash<TEntity>(TEntity entity) where TEntity : class
         {
-            var row = Entry(entity).ToDictionary(p => p.Metadata.Name != EFCore.Hash &&
+            var row = Entry(entity).ToDictionary(p => p.Metadata.Name != EFCoreShadow.Hash &&
                                                       !p.Metadata.ValueGenerated.HasFlag(ValueGenerated.OnUpdate) &&
                                                       !p.Metadata.IsShadowProperty());
             return EntityHash<TEntity>(row);

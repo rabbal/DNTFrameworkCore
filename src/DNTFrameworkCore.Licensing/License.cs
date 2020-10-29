@@ -30,7 +30,7 @@ namespace DNTFrameworkCore.Licensing
         public ExpirationTime ExpirationTime { get; private set; }
         public string CustomerName { get; private set; }
         public DateTime CreationTime { get; private set; }
-        public string SecurityStamp { get; private set; }
+        public string UniqueId { get; private set; }
         public bool Signed { get; private set; }
         public IReadOnlyCollection<LicenseFeature> Features => _features.AsReadOnly();
         public IReadOnlyDictionary<string, string> Attributes => _attributes.AsReadOnly();
@@ -56,7 +56,7 @@ namespace DNTFrameworkCore.Licensing
             CustomerName = reader.GetAttribute(nameof(CustomerName)) ??
                            throw new InvalidOperationException("This license is invalid.");
 
-            SecurityStamp = reader.GetAttribute(nameof(SecurityStamp)) ??
+            UniqueId = reader.GetAttribute(nameof(UniqueId)) ??
                            throw new InvalidOperationException("This license is invalid.");
 
             CreationTime = DateTime.Parse(reader.GetAttribute(nameof(CreationTime)) ??
@@ -103,7 +103,7 @@ namespace DNTFrameworkCore.Licensing
             writer.WriteAttributeString(nameof(ProductName), ProductName);
             writer.WriteAttributeString(nameof(ProductVersion), ProductVersion);
             writer.WriteAttributeString(nameof(CustomerName), CustomerName);
-            writer.WriteAttributeString(nameof(SecurityStamp), SecurityStamp);
+            writer.WriteAttributeString(nameof(UniqueId), UniqueId);
             writer.WriteAttributeString(nameof(CreationTime), CreationTime.ToString("s", CultureInfo.InvariantCulture));
             writer.WriteAttributeString(nameof(ExpirationTime), ExpirationTime.ToString());
 
@@ -146,12 +146,12 @@ namespace DNTFrameworkCore.Licensing
         }
 
         public static License New(string productName, string productVersion, string customerName,
-            string serialNumber)
+            string uniqueId)
         {
             if (string.IsNullOrWhiteSpace(productName)) throw new ArgumentNullException(nameof(productName));
             if (string.IsNullOrWhiteSpace(productVersion)) throw new ArgumentNullException(nameof(productVersion));
             if (string.IsNullOrWhiteSpace(customerName)) throw new ArgumentNullException(nameof(customerName));
-            if (string.IsNullOrWhiteSpace(serialNumber)) throw new ArgumentNullException(nameof(serialNumber));
+            if (string.IsNullOrWhiteSpace(uniqueId)) throw new ArgumentNullException(nameof(uniqueId));
 
             var license = new License
             {
@@ -161,7 +161,7 @@ namespace DNTFrameworkCore.Licensing
                 ProductVersion = productVersion,
                 CustomerName = customerName,
                 ExpirationTime = ExpirationTime.Infinite,
-                SecurityStamp = serialNumber
+                UniqueId = uniqueId
             };
 
             return license;
@@ -221,37 +221,33 @@ namespace DNTFrameworkCore.Licensing
             var doc = new XmlDocument();
             doc.LoadXml(content);
 
-            using (var provider = RSA.Create())
-            {
-                provider.FromXml(licensePublicKey);
+            using var provider = RSA.Create();
+            provider.FromXml(licensePublicKey);
 
-                var manager = new XmlNamespaceManager(doc.NameTable);
-                manager.AddNamespace("sig", "http://www.w3.org/2000/09/xmldsig#");
+            var manager = new XmlNamespaceManager(doc.NameTable);
+            manager.AddNamespace("sig", "http://www.w3.org/2000/09/xmldsig#");
 
-                var xml = new SignedXml(doc);
-                var signatureNode = (XmlElement) doc.SelectSingleNode("//sig:Signature", manager);
-                if (signatureNode == null)
-                    throw new InvalidOperationException("This license file is not signed.");
+            var xml = new SignedXml(doc);
+            var signatureNode = (XmlElement) doc.SelectSingleNode("//sig:Signature", manager);
+            if (signatureNode == null)
+                throw new InvalidOperationException("This license file is not signed.");
 
-                xml.LoadXml(signatureNode);
-                if (!xml.CheckSignature(provider))
-                    throw new InvalidOperationException("This license file is invalid.");
+            xml.LoadXml(signatureNode);
+            if (!xml.CheckSignature(provider))
+                throw new InvalidOperationException("This license file is invalid.");
 
-                var ourXml = xml.GetXml();
-                if (ourXml.OwnerDocument?.DocumentElement == null)
-                    throw new InvalidOperationException("This license file is corrupted.");
+            var ourXml = xml.GetXml();
+            if (ourXml.OwnerDocument?.DocumentElement == null)
+                throw new InvalidOperationException("This license file is corrupted.");
 
-                using (var reader = new XmlNodeReader(ourXml.OwnerDocument.DocumentElement))
-                {
-                    var xmlSerializer = new XmlSerializer(typeof(License));
-                    var license = (License) xmlSerializer.Deserialize(reader);
+            using var reader = new XmlNodeReader(ourXml.OwnerDocument.DocumentElement);
+            var xmlSerializer = new XmlSerializer(typeof(License));
+            var license = (License) xmlSerializer.Deserialize(reader);
 
-                    license._document = doc;
-                    license.Signed = true;
+            license._document = doc;
+            license.Signed = true;
 
-                    return license;
-                }
-            }
+            return license;
         }
 
         public void Sign(string licenseKey)
@@ -280,7 +276,7 @@ namespace DNTFrameworkCore.Licensing
             if (!ProductVersion.Equals(licensedProduct.ProductVersion, StringComparison.Ordinal))
                 return Result.Fail("This license is not for this product.");
 
-            if (!SecurityStamp.Equals(licensedProduct.SecurityStamp, StringComparison.Ordinal))
+            if (!UniqueId.Equals(licensedProduct.UniqueId, StringComparison.Ordinal))
                 return Result.Fail("This license is not for this machine.");
 
             return Result.Ok();

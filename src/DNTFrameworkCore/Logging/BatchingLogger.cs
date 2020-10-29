@@ -67,7 +67,7 @@ namespace DNTFrameworkCore.Logging
                 var user = scope.ServiceProvider.GetService<IUserSession>();
                 var tenant = scope.ServiceProvider.GetService<ITenantSession>();
 
-                _loggerProvider.Queue(new LogMessage
+                _loggerProvider.Queue(new LogItem
                 {
                     CreationTime = dateTime,
                     Message = message,

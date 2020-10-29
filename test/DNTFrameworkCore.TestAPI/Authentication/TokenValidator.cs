@@ -55,7 +55,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
             }
 
             var user = await FindUserAsync(userId);
-            if (!user.HasValue || user.Value.SecurityStamp != serialNumberClaim.Value || !user.Value.IsActive)
+            if (!user.HasValue || user.Value.SecurityToken != serialNumberClaim.Value || !user.Value.IsActive)
             {
                 // user has changed his/her password/permissions/roles/stat/IsActive
                 context.Fail("This token is expired. Please login again.");

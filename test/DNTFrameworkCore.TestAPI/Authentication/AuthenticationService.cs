@@ -121,7 +121,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
                     _options.Value.Issuer),
                 new Claim(UserClaimTypes.DisplayName, user.DisplayName, ClaimValueTypes.String,
                     _options.Value.Issuer),
-                new Claim(UserClaimTypes.SecurityStamp, user.SecurityStamp, ClaimValueTypes.String,
+                new Claim(UserClaimTypes.SecurityStamp, user.SecurityToken, ClaimValueTypes.String,
                     _options.Value.Issuer)
             };
 

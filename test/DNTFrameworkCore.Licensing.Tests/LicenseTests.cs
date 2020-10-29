@@ -25,7 +25,7 @@ namespace DNTFrameworkCore.Licensing.Tests
             license.ProductName.ShouldBe("DNTFrameworkCore");
             license.ProductVersion.ShouldBe("1.1.1-beta");
             license.CustomerName.ShouldBe("GitHub");
-            license.SecurityStamp.ShouldBe("4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9");
+            license.UniqueId.ShouldBe("4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9");
             license.Attributes.ShouldBeEmpty();
             license.Features.ShouldBeEmpty();
         }

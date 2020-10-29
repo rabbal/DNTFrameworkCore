@@ -29,11 +29,9 @@ namespace DNTFrameworkCore.Licensing
 
         private static string ComputeHash(string s)
         {
-            using (var md5 = MD5.Create())
-            {
-                var bt = Encoding.ASCII.GetBytes(s);
-                return ToHexString(md5.ComputeHash(bt));
-            }
+            using var md5 = MD5.Create();
+            var bt = Encoding.ASCII.GetBytes(s);
+            return ToHexString(md5.ComputeHash(bt));
         }
 
         private static string ToHexString(IReadOnlyList<byte> bytes)

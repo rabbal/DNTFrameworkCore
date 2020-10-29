@@ -57,10 +57,10 @@ namespace DNTFrameworkCore.EFCore.Context
 
         protected override void Hook(ICreationTracking entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(EFCore.CreatedDateTime).CurrentValue = _clock.Now;
-            metadata.Entry.Property(EFCore.CreatedByBrowserName).CurrentValue = _session.UserBrowserName;
-            metadata.Entry.Property(EFCore.CreatedByIP).CurrentValue = _session.UserIP;
-            metadata.Entry.Property(EFCore.CreatedByUserId).CurrentValue = _session.UserId.To<TUserId>();
+            metadata.Entry.Property(EFCoreShadow.CreatedDateTime).CurrentValue = _clock.Now;
+            metadata.Entry.Property(EFCoreShadow.CreatedByBrowserName).CurrentValue = _session.UserBrowserName;
+            metadata.Entry.Property(EFCoreShadow.CreatedByIP).CurrentValue = _session.UserIP;
+            metadata.Entry.Property(EFCoreShadow.CreatedByUserId).CurrentValue = _session.UserId.To<TUserId>();
         }
     }
 
@@ -80,10 +80,10 @@ namespace DNTFrameworkCore.EFCore.Context
 
         protected override void Hook(IModificationTracking entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(EFCore.ModifiedDateTime).CurrentValue = _clock.Now;
-            metadata.Entry.Property(EFCore.ModifiedByBrowserName).CurrentValue = _session.UserBrowserName;
-            metadata.Entry.Property(EFCore.ModifiedByIP).CurrentValue = _session.UserIP;
-            metadata.Entry.Property(EFCore.ModifiedByUserId).CurrentValue = _session.UserId.To<TUserId>();
+            metadata.Entry.Property(EFCoreShadow.ModifiedDateTime).CurrentValue = _clock.Now;
+            metadata.Entry.Property(EFCoreShadow.ModifiedByBrowserName).CurrentValue = _session.UserBrowserName;
+            metadata.Entry.Property(EFCoreShadow.ModifiedByIP).CurrentValue = _session.UserIP;
+            metadata.Entry.Property(EFCoreShadow.ModifiedByUserId).CurrentValue = _session.UserId.To<TUserId>();
         }
     }
 
@@ -101,7 +101,7 @@ namespace DNTFrameworkCore.EFCore.Context
 
         protected override void Hook(ITenantEntity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(EFCore.TenantId).CurrentValue = _session.TenantId.To<TTenantId>();
+            metadata.Entry.Property(EFCoreShadow.TenantId).CurrentValue = _session.TenantId.To<TTenantId>();
         }
     }
 
@@ -119,7 +119,7 @@ namespace DNTFrameworkCore.EFCore.Context
 
         protected override void Hook(IHasRowLevelSecurity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(EFCore.UserId).CurrentValue = _session.UserId.To<TUserId>();
+            metadata.Entry.Property(EFCoreShadow.UserId).CurrentValue = _session.UserId.To<TUserId>();
         }
     }
 
@@ -130,7 +130,7 @@ namespace DNTFrameworkCore.EFCore.Context
         protected override void Hook(IDeletedEntity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
             metadata.Entry.State = EntityState.Modified;
-            metadata.Entry.Property(EFCore.IsDeleted).CurrentValue = true;
+            metadata.Entry.Property(EFCoreShadow.IsDeleted).CurrentValue = true;
         }
     }
 
@@ -140,8 +140,8 @@ namespace DNTFrameworkCore.EFCore.Context
 
         protected override void Hook(IHasRowVersion entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(EFCore.Version).OriginalValue =
-                metadata.Entry.Property(EFCore.Version).CurrentValue;
+            metadata.Entry.Property(EFCoreShadow.Version).OriginalValue =
+                metadata.Entry.Property(EFCoreShadow.Version).CurrentValue;
         }
     }
 
@@ -153,7 +153,7 @@ namespace DNTFrameworkCore.EFCore.Context
 
         protected override void Hook(IHasRowIntegrity entity, HookEntityMetadata metadata, IUnitOfWork uow)
         {
-            metadata.Entry.Property(EFCore.Hash).CurrentValue = uow.EntityHash(entity);
+            metadata.Entry.Property(EFCoreShadow.Hash).CurrentValue = uow.EntityHash(entity);
         }
     }
 }

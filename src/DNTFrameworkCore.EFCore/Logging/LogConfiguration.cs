@@ -32,9 +32,9 @@ namespace DNTFrameworkCore.EFCore.Logging
             builder.Property(a => a.UserBrowserName).HasMaxLength(1024);
             builder.Property(a => a.UserIP).HasMaxLength(256);
             builder.Property(a => a.UserId).HasMaxLength(256);
+            builder.Property(a => a.ImpersonatorUserId).HasMaxLength(256);
             builder.Property(a => a.TenantId).HasMaxLength(256);
             builder.Property(a => a.TenantName).HasMaxLength(256);
-            builder.Property(a => a.ImpersonatorUserId).HasMaxLength(256);
             builder.Property(a => a.ImpersonatorTenantId).HasMaxLength(256);
         }
     }

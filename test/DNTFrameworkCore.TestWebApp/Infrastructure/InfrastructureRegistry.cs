@@ -15,9 +15,9 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure
             services.AddEFCore<ProjectDbContext>()
                 .WithTrackingHook<long>();
 
-            services.AddDbContext<ProjectDbContext>(builder =>
+            services.AddDbContext<ProjectDbContext>((provider,builder) =>
             {
-                builder.AddInterceptors(new SecondLevelCacheInterceptor());
+                builder.AddInterceptors(provider.GetService<SecondLevelCacheInterceptor>());
                 builder.EnableSensitiveDataLogging();
                 builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
                     optionsBuilder =>

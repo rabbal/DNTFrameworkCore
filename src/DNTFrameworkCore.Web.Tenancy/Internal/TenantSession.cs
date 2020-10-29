@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Security.Claims;
 using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.GuardToolkit;
@@ -24,5 +25,6 @@ namespace DNTFrameworkCore.Web.Tenancy.Internal
         public string TenantName => _session.IsAuthenticated ? Principal?.FindTenantName() : Tenant?.Name;
         public bool IsHeadTenant => Principal?.IsHeadTenant() ?? false;
         public string ImpersonatorTenantId => Principal?.FindImpersonatorTenantId();
+        public IDictionary<string, object> Properties { get; } = new Dictionary<string, object>();
     }
 }

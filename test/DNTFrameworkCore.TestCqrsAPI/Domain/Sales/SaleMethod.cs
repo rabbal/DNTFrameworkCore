@@ -11,6 +11,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales
     {
         public Title Title { get; private set; }
         public SaleNature Nature { get; private set; }
+        public byte[] Version { get; set; }
 
         private readonly List<SaleMethodProduct> _products;
         public IReadOnlyCollection<SaleMethodProduct> Products => _products.AsReadOnly();
@@ -38,9 +39,5 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales
 
             return Ok(saleMethod);
         }
-
-        public DateTime CreatedDateTime { get; set; }
-        public DateTime? ModifiedDateTime { get; set; }
-        public byte[] Version { get; set; }
     }
 }

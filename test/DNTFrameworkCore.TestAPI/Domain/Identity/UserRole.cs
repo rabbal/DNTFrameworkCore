@@ -1,3 +1,4 @@
+using System;
 using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Identity
@@ -8,5 +9,6 @@ namespace DNTFrameworkCore.TestAPI.Domain.Identity
         public User User { get; set; }
         public Role Role { get; set; }
         public long RoleId { get; set; }
+        
     }
 }

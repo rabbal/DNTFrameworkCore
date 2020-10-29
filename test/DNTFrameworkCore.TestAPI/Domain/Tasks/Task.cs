@@ -16,14 +16,10 @@ namespace DNTFrameworkCore.TestAPI.Domain.Tasks
         public string Description { get; set; }
         public TaskState State { get; set; } = TaskState.Todo;
         public long BranchId { get; set; }
-
         public DateTime? NullableDateTime { get; set; }
         [SkipNormalization] public DateTime LocalDateTime { get; set; }
         [SkipNormalization] public decimal Value { get; set; }
         public decimal NormalizedValue { get; set; }
-
         public byte[] Version { get; set; }
-        public string Hash { get; set; }
-        public DateTime CreatedDateTime { get; set; }
     }
 }

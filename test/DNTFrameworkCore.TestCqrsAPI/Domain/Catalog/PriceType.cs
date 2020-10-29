@@ -7,7 +7,7 @@ using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 {
-    public class PriceType : AggregateRoot<long>, IHasRowVersion, IHasRowIntegrity, ICreationTracking, IModificationTracking
+    public class PriceType : AggregateRoot<long>
     {
         private PriceType(Title title)
         {

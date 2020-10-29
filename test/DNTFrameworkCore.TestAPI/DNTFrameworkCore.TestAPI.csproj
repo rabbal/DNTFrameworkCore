@@ -6,18 +6,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="EFCoreSecondLevelCacheInterceptor" Version="1.7.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.6" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.6" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.6" />
-        <PackageReference Include="AutoMapper" Version="10.0.0" />
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="3.1.6" />
-        <PackageReference Include="Scrutor" Version="3.2.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.6" />
-        <PackageReference Include="MappingGenerator" Version="1.16.411" />
+        <PackageReference Include="EFCoreSecondLevelCacheInterceptor" Version="2.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.9" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.9" />
+        <PackageReference Include="AutoMapper" Version="10.1.1" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="3.1.9" />
+        <PackageReference Include="Scrutor" Version="3.2.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.6.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.9" />
+        <PackageReference Include="MappingGenerator" Version="1.18.448" />
     </ItemGroup>
 
     <ItemGroup>

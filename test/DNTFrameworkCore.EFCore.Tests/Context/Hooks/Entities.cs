@@ -1,3 +1,6 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace DNTFrameworkCore.EFCore.Tests.Context.Hooks
 {
     public class TimestampedSoftDeletedEntity : IHasCreationDateTime, IHasModificationDateTime, ISoftDeleteEntity

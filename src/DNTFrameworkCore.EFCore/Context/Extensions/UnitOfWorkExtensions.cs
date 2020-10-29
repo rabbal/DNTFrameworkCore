@@ -18,23 +18,23 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
     {
         public static void EntityVersion(this IUnitOfWork uow, IHasRowVersion versionedEntity, byte[] version)
         {
-            uow.PropertyValue(versionedEntity, EFCore.Version, version);
+            uow.PropertyValue(versionedEntity, EFCoreShadow.Version, version);
         }
 
         public static byte[] EntityVersion(this IUnitOfWork uow, IHasRowVersion versionedEntity)
         {
-            return (byte[]) uow.PropertyValue(versionedEntity, EFCore.Version);
+            return (byte[]) uow.PropertyValue(versionedEntity, EFCoreShadow.Version);
         }
 
         public static string EntityHash(this IUnitOfWork uow, IHasRowIntegrity entity)
         {
-            return uow.PropertyValue<string>(entity, EFCore.Hash);
+            return uow.PropertyValue<string>(entity, EFCoreShadow.Hash);
         }
 
         public static bool IsTampered<TEntity>(this IUnitOfWork uow, TEntity entity)
             where TEntity : class, IHasRowIntegrity
         {
-            return uow.EntityHash(entity) != uow.PropertyValue<string>(entity, EFCore.Hash);
+            return uow.EntityHash(entity) != uow.PropertyValue<string>(entity, EFCoreShadow.Hash);
         }
 
         public static async Task<bool> IsTamperedAsync<TEntity, TKey>(this IUnitOfWork uow, TKey id)
@@ -43,7 +43,7 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 
         {
             var entity = await uow.Set<TEntity>().FindAsync(id);
-            return uow.EntityHash(entity) != uow.PropertyValue<string>(entity, EFCore.Hash);
+            return uow.EntityHash(entity) != uow.PropertyValue<string>(entity, EFCoreShadow.Hash);
         }
 
         public static async Task<bool> HasTamperedEntryAsync<TEntity>(this IUnitOfWork uow,
@@ -64,7 +64,7 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
                 .ToListAsync();
 
             return entityList
-                .Where(entity => uow.EntityHash(entity) != uow.PropertyValue<string>(entity, EFCore.Hash))
+                .Where(entity => uow.EntityHash(entity) != uow.PropertyValue<string>(entity, EFCoreShadow.Hash))
                 .ToList();
         }
 

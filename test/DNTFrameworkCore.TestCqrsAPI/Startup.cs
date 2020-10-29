@@ -36,7 +36,7 @@ namespace DNTFrameworkCore.TestCqrsAPI
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseEndpoints(builder => { builder.MapControllers(); });
         }
     }
 }

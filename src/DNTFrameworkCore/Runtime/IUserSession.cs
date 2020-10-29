@@ -71,6 +71,11 @@ namespace DNTFrameworkCore.Runtime
         /// </summary>
         string ImpersonatorUserId { get; }
 
+        /// <summary>
+        /// Properties related to current user
+        /// </summary>
+        IDictionary<string, object> Properties { get; }
+
         bool IsInRole(string role);
         bool IsGranted(string permission);
     }

@@ -83,8 +83,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
         }
 
         public string Number { get; set; }
-        public byte[] Version { get; set; }
-        public DateTime CreatedDateTime { get; set; }
-        public DateTime? ModifiedDateTime { get; set; }
+        
+        
     }
 }

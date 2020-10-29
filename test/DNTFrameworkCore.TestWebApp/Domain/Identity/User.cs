@@ -24,7 +24,7 @@ namespace DNTFrameworkCore.TestWebApp.Domain.Identity
         /// <summary>
         /// A random value that must change whenever a users credentials change (password,roles or permissions)
         /// </summary>
-        public string SecurityStamp { get; set; }
+        public string SecurityToken { get; set; }
 
         public ICollection<UserRole> Roles { get; set; } = new HashSet<UserRole>();
         public ICollection<UserPermission> Permissions { get; set; } = new HashSet<UserPermission>();
@@ -37,7 +37,6 @@ namespace DNTFrameworkCore.TestWebApp.Domain.Identity
             return Guid.NewGuid().ToString("N");
         }
 
-        public DateTime CreatedDateTime { get; set; }
-        public DateTime? ModifiedDateTime { get; set; }
+        
     }
 }

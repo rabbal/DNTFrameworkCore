@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DNTFrameworkCore.Logging
 {
-    public struct LogMessage
+    public struct LogItem
     {
         public string Message { get; set; }
         public LogLevel Level { get; set; }

@@ -7,6 +7,7 @@ using DNTFrameworkCore.Application;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Linq;
+using DNTFrameworkCore.EFCore.Querying;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Querying;
 using DNTFrameworkCore.TestWebApp.Application.Catalog.Models;
@@ -37,7 +38,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Catalog
             return EntitySet.AsNoTracking().Select(p => new ProductModel
             {
                 Id = p.Id,
-                Version = p.Version,
+                Version = EFCoreShadow.PropertyVersion(p),
                 Title = p.Title,
                 Number = p.Number
             }).ToPagedListAsync(request, cancellationToken);

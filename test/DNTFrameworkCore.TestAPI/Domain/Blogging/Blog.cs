@@ -1,3 +1,4 @@
+using System;
 using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestAPI.Domain.Blogging

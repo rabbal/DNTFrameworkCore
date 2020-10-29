@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DNTFrameworkCore.EFCore.Context
 {
-    public static class EFCore
+    public static class EFCoreShadow
     {
         public const string CreatedDateTime = nameof(CreatedDateTime);
         public const string CreatedByUserId = nameof(CreatedByUserId);
@@ -24,11 +24,20 @@ namespace DNTFrameworkCore.EFCore.Context
         public const string Version = nameof(Version);
         public const string Hash = nameof(Hash);
 
+        public static readonly Func<object, byte[]> PropertyVersion =
+            entity => EF.Property<byte[]>(entity, Version);
+
+        public static readonly Func<object, string> PropertyHash =
+            entity => EF.Property<string>(entity, Hash);
+
         public static readonly Func<object, string> PropertyCreatedByBrowserName =
             entity => EF.Property<string>(entity, CreatedByBrowserName);
 
         public static readonly Func<object, string> PropertyCreatedByIP =
             entity => EF.Property<string>(entity, CreatedByIP);
+
+        public static TUserId PropertyCreatedByUserId<TUserId>(object entity) =>
+            EF.Property<TUserId>(entity, CreatedByUserId);
 
         public static readonly Func<object, DateTime> PropertyCreatedDateTime =
             entity => EF.Property<DateTime>(entity, CreatedDateTime);
@@ -39,8 +48,14 @@ namespace DNTFrameworkCore.EFCore.Context
         public static readonly Func<object, string> PropertyModifiedByIP =
             entity => EF.Property<string>(entity, ModifiedByIP);
 
+        public static TUserId PropertyModifiedByUserId<TUserId>(object entity) =>
+            EF.Property<TUserId>(entity, ModifiedByUserId);
+
         public static readonly Func<object, DateTime?> PropertyModifiedDateTime =
             entity => EF.Property<DateTime?>(entity, ModifiedDateTime);
+
+        public static TTenantId PropertyTenantId<TTenantId>(object entity) =>
+            EF.Property<TTenantId>(entity, TenantId);
 
         public static void AddTrackingFields<TUserId>(this ModelBuilder builder) where TUserId : IEquatable<TUserId>
         {

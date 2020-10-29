@@ -19,14 +19,13 @@ namespace DNTFrameworkCore.TestAPI.Domain.Identity
         public string PasswordHash { get; set; }
         public bool IsActive { get; set; }
         public DateTime? LastLoggedInDateTime { get; set; }
-        public string SecurityStamp { get; set; } = Guid.NewGuid().ToString("N");
+        public string SecurityToken { get; set; } = Guid.NewGuid().ToString("N");
         public byte[] Version { get; set; }
 
         public ICollection<UserRole> Roles { get; set; } = new HashSet<UserRole>();
         public ICollection<UserToken> Tokens { get; set; } = new HashSet<UserToken>();
         public ICollection<UserPermission> Permissions { get; set; } = new HashSet<UserPermission>();
         public ICollection<UserClaim> Claims { get; set; } = new HashSet<UserClaim>();
-
         public override string ToString() => UserName;
     }
 }

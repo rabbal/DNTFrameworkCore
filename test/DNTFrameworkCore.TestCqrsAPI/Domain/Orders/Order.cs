@@ -10,7 +10,7 @@ using DNTFrameworkCore.Timing;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
 {
-    public class Order : AggregateRoot<long>, IHasRowVersion, IHasRowIntegrity, ICreationTracking, IModificationTracking
+    public class Order : AggregateRoot<long>
     {
         public OrderStatus Status { get; private set; }
         public SaleMethod SaleMethod { get; private set; }

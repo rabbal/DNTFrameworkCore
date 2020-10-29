@@ -1,3 +1,9 @@
+using DNTFrameworkCore.EFCore.Context;
+using DNTFrameworkCore.EFCore.SqlServer.Numbering;
+using DNTFrameworkCore.Runtime;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 namespace DNTFrameworkCore.EFCore.Tests.Numbering
 {
     public class NumberingDbContext : DbContextCore

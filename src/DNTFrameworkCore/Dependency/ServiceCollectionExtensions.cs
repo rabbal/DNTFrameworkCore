@@ -1,10 +1,20 @@
 using System;
+using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.Dependency
 {
     public static class ServiceCollectionExtensions
     {
+        public static void RemoveService(this IServiceCollection services, Type serviceType)
+        {
+            var serviceDescriptor = services.FirstOrDefault(descriptor => descriptor.ServiceType == serviceType);
+            if (serviceDescriptor != null)
+            {
+                services.Remove(serviceDescriptor);
+            }
+        }
+        
         public static IServiceCollection CloneSingleton(
             this IServiceCollection services,
             ServiceDescriptor parent,

@@ -10,6 +10,8 @@ namespace DNTFrameworkCore.Mapping
 {
     public static class MappingExtensions
     {
+        private static readonly Dictionary<Type, PropertyInfo[]> _properties = new Dictionary<Type, PropertyInfo[]>();
+
         public static void Map<TSource, TDestination>(IReadOnlyList<TSource> source,
             IEnumerable<TDestination> destination,
             Func<TSource, TDestination> map)
@@ -20,8 +22,13 @@ namespace DNTFrameworkCore.Mapping
                 var sourceItem = source[i++];
                 var mappedItem = map(sourceItem);
 
-                var properties = typeof(TDestination).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(p => p.CanRead && p.CanWrite).ToList();
+                if (!_properties.TryGetValue(typeof(TDestination), out var properties))
+                {
+                    properties = typeof(TDestination).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                        .Where(p => p.CanRead && p.CanWrite).ToArray();
+                    _properties[typeof(TDestination)] = properties;
+                }
+
                 foreach (var property in properties) property.SetValue(destinationItem, property.GetValue(mappedItem));
             }
         }

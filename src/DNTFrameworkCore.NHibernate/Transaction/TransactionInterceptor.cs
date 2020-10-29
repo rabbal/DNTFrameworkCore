@@ -35,7 +35,7 @@ namespace DNTFrameworkCore.NHibernate.Transaction
             var attribute = FindTransactionalAttribute(method);
 
             //If there is a running transaction, just run the method
-            if (!attribute.HasValue || _session.Transaction != null)
+            if (!attribute.HasValue || _session.GetCurrentTransaction() != null)
             {
                 invocation.Proceed();
                 return;
@@ -68,7 +68,7 @@ namespace DNTFrameworkCore.NHibernate.Transaction
             }
             catch (Exception)
             {
-                _session.Transaction.Rollback();
+                _session.GetCurrentTransaction().Rollback();
                 throw;
             }
 
@@ -87,11 +87,11 @@ namespace DNTFrameworkCore.NHibernate.Transaction
             try
             {
                 await task.ConfigureAwait(false);
-                session.Transaction.Commit();
+                session.GetCurrentTransaction().Commit();
             }
             catch (Exception)
             {
-                session.Transaction.Rollback();
+                session.GetCurrentTransaction().Rollback();
                 throw;
             }
         }
@@ -102,15 +102,15 @@ namespace DNTFrameworkCore.NHibernate.Transaction
             {
                 var result = await task.ConfigureAwait(false);
                 if (result is Result returnValue && returnValue.Failed)
-                    session.Transaction.Rollback();
+                    session.GetCurrentTransaction().Rollback();
                 else
-                    session.Transaction.Commit();
+                    session.GetCurrentTransaction().Commit();
 
                 return result;
             }
             catch (Exception)
             {
-                session.Transaction.Rollback();
+                session.GetCurrentTransaction().Rollback();
                 throw;
             }
         }
@@ -123,13 +123,13 @@ namespace DNTFrameworkCore.NHibernate.Transaction
                 invocation.Proceed();
 
                 if (invocation.ReturnValue is Result returnValue && returnValue.Failed)
-                    _session.Transaction.Rollback();
+                    _session.GetCurrentTransaction().Rollback();
                 else
-                    _session.Transaction.Commit();
+                    _session.GetCurrentTransaction().Commit();
             }
             catch (Exception)
             {
-                _session.Transaction.Rollback();
+                _session.GetCurrentTransaction().Rollback();
                 throw;
             }
         }

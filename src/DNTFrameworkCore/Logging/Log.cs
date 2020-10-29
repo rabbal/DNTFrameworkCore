@@ -1,5 +1,6 @@
 ﻿using System;
 using DNTFrameworkCore.Domain;
+
 // ReSharper disable InconsistentNaming
 
 namespace DNTFrameworkCore.Logging
@@ -18,10 +19,10 @@ namespace DNTFrameworkCore.Logging
         public string UserId { get; set; }
         public string UserName { get; set; }
         public string UserDisplayName { get; set; }
+        public string ImpersonatorUserId { get; set; }
+        public int EventId { get; set; }
         public string TenantId { get; set; }
         public string TenantName { get; set; }
-        public string ImpersonatorUserId { get; set; }
         public string ImpersonatorTenantId { get; set; }
-        public int EventId { get; set; }
     }
 }

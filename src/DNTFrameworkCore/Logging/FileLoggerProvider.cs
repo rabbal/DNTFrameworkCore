@@ -57,7 +57,7 @@ namespace DNTFrameworkCore.Logging
         }
 
         /// <inheritdoc />
-        protected override async Task WriteMessagesAsync(IEnumerable<LogMessage> messages, CancellationToken cancellationToken)
+        protected override async Task WriteLogsAsync(IEnumerable<LogItem> messages, CancellationToken cancellationToken)
         {
             Directory.CreateDirectory(_path);
 
@@ -87,9 +87,9 @@ namespace DNTFrameworkCore.Logging
             return Path.Combine(_path, $"{_fileName}{group.Year:0000}{group.Month:00}{group.Day:00}.txt");
         }
 
-        private (int Year, int Month, int Day) GetGrouping(LogMessage message)
+        private (int Year, int Month, int Day) GetGrouping(LogItem item)
         {
-            return (message.CreationTime.Year, message.CreationTime.Month, message.CreationTime.Day);
+            return (item.CreationTime.Year, item.CreationTime.Month, item.CreationTime.Day);
         }
 
         /// <summary>    

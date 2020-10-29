@@ -10,11 +10,11 @@ namespace DNTFrameworkCore.Logging
 {
     public abstract class BatchingLoggerProvider : ILoggerProvider
     {
-        private readonly IList<LogMessage> _batch = new List<LogMessage>();
+        private readonly IList<LogItem> _batch = new List<LogItem>();
         private readonly TimeSpan _interval;
         private readonly int? _queueSize;
         private readonly int? _batchSize;
-        private BlockingCollection<LogMessage> _queue;
+        private BlockingCollection<LogItem> _queue;
         private Task _outputTask;
         private CancellationTokenSource _cancellationTokenSource;
         private readonly IServiceProvider _provider;
@@ -43,7 +43,7 @@ namespace DNTFrameworkCore.Logging
             Start();
         }
 
-        protected abstract Task WriteMessagesAsync(IEnumerable<LogMessage> messages,
+        protected abstract Task WriteLogsAsync(IEnumerable<LogItem> items,
             CancellationToken cancellationToken);
 
         private async Task ProcessLogQueue(object state)
@@ -61,7 +61,7 @@ namespace DNTFrameworkCore.Logging
                 var messagesDropped = Interlocked.Exchange(ref _messagesDropped, 0);
                 if (messagesDropped != 0)
                 {
-                    _batch.Add(new LogMessage
+                    _batch.Add(new LogItem
                     {
                         Message =
                             $"{messagesDropped} message(s) dropped because of queue size limit. Increase the queue size or decrease logging verbosity to avoid this.{Environment.NewLine}",
@@ -75,7 +75,7 @@ namespace DNTFrameworkCore.Logging
                 {
                     try
                     {
-                        await WriteMessagesAsync(_batch, _cancellationTokenSource.Token);
+                        await WriteLogsAsync(_batch, _cancellationTokenSource.Token);
                     }
                     catch
                     {
@@ -94,15 +94,15 @@ namespace DNTFrameworkCore.Logging
             return Task.Delay(interval, cancellationToken);
         }
 
-        internal void Queue(LogMessage message)
+        internal void Queue(LogItem item)
         {
             if (!_queue.IsAddingCompleted)
             {
                 try
                 {
-                    _queue.Add(message, _cancellationTokenSource.Token);
+                    _queue.Add(item, _cancellationTokenSource.Token);
 
-                    if (!_queue.TryAdd(message, 0, _cancellationTokenSource.Token))
+                    if (!_queue.TryAdd(item, 0, _cancellationTokenSource.Token))
                     {
                         Interlocked.Increment(ref _messagesDropped);
                     }
@@ -117,8 +117,8 @@ namespace DNTFrameworkCore.Logging
         private void Start()
         {
             _queue = !_queueSize.HasValue
-                ? new BlockingCollection<LogMessage>(new ConcurrentQueue<LogMessage>())
-                : new BlockingCollection<LogMessage>(new ConcurrentQueue<LogMessage>(), _queueSize.Value);
+                ? new BlockingCollection<LogItem>(new ConcurrentQueue<LogItem>())
+                : new BlockingCollection<LogItem>(new ConcurrentQueue<LogItem>(), _queueSize.Value);
 
             _cancellationTokenSource = new CancellationTokenSource();
             _outputTask = Task.Factory.StartNew(

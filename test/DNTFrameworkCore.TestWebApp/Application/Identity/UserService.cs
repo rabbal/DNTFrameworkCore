@@ -8,6 +8,7 @@ using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Linq;
+using DNTFrameworkCore.EFCore.Querying;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Querying;
 using DNTFrameworkCore.TestWebApp.Application.Identity.Models;
@@ -69,7 +70,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
         {
             //if (!model.ShouldMapSerial(user)) return;
 
-            user.SecurityStamp = User.NewSecurityStamp();
+            user.SecurityToken = User.NewSecurityStamp();
         }
 
         private void MapPasswordHash(User user, UserModel model)

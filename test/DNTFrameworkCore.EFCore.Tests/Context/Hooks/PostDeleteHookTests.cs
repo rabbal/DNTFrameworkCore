@@ -1,3 +1,9 @@
+using System;
+using DNTFrameworkCore.EFCore.Context.Hooks;
+using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
+using Shouldly;
+
 namespace DNTFrameworkCore.EFCore.Tests.Context.Hooks
 {
     [TestFixture]

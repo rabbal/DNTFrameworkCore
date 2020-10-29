@@ -1,3 +1,4 @@
+using System;
 using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Identity
@@ -8,5 +9,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Identity
         public const int MaxNameLength = 128;
         public string Name { get; set; }
         public bool IsGranted { get; set; } = true;
+        
+        
     }
 }

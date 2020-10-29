@@ -15,14 +15,12 @@ namespace DNTFrameworkCore.Licensing
 
         public static SigningKey New(int dwKeySize = 1024)
         {
-            using (var provider = new RSACryptoServiceProvider(dwKeySize))
+            using var provider = new RSACryptoServiceProvider(dwKeySize);
+            return new SigningKey
             {
-                return new SigningKey
-                {
-                    PublicKey = provider.ToXml(false),
-                    PrivateKey = provider.ToXml(true)
-                };
-            }
+                PublicKey = provider.ToXml(false),
+                PrivateKey = provider.ToXml(true)
+            };
         }
 
         protected override IEnumerable<object> EqualityValues

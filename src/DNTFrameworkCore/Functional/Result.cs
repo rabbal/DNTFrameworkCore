@@ -28,6 +28,8 @@ namespace DNTFrameworkCore.Functional
 
         public Result WithFailure(string memberName, string message)
         {
+            if (!Failed) throw new InvalidOperationException("Can not add failure to ok result!");
+            
             _failures.Add(new ValidationFailure(memberName, message));
             return this;
         }

@@ -4,7 +4,7 @@ using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales.Rules
 {
-    public interface ISaleMethodRules : IRules
+    public interface ISaleMethodRules
     {
         Task<bool> IsTitleUnique(Title title, int id);
     }

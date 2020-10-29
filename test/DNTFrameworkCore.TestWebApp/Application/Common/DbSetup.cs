@@ -83,7 +83,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Common
                     NormalizedDisplayName = admin.DisplayName, //.NormalizePersianTitle(),
                     IsActive = true,
                     PasswordHash = _password.HashPassword(admin.Password),
-                    SecurityStamp = Guid.NewGuid().ToString("N")
+                    SecurityToken = Guid.NewGuid().ToString("N")
                 };
 
                 _uow.Set<User>().Add(user);
