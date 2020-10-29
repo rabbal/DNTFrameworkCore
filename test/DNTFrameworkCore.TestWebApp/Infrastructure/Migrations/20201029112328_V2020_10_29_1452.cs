@@ -6,52 +6,13 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "SecurityStamp",
-                table: "User");
+            migrationBuilder.RenameColumn("SerialNumber", "User", "SecurityToken");
 
-            migrationBuilder.DropColumn(
-                name: "NextNumber",
-                table: "NumberedEntity");
-
-            migrationBuilder.AddColumn<string>(
-                name: "SecurityToken",
-                table: "User",
-                maxLength: 128,
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<long>(
-                name: "NextValue",
-                table: "NumberedEntity",
-                nullable: false,
-                defaultValue: 0L);
+            migrationBuilder.RenameColumn(name: "NextNumber", table: "NumberedEntity", "NextValue");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "SecurityToken",
-                table: "User");
-
-            migrationBuilder.DropColumn(
-                name: "NextValue",
-                table: "NumberedEntity");
-
-            migrationBuilder.AddColumn<string>(
-                name: "SecurityStamp",
-                table: "User",
-                type: "nvarchar(128)",
-                maxLength: 128,
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<long>(
-                name: "NextNumber",
-                table: "NumberedEntity",
-                type: "bigint",
-                nullable: false,
-                defaultValue: 0L);
         }
     }
 }

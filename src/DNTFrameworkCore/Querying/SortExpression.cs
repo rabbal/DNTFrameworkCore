@@ -29,7 +29,6 @@ namespace DNTFrameworkCore.Querying
         /// </summary>
         public bool Descending { get; }
 
-
         public override bool Equals(object obj)
         {
             if (obj == null || !(obj is SortExpression sort)) return false;
