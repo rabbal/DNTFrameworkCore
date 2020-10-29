@@ -175,7 +175,7 @@ For more info about templates you can watch [DNTFrameworkCoreTemplate repository
 
 **Create Entity**
 ```c#
-public class Task : Entity<int>, INumberedEntity, IRowVersion, IRowIntegrity, ICreationTracking, IModificationTracking
+public class Task : Entity<int>, INumberedEntity, IHasRowVersion, IHasRowIntegrity, ICreationTracking, IModificationTracking
 {
     public const int MaxTitleLength = 256;
     public const int MaxDescriptionLength = 1024;
@@ -185,11 +185,7 @@ public class Task : Entity<int>, INumberedEntity, IRowVersion, IRowIntegrity, IC
     public string Number { get; set; }
     public string Description { get; set; }
     public TaskState State { get; set; } = TaskState.Todo;
-    
     public byte[] Version { get; set; }
-    public string Hash { get; set; }
-    public DateTime CreatedDateTime { get; set; }
-    public DateTime? ModifiedDateTime { get; set; }
 }
 ```
 
