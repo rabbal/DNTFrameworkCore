@@ -6,7 +6,7 @@ using DNTFrameworkCore.Web.Mvc;
 namespace DNTFrameworkCore.TestWebApp.Controllers
 {
     public class RolesController :
-        CrudController<IRoleService, long, RoleReadModel, RoleModel, RoleFilteredPagedRequest>
+        EntityController<IRoleService, long, RoleReadModel, RoleModel, RoleFilteredPagedRequest>
     {
         public RolesController(IRoleService service) : base(service)
         {

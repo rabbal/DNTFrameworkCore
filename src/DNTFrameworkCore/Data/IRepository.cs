@@ -9,7 +9,7 @@ using DNTFrameworkCore.Querying;
 namespace DNTFrameworkCore.Data
 {
     /// <summary>
-    /// Implement per AggregateRoot and use it as internal Repository inside ApplicationLayer when your domain is Rich Domain, otherwise you don't need it and CrudService is fine
+    /// Implement per AggregateRoot and use it as internal Repository inside ApplicationLayer when your domain is Rich Domain, otherwise you don't need it and EntityService is fine
     /// Under development for DDD purpose just as internal repositories
     /// </summary>
     public interface IRepository<TEntity, in TKey> where TEntity : AggregateRoot<TKey>

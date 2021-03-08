@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DNTFrameworkCore.TestAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class RolesController : CrudController<IRoleService, long, RoleReadModel, RoleModel>
+    public class RolesController : EntityController<IRoleService, long, RoleReadModel, RoleModel>
     {
         public RolesController(IRoleService service) : base(service)
         {

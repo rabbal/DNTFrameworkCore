@@ -21,8 +21,8 @@ namespace DNTFrameworkCore.EFCore.Logging
         {
             builder.ToTable(nameof(Log), "dbo");
 
-            builder.HasIndex(e => e.LoggerName).HasName("IX_Log_LoggerName");
-            builder.HasIndex(e => e.Level).HasName("IX_Log_Level");
+            builder.HasIndex(e => e.LoggerName).HasDatabaseName("IX_Log_LoggerName");
+            builder.HasIndex(e => e.Level).HasDatabaseName("IX_Log_Level");
 
             builder.Property(a => a.Level).HasMaxLength(50).IsRequired();
             builder.Property(a => a.Message).IsRequired();

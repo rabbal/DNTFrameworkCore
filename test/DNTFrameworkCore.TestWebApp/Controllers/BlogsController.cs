@@ -5,7 +5,7 @@ using DNTFrameworkCore.Web.Mvc;
 
 namespace DNTFrameworkCore.TestWebApp.Controllers
 {
-    public class BlogsController : CrudController<IBlogService, int, BlogModel>
+    public class BlogsController : EntityController<IBlogService, int, BlogModel>
     {
         public BlogsController(IBlogService service) : base(service)
         {

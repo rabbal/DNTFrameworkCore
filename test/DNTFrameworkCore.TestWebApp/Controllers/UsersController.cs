@@ -5,7 +5,7 @@ using DNTFrameworkCore.Web.Mvc;
 
 namespace DNTFrameworkCore.TestWebApp.Controllers
 {
-    public class UsersController : CrudController<IUserService, long, UserReadModel, UserModel>
+    public class UsersController : EntityController<IUserService, long, UserReadModel, UserModel>
     {
         public UsersController(IUserService service) : base(service)
         {

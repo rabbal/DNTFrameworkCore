@@ -32,8 +32,7 @@ namespace DNTFrameworkCore.Domain
         {
             if (IsTransient()) return base.GetHashCode();
 
-            if (!_hash.HasValue)
-                _hash = (GetRealType().ToString() + Id).GetHashCode() ^ 31; // XOR for random distribution
+            _hash ??= (GetRealType().ToString() + Id).GetHashCode() ^ 31;
 
             return _hash.Value;
         }
@@ -52,7 +51,7 @@ namespace DNTFrameworkCore.Domain
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !(obj is Entity<TKey> instance)) return false;
+            if (obj is not Entity<TKey> instance) return false;
 
             if (ReferenceEquals(this, instance)) return true;
 

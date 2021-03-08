@@ -14,7 +14,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Mappings.Identity
             builder.Property(a => a.Type).IsRequired().HasMaxLength(Claim.MaxTypeLength);
             builder.Property(a => a.Value).IsRequired();
 
-            builder.HasIndex("EntityName").HasName("IX_Claim_EntityName");
+            builder.HasIndex("EntityName").HasDatabaseName("IX_Claim_EntityName");
 
             builder.ToTable(nameof(Claim));
         }

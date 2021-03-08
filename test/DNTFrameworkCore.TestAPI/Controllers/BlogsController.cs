@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DNTFrameworkCore.TestAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class BlogsController : CrudController<IBlogService, int, BlogModel>
+    public class BlogsController : EntityController<IBlogService, BlogModel>
     {
         public BlogsController(IBlogService service) : base(service)
         {

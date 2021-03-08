@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
         {
             builder.Property(a => a.EntityName).HasMaxLength(256).IsRequired().IsUnicode(false);
 
-            builder.HasIndex(a => a.EntityName).HasName("UIX_NumberedEntity_EntityName").IsUnique();
+            builder.HasIndex(a => a.EntityName).HasDatabaseName("UIX_NumberedEntity_EntityName").IsUnique();
 
             builder.ToTable(nameof(NumberedEntity));
         }

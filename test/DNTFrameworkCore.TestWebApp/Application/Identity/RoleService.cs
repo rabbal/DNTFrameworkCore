@@ -19,12 +19,12 @@ using DNTFrameworkCore.Querying;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Identity
 {
-    public interface IRoleService : ICrudService<long, RoleReadModel, RoleModel, RoleFilteredPagedRequest>
+    public interface IRoleService : IEntityService<long, RoleReadModel, RoleModel, RoleFilteredPagedRequest>
     {
     }
 
     public class RoleService :
-        CrudService<Role, long, RoleReadModel, RoleModel, RoleFilteredPagedRequest>,
+        EntityService<Role, long, RoleReadModel, RoleModel, RoleFilteredPagedRequest>,
         IRoleService
     {
         private readonly IMapper _mapper;
@@ -39,7 +39,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
 
         protected override IQueryable<Role> FindEntityQueryable => base.FindEntityQueryable.Include(r => r.Permissions);
 
-        public override Task<IPagedResult<RoleReadModel>> ReadPagedListAsync(RoleFilteredPagedRequest model,
+        public override Task<IPagedResult<RoleReadModel>> FetchPagedListAsync(RoleFilteredPagedRequest model,
             CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking()

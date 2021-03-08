@@ -3,6 +3,7 @@ using System.Linq;
 using DNTFrameworkCore.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+// ReSharper disable InconsistentNaming
 
 namespace DNTFrameworkCore.EFCore.Context
 {
@@ -112,7 +113,7 @@ namespace DNTFrameworkCore.EFCore.Context
 
                 builder.Entity(entityType.ClrType)
                     .HasIndex(TenantId)
-                    .HasName($"IX_{entityType.ClrType.Name}_TenantId");
+                    .HasDatabaseName($"IX_{entityType.ClrType.Name}_TenantId");
             }
         }
 

@@ -6,7 +6,6 @@ using AutoMapper;
 using DNTFrameworkCore.Application;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
-using DNTFrameworkCore.EFCore.Linq;
 using DNTFrameworkCore.EFCore.Querying;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Querying;
@@ -16,11 +15,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Catalog
 {
-    public interface IProductService : ICrudService<long, ProductModel>
+    public interface IProductService : IEntityService<long, ProductModel>
     {
     }
 
-    public class ProductService : CrudService<Product, long, ProductModel>, IProductService
+    public class ProductService : EntityService<Product, long, ProductModel>, IProductService
     {
         private readonly IMapper _mapper;
 
@@ -32,7 +31,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Catalog
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public override Task<IPagedResult<ProductModel>> ReadPagedListAsync(FilteredPagedRequest request,
+        public override Task<IPagedResult<ProductModel>> FetchPagedListAsync(FilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking().Select(p => new ProductModel

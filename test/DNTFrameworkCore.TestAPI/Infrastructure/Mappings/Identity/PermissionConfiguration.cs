@@ -12,7 +12,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Mappings.Identity
             builder.Property(a => a.Name).HasMaxLength(Permission.MaxNameLength).IsRequired();
             builder.Property<string>("EntityName").HasMaxLength(50);
 
-            builder.HasIndex("EntityName").HasName("IX_Permission_EntityName");
+            builder.HasIndex("EntityName").HasDatabaseName("IX_Permission_EntityName");
 
             builder.ToTable(nameof(Permission));
         }

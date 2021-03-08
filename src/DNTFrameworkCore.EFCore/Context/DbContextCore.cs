@@ -22,7 +22,7 @@ namespace DNTFrameworkCore.EFCore.Context
     public abstract class DbContextCore : DbContext, IUnitOfWork
     {
         private readonly IEnumerable<IHook> _hooks;
-        private readonly List<string> _ignoredHookList = new List<string>();
+        private readonly List<string> _ignoredHookList = new();
 
         protected DbContextCore(DbContextOptions options, IEnumerable<IHook> hooks) : base(options)
         {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -15,9 +15,9 @@ using DNTFrameworkCore.Validation;
 
 namespace DNTFrameworkCore.Application
 {
-    public abstract class InternalCrudService<TEntity, TKey, TReadModel, TModel,
+    public abstract class EntityServiceBase<TEntity, TKey, TReadModel, TModel,
         TFilteredPagedRequest> : ApplicationService,
-        ICrudService<TKey, TReadModel, TModel, TFilteredPagedRequest>
+        IEntityService<TKey, TReadModel, TModel, TFilteredPagedRequest>
         where TEntity : Entity<TKey>, new()
         where TModel : MasterModel<TKey>
         where TReadModel : ReadModel<TKey>
@@ -26,20 +26,20 @@ namespace DNTFrameworkCore.Application
     {
         protected readonly IEventBus EventBus;
 
-        protected InternalCrudService(IEventBus bus)
+        protected EntityServiceBase(IEventBus bus)
         {
             EventBus = bus ?? throw new ArgumentNullException(nameof(bus));
         }
 
         [SkipValidation]
-        public abstract Task<IPagedResult<TReadModel>> ReadPagedListAsync(TFilteredPagedRequest request,
+        public abstract Task<IPagedResult<TReadModel>> FetchPagedListAsync(TFilteredPagedRequest request,
             CancellationToken cancellationToken = default);
 
         public async Task<Maybe<TModel>> FindAsync(TKey id, CancellationToken cancellationToken = default)
         {
             var models = await FindAsync(IdEqualityExpression(id), cancellationToken);
 
-            return models.SingleOrDefault();
+            return models.FirstOrDefault();
         }
 
         public Task<IReadOnlyList<TModel>> FindListAsync(IEnumerable<TKey> ids,
@@ -69,6 +69,9 @@ namespace DNTFrameworkCore.Application
 
             return result;
         }
+
+        public virtual Task<TModel> CreateNewAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult<TModel>(null);
 
         [Transactional]
         public Task<Result> CreateAsync(TModel model, CancellationToken cancellationToken = default)
@@ -278,7 +281,7 @@ namespace DNTFrameworkCore.Application
         protected abstract Task RemoveEntityListAsync(IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken);
 
-        private Expression<Func<TEntity, bool>> IdEqualityExpression(TKey id)
+        private static Expression<Func<TEntity, bool>> IdEqualityExpression(TKey id)
         {
             var lambdaParam = Expression.Parameter(typeof(TEntity));
 

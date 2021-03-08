@@ -22,7 +22,7 @@ namespace DNTFrameworkCore.EFCore.Caching
             builder.Property(e => e.Id).HasMaxLength(449);
             builder.Property(e => e.Value).IsRequired();
             
-            builder.HasIndex(e => e.ExpiresAtTime).HasName("IX_Cache_ExpiresAtTime");
+            builder.HasIndex(e => e.ExpiresAtTime).HasDatabaseName("IX_Cache_ExpiresAtTime");
             
             builder.ToTable(name: "Cache", schema: "dbo");
         }

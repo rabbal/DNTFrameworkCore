@@ -16,11 +16,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.TestAPI.Application.Identity
 {
-    public interface IRoleService : ICrudService<long, RoleReadModel, RoleModel>
+    public interface IRoleService : IEntityService<long, RoleReadModel, RoleModel>
     {
     }
 
-    public class RoleService : CrudService<Role, long, RoleReadModel, RoleModel>, IRoleService
+    public class RoleService : EntityService<Role, long, RoleReadModel, RoleModel>, IRoleService
     {
         private readonly IMapper _mapper;
 
@@ -35,7 +35,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
         protected override IQueryable<Role> FindEntityQueryable =>
             base.FindEntityQueryable.Include(r => r.Permissions);
 
-        public override Task<IPagedResult<RoleReadModel>> ReadPagedListAsync(FilteredPagedRequest model,
+        public override Task<IPagedResult<RoleReadModel>> FetchPagedListAsync(FilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking()
@@ -44,7 +44,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
                     Id = r.Id,
                     Name = r.Name,
                     Description = r.Description
-                }).ToPagedListAsync(model, cancellationToken);
+                }).ToPagedListAsync(request, cancellationToken);
         }
 
         protected override void MapToEntity(RoleModel model, Role role)

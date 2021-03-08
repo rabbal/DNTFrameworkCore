@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -37,6 +38,14 @@ namespace DNTFrameworkCore.TestAPI
                 {
                     //options.UseFilteredPagedRequestModelBinder();
                     //options.UseExceptionHandling();
+                    
+                    // remove formatter that turns nulls into 204 - No Content responses
+                    // this formatter breaks SPA's Http response JSON parsing
+                    options.OutputFormatters.RemoveType<HttpNoContentOutputFormatter>();
+                    options.OutputFormatters.Insert(0, new HttpNoContentOutputFormatter
+                    {
+                        TreatNullValueAsNoContent = false
+                    });
                 }).AddDataAnnotationsLocalization(o =>
                 {
                     o.DataAnnotationLocalizerProvider = (type, factory) =>

@@ -12,7 +12,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Mappings.Identity
             builder.Property(a => a.NormalizedName).IsRequired().HasMaxLength(Role.MaxNameLength);
             builder.Property(a => a.Description).HasMaxLength(Role.MaxDescriptionLength);
 
-            builder.HasIndex(a => a.NormalizedName).HasName("UIX_Role_NormalizedName").IsUnique();
+            builder.HasIndex(a => a.NormalizedName).HasDatabaseName("UIX_Role_NormalizedName").IsUnique();
 
             builder.HasMany(a => a.Users).WithOne(a => a.Role).HasForeignKey(a => a.RoleId)
                 .OnDelete(DeleteBehavior.Restrict);

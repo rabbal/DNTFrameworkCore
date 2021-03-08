@@ -8,7 +8,7 @@ namespace DNTFrameworkCore.TestAPI.Controllers
 {
     [Route("api/[controller]")]
     public class
-        TasksController : CrudController<ITaskService, int, TaskReadModel, TaskModel, TaskFilteredPagedRequest>
+        TasksController : EntityController<ITaskService, int, TaskReadModel, TaskModel, TaskFilteredPagedRequest>
     {
         public TasksController(ITaskService service) : base(service)
         {
@@ -22,7 +22,7 @@ namespace DNTFrameworkCore.TestAPI.Controllers
         [HttpGet("[action]")]
         public IActionResult TamperedFromOutside()
         {
-            return Ok(CrudService.TamperedTaskExists());
+            return Ok(EntityService.TamperedTaskExists());
         }
     }
 }

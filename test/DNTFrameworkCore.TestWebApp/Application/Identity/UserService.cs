@@ -17,11 +17,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Identity
 {
-    public interface IUserService : ICrudService<long, UserReadModel, UserModel>
+    public interface IUserService : IEntityService<long, UserReadModel, UserModel>
     {
     }
 
-    public class UserService : CrudService<User, long, UserReadModel, UserModel>, IUserService
+    public class UserService : EntityService<User, long, UserReadModel, UserModel>, IUserService
     {
         private readonly IMapper _mapper;
         private readonly IUserPasswordHashAlgorithm _password;
@@ -39,7 +39,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
         protected override IQueryable<User> FindEntityQueryable => base.FindEntityQueryable.Include(u => u.Roles)
             .Include(u => u.Permissions);
 
-        public override Task<IPagedResult<UserReadModel>> ReadPagedListAsync(FilteredPagedRequest request,
+        public override Task<IPagedResult<UserReadModel>> FetchPagedListAsync(FilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking()

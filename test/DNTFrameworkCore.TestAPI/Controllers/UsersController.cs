@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DNTFrameworkCore.TestAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class UsersController : CrudController<IUserService, long, UserReadModel, UserModel>
+    public class UsersController : EntityController<IUserService, long, UserReadModel, UserModel>
     {
         private readonly ILookupService _lookupService;
 

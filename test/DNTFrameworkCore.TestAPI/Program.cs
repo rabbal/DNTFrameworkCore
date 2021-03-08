@@ -19,7 +19,11 @@ namespace DNTFrameworkCore.TestAPI
 
         public static IHostBuilder CreateWebHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>().UseIISIntegration())
+                .ConfigureWebHostDefaults(builder =>
+                {
+                    builder.CaptureStartupErrors(true);
+                    builder.UseStartup<Startup>().UseIISIntegration();
+                })
                 .UseDefaultServiceProvider((context, options) =>
                 {
                     options.ValidateScopes = context.HostingEnvironment.IsDevelopment();

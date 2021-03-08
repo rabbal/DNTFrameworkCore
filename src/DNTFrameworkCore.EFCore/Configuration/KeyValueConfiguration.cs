@@ -22,7 +22,7 @@ namespace DNTFrameworkCore.EFCore.Configuration
             builder.Property(v => v.Key).HasMaxLength(450).IsRequired();
             builder.Property(v => v.Value).IsRequired();
 
-            builder.HasIndex(v => v.Key).HasName("UIX_Values_Key").IsUnique();
+            builder.HasIndex(v => v.Key).HasDatabaseName("UIX_Values_Key").IsUnique();
             
             builder.ToTable("Values");
         }

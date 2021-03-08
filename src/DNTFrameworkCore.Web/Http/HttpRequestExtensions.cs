@@ -84,11 +84,7 @@ namespace DNTFrameworkCore.Web.Http
         /// </summary>
         public static string GetHeaderValue(this HttpContext httpContext, string headerName)
         {
-            if (httpContext.Request?.Headers?.TryGetValue(headerName, out var values) ?? false)
-            {
-                return values.ToString();
-            }
-            return string.Empty;
+            return httpContext.Request.Headers.TryGetValue(headerName, out var values) ? values.ToString() : string.Empty;
         }
 
         private static IEnumerable<string> SplitCsv(string csvList, bool nullOrWhitespaceInputReturnsNull = false)

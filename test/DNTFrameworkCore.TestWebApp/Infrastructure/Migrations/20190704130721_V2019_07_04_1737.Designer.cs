@@ -39,7 +39,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ExpiresAtTime")
-                        .HasName("IX_Cache_ExpiresAtTime");
+                        .HasDatabaseName("IX_Cache_ExpiresAtTime");
 
                     b.ToTable("Cache","dbo");
                 });
@@ -59,7 +59,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 
                     b.HasIndex("FriendlyName")
                         .IsUnique()
-                        .HasName("IX_ProtectionKey_FriendlyName");
+                        .HasDatabaseName("IX_ProtectionKey_FriendlyName");
 
                     b.ToTable("ProtectionKey","dbo");
                 });
@@ -101,10 +101,10 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Level")
-                        .HasName("IX_Log_Level");
+                        .HasDatabaseName("IX_Log_Level");
 
                     b.HasIndex("LoggerName")
-                        .HasName("IX_Log_LoggerName");
+                        .HasDatabaseName("IX_Log_LoggerName");
 
                     b.ToTable("Log","dbo");
                 });
@@ -126,7 +126,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 
                     b.HasIndex("EntityName")
                         .IsUnique()
-                        .HasName("UIX_NumberedEntity_EntityName");
+                        .HasDatabaseName("UIX_NumberedEntity_EntityName");
 
                     b.ToTable("NumberedEntity");
                 });
@@ -177,7 +177,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 
                     b.HasIndex("NormalizedTitle")
                         .IsUnique()
-                        .HasName("Blog_NormalizedTitle");
+                        .HasDatabaseName("Blog_NormalizedTitle");
 
                     b.ToTable("Blog");
                 });
@@ -254,7 +254,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Discriminator")
-                        .HasName("IX_Permission_Discriminator");
+                        .HasDatabaseName("IX_Permission_Discriminator");
 
                     b.ToTable("Permission");
 
@@ -306,7 +306,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("UIX_Role_NormalizedName");
+                        .HasDatabaseName("UIX_Role_NormalizedName");
 
                     b.ToTable("Role");
                 });
@@ -405,11 +405,11 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 
                     b.HasIndex("NormalizedDisplayName")
                         .IsUnique()
-                        .HasName("UIX_User_NormalizedDisplayName");
+                        .HasDatabaseName("UIX_User_NormalizedDisplayName");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UIX_User_NormalizedUserName");
+                        .HasDatabaseName("UIX_User_NormalizedUserName");
 
                     b.ToTable("User");
                 });
@@ -504,7 +504,7 @@ namespace DNTFrameworkCore.TestWebApp.Infrastructure.Migrations
 
                     b.HasIndex("NormalizedTitle")
                         .IsUnique()
-                        .HasName("UIX_Task_NormalizedTitle");
+                        .HasDatabaseName("UIX_Task_NormalizedTitle");
 
                     b.ToTable("Task");
                 });

@@ -7,26 +7,31 @@ using DNTFrameworkCore.Querying;
 
 namespace DNTFrameworkCore.Application
 {
-    public interface ICrudService<in TKey, TModel> : ICrudService<TKey, TModel, TModel>
+    public interface IEntityService<TModel> : IEntityService<int, TModel>
+        where TModel : MasterModel<int>
+    {
+    }
+
+    public interface IEntityService<in TKey, TModel> : IEntityService<TKey, TModel, TModel>
         where TModel : MasterModel<TKey> where TKey : IEquatable<TKey>
     {
     }
 
     public interface
-        ICrudService<in TKey, TReadModel, TModel> : ICrudService<TKey, TReadModel, TModel, FilteredPagedRequest>
+        IEntityService<in TKey, TReadModel, TModel> : IEntityService<TKey, TReadModel, TModel, FilteredPagedRequest>
         where TModel : MasterModel<TKey>
         where TReadModel : ReadModel<TKey>
         where TKey : IEquatable<TKey>
     {
     }
 
-    public interface ICrudService<in TKey, TReadModel, TModel, in TFilteredPagedRequest> : IApplicationService
+    public interface IEntityService<in TKey, TReadModel, TModel, in TFilteredPagedRequest> : IApplicationService
         where TModel : MasterModel<TKey>
         where TReadModel : ReadModel<TKey>
         where TFilteredPagedRequest : IFilteredPagedRequest
         where TKey : IEquatable<TKey>
     {
-        Task<IPagedResult<TReadModel>> ReadPagedListAsync(TFilteredPagedRequest request,
+        Task<IPagedResult<TReadModel>> FetchPagedListAsync(TFilteredPagedRequest request,
             CancellationToken cancellationToken = default);
 
         Task<Maybe<TModel>> FindAsync(TKey id, CancellationToken cancellationToken = default);
@@ -36,6 +41,7 @@ namespace DNTFrameworkCore.Application
         Task<IPagedResult<TModel>> FindPagedListAsync(IPagedRequest request,
             CancellationToken cancellationToken = default);
 
+        Task<TModel> CreateNewAsync(CancellationToken cancellationToken = default);
         Task<Result> CreateAsync(TModel model, CancellationToken cancellationToken = default);
         Task<Result> CreateAsync(IEnumerable<TModel> models, CancellationToken cancellationToken = default);
         Task<Result> EditAsync(TModel model, CancellationToken cancellationToken = default);

@@ -18,158 +18,218 @@ namespace DNTFrameworkCore.Web.API
 {
     [Authorize]
     public abstract class
-        CrudController<TCrudService, TKey, TModel> : CrudControllerBase<TKey, TModel, TModel,
+        EntityController<TEntityService, TModel> : EntityControllerBase<int, TModel, TModel,
             FilteredPagedRequest>
-        where TCrudService : class, ICrudService<TKey, TModel>
-        where TModel : MasterModel<TKey>
-        where TKey : IEquatable<TKey>
+        where TEntityService : class, IEntityService<int, TModel>
+        where TModel : MasterModel<int>
     {
-        protected readonly TCrudService CrudService;
+        protected readonly TEntityService EntityService;
 
-        protected CrudController(TCrudService service)
+        protected EntityController(TEntityService service)
         {
-            CrudService = service ?? throw new ArgumentNullException(nameof(service));
+            EntityService = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        private protected override Task<IPagedResult<TModel>> ReadPagedListAsync(FilteredPagedRequest request,
+        private protected override Task<IPagedResult<TModel>> FetchPagedListAsync(FilteredPagedRequest request,
             CancellationToken cancellationToken)
         {
-            return CrudService.ReadPagedListAsync(request, cancellationToken);
+            return EntityService.FetchPagedListAsync(request, cancellationToken);
         }
 
-        private protected override Task<Maybe<TModel>> FindAsync(TKey id, CancellationToken cancellationToken)
+        private protected override Task<Maybe<TModel>> FindAsync(int id, CancellationToken cancellationToken)
         {
-            return CrudService.FindAsync(id, cancellationToken);
+            return EntityService.FindAsync(id, cancellationToken);
         }
 
         private protected override Task<Result> EditAsync(TModel model, CancellationToken cancellationToken)
         {
-            return CrudService.EditAsync(model, cancellationToken);
+            return EntityService.EditAsync(model, cancellationToken);
         }
+
+        private protected override Task<TModel> CreateNewAsync(CancellationToken cancellationToken) =>
+            EntityService.CreateNewAsync(cancellationToken);
 
         private protected override Task<Result> CreateAsync(TModel model, CancellationToken cancellationToken)
         {
-            return CrudService.CreateAsync(model, cancellationToken);
+            return EntityService.CreateAsync(model, cancellationToken);
         }
 
         private protected override Task<Result> DeleteAsync(TModel model, CancellationToken cancellationToken)
         {
-            return CrudService.DeleteAsync(model, cancellationToken);
+            return EntityService.DeleteAsync(model, cancellationToken);
         }
 
-        private protected override async Task<Result> DeleteAsync(IEnumerable<TKey> ids,
+        private protected override async Task<Result> DeleteAsync(IEnumerable<int> ids,
             CancellationToken cancellationToken)
         {
-            var models = await CrudService.FindListAsync(ids, cancellationToken);
-            return await CrudService.DeleteAsync(models, cancellationToken);
+            var models = await EntityService.FindListAsync(ids, cancellationToken);
+            return await EntityService.DeleteAsync(models, cancellationToken);
         }
     }
 
     [Authorize]
     public abstract class
-        CrudController<TCrudService, TKey, TReadModel, TModel> : CrudControllerBase<TKey, TReadModel, TModel,
+        EntityController<TEntityService, TKey, TModel> : EntityControllerBase<TKey, TModel, TModel,
             FilteredPagedRequest>
-        where TCrudService : class, ICrudService<TKey, TReadModel, TModel>
+        where TEntityService : class, IEntityService<TKey, TModel>
+        where TModel : MasterModel<TKey>
+        where TKey : IEquatable<TKey>
+    {
+        protected readonly TEntityService EntityService;
+
+        protected EntityController(TEntityService service)
+        {
+            EntityService = service ?? throw new ArgumentNullException(nameof(service));
+        }
+
+        private protected override Task<IPagedResult<TModel>> FetchPagedListAsync(FilteredPagedRequest request,
+            CancellationToken cancellationToken)
+        {
+            return EntityService.FetchPagedListAsync(request, cancellationToken);
+        }
+
+        private protected override Task<Maybe<TModel>> FindAsync(TKey id, CancellationToken cancellationToken)
+        {
+            return EntityService.FindAsync(id, cancellationToken);
+        }
+
+        private protected override Task<Result> EditAsync(TModel model, CancellationToken cancellationToken)
+        {
+            return EntityService.EditAsync(model, cancellationToken);
+        }
+
+        private protected override Task<TModel> CreateNewAsync(CancellationToken cancellationToken) =>
+            EntityService.CreateNewAsync(cancellationToken);
+
+        private protected override Task<Result> CreateAsync(TModel model, CancellationToken cancellationToken)
+        {
+            return EntityService.CreateAsync(model, cancellationToken);
+        }
+
+        private protected override Task<Result> DeleteAsync(TModel model, CancellationToken cancellationToken)
+        {
+            return EntityService.DeleteAsync(model, cancellationToken);
+        }
+
+        private protected override async Task<Result> DeleteAsync(IEnumerable<TKey> ids,
+            CancellationToken cancellationToken)
+        {
+            var models = await EntityService.FindListAsync(ids, cancellationToken);
+            return await EntityService.DeleteAsync(models, cancellationToken);
+        }
+    }
+
+    [Authorize]
+    public abstract class
+        EntityController<TEntityService, TKey, TReadModel, TModel> : EntityControllerBase<TKey, TReadModel, TModel,
+            FilteredPagedRequest>
+        where TEntityService : class, IEntityService<TKey, TReadModel, TModel>
         where TReadModel : ReadModel<TKey>
         where TModel : MasterModel<TKey>
         where TKey : IEquatable<TKey>
     {
-        protected readonly TCrudService CrudService;
+        protected readonly TEntityService EntityService;
 
-        protected CrudController(TCrudService service)
+        protected EntityController(TEntityService service)
         {
-            CrudService = service ?? throw new ArgumentNullException(nameof(service));
+            EntityService = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        private protected override Task<IPagedResult<TReadModel>> ReadPagedListAsync(FilteredPagedRequest request,
+        private protected override Task<IPagedResult<TReadModel>> FetchPagedListAsync(FilteredPagedRequest request,
             CancellationToken cancellationToken)
         {
-            return CrudService.ReadPagedListAsync(request, cancellationToken);
+            return EntityService.FetchPagedListAsync(request, cancellationToken);
         }
 
         private protected override Task<Maybe<TModel>> FindAsync(TKey id, CancellationToken cancellationToken)
         {
-            return CrudService.FindAsync(id, cancellationToken);
+            return EntityService.FindAsync(id, cancellationToken);
         }
 
         private protected override Task<Result> EditAsync(TModel model, CancellationToken cancellationToken)
         {
-            return CrudService.EditAsync(model, cancellationToken);
+            return EntityService.EditAsync(model, cancellationToken);
         }
+
+        private protected override Task<TModel> CreateNewAsync(CancellationToken cancellationToken) =>
+            EntityService.CreateNewAsync(cancellationToken);
 
         private protected override Task<Result> CreateAsync(TModel model, CancellationToken cancellationToken)
         {
-            return CrudService.CreateAsync(model, cancellationToken);
+            return EntityService.CreateAsync(model, cancellationToken);
         }
 
         private protected override Task<Result> DeleteAsync(TModel model, CancellationToken cancellationToken)
         {
-            return CrudService.DeleteAsync(model, cancellationToken);
+            return EntityService.DeleteAsync(model, cancellationToken);
         }
 
         private protected override async Task<Result> DeleteAsync(IEnumerable<TKey> ids,
             CancellationToken cancellationToken)
         {
-            var models = await CrudService.FindListAsync(ids, cancellationToken);
-            return await CrudService.DeleteAsync(models, cancellationToken);
+            var models = await EntityService.FindListAsync(ids, cancellationToken);
+            return await EntityService.DeleteAsync(models, cancellationToken);
         }
     }
 
     [Authorize]
     public abstract class
-        CrudController<TCrudService, TKey, TReadModel, TModel, TFilteredPagedRequest> :
-            CrudControllerBase<TKey, TReadModel, TModel, TFilteredPagedRequest>
-        where TCrudService : class, ICrudService<TKey, TReadModel, TModel, TFilteredPagedRequest>
+        EntityController<TEntityService, TKey, TReadModel, TModel, TFilteredPagedRequest> :
+            EntityControllerBase<TKey, TReadModel, TModel, TFilteredPagedRequest>
+        where TEntityService : class, IEntityService<TKey, TReadModel, TModel, TFilteredPagedRequest>
         where TReadModel : ReadModel<TKey>
         where TModel : MasterModel<TKey>, new()
         where TFilteredPagedRequest : class, IFilteredPagedRequest, new()
         where TKey : IEquatable<TKey>
     {
-        protected readonly TCrudService CrudService;
+        protected readonly TEntityService EntityService;
 
-        protected CrudController(TCrudService service)
+        protected EntityController(TEntityService service)
         {
-            CrudService = service ?? throw new ArgumentNullException(nameof(service));
+            EntityService = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        private protected override Task<IPagedResult<TReadModel>> ReadPagedListAsync(TFilteredPagedRequest request,
+        private protected override Task<IPagedResult<TReadModel>> FetchPagedListAsync(TFilteredPagedRequest request,
             CancellationToken cancellationToken)
         {
-            return CrudService.ReadPagedListAsync(request, cancellationToken);
+            return EntityService.FetchPagedListAsync(request, cancellationToken);
         }
 
         private protected override Task<Maybe<TModel>> FindAsync(TKey id, CancellationToken cancellationToken)
         {
-            return CrudService.FindAsync(id, cancellationToken);
+            return EntityService.FindAsync(id, cancellationToken);
         }
 
         private protected override Task<Result> EditAsync(TModel model, CancellationToken cancellationToken)
         {
-            return CrudService.EditAsync(model, cancellationToken);
+            return EntityService.EditAsync(model, cancellationToken);
         }
+
+        private protected override Task<TModel> CreateNewAsync(CancellationToken cancellationToken) =>
+            EntityService.CreateNewAsync(cancellationToken);
 
         private protected override Task<Result> CreateAsync(TModel model, CancellationToken cancellationToken)
         {
-            return CrudService.CreateAsync(model, cancellationToken);
+            return EntityService.CreateAsync(model, cancellationToken);
         }
 
         private protected override Task<Result> DeleteAsync(TModel model, CancellationToken cancellationToken)
         {
-            return CrudService.DeleteAsync(model, cancellationToken);
+            return EntityService.DeleteAsync(model, cancellationToken);
         }
 
         private protected override async Task<Result> DeleteAsync(IEnumerable<TKey> ids,
             CancellationToken cancellationToken)
         {
-            var models = await CrudService.FindListAsync(ids, cancellationToken);
-            return await CrudService.DeleteAsync(models, cancellationToken);
+            var models = await EntityService.FindListAsync(ids, cancellationToken);
+            return await EntityService.DeleteAsync(models, cancellationToken);
         }
     }
 
     [ApiController]
     [Produces("application/json")]
     public abstract class
-        CrudControllerBase<TKey, TReadModel, TModel, TFilteredPagedRequest> : ControllerBase
+        EntityControllerBase<TKey, TReadModel, TModel, TFilteredPagedRequest> : ControllerBase
         where TReadModel : ReadModel<TKey>
         where TModel : MasterModel<TKey>
         where TFilteredPagedRequest : class, IFilteredPagedRequest, new()
@@ -180,11 +240,12 @@ namespace DNTFrameworkCore.Web.API
         protected abstract string ViewPermissionName { get; }
         protected abstract string DeletePermissionName { get; }
 
-        private protected abstract Task<IPagedResult<TReadModel>> ReadPagedListAsync(TFilteredPagedRequest request,
+        private protected abstract Task<IPagedResult<TReadModel>> FetchPagedListAsync(TFilteredPagedRequest request,
             CancellationToken cancellationToken);
 
         private protected abstract Task<Maybe<TModel>> FindAsync(TKey id, CancellationToken cancellationToken);
         private protected abstract Task<Result> EditAsync(TModel model, CancellationToken cancellationToken);
+        private protected abstract Task<TModel> CreateNewAsync(CancellationToken cancellationToken);
         private protected abstract Task<Result> CreateAsync(TModel model, CancellationToken cancellationToken);
         private protected abstract Task<Result> DeleteAsync(TModel model, CancellationToken cancellationToken);
         private protected abstract Task<Result> DeleteAsync(IEnumerable<TKey> ids, CancellationToken cancellationToken);
@@ -197,7 +258,7 @@ namespace DNTFrameworkCore.Web.API
         {
             if (!await HasPermission(ViewPermissionName)) return Forbid();
 
-            var result = await ReadPagedListAsync(request ?? Factory<TFilteredPagedRequest>.New(),
+            var result = await FetchPagedListAsync(request ?? Factory<TFilteredPagedRequest>.New(),
                 cancellationToken);
 
             return Ok(result);
@@ -206,16 +267,26 @@ namespace DNTFrameworkCore.Web.API
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> New(CancellationToken cancellationToken)
+        {
+            if (!await HasPermission(CreatePermissionName)) return Forbid();
+
+            var model = await CreateNewAsync(cancellationToken);
+
+            return Ok(model);
+        }
+
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Get([BindRequired] TKey id, CancellationToken cancellationToken)
         {
             if (!await HasPermission(EditPermissionName)) return Forbid();
 
             var model = await FindAsync(id, cancellationToken);
 
-            if (!model.HasValue) return NotFound();
-
-            return Ok(model.Value);
+            return !model.HasValue ? null : Ok(model.Value);
         }
 
         [HttpPost]
@@ -245,7 +316,7 @@ namespace DNTFrameworkCore.Web.API
             var result = await EditAsync(model, cancellationToken);
             return !result.Failed ? Ok(model) : BadRequest(result);
         }
-        
+
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -284,7 +355,7 @@ namespace DNTFrameworkCore.Web.API
             var authorization = HttpContext.RequestServices.GetRequiredService<IAuthorizationService>();
             return (await authorization.AuthorizeAsync(User, policyName)).Succeeded;
         }
-        
+
         protected IActionResult BadRequest(Result result)
         {
             ModelState.AddResult(result);

@@ -5,7 +5,7 @@ using DNTFrameworkCore.Web.Mvc;
 
 namespace DNTFrameworkCore.TestWebApp.Controllers
 {
-    public class ProductsController : CrudController<IProductService, long, ProductModel>
+    public class ProductsController : EntityController<IProductService, long, ProductModel>
     {
         public ProductsController(IProductService service) : base(service)
         {

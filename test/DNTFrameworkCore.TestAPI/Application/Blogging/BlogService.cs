@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using DNTFrameworkCore.Application;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
-using DNTFrameworkCore.EFCore.Linq;
 using DNTFrameworkCore.EFCore.Querying;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Querying;
@@ -14,17 +13,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DNTFrameworkCore.TestAPI.Application.Blogging
 {
-    public interface IBlogService : ICrudService<int, BlogModel>
+    public interface IBlogService : IEntityService<BlogModel>
     {
     }
 
-    public class BlogService : CrudService<Blog, int, BlogModel>, IBlogService
+    public class BlogService : EntityService<Blog, BlogModel>, IBlogService
     {
         public BlogService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
         {
         }
 
-        public override Task<IPagedResult<BlogModel>> ReadPagedListAsync(FilteredPagedRequest request,
+        public override Task<BlogModel> CreateNewAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(new BlogModel
+            {
+                Title = "Some default value from somewhere"
+            });
+        }
+
+        public override Task<IPagedResult<BlogModel>> FetchPagedListAsync(FilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking()

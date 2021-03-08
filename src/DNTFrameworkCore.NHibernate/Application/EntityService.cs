@@ -14,33 +14,44 @@ using NHibernate.Linq;
 
 namespace DNTFrameworkCore.NHibernate.Application
 {
-    public abstract class CrudService<TEntity, TKey, TModel> :
-        CrudService<TEntity, TKey, TModel, TModel>,
-        ICrudService<TKey, TModel>
+    public abstract class EntityService<TEntity, TModel> :
+        EntityService<TEntity, int, TModel, TModel>,
+        IEntityService<int, TModel>
+        where TEntity : Entity<int>, new()
+        where TModel : MasterModel<int>
+    {
+        protected EntityService(ISession session, IEventBus bus) : base(session, bus)
+        {
+        }
+    }
+    
+    public abstract class EntityService<TEntity, TKey, TModel> :
+        EntityService<TEntity, TKey, TModel, TModel>,
+        IEntityService<TKey, TModel>
         where TEntity : Entity<TKey>, new()
         where TModel : MasterModel<TKey>
         where TKey : IEquatable<TKey>
     {
-        protected CrudService(ISession session, IEventBus bus) : base(session, bus)
+        protected EntityService(ISession session, IEventBus bus) : base(session, bus)
         {
         }
     }
 
-    public abstract class CrudService<TEntity, TKey, TReadModel, TModel> :
-        CrudService<TEntity, TKey, TReadModel, TModel, FilteredPagedRequest>,
-        ICrudService<TKey, TReadModel, TModel>
+    public abstract class EntityService<TEntity, TKey, TReadModel, TModel> :
+        EntityService<TEntity, TKey, TReadModel, TModel, FilteredPagedRequest>,
+        IEntityService<TKey, TReadModel, TModel>
         where TEntity : Entity<TKey>, new()
         where TModel : MasterModel<TKey>
         where TReadModel : ReadModel<TKey>
         where TKey : IEquatable<TKey>
     {
-        protected CrudService(ISession session, IEventBus bus) : base(session, bus)
+        protected EntityService(ISession session, IEventBus bus) : base(session, bus)
         {
         }
     }
 
-    public abstract class CrudService<TEntity, TKey, TReadModel, TModel,
-        TFilteredPagedRequest> : InternalCrudService<TEntity, TKey, TReadModel,
+    public abstract class EntityService<TEntity, TKey, TReadModel, TModel,
+        TFilteredPagedRequest> : EntityServiceBase<TEntity, TKey, TReadModel,
         TModel, TFilteredPagedRequest>
         where TEntity : Entity<TKey>, new()
         where TModel : MasterModel<TKey>
@@ -51,7 +62,7 @@ namespace DNTFrameworkCore.NHibernate.Application
         protected ISession Session { get; }
         protected IQueryable<TEntity> EntitySet { get; }
 
-        protected CrudService(ISession session, IEventBus bus) : base(bus)
+        protected EntityService(ISession session, IEventBus bus) : base(bus)
         {
             Session = session ?? throw new ArgumentNullException(nameof(session));
 

@@ -12,7 +12,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Mappings.Blogging
             builder.Property(b => b.NormalizedTitle).IsRequired().HasMaxLength(Blog.MaxTitleLength);
             builder.Property(b => b.Url).IsRequired().HasMaxLength(Blog.MaxUrlLength);
 
-            builder.HasIndex(b => b.NormalizedTitle).HasName("Blog_NormalizedTitle").IsUnique();
+            builder.HasIndex(b => b.NormalizedTitle).HasDatabaseName("Blog_NormalizedTitle").IsUnique();
         }
     }
 }

@@ -28,11 +28,5 @@ namespace DNTFrameworkCore.TestWebApp.Resources
         {
             return _localizer.GetAllStrings(includeParentCultures);
         }
-        
-        [Obsolete("This method is obsolete. Use `CurrentCulture` and `CurrentUICulture` instead.")]
-        public IStringLocalizer WithCulture(CultureInfo culture)
-        {
-            return _localizer.WithCulture(culture);
-        }
     }
 }

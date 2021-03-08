@@ -1,25 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
 
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="nunit" Version="3.12.0" />
-        <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
-        <PackageReference Include="Shouldly" Version="3.0.2" />
+        <PackageReference Include="nunit" Version="3.13.1"/>
+        <PackageReference Include="NUnit3TestAdapter" Version="3.17.0"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1"/>
+        <PackageReference Include="Shouldly" Version="4.0.3"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\DNTFrameworkCore.Licensing\DNTFrameworkCore.Licensing.csproj" />
+        <ProjectReference Include="..\..\src\DNTFrameworkCore.Licensing\DNTFrameworkCore.Licensing.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="License.lic" />
-      <EmbeddedResource Include="License.lic" />
+        <None Remove="License.lic"/>
+        <EmbeddedResource Include="License.lic"/>
     </ItemGroup>
 
 </Project>

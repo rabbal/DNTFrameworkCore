@@ -22,7 +22,7 @@ namespace DNTFrameworkCore.EFCore.Cryptography
             builder.ToTable(nameof(ProtectionKey), "dbo");
 
             builder.Property(a => a.FriendlyName).IsRequired();
-            builder.HasIndex(a => a.FriendlyName).IsUnique().HasName("IX_ProtectionKey_FriendlyName");
+            builder.HasIndex(a => a.FriendlyName).IsUnique().HasDatabaseName("IX_ProtectionKey_FriendlyName");
         }
     }
 }

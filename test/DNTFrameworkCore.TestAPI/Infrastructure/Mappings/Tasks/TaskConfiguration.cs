@@ -13,8 +13,8 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Mappings.Tasks
             builder.Property(t => t.NormalizedTitle).HasMaxLength(Task.MaxTitleLength).IsRequired();
             builder.Property(t => t.Number).IsRequired().HasMaxLength(50);
 
-            builder.HasIndex(t => new {t.Number, t.BranchId}).HasName("UIX_Task_Number_BranchId");
-            builder.HasIndex(t => t.NormalizedTitle).HasName("UIX_Task_NormalizedTitle").IsUnique();
+            builder.HasIndex(t => new {t.Number, t.BranchId}).HasDatabaseName("UIX_Task_Number_BranchId");
+            builder.HasIndex(t => t.NormalizedTitle).HasDatabaseName("UIX_Task_NormalizedTitle").IsUnique();
 
             builder.ToTable(nameof(Task));
         }
