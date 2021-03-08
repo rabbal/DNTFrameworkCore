@@ -13,11 +13,11 @@ Extensible Infrastructure for Building High Quality Web Applications Based on AS
  
 Application Service
 ```csharp
-public interface IBlogService : ICrudService<int, BlogModel>
+public interface IBlogService : IEntityService<int, BlogModel>
 {
 }
 
-public class BlogService : CrudService<Blog, int, BlogModel>, IBlogService
+public class BlogService : EntityService<Blog, int, BlogModel>, IBlogService
 {
     private readonly IMapper _mapper;
 
@@ -29,7 +29,7 @@ public class BlogService : CrudService<Blog, int, BlogModel>, IBlogService
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
-    public override Task<IPagedResult<BlogModel>> ReadPagedListAsync(FilteredPagedRequest request,
+    public override Task<IPagedResult<BlogModel>> FetchPagedListAsync(FilteredPagedRequest request,
         CancellationToken cancellationToken = default)
     {
         return EntitySet.AsNoTracking()
@@ -57,7 +57,7 @@ public class BlogService : CrudService<Blog, int, BlogModel>, IBlogService
 ASP.NET Core WebAPI
 ```csharp
 [Route("api/[controller]")]
-public class BlogsController : CrudController<IBlogService, int, BlogModel>
+public class BlogsController : EntityController<IBlogService, int, BlogModel>
 {
     public BlogsController(IBlogService service) : base(service)
     {
@@ -72,7 +72,7 @@ public class BlogsController : CrudController<IBlogService, int, BlogModel>
  
  ASP.NET Core MVC
  ```csharp
-public class BlogsController : CrudController<IBlogService, int, BlogModel>
+public class BlogsController : EntityController<IBlogService, int, BlogModel>
 {
     public BlogsController(IBlogService service) : base(service)
     {
@@ -155,8 +155,8 @@ For more info about templates you can watch [DNTFrameworkCoreTemplate repository
 * Numbering
 * Functional Programming Error Handling
 * Permission Authorization
-* CrudService
-* CrudController (API and MVC)
+* EntityService
+* EntityController (API and MVC)
 * DbLogger Provider based on EFCore
 * ProtectionKey EFCore Store
 * Hooks
@@ -265,11 +265,11 @@ public class TaskReadModel : ReadModel<int>
 **Implement Service**
  
 ```c#
-public interface ITaskService : ICrudService<int, TaskReadModel, TaskModel, TaskFilteredPagedRequest>
+public interface ITaskService : IEntityService<int, TaskReadModel, TaskModel, TaskFilteredPagedRequest>
 {
 }
 
-public class TaskService : CrudService<Task, int, TaskReadModel, TaskModel, TaskFilteredPagedRequest>,
+public class TaskService : EntityService<Task, int, TaskReadModel, TaskModel, TaskFilteredPagedRequest>,
     ITaskService
 {
     private readonly IMapper _mapper;
@@ -278,7 +278,7 @@ public class TaskService : CrudService<Task, int, TaskReadModel, TaskModel, Task
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper);
     }
 
-    public override Task<IPagedResult<TaskReadModel>> ReadPagedListAsync(TaskFilteredPagedRequest request,
+    public override Task<IPagedResult<TaskReadModel>> FetchPagedListAsync(TaskFilteredPagedRequest request,
         CancellationToken cancellationToken = default)
     {
         return EntitySet.AsNoTracking()
@@ -310,7 +310,7 @@ In DNTFrameworkCore.EFCore [there is no dependency to AutoMapper](https://cezary
 ```c#
 [Route("api/[controller]")]
 public class
-    TasksController : CrudController<ITaskService, int, TaskReadModel, TaskModel, TaskFilteredPagedRequest>
+    TasksController : EntityController<ITaskService, int, TaskReadModel, TaskModel, TaskFilteredPagedRequest>
 {
     public TasksController(ITaskService service) : base(service)
     {
@@ -326,7 +326,7 @@ public class
 ```c#
 
 [Route("api/[controller]")]
-public class BlogsController : CrudController<IBlogService, int, BlogModel>
+public class BlogsController : EntityController<IBlogService, int, BlogModel>
 {
     public BlogsController(IBlogService service) : base(service)
     {
