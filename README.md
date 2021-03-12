@@ -22,9 +22,9 @@ public class BlogService : EntityService<Blog, int, BlogModel>, IBlogService
     private readonly IMapper _mapper;
 
     public BlogService(
-        IUnitOfWork uow,
+        IDbContext dbContext,
         IEventBus bus,
-        IMapper mapper) : base(uow, bus)
+        IMapper mapper) : base(dbContext, bus)
     {
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
@@ -273,7 +273,7 @@ public class TaskService : EntityService<Task, int, TaskReadModel, TaskModel, Ta
     ITaskService
 {
     private readonly IMapper _mapper;
-    public TaskService(IUnitOfWork uow, IEventBus bus, IMapper mapper) :base(uow, bus)
+    public TaskService(IDbContext dbContext, IEventBus bus, IMapper mapper) :base(dbContext, bus)
     {
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper);
     }
