@@ -27,10 +27,10 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity
         private readonly IUserPasswordHashAlgorithm _password;
 
         public UserService(
-            IUnitOfWork uow,
+            IDbContext dbContext,
             IEventBus bus,
             IUserPasswordHashAlgorithm password,
-            IMapper mapper) : base(uow, bus)
+            IMapper mapper) : base(dbContext, bus)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _password = password ?? throw new ArgumentNullException(nameof(password));

@@ -5,7 +5,7 @@ namespace DNTFrameworkCore.Domain
 {
     public interface IAggregateRoot : IEntity
     {
-        IReadOnlyList<IDomainEvent> Events { get; }
+        IEnumerable<IDomainEvent> Events { get; }
         void EmptyEvents();
     }
 
@@ -17,7 +17,7 @@ namespace DNTFrameworkCore.Domain
         where TKey : IEquatable<TKey>
     {
         private readonly List<IDomainEvent> _events = new List<IDomainEvent>();
-        public IReadOnlyList<IDomainEvent> Events => _events.AsReadOnly();
+        public IEnumerable<IDomainEvent> Events => _events.AsReadOnly();
         public virtual void EmptyEvents() => _events.Clear();
         protected virtual void RaiseDomainEvent(IDomainEvent domainEvent) => _events.Add(domainEvent);
     }

@@ -59,13 +59,12 @@ namespace DNTFrameworkCore.NHibernate.Application
         where TFilteredPagedRequest : class, IFilteredPagedRequest
         where TKey : IEquatable<TKey>
     {
-        protected ISession Session { get; }
-        protected IQueryable<TEntity> EntitySet { get; }
+        protected readonly ISession Session;
+        protected readonly IQueryable<TEntity> EntitySet;
 
         protected EntityService(ISession session, IEventBus bus) : base(bus)
         {
             Session = session ?? throw new ArgumentNullException(nameof(session));
-
             EntitySet = session.Query<TEntity>();
         }
 

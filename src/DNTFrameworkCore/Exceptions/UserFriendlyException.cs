@@ -3,7 +3,7 @@
 namespace DNTFrameworkCore.Exceptions
 {
     [Serializable]
-    public class UserFriendlyException : FrameworkException
+    public class UserFriendlyException : DNTException
     {
         public UserFriendlyException(string message) : base(message)
         {

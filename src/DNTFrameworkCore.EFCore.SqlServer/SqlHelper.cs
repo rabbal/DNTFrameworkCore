@@ -6,11 +6,11 @@ namespace DNTFrameworkCore.EFCore.SqlServer
 {
     public class SqlHelper
     {
-        public static IReadOnlyDictionary<Type, DbType> TypeMap { get; }
+        public static IReadOnlyDictionary<Type, DbType> TypeMapping { get; }
 
         static SqlHelper()
         {
-            TypeMap = new Dictionary<Type, DbType>
+            TypeMapping = new Dictionary<Type, DbType>
             {
                 [typeof(byte)] = DbType.Byte,
                 [typeof(sbyte)] = DbType.SByte,

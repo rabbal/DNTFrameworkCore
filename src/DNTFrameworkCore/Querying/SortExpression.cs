@@ -31,7 +31,7 @@ namespace DNTFrameworkCore.Querying
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !(obj is SortExpression sort)) return false;
+            if (obj is not SortExpression sort) return false;
 
             if (ReferenceEquals(this, obj)) return true;
 

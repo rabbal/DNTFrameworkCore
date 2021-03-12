@@ -19,7 +19,7 @@ namespace DNTFrameworkCore.Authorization
            {
                if (existingPermission != permission)
                {
-                   throw new FrameworkException("Duplicate permission name detected for " + permission.Name);
+                   throw new DNTException("Duplicate permission name detected for " + permission.Name);
                }
            }
            else

@@ -19,7 +19,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Blogging
 
     public class BlogService : EntityService<Blog, BlogModel>, IBlogService
     {
-        public BlogService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
+        public BlogService(IDbContext dbContext, IEventBus bus) : base(dbContext, bus)
         {
         }
 

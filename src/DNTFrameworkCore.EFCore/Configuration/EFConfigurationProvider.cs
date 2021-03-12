@@ -19,10 +19,10 @@ namespace DNTFrameworkCore.EFCore.Configuration
 
         public override void Load()
         {
-            _provider.RunScoped<IUnitOfWork>(uow =>
+            _provider.RunScoped<IDbContext>(dbContext =>
             {
                 Data?.Clear();
-                Data = uow.Set<KeyValue>()
+                Data = dbContext.Set<KeyValue>()
                     .AsNoTracking()
                     .ToDictionary(c => c.Key, c => c.Value);
             });

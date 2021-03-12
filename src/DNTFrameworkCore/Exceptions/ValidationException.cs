@@ -6,7 +6,7 @@ using DNTFrameworkCore.Validation;
 namespace DNTFrameworkCore.Exceptions
 {
     [Serializable]
-    public class ValidationException : FrameworkException
+    public class ValidationException : DNTException
     {
         private readonly List<ValidationFailure> _failures;
 

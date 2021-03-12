@@ -10,23 +10,23 @@ namespace DNTFrameworkCore.Cqrs.EFCore.Behaviors
     public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : ICommand
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _dbContext;
 
-        public TransactionBehavior(IUnitOfWork uow)
+        public TransactionBehavior(IDbContext dbContext)
         {
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
             RequestHandlerDelegate<TResponse> next)
         {
             //If there is a running transaction, just run the method
-            //if (!attribute.HasValue || _uow.HasTransaction)
+            //if (!attribute.HasValue || _dbContext.HasTransaction)
 //            {
 //                return next();
 //            }
 //
-//            _uow.BeginTransaction(attribute.IsolationLevel);
+//            _dbContext.BeginTransaction(attribute.IsolationLevel);
 //
 //            try
 //            {
@@ -34,7 +34,7 @@ namespace DNTFrameworkCore.Cqrs.EFCore.Behaviors
 //            }
 //            catch (Exception)
 //            {
-//                _uow.RollbackTransaction();
+//                _dbContext.RollbackTransaction();
 //                throw;
 //            }
 //
@@ -43,7 +43,7 @@ namespace DNTFrameworkCore.Cqrs.EFCore.Behaviors
 //
 //            try
 //            {
-//                if (_uow.HasTransaction)
+//                if (_dbContext.HasTransaction)
 //                {
 //                    return await next();
 //                }

@@ -11,15 +11,15 @@ namespace DNTFrameworkCore.EFCore.Configuration
 {
     internal sealed class KeyValueService : ApplicationService, IKeyValueService
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _dbContext;
         private readonly IConfiguration _configuration;
         private readonly DbSet<KeyValue> _values;
 
-        public KeyValueService(IUnitOfWork uow, IConfiguration configuration)
+        public KeyValueService(IDbContext dbContext, IConfiguration configuration)
         {
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            _values = _uow.Set<KeyValue>();
+            _values = _dbContext.Set<KeyValue>();
         }
 
         public async Task SetValueAsync(string key, string value)
@@ -38,7 +38,7 @@ namespace DNTFrameworkCore.EFCore.Configuration
                 record.Value = value;
             }
 
-            await _uow.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
             ReloadConfiguration();
         }

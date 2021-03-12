@@ -22,13 +22,13 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
             var provider = BuildServiceProvider();
 
             //Act, Assert
-            provider.RunScoped<IUnitOfWork>(uow =>
+            provider.RunScoped<IDbContext>(dbContext =>
             {
-                using (var transaction = uow.BeginTransaction())
+                using (var transaction = dbContext.BeginTransaction())
                 {
                     var task = new TestTask();
-                    uow.AddRange(new[] {task});
-                    uow.SaveChanges();
+                    dbContext.AddRange(new[] {task});
+                    dbContext.SaveChanges();
                     task.Number.ShouldBe("Task-100");
 
                     transaction.Commit();
@@ -41,25 +41,25 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
         {
             //Arrange
             var provider = BuildServiceProvider();
-            provider.RunScoped<IUnitOfWork>(uow =>
+            provider.RunScoped<IDbContext>(dbContext =>
             {
                 var task = new TestTask {Number = "Task-Number"};
-                uow.AddRange(new[] {task});
-                uow.SaveChanges();
+                dbContext.AddRange(new[] {task});
+                dbContext.SaveChanges();
             });
 
             //Act
-            provider.RunScoped<IUnitOfWork>(uow =>
+            provider.RunScoped<IDbContext>(dbContext =>
             {
                 var task = new TestTask {Number = "Task-NewNumber"};
-                uow.UpdateRange(new[] {task});
-                uow.SaveChanges();
+                dbContext.UpdateRange(new[] {task});
+                dbContext.SaveChanges();
             });
 
             //Assert
-            provider.RunScoped<IUnitOfWork>(uow =>
+            provider.RunScoped<IDbContext>(dbContext =>
             {
-                var task = uow.Set<TestTask>().SingleOrDefault(t=>t.Number=="Task-Number");
+                var task = dbContext.Set<TestTask>().SingleOrDefault(t=>t.Number=="Task-Number");
                 task.ShouldNotBeNull();
             });
         }
@@ -74,13 +74,13 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
             //Act
             ExecuteInParallel(delegate
             {
-                provider.RunScoped<IUnitOfWork>(uow =>
+                provider.RunScoped<IDbContext>(dbContext =>
                 {
-                    using (var transaction = uow.BeginTransaction())
+                    using (var transaction = dbContext.BeginTransaction())
                     {
                         var task = new TestTask();
-                        uow.AddRange(new[] {task});
-                        uow.SaveChanges();
+                        dbContext.AddRange(new[] {task});
+                        dbContext.SaveChanges();
 
                         transaction.Commit();
                     }
@@ -88,9 +88,9 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
             });
 
             //Assert
-            provider.RunScoped<IUnitOfWork>(uow =>
+            provider.RunScoped<IDbContext>(dbContext =>
             {
-                var tasks = uow.Set<TestTask>().OrderBy(a => a.Id).ToList();
+                var tasks = dbContext.Set<TestTask>().OrderBy(a => a.Id).ToList();
                 tasks.Count.ShouldBe(10);
                 tasks[0].Number.ShouldBe("Task-100");
                 tasks[5].Number.ShouldBe("Task-125");
@@ -101,17 +101,16 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
         private static ServiceProvider BuildServiceProvider()
         {
             var services = new ServiceCollection();
-            services.AddDNTFramework();
-            services.AddDNTUnitOfWork<NumberingDbContext>();
-            services.AddNumbering(options =>
-            {
-                options.NumberedEntityMap[typeof(TestTask)] = new NumberedEntityOption
-                {
-                    Start = 100,
-                    Prefix = "Task-",
-                    IncrementBy = 5
-                };
-            });
+            services.AddFramework();
+            // services.AddNumbering(options =>
+            // {
+            //     options.NumberedEntityMap[typeof(TestTask)] = new NumberedEntityOption
+            //     {
+            //         Start = 100,
+            //         Prefix = "Task-",
+            //         IncrementBy = 5
+            //     };
+            // });
 
             var fileName =
                 Path.Combine(

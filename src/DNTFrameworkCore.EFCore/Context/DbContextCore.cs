@@ -19,7 +19,7 @@ using DbException = DNTFrameworkCore.Exceptions.DbException;
 
 namespace DNTFrameworkCore.EFCore.Context
 {
-    public abstract class DbContextCore : DbContext, IUnitOfWork
+    public abstract class DbContextCore : DbContext, IDbContext
     {
         private readonly IEnumerable<IHook> _hooks;
         private readonly List<string> _ignoredHookList = new();
@@ -55,6 +55,29 @@ namespace DNTFrameworkCore.EFCore.Context
             try
             {
                 Transaction.Commit();
+            }
+            catch
+            {
+                RollbackTransaction();
+                throw;
+            }
+            finally
+            {
+                if (Transaction != null)
+                {
+                    Transaction.Dispose();
+                    Transaction = null;
+                }
+            }
+        }
+
+        public async Task CommitTransactionAsync()
+        {
+            if (!HasTransaction) throw new NullReferenceException("Please call `BeginTransaction()` method first.");
+
+            try
+            {
+                await Transaction.CommitAsync();
             }
             catch
             {

@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Functional;
-using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.Mapping;
 using DNTFrameworkCore.Querying;
 using DNTFrameworkCore.Transaction;
 using DNTFrameworkCore.Validation;
+using static DNTFrameworkCore.GuardToolkit.Guard;
+using static DNTFrameworkCore.Mapping.MappingExtensions;
 
 namespace DNTFrameworkCore.Application
 {
@@ -76,7 +77,7 @@ namespace DNTFrameworkCore.Application
         [Transactional]
         public Task<Result> CreateAsync(TModel model, CancellationToken cancellationToken = default)
         {
-            Guard.ArgumentNotNull(model, nameof(model));
+            ArgumentNotNull(model, nameof(model));
 
             return CreateAsync(new[] {model}, cancellationToken);
         }
@@ -98,7 +99,7 @@ namespace DNTFrameworkCore.Application
 
             await CreateEntityListAsync(entityList, cancellationToken);
 
-            MappingExtensions.Map(entityList, modelList, MapToModel);
+            Map(entityList, modelList, MapToModel);
 
             result = await AfterCreateAsync(modelList, cancellationToken);
             if (result.Failed) return result;
@@ -111,7 +112,7 @@ namespace DNTFrameworkCore.Application
         [Transactional]
         public Task<Result> EditAsync(TModel model, CancellationToken cancellationToken = default)
         {
-            Guard.ArgumentNotNull(model, nameof(model));
+            ArgumentNotNull(model, nameof(model));
 
             return EditAsync(new[] {model}, cancellationToken);
         }
@@ -129,7 +130,7 @@ namespace DNTFrameworkCore.Application
             var result = await BeforeEditAsync(modifiedList, entityList, cancellationToken);
             if (result.Failed) return result;
 
-            MappingExtensions.Map(modelList, entityList, MapToEntity);
+            Map(modelList, entityList, MapToEntity);
 
             await AfterMappingAsync(modelList, entityList, cancellationToken);
 
@@ -138,7 +139,7 @@ namespace DNTFrameworkCore.Application
 
             await UpdateEntityListAsync(entityList, cancellationToken);
 
-            MappingExtensions.Map(entityList, modelList, MapToModel);
+            Map(entityList, modelList, MapToModel);
 
             result = await AfterEditAsync(modifiedList, entityList, cancellationToken);
             if (result.Failed) return result;
@@ -152,7 +153,7 @@ namespace DNTFrameworkCore.Application
         [SkipValidation]
         public Task<Result> DeleteAsync(TModel model, CancellationToken cancellationToken = default)
         {
-            Guard.ArgumentNotNull(model, nameof(model));
+            ArgumentNotNull(model, nameof(model));
 
             return DeleteAsync(new[] {model}, cancellationToken);
         }

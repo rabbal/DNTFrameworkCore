@@ -30,9 +30,9 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
         private readonly IMapper _mapper;
 
         public RoleService(
-            IUnitOfWork uow,
+            IDbContext dbContext,
             IEventBus bus,
-            IMapper mapper) : base(uow, bus)
+            IMapper mapper) : base(dbContext, bus)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }

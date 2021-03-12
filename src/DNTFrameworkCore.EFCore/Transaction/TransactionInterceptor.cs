@@ -14,12 +14,12 @@ namespace DNTFrameworkCore.EFCore.Transaction
 {
     public sealed class TransactionInterceptor : IInterceptor
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _dbContext;
         private readonly ILogger _logger;
 
-        public TransactionInterceptor(IUnitOfWork uow, ILoggerFactory loggerFactory)
+        public TransactionInterceptor(IDbContext dbContext, ILoggerFactory loggerFactory)
         {
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _logger = Ensure.IsNotNull(loggerFactory, nameof(loggerFactory))
                 .CreateLogger("DNTFrameworkCore.Transaction.Interception");
         }
@@ -39,7 +39,7 @@ namespace DNTFrameworkCore.EFCore.Transaction
             var attribute = FindTransactionalAttribute(method);
 
             //If there is a running transaction, just run the method
-            if (!attribute.HasValue || _uow.HasTransaction)
+            if (!attribute.HasValue || _dbContext.HasTransaction)
             {
                 invocation.Proceed();
                 return;
@@ -70,7 +70,7 @@ namespace DNTFrameworkCore.EFCore.Transaction
         {
             _logger.LogInformation($"BeginTransaction with IsolationLevel: {attribute.IsolationLevel}");
 
-            _uow.BeginTransaction(attribute.IsolationLevel);
+            _dbContext.BeginTransaction(attribute.IsolationLevel);
 
             try
             {
@@ -78,53 +78,53 @@ namespace DNTFrameworkCore.EFCore.Transaction
             }
             catch (Exception)
             {
-                _uow.RollbackTransaction();
+                _dbContext.RollbackTransaction();
                 throw;
             }
 
             if (invocation.Method.ReturnType == typeof(Task))
-                invocation.ReturnValue = InterceptAsync((Task) invocation.ReturnValue, _uow);
+                invocation.ReturnValue = InterceptAsync((Task) invocation.ReturnValue, _dbContext);
             else //Task<TResult>
                 invocation.ReturnValue = typeof(TransactionInterceptor)
                     .GetMethod(nameof(InterceptWithResultAsync),
                         BindingFlags.NonPublic | BindingFlags.Static)
                     ?.MakeGenericMethod(invocation.Method.ReturnType.GenericTypeArguments[0])
-                    .Invoke(null, new[] {invocation.ReturnValue, _uow});
+                    .Invoke(null, new[] {invocation.ReturnValue, _dbContext});
         }
 
-        private static async Task InterceptAsync(Task task, IUnitOfWork uow)
+        private static async Task InterceptAsync(Task task, IDbContext dbContext)
         {
             try
             {
                 await task.ConfigureAwait(false);
-                uow.CommitTransaction();
+                dbContext.CommitTransaction();
             }
             catch (Exception)
             {
-                uow.RollbackTransaction();
+                dbContext.RollbackTransaction();
                 throw;
             }
         }
 
-        private static async Task<T> InterceptWithResultAsync<T>(Task<T> task, IUnitOfWork uow)
+        private static async Task<T> InterceptWithResultAsync<T>(Task<T> task, IDbContext dbContext)
         {
             try
             {
                 var result = await task.ConfigureAwait(false);
                 if (result is Result returnValue && returnValue.Failed)
                 {
-                    uow.RollbackTransaction();
+                    dbContext.RollbackTransaction();
                 }
                 else
                 {
-                    uow.CommitTransaction();
+                    dbContext.CommitTransaction();
                 }
 
                 return result;
             }
             catch (Exception)
             {
-                uow.RollbackTransaction();
+                dbContext.RollbackTransaction();
                 throw;
             }
         }
@@ -133,23 +133,23 @@ namespace DNTFrameworkCore.EFCore.Transaction
         {
             _logger.LogInformation($"BeginTransaction with IsolationLevel: {attribute.IsolationLevel}");
             
-            _uow.BeginTransaction(attribute.IsolationLevel);
+            _dbContext.BeginTransaction(attribute.IsolationLevel);
             try
             {
                 invocation.Proceed();
 
                 if (invocation.ReturnValue is Result returnValue && returnValue.Failed)
                 {
-                    _uow.RollbackTransaction();
+                    _dbContext.RollbackTransaction();
                 }
                 else
                 {
-                    _uow.CommitTransaction();
+                    _dbContext.CommitTransaction();
                 }
             }
             catch (Exception)
             {
-                _uow.RollbackTransaction();
+                _dbContext.RollbackTransaction();
                 throw;
             }
         }

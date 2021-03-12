@@ -11,14 +11,12 @@ namespace DNTFrameworkCore.Exceptions
         private static readonly Regex _regex = new Regex(@"\W", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         public List<ExceptionMapItem> Mappings { get; } = new List<ExceptionMapItem>();
         [Required] public string DbException { get; set; }
-
         [Required] public string DbConcurrencyException { get; set; }
-
         [Required] public string InternalServerIssue { get; set; }
 
         public bool TryFindMapping(DbException dbException, out ExceptionMapItem mapping)
         {
-            var words = new HashSet<string>(_regex.Split(dbException.ToStringFormat()));
+            var words = new HashSet<string>(_regex.Split(dbException.ToString()));
 
             mapping = Mappings.FirstOrDefault(a => a.Keywords.IsProperSubsetOf(words));
             

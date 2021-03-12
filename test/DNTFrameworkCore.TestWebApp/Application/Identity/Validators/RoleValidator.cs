@@ -11,11 +11,11 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity.Validators
 {
     public class RoleValidator : FluentModelValidator<RoleModel>
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _dbContext;
 
-        public RoleValidator(IUnitOfWork uow, IMessageLocalizer localizer)
+        public RoleValidator(IDbContext dbContext, IMessageLocalizer localizer)
         {
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
             RuleFor(m => m.Name).NotEmpty()
                 .WithMessage(localizer["Role.Fields.Name.Required"])
@@ -37,7 +37,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity.Validators
         private bool IsUniqueName(string name, long id)
         {
             name = name.ToUpperInvariant();
-            return _uow.Set<Role>().Any(u => u.NormalizedName == name && u.Id != id);
+            return _dbContext.Set<Role>().Any(u => u.NormalizedName == name && u.Id != id);
         }
     }
 }

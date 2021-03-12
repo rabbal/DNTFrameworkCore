@@ -6,7 +6,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn("SerialNumber", "User", "SecurityToken");
+            migrationBuilder.RenameColumn("SecurityStamp", "User", "SecurityToken");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

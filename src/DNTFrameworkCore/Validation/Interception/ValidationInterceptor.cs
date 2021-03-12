@@ -41,12 +41,15 @@ namespace DNTFrameworkCore.Validation.Interception
                 invocation.Proceed();
                 return;
             }
-                
+
             _logger.LogInformation(
                 $"Starting Validation: {invocation.TargetType?.FullName}.{method.Name}");
-            
+
             var failures = _validator.Validate(method, invocation.Arguments);
-            var result = failures.ToResult();
+
+            var failureList = failures.ToList();
+            var result = failureList.Count > 0 ? Result.Fail(null, failureList) : Result.Ok();
+
 
             if (!result.Failed)
             {

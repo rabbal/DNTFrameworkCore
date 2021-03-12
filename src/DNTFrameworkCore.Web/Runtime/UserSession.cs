@@ -22,7 +22,7 @@ namespace DNTFrameworkCore.Web.Runtime
         private HttpContext HttpContext => _context.HttpContext;
         private ClaimsPrincipal Principal => HttpContext?.User;
 
-        public bool IsAuthenticated => Principal?.Identity.IsAuthenticated ?? false;
+        public bool IsAuthenticated => Principal?.Identity?.IsAuthenticated ?? false;
         public string UserId => Principal?.FindUserId();
         public string UserName => Principal?.FindUserName();
         public string BranchId => Principal?.FindBranchId();

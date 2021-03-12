@@ -30,7 +30,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
     public sealed class AuthenticationService : IAuthenticationService
     {
         private readonly ITokenService _token;
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _dbContext;
         private readonly IAntiXsrf _antiforgery;
         private readonly IOptionsSnapshot<TokenOptions> _options;
         private readonly IMessageLocalizer _localizer;
@@ -41,7 +41,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
         public AuthenticationService(
             ITokenService token,
-            IUnitOfWork uow,
+            IDbContext dbContext,
             IAntiXsrf antiforgery,
             IOptionsSnapshot<TokenOptions> options,
             IMessageLocalizer localizer,
@@ -49,15 +49,15 @@ namespace DNTFrameworkCore.TestAPI.Authentication
             IUserSession session)
         {
             _token = token ?? throw new ArgumentNullException(nameof(token));
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _antiforgery = antiforgery ?? throw new ArgumentNullException(nameof(antiforgery));
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
             _password = password ?? throw new ArgumentNullException(nameof(password));
             _session = session ?? throw new ArgumentNullException(nameof(session));
 
-            _users = _uow.Set<User>();
-            _roles = _uow.Set<Role>();
+            _users = _dbContext.Set<User>();
+            _roles = _dbContext.Set<Role>();
         }
 
         public async Task<SignInResult> SignInAsync(string userName, string password)

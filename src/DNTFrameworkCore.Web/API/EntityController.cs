@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Application;
@@ -7,6 +9,8 @@ using DNTFrameworkCore.Authorization;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Mapping;
 using DNTFrameworkCore.Querying;
+using DNTFrameworkCore.Validation;
+using DNTFrameworkCore.Web.ExceptionHandling;
 using DNTFrameworkCore.Web.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -264,29 +268,29 @@ namespace DNTFrameworkCore.Web.API
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> New(CancellationToken cancellationToken)
+        public async Task<ActionResult<TModel>> New(CancellationToken cancellationToken)
         {
             if (!await HasPermission(CreatePermissionName)) return Forbid();
 
             var model = await CreateNewAsync(cancellationToken);
 
-            return Ok(model);
+            return model;
         }
 
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Get([BindRequired] TKey id, CancellationToken cancellationToken)
+        public async Task<ActionResult<TModel>> Get([BindRequired] TKey id, CancellationToken cancellationToken)
         {
             if (!await HasPermission(EditPermissionName)) return Forbid();
 
             var model = await FindAsync(id, cancellationToken);
 
-            return !model.HasValue ? null : Ok(model.Value);
+            return !model.HasValue ? null : model.Value;
         }
 
         [HttpPost]
@@ -298,14 +302,15 @@ namespace DNTFrameworkCore.Web.API
             if (!await HasPermission(CreatePermissionName)) return Forbid();
 
             var result = await CreateAsync(model, cancellationToken);
-            return !result.Failed ? Created("", model) : BadRequest(result);
+            return !result.Failed ? Created($"{HttpContext.Request.Path}/{model.Id}", model) : FailureRequest(result);
         }
 
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Put([BindRequired] TKey id, TModel model, CancellationToken cancellationToken)
+        public async Task<ActionResult<TModel>> Put([BindRequired] TKey id, TModel model,
+            CancellationToken cancellationToken)
         {
             if (!model.Id.Equals(id)) return BadRequest();
 
@@ -314,7 +319,7 @@ namespace DNTFrameworkCore.Web.API
             model.Id = id;
 
             var result = await EditAsync(model, cancellationToken);
-            return !result.Failed ? Ok(model) : BadRequest(result);
+            return !result.Failed ? model : FailureRequest(result);
         }
 
         [HttpDelete("{id}")]
@@ -330,7 +335,7 @@ namespace DNTFrameworkCore.Web.API
             if (!model.HasValue) return NotFound();
 
             var result = await DeleteAsync(model.Value, cancellationToken);
-            return !result.Failed ? NoContent() : BadRequest(result);
+            return !result.Failed ? NoContent() : FailureRequest(result);
         }
 
         [HttpPost("[action]")]
@@ -346,20 +351,32 @@ namespace DNTFrameworkCore.Web.API
 
             var result = await DeleteAsync(ids, cancellationToken);
 
-            return !result.Failed ? NoContent() : BadRequest(result);
+            return !result.Failed ? NoContent() : FailureRequest(result);
         }
 
-        protected async Task<bool> HasPermission(string permissionName)
+        protected virtual async Task<bool> HasPermission(string permissionName)
         {
             var policyName = PermissionConstant.PolicyPrefix + permissionName;
             var authorization = HttpContext.RequestServices.GetRequiredService<IAuthorizationService>();
             return (await authorization.AuthorizeAsync(User, policyName)).Succeeded;
         }
-
-        protected IActionResult BadRequest(Result result)
+        
+        protected BadRequestObjectResult FailureRequest()
         {
-            ModelState.AddResult(result);
-            return BadRequest(ModelState);
+            return FailureRequest(ModelState);
+        }
+
+        protected virtual BadRequestObjectResult FailureRequest(ModelStateDictionary modelState)
+        {
+            var detail = FailureProblemDetail.FromHttpContext(HttpContext).WithFailures(modelState.ToSerializable());
+            return BadRequest(detail);
+        }
+
+        protected virtual BadRequestObjectResult FailureRequest(Result result)
+        {
+            var detail = FailureProblemDetail.FromHttpContext(HttpContext, result.Message)
+                .WithFailures(result.Failures);
+            return BadRequest(detail);
         }
     }
 }

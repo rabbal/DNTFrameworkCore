@@ -35,7 +35,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
         private readonly IUserPasswordHashAlgorithm _password;
         private readonly DbSet<User> _users;
         private readonly DbSet<Role> _roles;
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _dbContext;
 
         public AuthenticationService(
             IMessageLocalizer localizer,
@@ -43,19 +43,19 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
             IUserSession session,
             ILogger<AuthenticationService> logger,
             IConfiguration configuration,
-            IUnitOfWork uow,
+            IDbContext dbContext,
             IUserPasswordHashAlgorithm password)
         {
             _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _httpContext = httpContext ?? throw new ArgumentNullException(nameof(httpContext));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _session = session ?? throw new ArgumentNullException(nameof(session));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _password = password ?? throw new ArgumentNullException(nameof(password));
 
-            _roles = _uow.Set<Role>();
-            _users = _uow.Set<User>();
+            _roles = _dbContext.Set<Role>();
+            _users = _dbContext.Set<User>();
         }
 
         public async Task<SignInResult> SignInAsync(string userName, string password, bool persistent)

@@ -16,12 +16,12 @@
 //{
 //    public class NumberingService : INumberingService
 //    {
-//        private readonly IUnitOfWork _uow;
+//        private readonly IDbContext _dbContext;
 //        private readonly IOptions<NumberingOptions> _options;
 //
-//        public NumberingService(IUnitOfWork uow, IOptions<NumberingOptions> options)
+//        public NumberingService(IDbContext dbContext, IOptions<NumberingOptions> options)
 //        {
-//            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+//            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 //            _options = options ?? throw new ArgumentNullException(nameof(options));
 //        }
 //
@@ -33,7 +33,7 @@
 //            string number;
 //            do
 //            {
-//                number = NewNumber(numberedEntity, option, _uow);
+//                number = NewNumber(numberedEntity, option, _dbContext);
 //                retry = !IsUniqueNumber(numberedEntity, number, option.Fields);
 //            } while (retry);
 //
@@ -43,12 +43,12 @@
 //        private bool IsUniqueNumber(INumberedEntity entity, string number, IEnumerable<string> fields)
 //        {
 //            fields = fields.ToList();
-//            using (var command = _uow.Connection.CreateCommand())
+//            using (var command = _dbContext.Connection.CreateCommand())
 //            {
 //                var parameterNames = fields.Aggregate(string.Empty,
 //                    (current, fieldName) => $"{current} AND [t0].[{fieldName}] = @{fieldName} ");
 //
-//                var tableName = _uow.Entry(entity).Metadata.GetTableName();
+//                var tableName = _dbContext.Entry(entity).Metadata.GetTableName();
 //                command.CommandText = $@"SELECT
 //                    (CASE
 //                WHEN EXISTS(
@@ -69,16 +69,16 @@
 //                {
 //                    var p = command.CreateParameter();
 //
-//                    var value = _uow.Entry(entity).Property(field).CurrentValue;
+//                    var value = _dbContext.Entry(entity).Property(field).CurrentValue;
 //
 //                    p.Value = NormalizeValue(value);
 //                    p.ParameterName = $"@{field}";
-//                    p.DbType = SqlHelper.TypeMap[value.GetType()];
+//                    p.DbType = SqlHelper.TypeMapping[value.GetType()];
 //
 //                    command.Parameters.Add(p);
 //                }
 //
-//                command.Transaction = _uow.Transaction.GetDbTransaction();
+//                command.Transaction = _dbContext.Transaction.GetDbTransaction();
 //
 //                var result = command.ExecuteScalar();
 //
@@ -86,18 +86,18 @@
 //            }
 //        }
 //
-//        private static string NewNumber(INumberedEntity entity, NumberedEntityOption option, IUnitOfWork uow)
+//        private static string NewNumber(INumberedEntity entity, NumberedEntityOption option, IDbContext dbContext)
 //        {
-//            var key = CreateEntityKey(entity, option.Fields, uow);
+//            var key = CreateEntityKey(entity, option.Fields, dbContext);
 //
-//            uow.AcquireDistributedLock(key);
+//            dbContext.AcquireDistributedLock(key);
 //
 //            var number = option.Start.ToString(CultureInfo.InvariantCulture);
 //
-//            var numberedEntity = uow.Set<NumberedEntity>().AsNoTracking().FirstOrDefault(a => a.EntityName == key);
+//            var numberedEntity = dbContext.Set<NumberedEntity>().AsNoTracking().FirstOrDefault(a => a.EntityName == key);
 //            if (numberedEntity == null)
 //            {
-//                uow.ExecuteSqlRawCommand(
+//                dbContext.ExecuteSqlRawCommand(
 //                    "INSERT INTO [dbo].[NumberedEntity]([EntityName], [NextValue]) VALUES(@p0,@p1)",
 //                    key,
 //                    option.Start + option.IncrementBy);
@@ -105,7 +105,7 @@
 //            else
 //            {
 //                number = numberedEntity.NextValue.ToString(CultureInfo.InvariantCulture);
-//                uow.ExecuteSqlRawCommand(
+//                dbContext.ExecuteSqlRawCommand(
 //                    "UPDATE [dbo].[NumberedEntity] SET [NextValue] = @p0 WHERE [Id] = @p1",
 //                    numberedEntity.NextValue + option.IncrementBy, numberedEntity.Id);
 //            }
@@ -116,7 +116,7 @@
 //            return number;
 //        }
 //
-//        private static string CreateEntityKey(INumberedEntity entity, IEnumerable<string> fields, IUnitOfWork uow)
+//        private static string CreateEntityKey(INumberedEntity entity, IEnumerable<string> fields, IDbContext dbContext)
 //        {
 //            var type = entity.GetType();
 //
@@ -124,7 +124,7 @@
 //
 //            foreach (var field in fields)
 //            {
-//                var value = uow.Entry(entity).Property(field).CurrentValue;
+//                var value = dbContext.Entry(entity).Property(field).CurrentValue;
 //                value = NormalizeValue(value);
 //
 //                key += $"_{field}_{value}";

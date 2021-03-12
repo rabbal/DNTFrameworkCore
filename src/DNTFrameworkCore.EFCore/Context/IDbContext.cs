@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DNTFrameworkCore.EFCore.Context
 {
-    public interface IUnitOfWork : IDisposable, IScopedDependency
+    public interface IDbContext : IDisposable, IScopedDependency
     {
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
         EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
@@ -30,6 +30,7 @@ namespace DNTFrameworkCore.EFCore.Context
         IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
         Task<IDbContextTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
         void CommitTransaction();
+        Task CommitTransactionAsync();
         void RollbackTransaction();
         void IgnoreHook(string hookName);
     }

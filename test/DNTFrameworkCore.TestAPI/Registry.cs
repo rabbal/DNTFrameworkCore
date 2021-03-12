@@ -1,11 +1,14 @@
 using System;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
 using DNTFrameworkCore.Localization;
 using DNTFrameworkCore.TestAPI.Authentication;
 using DNTFrameworkCore.TestAPI.Infrastructure.Context;
 using DNTFrameworkCore.Web.EFCore.Cryptography;
+using DNTFrameworkCore.Web.ExceptionHandling;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -38,7 +41,7 @@ namespace DNTFrameworkCore.TestAPI
                 {
                     //options.UseFilteredPagedRequestModelBinder();
                     //options.UseExceptionHandling();
-                    
+
                     // remove formatter that turns nulls into 204 - No Content responses
                     // this formatter breaks SPA's Http response JSON parsing
                     options.OutputFormatters.RemoveType<HttpNoContentOutputFormatter>();
@@ -56,18 +59,23 @@ namespace DNTFrameworkCore.TestAPI
                             : factory.Create(localizationResource.Name, localizationResource.Location);
                     };
                 })
-                .AddNewtonsoftJson(options =>
+                .AddJsonOptions(options =>
                 {
-                    options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Include;
-                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                    options.JsonSerializerOptions.WriteIndented = true;
+                    options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.IgnoreNullValues = false;
+                    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 })
-                .ConfigureApiBehaviorOptions(options =>
-                {
-                    options.InvalidModelStateResponseFactory =
-                        context => new BadRequestObjectResult(context.ModelState);
-                });
+                // .AddNewtonsoftJson(options =>
+                // {
+                //     options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate;
+                //     options.SerializerSettings.NullValueHandling = NullValueHandling.Include;
+                //     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                //     options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                // })
+                .ConfigureApiBehaviorOptions(options => { options.UseFailureProblemDetailResponseFactory(); });
 
             services.AddDataProtection().PersistKeysToDbContext<ProjectDbContext>();
 
@@ -80,7 +88,7 @@ namespace DNTFrameworkCore.TestAPI
                         .AllowAnyHeader()
                         .AllowCredentials());
             });
-            
+
             services.AddAntiforgery(x => x.HeaderName = "X-XSRF-TOKEN");
             services.AddSignalR();
 
@@ -94,7 +102,7 @@ namespace DNTFrameworkCore.TestAPI
                     Contact = new OpenApiContact
                     {
                         Email = "gholamrezarabbal@gmail.com",
-                        Name = "GholamReza Rabbal",
+                        Name = "Salar Rabbal",
                         Url = new Uri(
                             "https://www.dotnettips.info/user/%D8%BA%D9%84%D8%A7%D9%85%D8%B1%D8%B6%D8%A7%20%D8%B1%D8%A8%D8%A7%D9%84")
                     }

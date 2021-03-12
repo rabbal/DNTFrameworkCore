@@ -14,13 +14,13 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
 {
     public class NewPriceTypeHandler : CommandHandler<NewPriceType>
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _dbContext;
         private readonly IPriceTypePolicy _policy;
         private readonly IEventBus _bus;
 
-        public NewPriceTypeHandler(IUnitOfWork uow, IPriceTypePolicy policy, IEventBus bus)
+        public NewPriceTypeHandler(IDbContext dbContext, IPriceTypePolicy policy, IEventBus bus)
         {
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _policy = policy ?? throw new ArgumentNullException(nameof(policy));
             _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         }
@@ -37,9 +37,9 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
             if (priceTypeResult.Failed) return priceTypeResult;
 
             var priceType = priceTypeResult.Value;
-            _uow.Set<PriceType>().Add(priceType);
+            _dbContext.Set<PriceType>().Add(priceType);
 
-            await _uow.SaveChangesAsync(cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             await _bus.PublishAsync(priceType);
 

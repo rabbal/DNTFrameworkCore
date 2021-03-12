@@ -22,7 +22,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Blogging
     {
         private readonly IMapper _mapper;
 
-        public BlogService(IUnitOfWork uow, IEventBus bus, IMapper mapper) : base(uow, bus)
+        public BlogService(IDbContext dbContext, IEventBus bus, IMapper mapper) : base(dbContext, bus)
         {
             _mapper = mapper;
         }

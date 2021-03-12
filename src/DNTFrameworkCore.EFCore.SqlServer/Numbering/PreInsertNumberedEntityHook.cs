@@ -25,35 +25,35 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
 
         public override string Name => HookNames.Numbering;
 
-        protected override void Hook(INumberedEntity entity, HookEntityMetadata metadata, IUnitOfWork uow)
+        protected override void Hook(INumberedEntity entity, HookEntityMetadata metadata, IDbContext dbContext)
         {
             var options = _options.Value[entity.GetType()].ToList();
             foreach (var option in options)
             {
-                if (!string.IsNullOrEmpty(uow.PropertyValue<string>(entity, option.FieldName))) return;
+                if (!string.IsNullOrEmpty(dbContext.PropertyValue<string>(entity, option.FieldName))) return;
 
                 bool retry;
                 string number;
                 do
                 {
-                    number = NewNumber(entity, option, uow);
-                    retry = !IsUniqueNumber(entity, number, option.Fields, uow);
+                    number = NewNumber(entity, option, dbContext);
+                    retry = !IsUniqueNumber(entity, number, option.Fields, dbContext);
                 } while (retry);
 
-                uow.Entry(entity).Property(option.FieldName).CurrentValue = number;
+                dbContext.Entry(entity).Property(option.FieldName).CurrentValue = number;
             }
         }
 
         private static bool IsUniqueNumber(INumberedEntity entity, string number, IEnumerable<string> fields,
-            IUnitOfWork uow)
+            IDbContext dbContext)
         {
             fields = fields.ToList();
-            using (var command = uow.Connection.CreateCommand())
+            using (var command = dbContext.Connection.CreateCommand())
             {
                 var parameterNames = fields.Aggregate(string.Empty,
                     (current, fieldName) => $"{current} AND [t0].[{fieldName}] = @{fieldName} ");
 
-                var tableName = uow.Entry(entity).Metadata.GetTableName();
+                var tableName = dbContext.Entry(entity).Metadata.GetTableName();
                 command.CommandText = $@"SELECT
                     (CASE
                 WHEN EXISTS(
@@ -74,16 +74,16 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
                 {
                     var p = command.CreateParameter();
 
-                    var value = uow.Entry(entity).Property(field).CurrentValue;
+                    var value = dbContext.Entry(entity).Property(field).CurrentValue;
 
                     p.Value = NormalizeValue(value);
                     p.ParameterName = $"@{field}";
-                    p.DbType = SqlHelper.TypeMap[value.GetType()];
+                    p.DbType = SqlHelper.TypeMapping[value.GetType()];
 
                     command.Parameters.Add(p);
                 }
 
-                command.Transaction = uow.Transaction.GetDbTransaction();
+                command.Transaction = dbContext.Transaction.GetDbTransaction();
 
                 var result = command.ExecuteScalar();
 
@@ -91,18 +91,18 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             }
         }
 
-        private static string NewNumber(INumberedEntity entity, NumberedEntityOption option, IUnitOfWork uow)
+        private static string NewNumber(INumberedEntity entity, NumberedEntityOption option, IDbContext dbContext)
         {
-            var key = CreateEntityKey(entity, option.Fields, uow);
+            var key = CreateEntityKey(entity, option.Fields, dbContext);
 
-            uow.AcquireDistributedLock(key);
+            dbContext.AcquireDistributedLock(key);
 
             var number = option.Start.ToString(CultureInfo.InvariantCulture);
 
-            var numberedEntity = uow.Set<NumberedEntity>().AsNoTracking().FirstOrDefault(a => a.EntityName == key);
+            var numberedEntity = dbContext.Set<NumberedEntity>().AsNoTracking().FirstOrDefault(a => a.EntityName == key);
             if (numberedEntity == null)
             {
-                uow.ExecuteSqlRawCommand(
+                dbContext.ExecuteSqlRawCommand(
                     "INSERT INTO [dbo].[NumberedEntity]([EntityName], [NextValue]) VALUES(@p0,@p1)",
                     key,
                     option.Start + option.IncrementBy);
@@ -110,7 +110,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             else
             {
                 number = numberedEntity.NextValue.ToString(CultureInfo.InvariantCulture);
-                uow.ExecuteSqlRawCommand(
+                dbContext.ExecuteSqlRawCommand(
                     "UPDATE [dbo].[NumberedEntity] SET [NextValue] = @p0 WHERE [Id] = @p1 ",
                     numberedEntity.NextValue + option.IncrementBy, numberedEntity.Id);
             }
@@ -121,7 +121,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             return number;
         }
 
-        private static string CreateEntityKey(INumberedEntity entity, IEnumerable<string> fields, IUnitOfWork uow)
+        private static string CreateEntityKey(INumberedEntity entity, IEnumerable<string> fields, IDbContext dbContext)
         {
             var type = entity.GetType();
 
@@ -129,7 +129,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
 
             foreach (var field in fields)
             {
-                var value = uow.Entry(entity).Property(field).CurrentValue;
+                var value = dbContext.Entry(entity).Property(field).CurrentValue;
                 value = NormalizeValue(value);
 
                 key += $"_{field}_{value}";

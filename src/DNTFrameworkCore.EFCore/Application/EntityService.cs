@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.EFCore.Application
         where TEntity : Entity<int>, new()
         where TModel : MasterModel<int>
     {
-        protected EntityService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
+        protected EntityService(IDbContext dbContext, IEventBus bus) : base(dbContext, bus)
         {
         }
     }
@@ -33,7 +33,7 @@ namespace DNTFrameworkCore.EFCore.Application
         where TModel : MasterModel<TKey>
         where TKey : IEquatable<TKey>
     {
-        protected EntityService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
+        protected EntityService(IDbContext dbContext, IEventBus bus) : base(dbContext, bus)
         {
         }
     }
@@ -46,7 +46,7 @@ namespace DNTFrameworkCore.EFCore.Application
         where TReadModel : ReadModel<TKey>
         where TKey : IEquatable<TKey>
     {
-        protected EntityService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
+        protected EntityService(IDbContext dbContext, IEventBus bus) : base(dbContext, bus)
         {
         }
     }
@@ -61,12 +61,12 @@ namespace DNTFrameworkCore.EFCore.Application
         where TKey : IEquatable<TKey>
     {
         protected readonly DbSet<TEntity> EntitySet;
-        protected readonly IUnitOfWork UnitOfWork;
+        protected readonly IDbContext DbContext;
 
-        protected EntityService(IUnitOfWork uow, IEventBus bus) : base(bus)
+        protected EntityService(IDbContext dbContext, IEventBus bus) : base(bus)
         {
-            UnitOfWork = uow ?? throw new ArgumentNullException(nameof(uow));
-            EntitySet = UnitOfWork.Set<TEntity>();
+            DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            EntitySet = DbContext.Set<TEntity>();
         }
 
         protected virtual IQueryable<TEntity> FindEntityQueryable => EntitySet.AsNoTracking();
@@ -86,24 +86,24 @@ namespace DNTFrameworkCore.EFCore.Application
         protected sealed override async Task CreateEntityListAsync(IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken)
         {
-            EntitySet.AddRange(entityList);
-            await UnitOfWork.SaveChangesAsync(cancellationToken);
-            UnitOfWork.MarkUnchanged(entityList);
+            await EntitySet.AddRangeAsync(entityList, cancellationToken);
+            await DbContext.SaveChangesAsync(cancellationToken);
+            DbContext.MarkUnchanged(entityList);
         }
 
         protected sealed override async Task UpdateEntityListAsync(IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken)
         {
-            UnitOfWork.UpdateGraph(entityList);
-            await UnitOfWork.SaveChangesAsync(cancellationToken);
-            UnitOfWork.MarkUnchanged(entityList);
+            DbContext.UpdateGraph(entityList);
+            await DbContext.SaveChangesAsync(cancellationToken);
+            DbContext.MarkUnchanged(entityList);
         }
 
         protected sealed override Task RemoveEntityListAsync(IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken)
         {
             EntitySet.RemoveRange(entityList);
-            return UnitOfWork.SaveChangesAsync(cancellationToken);
+            return DbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

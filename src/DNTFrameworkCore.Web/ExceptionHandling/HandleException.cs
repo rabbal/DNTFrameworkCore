@@ -23,6 +23,7 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
         }
     }
 
+    //TODO: Refactor to support FailureProblemDetail
     public sealed class HandleException : IExceptionFilter
     {
         private readonly ILogger<HandleException> _logger;
@@ -42,7 +43,7 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
             if (context.Exception is OperationCanceledException)
             {
                 _logger.LogInformation("Request was cancelled");
-                context.Result = new StatusCodeResult(400);
+                context.Result = new BadRequestResult();
             }
             else if (context.Exception is ValidationException validationException)
             {
@@ -51,7 +52,7 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
                 context.ModelState.AddValidationException(validationException);
 
                 context.Result = new BadRequestObjectResult(context.ModelState);
-                context.HttpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
+                context.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
             }
             else if (context.Exception is DbConcurrencyException)
             {
@@ -60,7 +61,7 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
                 context.ModelState.AddModelError(string.Empty, _options.Value.DbConcurrencyException);
 
                 context.Result = new BadRequestObjectResult(context.ModelState);
-                context.HttpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
+                context.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
             }
             else if (context.Exception is DbException dbException &&
                      _options.Value.TryFindMapping(dbException, out var mapping))
@@ -70,30 +71,24 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
                 context.ModelState.AddModelError(mapping.MemberName ?? string.Empty, mapping.Message);
 
                 context.Result = new BadRequestObjectResult(context.ModelState);
-                context.HttpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
+                context.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
             }
             else
             {
                 _logger.LogError(new EventId(context.Exception.HResult), context.Exception, context.Exception.Message);
 
-                var traceId = Activity.Current?.Id ?? context.HttpContext.TraceIdentifier;
                 var message = context.Exception is DbException
                     ? _options.Value.DbException
                     : _options.Value.InternalServerIssue;
 
-                var result = new Dictionary<string, string>
-                {
-                    {"traceId", traceId},
-                    {"message", message}
-                };
+                var detail = FailureProblemDetail.FromHttpContext(context.HttpContext, message);
 
                 if (_environment.IsDevelopment())
                 {
-                    result.Add("development_message", context.Exception.ToStringFormat());
+                    detail.DevelopmentMessage = context.Exception.ToString();
                 }
 
-                context.Result = new InternalServerErrorObjectResult(result);
-
+                context.Result = new InternalServerErrorObjectResult(detail);
                 context.HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
             }
 

@@ -17,12 +17,12 @@ namespace DNTFrameworkCore.EFCore.Context
         where TEntity : AggregateRoot<TKey>
     {
         protected readonly DbSet<TEntity> EntitySet;
-        protected readonly IUnitOfWork UnitOfWork;
+        protected readonly IDbContext DbContext;
 
-        protected Repository(IUnitOfWork uow)
+        protected Repository(IDbContext dbContext)
         {
-            UnitOfWork = uow ?? throw new ArgumentNullException(nameof(uow));
-            EntitySet = UnitOfWork.Set<TEntity>();
+            DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            EntitySet = DbContext.Set<TEntity>();
         }
 
         protected virtual IQueryable<TEntity> BuildFindQuery()

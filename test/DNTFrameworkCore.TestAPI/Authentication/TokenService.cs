@@ -22,23 +22,23 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
     public class TokenService : ITokenService
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _dbContext;
         private readonly IOptionsSnapshot<TokenOptions> _options;
         private readonly IClock _clock;
         private readonly ISecurityService _security;
         private readonly DbSet<UserToken> _tokens;
 
-        public TokenService(IUnitOfWork uow,
+        public TokenService(IDbContext dbContext,
             IOptionsSnapshot<TokenOptions> options,
             IClock clock,
             ISecurityService security)
         {
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _clock = clock ?? throw new ArgumentNullException(nameof(clock));
             _security = security ?? throw new ArgumentNullException(nameof(security));
 
-            _tokens = _uow.Set<UserToken>();
+            _tokens = _dbContext.Set<UserToken>();
         }
 
         public async Task<Token> NewTokenAsync(long userId, IEnumerable<Claim> claims)
@@ -62,7 +62,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
             await DeleteExpiredTokensAsync();
 
-            await _uow.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<bool> IsValidTokenAsync(long userId, string token)
@@ -84,7 +84,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
             _tokens.Add(token);
 
-            await _uow.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
 
         private async Task AddUserTokenAsync(long userId, string token)

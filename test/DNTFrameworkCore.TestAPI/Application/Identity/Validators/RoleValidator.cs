@@ -11,11 +11,11 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity.Validators
 {
     public class RoleValidator : FluentModelValidator<RoleModel>
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _dbContext;
 
-        public RoleValidator(IUnitOfWork uow, IMessageLocalizer localizer)
+        public RoleValidator(IDbContext dbContext, IMessageLocalizer localizer)
         {
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
             RuleFor(m => m.Name).NotEmpty()
                 .WithMessage(localizer["Role.Fields.Name.Required"])
@@ -43,7 +43,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity.Validators
         private bool CheckDuplicateName(string name, long id)
         {
             var normalizedName = name.ToUpperInvariant();
-            return _uow.Set<Role>().Any(u => u.NormalizedName == normalizedName && u.Id != id);
+            return _dbContext.Set<Role>().Any(u => u.NormalizedName == normalizedName && u.Id != id);
         }
 
         private bool CheckDuplicatePermissions(RoleModel model)

@@ -23,9 +23,9 @@ namespace DNTFrameworkCore.EFCore
         /// <param name="services"></param>
         /// <returns></returns>
         public static EFCoreBuilder AddEFCore<TDbContext>(this IServiceCollection services)
-            where TDbContext : DbContext, IUnitOfWork
+            where TDbContext : DbContext, IDbContext
         {
-            services.AddScoped(provider => (IUnitOfWork) provider.GetRequiredService(typeof(TDbContext)));
+            services.AddScoped(provider => (IDbContext) provider.GetRequiredService(typeof(TDbContext)));
             services.AddTransient<TransactionInterceptor>();
             services.AddScoped<IKeyValueService, KeyValueService>();
             services.AddTransient<IHook, PreUpdateRowVersionHook>();

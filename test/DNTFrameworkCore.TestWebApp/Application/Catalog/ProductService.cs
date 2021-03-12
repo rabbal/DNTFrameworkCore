@@ -24,9 +24,9 @@ namespace DNTFrameworkCore.TestWebApp.Application.Catalog
         private readonly IMapper _mapper;
 
         public ProductService(
-            IUnitOfWork uow,
+            IDbContext dbContext,
             IEventBus bus,
-            IMapper mapper) : base(uow, bus)
+            IMapper mapper) : base(dbContext, bus)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }

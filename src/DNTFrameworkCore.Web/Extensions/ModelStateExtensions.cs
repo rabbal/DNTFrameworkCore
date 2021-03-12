@@ -4,21 +4,30 @@ using System.Text;
 using DNTFrameworkCore.Exceptions;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Validation;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DNTFrameworkCore.Web.Extensions
 {
     public static class ModelStateExtensions
     {
+        public static IEnumerable<ValidationFailure> ToFailures(this ModelStateDictionary modelState)
+        {
+            return modelState.SelectMany(entry =>
+            {
+                var (key, value) = entry;
+                return value.Errors.Select(error => new ValidationFailure(key, error.ErrorMessage));
+            });
+        }
+        
         /// <summary>
         /// Converts the <paramref name="modelState"/> to a dictionary that can be easily serialized.
         /// </summary>
-        public static IDictionary<string, string[]> ToSerializableDictionary(this ModelStateDictionary modelState)
+        public static Dictionary<string, string[]> ToSerializable(this ModelStateDictionary modelState)
         {
-            return modelState.Where(x => x.Value.Errors.Any()).ToDictionary(
+            return modelState.Where(x => x.Value.Errors.Count > 0).ToDictionary(
                 kvp => kvp.Key,
-                kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-            );
+                kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray());
         }
 
         /// <summary>
@@ -26,7 +35,7 @@ namespace DNTFrameworkCore.Web.Extensions
         /// </summary>
         /// /// <param name="exception">The validation exception to store</param>
         /// <param name="modelState">The ModelStateDictionary to store the errors in.</param>
-        /// <param name="prefix">An optional prefix. If ommitted, the property names will be the keys. If specified, the prefix will be concatenatd to the property name with a period. Eg "user.Name"</param>
+        /// <param name="prefix">An optional prefix. If omitted, the property names will be the keys. If specified, the prefix will be concatenated to the property name with a period. Eg "user.Name"</param>
         public static void AddValidationException(this ModelStateDictionary modelState,
             ValidationException exception, string prefix = null)
         {
@@ -40,7 +49,7 @@ namespace DNTFrameworkCore.Web.Extensions
         /// </summary>
         /// <param name="result">The validation result to store</param>
         /// <param name="modelState">The ModelStateDictionary to store the errors in.</param>
-        /// <param name="prefix">An optional prefix. If ommitted, the property names will be the keys. If specified, the prefix will be concatenatd to the property name with a period. Eg "user.Name"</param>
+        /// <param name="prefix">An optional prefix. If omitted, the property names will be the keys. If specified, the prefix will be concatenated to the property name with a period. Eg "user.Name"</param>
         public static void AddResult(this ModelStateDictionary modelState, Result result, string prefix = null)
         {
             if (!result.Failed) return;

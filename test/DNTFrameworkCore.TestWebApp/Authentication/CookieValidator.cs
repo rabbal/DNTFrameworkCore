@@ -19,13 +19,13 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
 
     public class CookieValidator : ICookieValidator
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _dbContext;
         private readonly DbSet<User> _users;
 
-        public CookieValidator(IUnitOfWork uow)
+        public CookieValidator(IDbContext dbContext)
         {
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _users = uow.Set<User>();
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _users = dbContext.Set<User>();
         }
         public async Task ValidateAsync(CookieValidatePrincipalContext context)
         {

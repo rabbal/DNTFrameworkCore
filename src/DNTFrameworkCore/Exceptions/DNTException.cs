@@ -4,23 +4,23 @@ using System.Runtime.Serialization;
 namespace DNTFrameworkCore.Exceptions
 {
     [Serializable]
-    public class FrameworkException : Exception
+    public class DNTException : Exception
     {
-        public FrameworkException()
+        public DNTException()
         {
         }
 
-        public FrameworkException(string message)
+        public DNTException(string message)
             : base(message)
         {
         }
 
-        public FrameworkException(string message, Exception innerException)
+        public DNTException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
-        public FrameworkException(SerializationInfo serializationInfo, StreamingContext context)
+        public DNTException(SerializationInfo serializationInfo, StreamingContext context)
             : base(serializationInfo, context)
         {
         }

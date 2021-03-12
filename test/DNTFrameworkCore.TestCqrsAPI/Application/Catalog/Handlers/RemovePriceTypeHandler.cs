@@ -11,21 +11,21 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
 {
     public class RemovePriceTypeHandler : CommandHandler<RemovePriceType>
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _dbContext;
 
-        public RemovePriceTypeHandler(IUnitOfWork uow)
+        public RemovePriceTypeHandler(IDbContext dbContext)
         {
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
         public override async Task<Result> Handle(RemovePriceType command, CancellationToken cancellationToken)
         {
-            var priceType = await _uow.Set<PriceType>().FindAsync(command.Id, cancellationToken);
+            var priceType = await _dbContext.Set<PriceType>().FindAsync(command.Id, cancellationToken);
             if (priceType == null) return Fail($"priceType with id:{command.Id} not found");
 
-            _uow.Set<PriceType>().Remove(priceType);
+            _dbContext.Set<PriceType>().Remove(priceType);
 
-            await _uow.SaveChangesAsync(cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return Ok();
         }

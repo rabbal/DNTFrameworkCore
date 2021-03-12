@@ -22,14 +22,14 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
     public class TaskService : EntityService<Task, int, TaskReadModel, TaskModel,
         TaskFilteredPagedRequest>, ITaskService
     {
-        public TaskService(IUnitOfWork uow, IEventBus bus) : base(uow, bus)
+        public TaskService(IDbContext dbContext, IEventBus bus) : base(dbContext, bus)
         {
         }
 
         public bool TamperedTaskExists()
         {
             var tasks = EntitySet.ToList();
-            return tasks.Any(task => EFCoreShadow.PropertyHash(task) != UnitOfWork.EntityHash(task));
+            return tasks.Any(task => EFCoreShadow.PropertyHash(task) != DbContext.EntityHash(task));
         }
 
         public override Task<IPagedResult<TaskReadModel>> FetchPagedListAsync(TaskFilteredPagedRequest request,

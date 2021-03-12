@@ -11,12 +11,12 @@ namespace DNTFrameworkCore.TestWebApp.Application.Catalog.Validators
 {
     public class ProductValidator : ModelValidator<ProductModel>
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _dbContext;
         private readonly IMessageLocalizer _localizer;
 
-        public ProductValidator(IUnitOfWork uow, IMessageLocalizer localizer)
+        public ProductValidator(IDbContext dbContext, IMessageLocalizer localizer)
         {
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
         }
         
@@ -30,7 +30,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Catalog.Validators
 
         private bool IsUniqueNumber(ProductModel model)
         {
-            return _uow.Set<Product>().Any(p => p.Number == model.Number && p.Id != model.Id);
+            return _dbContext.Set<Product>().Any(p => p.Number == model.Number && p.Id != model.Id);
         }
     }
 }
