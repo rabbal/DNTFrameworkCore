@@ -12,7 +12,7 @@ namespace DNTFrameworkCore.Tests.Extensibility
         public void Should_TypeDescriptor_GetProperties_Returns_ExtensionProperties_And_PredefinedProperties()
         {
             //Arrange
-            var rabbal = new Person {Name = "GholamReza", Family = "Rabbal"};
+            var rabbal = new Person {Name = "Salar", Family = "Rabbal"};
             const string propertyName = "Title";
             const string propertyValue = "Software Engineer";
 

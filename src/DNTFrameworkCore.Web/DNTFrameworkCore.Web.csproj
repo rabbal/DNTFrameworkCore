@@ -1,19 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\common.props"/>
   <PropertyGroup>
     <Title>DNTFrameworkCore.Web</Title>
     <Description>This Library Contains Infrastructures for Permission-based Authorization,Building CRUD API,Building CRUD Mvc Controller and etc based on ASP.NET Core</Description>
-    <VersionPrefix>4.6.0</VersionPrefix>
-    <Authors>GholamReza Rabbal</Authors>
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageTags>.NETCore;ASP.NET Core;API;MVC;CRUD</PackageTags>
     <AssemblyName>DNTFrameworkCore.Web</AssemblyName>
     <RootNamespace>DNTFrameworkCore.Web</RootNamespace>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\DNTFrameworkCore\DNTFrameworkCore.csproj" />

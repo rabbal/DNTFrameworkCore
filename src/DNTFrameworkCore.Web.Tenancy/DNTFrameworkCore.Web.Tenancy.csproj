@@ -1,20 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\common.props"/>
   <PropertyGroup>
     <Title>DNTFrameworkCore.Web.Tenancy</Title>
     <Description>This Library Contains Infrastructure for Tenant Resolution,Building HttpPipline Per Tenant,TenantScoped Lifetime Service Registration and etc for Building MultiTenant Web Applications based on ASP.NET Core</Description>
-    <VersionPrefix>4.6.0</VersionPrefix>
-    <Authors>GholamReza Rabbal</Authors>
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageTags>.NETCore;Tenancy;ASP.NET Core</PackageTags>
     <AssemblyName>DNTFrameworkCore.Web.Tenancy</AssemblyName>
     <RootNamespace>DNTFrameworkCore.Web.Tenancy</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

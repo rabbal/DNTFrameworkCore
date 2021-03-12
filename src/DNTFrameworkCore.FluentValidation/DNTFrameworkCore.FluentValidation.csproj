@@ -1,19 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\common.props"/>
   <PropertyGroup>
     <Title>DNTFrameworkCore.FluentValidation</Title>
     <Description>This Library Contains Implementation of IModelValidator based on FluentValidation Library</Description>
-    <VersionPrefix>4.6.0</VersionPrefix>
-    <Authors>GholamReza Rabbal</Authors>
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageTags>.NETCore;Validation;FluentValidation</PackageTags>
     <AssemblyName>DNTFrameworkCore.FluentValidation</AssemblyName>
     <RootNamespace>DNTFrameworkCore.FluentValidation</RootNamespace>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="9.5.2" />

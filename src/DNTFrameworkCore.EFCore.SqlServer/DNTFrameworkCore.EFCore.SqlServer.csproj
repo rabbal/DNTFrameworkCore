@@ -1,19 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\..\common.props"/>
     <PropertyGroup>
         <Title>DNTFrameworkCore.EFCore.SqlServer</Title>
         <Description>This Library Contains Infrastructures Like Resource Locking or Numbering that They are Related to EFCore and SqlServer</Description>
-        <VersionPrefix>4.6.0</VersionPrefix>
-        <Authors>GholamReza Rabbal</Authors>
-        <TargetFramework>net5.0</TargetFramework>
-        <LangVersion>latest</LangVersion>
-        <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
-        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageTags>.NETCore;EFCore;SqlServer;Numbering</PackageTags>
         <AssemblyName>DNTFrameworkCore.EFCore.SqlServer</AssemblyName>
         <RootNamespace>DNTFrameworkCore.EFCore.SqlServer</RootNamespace>
-        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\DNTFrameworkCore.EFCore\DNTFrameworkCore.EFCore.csproj" />

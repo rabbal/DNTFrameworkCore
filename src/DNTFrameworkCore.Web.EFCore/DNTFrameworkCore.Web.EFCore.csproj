@@ -1,19 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\..\common.props"/>
     <PropertyGroup>
         <Title>DNTFrameworkCore.Web.EFCore</Title>
         <Description>This Library Contains Infrastructures that Related to ASP.NET Core and EFCore</Description>
-        <VersionPrefix>4.6.0</VersionPrefix>
-        <Authors>GholamReza Rabbal</Authors>
-        <TargetFramework>net5.0</TargetFramework>
-        <LangVersion>latest</LangVersion>
-        <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
-        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageTags>.NETCore;ASP.NET Core;EFCore</PackageTags>
         <AssemblyName>DNTFrameworkCore.Web.EFCore</AssemblyName>
         <RootNamespace>DNTFrameworkCore.Web.EFCore</RootNamespace>
-        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\DNTFrameworkCore.EFCore\DNTFrameworkCore.EFCore.csproj" />
