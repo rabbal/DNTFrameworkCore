@@ -67,7 +67,7 @@ namespace DNTFrameworkCore.Licensing
             return HardwareQuery("Win32_BIOS", "Manufacturer")
                    + HardwareQuery("Win32_BIOS", "SMBIOSBIOSVersion")
                    + HardwareQuery("Win32_BIOS", "IdentificationCode")
-                   + HardwareQuery("Win32_BIOS", "SecurityStamp")
+                   + HardwareQuery("Win32_BIOS", "SerialNumber")
                    + HardwareQuery("Win32_BIOS", "ReleaseDate")
                    + HardwareQuery("Win32_BIOS", "Version");
         }
@@ -77,7 +77,7 @@ namespace DNTFrameworkCore.Licensing
             return HardwareQuery("Win32_BaseBoard", "Model")
                    + HardwareQuery("Win32_BaseBoard", "Manufacturer")
                    + HardwareQuery("Win32_BaseBoard", "Name")
-                   + HardwareQuery("Win32_BaseBoard", "SecurityStamp");
+                   + HardwareQuery("Win32_BaseBoard", "SerialNumber");
         }
 
         private static string DiskId()

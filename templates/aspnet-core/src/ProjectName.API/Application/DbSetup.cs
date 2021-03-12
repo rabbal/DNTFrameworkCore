@@ -15,17 +15,17 @@ namespace ProjectName.API.Application
 {
     public class DbSetup : IDbSetup
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _dbContext;
         private readonly IOptionsSnapshot<ProjectOptions> _settings;
         private readonly IUserPasswordHashAlgorithm _password;
         private readonly ILogger<DbSetup> _logger;
 
-        public DbSetup(IUnitOfWork uow,
+        public DbSetup(IDbContext dbContext,
             IOptionsSnapshot<ProjectOptions> settings,
             IUserPasswordHashAlgorithm password,
             ILogger<DbSetup> logger)
         {
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
             _password = password ?? throw new ArgumentNullException(nameof(password));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -38,7 +38,7 @@ namespace ProjectName.API.Application
 
         private void SeedIdentity()
         {
-            var role = _uow.Set<Role>()
+            var role = _dbContext.Set<Role>()
                 .Include(r => r.Permissions)
                 .FirstOrDefault(r => r.Name == RoleNames.Administrators);
             if (role == null)
@@ -50,7 +50,7 @@ namespace ProjectName.API.Application
                     Description =
                         "حذف گروه کاربری پیش فرض «مدیران سیستم» باعث ایجاد اختلال در کارکرد صحیح سیستم خواهد شد.",
                 };
-                _uow.Set<Role>().Add(role);
+                _dbContext.Set<Role>().Add(role);
             }
             else
             {
@@ -69,7 +69,7 @@ namespace ProjectName.API.Application
 
             var admin = _settings.Value.UserSeed;
 
-            var user = _uow.Set<User>()
+            var user = _dbContext.Set<User>()
                 .Include(u => u.Permissions)
                 .Include(u => u.Roles)
                 .FirstOrDefault(u => u.NormalizedUserName == admin.UserName.ToUpperInvariant());
@@ -86,7 +86,7 @@ namespace ProjectName.API.Application
                     SecurityStamp = Guid.NewGuid().ToString("N")
                 };
 
-                _uow.Set<User>().Add(user);
+                _dbContext.Set<User>().Add(user);
             }
             else
             {
@@ -95,7 +95,7 @@ namespace ProjectName.API.Application
 
             if (user.Roles.All(ur => ur.RoleId != role.Id))
             {
-                _uow.Set<UserRole>().Add(new UserRole {Role = role, User = user});
+                _dbContext.Set<UserRole>().Add(new UserRole {Role = role, User = user});
             }
             else
             {
@@ -104,7 +104,7 @@ namespace ProjectName.API.Application
 
             user.Permissions.Clear();
 
-            _uow.SaveChanges();
+            _dbContext.SaveChanges();
         }
     }
 }

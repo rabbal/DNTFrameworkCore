@@ -11,11 +11,11 @@ namespace ProjectName.Application.Identity.Validators
 {
     public class UserValidator : FluentModelValidator<UserModel>
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IDbContext _dbContext;
 
-        public UserValidator(IUnitOfWork uow, IMessageLocalizer localizer)
+        public UserValidator(IDbContext dbContext, IMessageLocalizer localizer)
         {
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
             RuleFor(m => m.DisplayName).NotEmpty()
                 .WithMessage(localizer["User.Fields.DisplayName.Required"])
@@ -28,7 +28,7 @@ namespace ProjectName.Application.Identity.Validators
                 .DependentRules(() =>
                 {
                     RuleFor(m => m).Must(model =>
-                         !CheckDuplicateDisplayName(model.DisplayName, model.Id))
+                         IsUniqueDisplayName(model.DisplayName, model.Id))
                         .WithMessage(localizer["User.Fields.DisplayName.Unique"])
                         .OverridePropertyName(nameof(UserModel.DisplayName));
                 });
@@ -44,7 +44,7 @@ namespace ProjectName.Application.Identity.Validators
                 .DependentRules(() =>
                 {
                     RuleFor(m => m).Must(model =>
-                         !CheckDuplicateUserName(model.UserName, model.Id))
+                         IsUniqueUserName(model.UserName, model.Id))
                         .WithMessage(localizer["User.Fields.UserName.Unique"])
                         .OverridePropertyName(nameof(UserModel.UserName));
                 });
@@ -62,16 +62,16 @@ namespace ProjectName.Application.Identity.Validators
                 .When(m => m.Roles != null && m.Roles.Any(r => !r.IsDeleted()));
         }
 
-        private bool CheckDuplicateUserName(string userName, long id)
+        private bool IsUniqueUserName(string userName, long id)
         {
             var normalizedUserName = userName.ToUpperInvariant();
-            return _uow.Set<User>().Any(u => u.NormalizedUserName == normalizedUserName && u.Id != id);
+            return _dbContext.Set<User>().Any(u => u.NormalizedUserName == normalizedUserName && u.Id != id);
         }
 
-        private bool CheckDuplicateDisplayName(string displayName, long id)
+        private bool IsUniqueDisplayName(string displayName, long id)
         {
             var normalizedDisplayName = displayName.ToUpperInvariant(); //Todo: In persian can use DNTPersianUtils.Core nuget package
-            return _uow.Set<User>().Any(u => u.NormalizedDisplayName == normalizedDisplayName && u.Id != id);
+            return _dbContext.Set<User>().Any(u => u.NormalizedDisplayName == normalizedDisplayName && u.Id != id);
         }
 
         private bool CheckDuplicateRoles(UserModel model)

@@ -15,7 +15,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Identity.Models
         public ICollection<PermissionModel> Permissions { get; set; } = new HashSet<PermissionModel>();
         public ICollection<PermissionModel> IgnoredPermissions { get; set; } = new HashSet<PermissionModel>();
 
-        public bool ShouldMapSecurityStamp() =>
+        public bool ShouldResetSecurityToken() =>
             IsNew() || !IsActive || !Password.IsEmpty() ||
             Roles.Any(a => a.IsNew() || a.IsDeleted()) ||
             IgnoredPermissions.Any(p => p.IsDeleted() || p.IsNew()) ||

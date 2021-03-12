@@ -111,7 +111,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
             identity.AddClaim(new Claim(UserClaimTypes.UserId, user.Id.ToString(), ClaimValueTypes.Integer64));
             identity.AddClaim(new Claim(UserClaimTypes.UserName, user.UserName, ClaimValueTypes.String));
             identity.AddClaim(new Claim(UserClaimTypes.DisplayName, user.DisplayName, ClaimValueTypes.String));
-            identity.AddClaim(new Claim(UserClaimTypes.SecurityStamp, user.SecurityToken, ClaimValueTypes.String));
+            identity.AddClaim(new Claim(UserClaimTypes.SecurityToken, user.SecurityToken, ClaimValueTypes.String));
 
             foreach (var claim in user.Claims)
             {

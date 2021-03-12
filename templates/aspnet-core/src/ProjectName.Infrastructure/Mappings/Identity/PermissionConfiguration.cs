@@ -11,7 +11,7 @@ namespace ProjectName.Infrastructure.Mappings.Identity
             builder.Property(a => a.Name).HasMaxLength(Permission.NameLength).IsRequired();
             builder.Property<string>("Discriminator").HasMaxLength(50);
 
-            builder.HasIndex("Discriminator").HasName("IX_Permission_Discriminator");
+            builder.HasIndex("Discriminator").HasDatabaseName("IX_Permission_Discriminator");
 
             builder.ToTable(nameof(Permission));
         }

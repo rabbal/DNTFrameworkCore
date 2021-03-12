@@ -1,5 +1,5 @@
 using System;
-using DNTFrameworkCore.Application.Models;
+using DNTFrameworkCore.Application;
 
 namespace ProjectName.Application.Identity.Models
 {

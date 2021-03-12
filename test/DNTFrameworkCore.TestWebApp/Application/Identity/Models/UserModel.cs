@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Extensions;
+using DNTFrameworkCore.TestWebApp.Domain.Identity;
 
 namespace DNTFrameworkCore.TestWebApp.Application.Identity.Models
 {
@@ -13,11 +15,11 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity.Models
         public ICollection<long> Roles { get; set; } = new HashSet<long>();
         public ICollection<string> Permissions { get; set; } = new HashSet<string>();
         public ICollection<string> IgnoredPermissions { get; set; } = new HashSet<string>();
-//         public bool ShouldMapSerial(User user) =>
-//            IsNew() || !IsActive || !Password.IsEmpty() ||
-//                Roles.Any(a => a.IsNew() || a.IsDeleted()) ||
-//                IgnoredPermissions.Any(p => p.IsDeleted() || p.IsNew()) ||
-//                Permissions.Any(p => p.IsDeleted() || p.IsNew());
+         // public bool ShouldResetSecurityToken(User user) =>
+         //    IsNew() || !IsActive || !Password.IsEmpty() ||
+         //        Roles.Any(a => a.IsNew() || a.IsDeleted()) ||
+         //        IgnoredPermissions.Any(p => p.IsDeleted() || p.IsNew()) ||
+         //        Permissions.Any(p => p.IsDeleted() || p.IsNew());
 
         public bool ShouldMapPasswordHash() =>
             IsNew() || !Password.IsEmpty();

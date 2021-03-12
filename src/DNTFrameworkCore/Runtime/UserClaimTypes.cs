@@ -6,7 +6,7 @@ namespace DNTFrameworkCore.Runtime
     {
         public const string UserName = ClaimTypes.Name;
         public const string UserId = ClaimTypes.NameIdentifier;
-        public const string SecurityStamp = nameof(SecurityStamp);
+        public const string SecurityToken = nameof(SecurityToken);
         public const string Role = ClaimTypes.Role;
         public const string DisplayName = nameof(DisplayName);
         public const string BranchId = nameof(BranchId);

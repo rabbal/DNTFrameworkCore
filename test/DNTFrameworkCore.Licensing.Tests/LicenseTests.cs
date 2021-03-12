@@ -79,7 +79,7 @@ namespace DNTFrameworkCore.Licensing.Tests
         }
 
         [Test]
-        public void Should_Not_Create_New_With_Empty_SecurityStamp()
+        public void Should_Not_Create_New_With_Empty_SerialNumber()
         {
             var exception1 = Assert.Throws<ArgumentNullException>(() =>
                 License.New("DNTFrameworkCore", "1.1.1-beta", "GitHub", null));
@@ -182,7 +182,7 @@ namespace DNTFrameworkCore.Licensing.Tests
             license.Signed.ShouldBeTrue();
             var licenseText = license.ToString();
             licenseText.ShouldContain("Signature");
-            licenseText.ShouldContain("SecurityStamp=\"4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9\"");
+            licenseText.ShouldContain("SerialNumber=\"4876-8DB5-EE85-69D3-FE52-8CF7-395D-2EA9\"");
             licenseText.ShouldContain("Name=\"AttributeName1\"");
             licenseText.ShouldContain("Name=\"Feature1\"");
         }
@@ -255,7 +255,7 @@ namespace DNTFrameworkCore.Licensing.Tests
         }
 
         [Test]
-        public void Should_Not_Verify_With_Invalid_SecurityStamp()
+        public void Should_Not_Verify_With_Invalid_SerialNumber()
         {
             var content = ReadLicense("DNTFrameworkCore.Licensing.Tests.License.lic");
 

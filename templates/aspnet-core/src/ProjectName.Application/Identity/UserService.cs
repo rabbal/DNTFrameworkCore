@@ -1,45 +1,45 @@
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
-using DNTFrameworkCore.Application.Models;
-using DNTFrameworkCore.Application.Services;
+using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
+using DNTFrameworkCore.EFCore.Querying;
 using DNTFrameworkCore.Eventing;
+using DNTFrameworkCore.Querying;
 using Microsoft.EntityFrameworkCore;
 using ProjectName.Application.Identity.Models;
 using ProjectName.Domain.Identity;
 
 namespace ProjectName.Application.Identity
 {
-    public interface IUserService : ICrudService<long, UserReadModel, UserModel>
+    public interface IUserService : IEntityService<long, UserReadModel, UserModel>
     {
     }
 
-    public class UserService : CrudService<User, long, UserReadModel, UserModel>, IUserService
+    public class UserService : EntityService<User, long, UserReadModel, UserModel>, IUserService
     {
         private readonly IMapper _mapper;
         private readonly IUserPasswordHashAlgorithm _password;
 
         public UserService(
-            IUnitOfWork uow,
+            IDbContext dbContext,
             IEventBus bus,
             IUserPasswordHashAlgorithm password,
-            IMapper mapper) : base(uow, bus)
+            IMapper mapper) : base(dbContext, bus)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _password = password ?? throw new ArgumentNullException(nameof(password));
         }
 
-        protected override IQueryable<User> BuildFindQuery()
-        {
-            return base.BuildFindQuery()
-                .Include(u => u.Roles)
-                .Include(u => u.Permissions);
-        }
+        protected override IQueryable<User> FindEntityQueryable => base.FindEntityQueryable.Include(u => u.Roles)
+            .Include(u => u.Permissions);
 
-        protected override IQueryable<UserReadModel> BuildReadQuery(FilteredPagedQueryModel model)
+        public override Task<IPagedResult<UserReadModel>> FetchPagedListAsync(FilteredPagedRequest request,
+            CancellationToken cancellationToken = default)
         {
             return EntitySet.AsNoTracking()
                 .Select(u => new UserReadModel
@@ -49,14 +49,14 @@ namespace ProjectName.Application.Identity
                     UserName = u.UserName,
                     DisplayName = u.DisplayName,
                     LastLoggedInDateTime = u.LastLoggedInDateTime
-                });
+                }).ToPagedListAsync(request, cancellationToken);
         }
 
         protected override void MapToEntity(UserModel model, User user)
         {
             _mapper.Map(model, user);
 
-            MapSerialNumber(user, model);
+            ResetSecurityToken(user, model);
             MapPasswordHash(user, model);
         }
 
@@ -65,9 +65,9 @@ namespace ProjectName.Application.Identity
             return _mapper.Map<UserModel>(user);
         }
 
-        private void MapSerialNumber(User user, UserModel model)
+        private static void ResetSecurityToken(User user, UserModel model)
         {
-            if (!model.ShouldMapSerialNumber()) return;
+            if (!model.ShouldResetSecurityToken()) return;
 
             user.SecurityStamp = User.NewSecurityStamp();
         }

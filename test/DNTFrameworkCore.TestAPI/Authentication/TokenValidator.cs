@@ -40,7 +40,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
                 return;
             }
 
-            var serialNumberClaim = claimsIdentity.FindFirst(UserClaimTypes.SecurityStamp);
+            var serialNumberClaim = claimsIdentity.FindFirst(UserClaimTypes.SecurityToken);
             if (serialNumberClaim == null)
             {
                 context.Fail("This is not our issued token. It has no serial-number.");

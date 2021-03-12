@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
@@ -10,8 +11,7 @@ namespace ProjectName.API.Authentication
 {
     public class Token
     {
-        [JsonProperty("token")] public string Value { get; private set; }
-
+        [JsonPropertyName("token")] public string Value { get; private set; }
         private Token(string value)
         {
             Value = value;

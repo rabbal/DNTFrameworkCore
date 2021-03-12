@@ -11,7 +11,7 @@ using ProjectName.Application.Identity.Models;
 namespace ProjectName.API.Controllers
 {
     [Route("api/[controller]")]
-    public class UsersController : CrudController<IUserService, long, UserReadModel, UserModel>
+    public class UsersController : EntityController<IUserService, long, UserReadModel, UserModel>
     {
         private readonly ILookupService _lookupService;
 

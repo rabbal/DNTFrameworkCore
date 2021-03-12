@@ -39,7 +39,7 @@ namespace DNTFrameworkCore.TestWebApp.Authentication
                 return;
             }
 
-            var serialNumberClaim = claimsIdentity.FindFirst(UserClaimTypes.SecurityStamp);
+            var serialNumberClaim = claimsIdentity.FindFirst(UserClaimTypes.SecurityToken);
             if (serialNumberClaim == null)
             {
                 // this is not our issued cookie

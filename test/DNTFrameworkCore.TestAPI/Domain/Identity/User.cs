@@ -10,7 +10,7 @@ namespace DNTFrameworkCore.TestAPI.Domain.Identity
         public const int MaxDisplayNameLength = 50;
         public const int MaxPasswordHashLength = 256;
         public const int MaxPasswordLength = 128;
-        public const int MaxSecurityStampLength = 128;
+        public const int MaxSecurityTokenLength = 128;
 
         public string UserName { get; set; }
         public string NormalizedUserName { get; set; }

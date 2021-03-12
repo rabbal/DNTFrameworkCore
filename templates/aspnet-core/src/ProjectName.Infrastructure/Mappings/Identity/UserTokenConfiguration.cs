@@ -10,7 +10,7 @@ namespace ProjectName.Infrastructure.Mappings.Identity
         {
             builder.Property(a => a.TokenHash).HasMaxLength(UserToken.TokenHashLength).IsRequired();
 
-            builder.HasIndex(a => a.TokenHash).HasName("IX_UserToken_TokenHash");
+            builder.HasIndex(a => a.TokenHash).HasDatabaseName("IX_UserToken_TokenHash");
             
             builder.ToTable(nameof(UserToken));
         }

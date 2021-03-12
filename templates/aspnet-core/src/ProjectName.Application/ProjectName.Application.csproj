@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="DNTFrameworkCore.EFCore" Version="4.6.0" />
-      <PackageReference Include="DNTFrameworkCore.FluentValidation" Version="4.6.0" />
+      <PackageReference Include="DNTFrameworkCore.EFCore" Version="5.0.0" />
+      <PackageReference Include="DNTFrameworkCore.FluentValidation" Version="5.0.0" />
       <PackageReference Include="Scrutor" Version="3.2.1" />
       <PackageReference Include="AutoMapper" Version="9.0.0" />
       <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
