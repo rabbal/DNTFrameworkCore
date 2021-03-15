@@ -14,11 +14,12 @@ namespace ProjectName.Application.Identity.Models
         public ICollection<UserRoleModel> Roles { get; set; } = new HashSet<UserRoleModel>();
         public ICollection<PermissionModel> Permissions { get; set; } = new HashSet<PermissionModel>();
         public ICollection<PermissionModel> IgnoredPermissions { get; set; } = new HashSet<PermissionModel>();
+
         public bool ShouldResetSecurityToken() =>
-        IsNew() || !IsActive || !Password.IsEmpty() ||
-        Roles.Any(a => a.IsNew() || a.IsDeleted()) ||
-        IgnoredPermissions.Any(p => p.IsDeleted() || p.IsNew()) ||
-        Permissions.Any(p => p.IsDeleted() || p.IsNew());
+            IsNew() || !IsActive || !Password.IsEmpty() ||
+            Roles.Any(a => a.IsNew() || a.IsDeleted()) ||
+            IgnoredPermissions.Any(p => p.IsDeleted() || p.IsNew()) ||
+            Permissions.Any(p => p.IsDeleted() || p.IsNew());
 
         public bool ShouldMapPasswordHash() =>
             IsNew() || !Password.IsEmpty();

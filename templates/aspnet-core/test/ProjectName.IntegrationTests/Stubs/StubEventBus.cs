@@ -1,8 +1,3 @@
-using System.Threading.Tasks;
-using DNTFrameworkCore.Domain;
-using DNTFrameworkCore.Eventing;
-using DNTFrameworkCore.Functional;
-
 namespace ProjectName.IntegrationTests.Stubs
 {
     public class StubEventBus : IEventBus

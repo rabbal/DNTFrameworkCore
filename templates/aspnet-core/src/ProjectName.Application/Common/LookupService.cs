@@ -12,7 +12,7 @@ namespace ProjectName.Application.Common
 {
     public interface ILookupService : IScopedDependency
     {
-        Task<IReadOnlyList<LookupItem<long>>> ReadRolesAsync();
+        Task<IReadOnlyList<LookupItem<long>>> FetchRolesAsync();
     }
 
     public class LookupService : ILookupService
@@ -24,7 +24,7 @@ namespace ProjectName.Application.Common
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<IReadOnlyList<LookupItem<long>>> ReadRolesAsync()
+        public async Task<IReadOnlyList<LookupItem<long>>> FetchRolesAsync()
         {
             var roles = await _dbContext.Set<Role>().AsNoTracking().Select(role => new LookupItem<long>
             {

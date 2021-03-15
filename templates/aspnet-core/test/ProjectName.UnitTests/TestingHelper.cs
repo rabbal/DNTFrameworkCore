@@ -1,15 +1,3 @@
-using System;
-using CacheManager.Core;
-using DNTFrameworkCore.Dependency;
-using DNTFrameworkCore.EFCore;
-using DNTFrameworkCore.Localization;
-using EFSecondLevelCache.Core;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using ProjectName.Infrastructure.Context;
-using ProjectName.Resources;
-
 namespace ProjectName.UnitTests
 {
     public enum DatabaseEngine

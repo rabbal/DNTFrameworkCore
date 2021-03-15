@@ -6,6 +6,7 @@ using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EFCore.Transaction;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.FluentValidation;
+using DNTFrameworkCore.Validation;
 using DNTFrameworkCore.Validation.Interception;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -33,15 +34,19 @@ namespace ProjectName.Application
                 .WithTransientLifetime()
                 .AddClasses(classes => classes.AssignableTo(typeof(IBusinessEventHandler<>)))
                 .AsImplementedInterfaces()
+                .WithTransientLifetime()
+                .AddClasses(classes => classes.AssignableTo(typeof(IModelValidator<>)))
+                .AsImplementedInterfaces()
                 .WithTransientLifetime());
 
-            foreach (var descriptor in services.Where(s => typeof(IApplicationService).IsAssignableFrom(s.ServiceType)).ToList())
+            foreach (var descriptor in services.Where(s => typeof(IApplicationService).IsAssignableFrom(s.ServiceType))
+                .ToList())
             {
                 services.Decorate(descriptor.ServiceType, (target, serviceProvider) =>
                     ProxyGenerator.CreateInterfaceProxyWithTargetInterface(
                         descriptor.ServiceType,
                         target, serviceProvider.GetRequiredService<ValidationInterceptor>(),
-                        (IInterceptor)serviceProvider.GetRequiredService<TransactionInterceptor>()));
+                        (IInterceptor) serviceProvider.GetRequiredService<TransactionInterceptor>()));
             }
         }
     }

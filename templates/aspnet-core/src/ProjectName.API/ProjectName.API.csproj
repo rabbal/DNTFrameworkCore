@@ -5,14 +5,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DNTFrameworkCore.Web" Version="5.0.0"/>
-        <PackageReference Include="DNTFrameworkCore.Web.EFCore" Version="5.0.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.4"/>
+        <PackageReference Include="DNTFrameworkCore.Web" Version="5.0.1" />
+        <PackageReference Include="DNTFrameworkCore.Web.EFCore" Version="5.0.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.4" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.1.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ProjectName.Application\ProjectName.Application.csproj"/>
-        <ProjectReference Include="..\ProjectName.Infrastructure\ProjectName.Infrastructure.csproj"/>
-        <ProjectReference Include="..\ProjectName.Resources\ProjectName.Resources.csproj"/>
+        <ProjectReference Include="..\ProjectName.Application\ProjectName.Application.csproj" />
+        <ProjectReference Include="..\ProjectName.Infrastructure\ProjectName.Infrastructure.csproj" />
+        <ProjectReference Include="..\ProjectName.Resources\ProjectName.Resources.csproj" />
     </ItemGroup>
 </Project>

@@ -1,21 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DNTFrameworkCore.Application.Models;
-using DNTFrameworkCore.Collections;
-using DNTFrameworkCore.Dependency;
-using DNTFrameworkCore.Domain;
-using DNTFrameworkCore.EFCore.Context;
-using DNTFrameworkCore.Functional;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using ProjectName.Application.Identity;
-using ProjectName.Application.Identity.Models;
-using ProjectName.Domain.Identity;
-using Shouldly;
 using static ProjectName.IntegrationTests.TestingHelper;
 
 namespace ProjectName.IntegrationTests.Application

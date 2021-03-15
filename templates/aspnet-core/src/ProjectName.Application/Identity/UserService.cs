@@ -57,7 +57,7 @@ namespace ProjectName.Application.Identity
             _mapper.Map(model, user);
 
             ResetSecurityToken(user, model);
-            MapPasswordHash(user, model);
+            ReplayPasswordHash(user, model);
         }
 
         protected override UserModel MapToModel(User user)
@@ -69,10 +69,10 @@ namespace ProjectName.Application.Identity
         {
             if (!model.ShouldResetSecurityToken()) return;
 
-            user.SecurityStamp = User.NewSecurityStamp();
+            user.ResetSecurityToken();
         }
 
-        private void MapPasswordHash(User user, UserModel model)
+        private void ReplayPasswordHash(User user, UserModel model)
         {
             if (!model.ShouldMapPasswordHash()) return;
 

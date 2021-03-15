@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Functional;
+using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.Runtime;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -21,54 +22,57 @@ namespace ProjectName.API.Authentication
     public class TokenValidator : ITokenValidator
     {
         private readonly ITokenService _token;
-        private readonly IUnitOfWork _uow;
         private readonly DbSet<User> _users;
 
-        public TokenValidator(ITokenService token, IUnitOfWork uow)
+        public TokenValidator(ITokenService token, IDbContext dbContext)
         {
+            Ensure.IsNotNull(dbContext, nameof(dbContext));
+
             _token = token ?? throw new ArgumentNullException(nameof(token));
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _users = uow.Set<User>();
+            _users = dbContext.Set<User>();
         }
 
         public async Task ValidateAsync(TokenValidatedContext context)
         {
             var principal = context.Principal;
 
-            var claimsIdentity = principal.Identity as ClaimsIdentity;
-            if (claimsIdentity?.Claims == null || !claimsIdentity.Claims.Any())
+            if (principal != null)
             {
-                context.Fail("This is not our issued token. It has no claims.");
-                return;
-            }
+                var claimsIdentity = principal.Identity as ClaimsIdentity;
+                if (claimsIdentity?.Claims == null || !claimsIdentity.Claims.Any())
+                {
+                    context.Fail("This is not our issued token. It has no claims.");
+                    return;
+                }
 
-            var serialNumberClaim = claimsIdentity.FindFirst(UserClaimTypes.SerialNumber);
-            if (serialNumberClaim == null)
-            {
-                context.Fail("This is not our issued token. It has no serial-number.");
-                return;
-            }
+                var securityTokenClaim = claimsIdentity.FindFirst(UserClaimTypes.SecurityToken);
+                if (securityTokenClaim == null)
+                {
+                    context.Fail("This is not our issued token. It has no securityToken.");
+                    return;
+                }
 
-            var userIdString = claimsIdentity.FindFirst(UserClaimTypes.UserId).Value;
-            if (!long.TryParse(userIdString, out var userId))
-            {
-                context.Fail("This is not our issued token. It has no user-id.");
-                return;
-            }
+                var userIdString = claimsIdentity.FindFirst(UserClaimTypes.UserId)?.Value;
+                if (!long.TryParse(userIdString, out var userId))
+                {
+                    context.Fail("This is not our issued token. It has no userId.");
+                    return;
+                }
 
-            var user = await FindUserAsync(userId);
-            if (!user.HasValue || user.Value.SecurityStamp != serialNumberClaim.Value || !user.Value.IsActive)
-            {
-                // user has changed his/her password/permissions/roles/stat/IsActive
-                context.Fail("This token is expired. Please login again.");
-                return;
-            }
+                var user = await FindUserAsync(userId);
+                if (!user.HasValue || user.Value.SecurityToken != securityTokenClaim.Value || !user.Value.IsActive)
+                {
+                    // user has changed his/her password/permissions/roles/stat/IsActive
+                    context.Fail("This token is expired. Please login again.");
+                    return;
+                }
 
-            if (!(context.SecurityToken is JwtSecurityToken token) ||
-                string.IsNullOrWhiteSpace(token.RawData) ||
-                !await _token.IsValidTokenAsync(userId, token.RawData))
-            {
-                context.Fail("This token is not in our database.");
+                if (!(context.SecurityToken is JwtSecurityToken token) ||
+                    string.IsNullOrWhiteSpace(token.RawData) ||
+                    !await _token.IsValidTokenAsync(userId, token.RawData))
+                {
+                    context.Fail("This token is not in our database.");
+                }
             }
         }
 

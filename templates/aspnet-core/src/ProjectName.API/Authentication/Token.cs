@@ -5,7 +5,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 
 namespace ProjectName.API.Authentication
 {

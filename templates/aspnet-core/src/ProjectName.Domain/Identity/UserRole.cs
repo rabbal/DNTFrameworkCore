@@ -1,13 +1,9 @@
-using System;
 using DNTFrameworkCore.Domain;
 
 namespace ProjectName.Domain.Identity
 {
-    public class UserRole : TrackableEntity<long>, ICreationTracking, IModificationTracking
+    public class UserRole : TrackableEntity<long>, IHasRowIntegrity, ICreationTracking, IModificationTracking
     {
-        public DateTime CreatedDateTime { get; set; }
-        public DateTime? ModifiedDateTime { get; set; }
-
         public long UserId { get; set; }
         public User User { get; set; }
         public Role Role { get; set; }

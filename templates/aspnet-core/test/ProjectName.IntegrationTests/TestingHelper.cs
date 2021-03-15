@@ -1,23 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using CacheManager.Core;
-using DNTFrameworkCore;
-using DNTFrameworkCore.Dependency;
-using DNTFrameworkCore.EFCore;
-using DNTFrameworkCore.Eventing;
-using DNTFrameworkCore.FluentValidation;
-using DNTFrameworkCore.Localization;
-using DNTFrameworkCore.Web;
-using EFSecondLevelCache.Core;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using ProjectName.Application;
-using ProjectName.Infrastructure.Context;
-using ProjectName.IntegrationTests.Stubs;
-using ProjectName.Resources;
+﻿using ProjectName.IntegrationTests.Stubs;
 
 namespace ProjectName.IntegrationTests
 {

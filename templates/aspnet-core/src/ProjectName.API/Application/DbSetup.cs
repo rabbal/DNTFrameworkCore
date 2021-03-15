@@ -47,14 +47,13 @@ namespace ProjectName.API.Application
                 {
                     Name = RoleNames.Administrators,
                     NormalizedName = RoleNames.Administrators.ToUpperInvariant(),
-                    Description =
-                        "حذف گروه کاربری پیش فرض «مدیران سیستم» باعث ایجاد اختلال در کارکرد صحیح سیستم خواهد شد.",
+                    Description = "Removing default system role cause problems!",
                 };
                 _dbContext.Set<Role>().Add(role);
             }
             else
             {
-                _logger.LogInformation($"{nameof(Seed)}: Administrators role already exists.");
+                _logger.LogInformation($"{nameof(Seed)}: `{RoleNames.Administrators}` role already exists.");
             }
 
             var rolePermissionNames = role.Permissions.Select(a => a.Name).ToList();
@@ -83,14 +82,14 @@ namespace ProjectName.API.Application
                     NormalizedDisplayName = admin.DisplayName, //.NormalizePersianTitle(),
                     IsActive = true,
                     PasswordHash = _password.HashPassword(admin.Password),
-                    SecurityStamp = Guid.NewGuid().ToString("N")
+                    SecurityToken = Guid.NewGuid().ToString("N")
                 };
 
                 _dbContext.Set<User>().Add(user);
             }
             else
             {
-                _logger.LogInformation($"{nameof(Seed)}: Admin user already exists.");
+                _logger.LogInformation($"{nameof(Seed)}: admin user already exists.");
             }
 
             if (user.Roles.All(ur => ur.RoleId != role.Id))
@@ -99,7 +98,7 @@ namespace ProjectName.API.Application
             }
             else
             {
-                _logger.LogInformation($"{nameof(Seed)}: Admin user already is assigned to Administrators role.");
+                _logger.LogInformation($"{nameof(Seed)}: admin user already is assigned to `{RoleNames.Administrators}` role.");
             }
 
             user.Permissions.Clear();

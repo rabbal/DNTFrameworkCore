@@ -10,12 +10,15 @@ using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.Functional;
+using DNTFrameworkCore.GuardToolkit;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.Web.Security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using ProjectName.Common.Localization;
 using ProjectName.Domain.Identity;
-using ProjectName.Resources;
+using Claim = System.Security.Claims.Claim;
 
 namespace ProjectName.API.Authentication
 {
@@ -28,10 +31,9 @@ namespace ProjectName.API.Authentication
     public class AuthenticationService : IAuthenticationService
     {
         private readonly ITokenService _token;
-        private readonly IDbContext _dbContext;
-        private readonly IAntiforgeryService _antiforgery;
+        private readonly IAntiXsrf _antiXsrf;
         private readonly IOptionsSnapshot<TokenOptions> _options;
-        private readonly IMessageLocalizer _localizer;
+        private readonly ITranslationService _translation;
         private readonly IUserPasswordHashAlgorithm _password;
         private readonly IUserSession _session;
         private readonly DbSet<User> _users;
@@ -40,22 +42,22 @@ namespace ProjectName.API.Authentication
         public AuthenticationService(
             ITokenService token,
             IDbContext dbContext,
-            IAntiforgeryService antiforgery,
+            IAntiXsrf antiXsrf,
             IOptionsSnapshot<TokenOptions> options,
-            IMessageLocalizer localizer,
+            ITranslationService translation,
             IUserPasswordHashAlgorithm password,
             IUserSession session)
         {
             _token = token ?? throw new ArgumentNullException(nameof(token));
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            _antiforgery = antiforgery ?? throw new ArgumentNullException(nameof(antiforgery));
+            _antiXsrf = antiXsrf ?? throw new ArgumentNullException(nameof(antiXsrf));
             _options = options ?? throw new ArgumentNullException(nameof(options));
-            _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
+            _translation = translation ?? throw new ArgumentNullException(nameof(translation));
             _password = password ?? throw new ArgumentNullException(nameof(password));
             _session = session ?? throw new ArgumentNullException(nameof(session));
+            Ensure.IsNotNull(dbContext, nameof(dbContext));
 
-            _users = _dbContext.Set<User>();
-            _roles = _dbContext.Set<Role>();
+            _users = dbContext.Set<User>();
+            _roles = dbContext.Set<Role>();
         }
 
         public async Task<SignInResult> SignInAsync(string userName, string password)
@@ -63,19 +65,19 @@ namespace ProjectName.API.Authentication
             var maybe = await FindUserByNameAsync(userName);
             if (!maybe.HasValue)
             {
-                return SignInResult.Fail(_localizer["SignIn.Messages.Failure"]);
+                return SignInResult.Fail(_translation["SignIn.Messages.Failure"]);
             }
 
             var user = maybe.Value;
 
             if (_password.VerifyHashedPassword(user.PasswordHash, password) == PasswordVerificationResult.Failed)
             {
-                return SignInResult.Fail(_localizer["SignIn.Messages.Failure"]);
+                return SignInResult.Fail(_translation["SignIn.Messages.Failure"]);
             }
 
             if (!user.IsActive)
             {
-                return SignInResult.Fail(_localizer["SignIn.Messages.IsNotActive"]);
+                return SignInResult.Fail(_translation["SignIn.Messages.IsNotActive"]);
             }
 
             var userId = user.Id;
@@ -84,7 +86,8 @@ namespace ProjectName.API.Authentication
 
             var token = await _token.NewTokenAsync(userId, claims);
 
-            _antiforgery.AddTokenToResponse(claims);
+            //TODO: Remove this line if you don't store jwt in cookie
+            _antiXsrf.AddToken(claims, JwtBearerDefaults.AuthenticationScheme);
 
             return SignInResult.Ok(token);
         }
@@ -97,7 +100,8 @@ namespace ProjectName.API.Authentication
         {
             await _token.InvalidateTokensAsync(_session.UserId);
 
-            _antiforgery.RemoveTokenFromResponse();
+            //TODO: Remove this line if you don't store jwt in cookie
+            _antiXsrf.RemoveToken();
         }
 
         private async Task<IList<Claim>> BuildClaimsAsync(long userId)
@@ -109,25 +113,25 @@ namespace ProjectName.API.Authentication
 
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString(), ClaimValueTypes.String,
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString(), ClaimValueTypes.String,
                     _options.Value.Issuer),
-                new Claim(JwtRegisteredClaimNames.Iss, _options.Value.Issuer, ClaimValueTypes.String,
+                new(JwtRegisteredClaimNames.Iss, _options.Value.Issuer, ClaimValueTypes.String,
                     _options.Value.Issuer),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
+                new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
                     ClaimValueTypes.Integer64, _options.Value.Issuer),
-                new Claim(UserClaimTypes.UserId, user.Id.ToString(), ClaimValueTypes.Integer64,
+                new(UserClaimTypes.UserId, user.Id.ToString(), ClaimValueTypes.Integer64,
                     _options.Value.Issuer),
-                new Claim(UserClaimTypes.UserName, user.UserName, ClaimValueTypes.String,
+                new(UserClaimTypes.UserName, user.UserName, ClaimValueTypes.String,
                     _options.Value.Issuer),
-                new Claim(UserClaimTypes.DisplayName, user.DisplayName, ClaimValueTypes.String,
+                new(UserClaimTypes.DisplayName, user.DisplayName, ClaimValueTypes.String,
                     _options.Value.Issuer),
-                new Claim(UserClaimTypes.SecurityStamp, user.SecurityStamp, ClaimValueTypes.String,
+                new(UserClaimTypes.SecurityToken, user.SecurityToken, ClaimValueTypes.String,
                     _options.Value.Issuer)
             };
 
             foreach (var claim in user.Claims)
             {
-                claims.Add(new Claim(claim.ClaimType, claim.ClaimValue, ClaimValueTypes.String,
+                claims.Add(new Claim(claim.Type, claim.Value, ClaimValueTypes.String,
                     _options.Value.Issuer));
             }
 
@@ -141,7 +145,7 @@ namespace ProjectName.API.Authentication
             var roleClaims = roles.SelectMany(a => a.Claims);
             foreach (var claim in roleClaims)
             {
-                claims.Add(new Claim(claim.ClaimType, claim.ClaimValue, ClaimValueTypes.String,
+                claims.Add(new Claim(claim.Type, claim.Value, ClaimValueTypes.String,
                     _options.Value.Issuer));
             }
 
@@ -151,8 +155,9 @@ namespace ProjectName.API.Authentication
 
             var permissions = rolePermissions.Union(grantedPermissions).Except(deniedPermissions).ToList();
 
+            //recommended approach to minimize size of  token/cookie
             claims.Add(new Claim(UserClaimTypes.PackedPermission,
-                permissions.PackToString(PermissionConstant.PackingSymbol)));
+                permissions.PackToString(PermissionConstant.PackingSymbol), ClaimValueTypes.String));
 
             return claims;
         }
@@ -182,9 +187,7 @@ namespace ProjectName.API.Authentication
 
         private async Task<Maybe<User>> FindUserByNameAsync(string userName)
         {
-            userName = userName.ToUpperInvariant();
-
-            return await _users.FirstOrDefaultAsync(x => x.NormalizedUserName == userName);
+            return await _users.FirstOrDefaultAsync(x => x.NormalizedUserName == User.NormalizeUserName(userName));
         }
     }
 }

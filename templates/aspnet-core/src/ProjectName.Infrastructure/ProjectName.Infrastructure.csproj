@@ -5,12 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DNTFrameworkCore.EFCore" Version="5.0.0" />
-    <PackageReference Include="DNTFrameworkCore.EFCore.SqlServer" Version="5.0.0" />
-    <PackageReference Include="EFCoreSecondLevelCacheInterceptor" Version="1.7.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.3" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.3" />
+    <PackageReference Include="DNTFrameworkCore.EFCore" Version="5.0.1" />
+    <PackageReference Include="DNTFrameworkCore.EFCore.SqlServer" Version="5.0.1" />
+    <PackageReference Include="EFCoreSecondLevelCacheInterceptor" Version="2.4.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Folder Include="Hooks" />
+    <Folder Include="Interception" />
     <Folder Include="Migrations" />
   </ItemGroup>
 

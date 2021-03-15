@@ -4,8 +4,8 @@ using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.FluentValidation;
 using FluentValidation;
 using ProjectName.Application.Identity.Models;
+using ProjectName.Common.Localization;
 using ProjectName.Domain.Identity;
-using ProjectName.Resources;
 
 namespace ProjectName.Application.Identity.Validators
 {
@@ -13,65 +13,63 @@ namespace ProjectName.Application.Identity.Validators
     {
         private readonly IDbContext _dbContext;
 
-        public UserValidator(IDbContext dbContext, IMessageLocalizer localizer)
+        public UserValidator(IDbContext dbContext, ITranslationService translation)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
             RuleFor(m => m.DisplayName).NotEmpty()
-                .WithMessage(localizer["User.Fields.DisplayName.Required"])
+                .WithMessage(translation["User.Fields.DisplayName.Required"])
                 .MinimumLength(3)
-                .WithMessage(localizer["User.Fields.DisplayName.MinimumLength"])
+                .WithMessage(translation["User.Fields.DisplayName.MinimumLength"])
                 .MaximumLength(User.DisplayNameLength)
-                .WithMessage(localizer["User.Fields.DisplayName.MaximumLength"])
+                .WithMessage(translation["User.Fields.DisplayName.MaximumLength"])
                 .Matches(@"^[\u0600-\u06FF,\u0590-\u05FF,0-9\s]*$")
-                .WithMessage(localizer["User.Fields.DisplayName.RegularExpression"])
+                .WithMessage(translation["User.Fields.DisplayName.RegularExpression"])
                 .DependentRules(() =>
                 {
                     RuleFor(m => m).Must(model =>
                          IsUniqueDisplayName(model.DisplayName, model.Id))
-                        .WithMessage(localizer["User.Fields.DisplayName.Unique"])
+                        .WithMessage(translation["User.Fields.DisplayName.Unique"])
                         .OverridePropertyName(nameof(UserModel.DisplayName));
                 });
 
             RuleFor(m => m.UserName).NotEmpty()
-                .WithMessage(localizer["User.Fields.UserName.Required"])
+                .WithMessage(translation["User.Fields.UserName.Required"])
                 .MinimumLength(3)
-                .WithMessage(localizer["User.Fields.UserName.MinimumLength"])
+                .WithMessage(translation["User.Fields.UserName.MinimumLength"])
                 .MaximumLength(User.UserNameLength)
-                .WithMessage(localizer["User.Fields.UserName.MaximumLength"])
+                .WithMessage(translation["User.Fields.UserName.MaximumLength"])
                 .Matches("^[a-zA-Z0-9_]*$")
-                .WithMessage(localizer["User.Fields.UserName.RegularExpression"])
+                .WithMessage(translation["User.Fields.UserName.RegularExpression"])
                 .DependentRules(() =>
                 {
                     RuleFor(m => m).Must(model =>
                          IsUniqueUserName(model.UserName, model.Id))
-                        .WithMessage(localizer["User.Fields.UserName.Unique"])
+                        .WithMessage(translation["User.Fields.UserName.Unique"])
                         .OverridePropertyName(nameof(UserModel.UserName));
                 });
 
             RuleFor(m => m.Password).NotEmpty()
-                .WithMessage(localizer["User.Fields.Password.Required"])
+                .WithMessage(translation["User.Fields.Password.Required"])
                 .When(m => m.IsNew(), ApplyConditionTo.CurrentValidator)
                 .MinimumLength(6)
-                .WithMessage(localizer["User.Fields.Password.MinimumLength"])
+                .WithMessage(translation["User.Fields.Password.MinimumLength"])
                 .MaximumLength(User.PasswordLength)
-                .WithMessage(localizer["User.Fields.Password.MaximumLength"]);
+                .WithMessage(translation["User.Fields.Password.MaximumLength"]);
 
             RuleFor(m => m).Must(model => !CheckDuplicateRoles(model))
-                .WithMessage(localizer["User.Fields.Roles.Unique"])
+                .WithMessage(translation["User.Fields.Roles.Unique"])
                 .When(m => m.Roles != null && m.Roles.Any(r => !r.IsDeleted()));
         }
 
         private bool IsUniqueUserName(string userName, long id)
         {
-            var normalizedUserName = userName.ToUpperInvariant();
-            return _dbContext.Set<User>().Any(u => u.NormalizedUserName == normalizedUserName && u.Id != id);
+            return _dbContext.Set<User>().Any(u => u.NormalizedUserName == User.NormalizeUserName(userName) && u.Id != id);
         }
 
         private bool IsUniqueDisplayName(string displayName, long id)
         {
-            var normalizedDisplayName = displayName.ToUpperInvariant(); //Todo: In persian can use DNTPersianUtils.Core nuget package
-            return _dbContext.Set<User>().Any(u => u.NormalizedDisplayName == normalizedDisplayName && u.Id != id);
+            return _dbContext.Set<User>().Any(u => u.NormalizedDisplayName == User.NormalizeDisplayName(displayName) && u.Id != id);
         }
 
         private bool CheckDuplicateRoles(UserModel model)

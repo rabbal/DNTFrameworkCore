@@ -5,20 +5,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="DNTFrameworkCore.EFCore" Version="5.0.0" />
-      <PackageReference Include="DNTFrameworkCore.FluentValidation" Version="5.0.0" />
-      <PackageReference Include="Scrutor" Version="3.2.1" />
-      <PackageReference Include="AutoMapper" Version="9.0.0" />
-      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+        <PackageReference Include="DNTFrameworkCore.EFCore" Version="5.0.1"/>
+        <PackageReference Include="DNTFrameworkCore.FluentValidation" Version="5.0.1"/>
+        <PackageReference Include="Scrutor" Version="3.2.1"/>
+        <PackageReference Include="AutoMapper" Version="9.0.0"/>
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0"/>
+        <PackageReference Include="MappingGenerator" Version="1.22.1.18"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ProjectName.Domain\ProjectName.Domain.csproj" />
-      <ProjectReference Include="..\ProjectName.Resources\ProjectName.Resources.csproj" />
+        <ProjectReference Include="..\ProjectName.Domain\ProjectName.Domain.csproj"/>
+        <ProjectReference Include="..\ProjectName.Resources\ProjectName.Resources.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Identity\Handlers" />
+        <Folder Include="Identity\Handlers"/>
     </ItemGroup>
 
 </Project>

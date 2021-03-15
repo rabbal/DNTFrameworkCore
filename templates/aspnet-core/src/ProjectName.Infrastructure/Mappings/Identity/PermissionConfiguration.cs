@@ -8,10 +8,11 @@ namespace ProjectName.Infrastructure.Mappings.Identity
     {
         public void Configure(EntityTypeBuilder<Permission> builder)
         {
+            builder.HasDiscriminator<string>("EntityName");
             builder.Property(a => a.Name).HasMaxLength(Permission.NameLength).IsRequired();
-            builder.Property<string>("Discriminator").HasMaxLength(50);
+            builder.Property<string>("EntityName").HasMaxLength(50);
 
-            builder.HasIndex("Discriminator").HasDatabaseName("IX_Permission_Discriminator");
+            builder.HasIndex("EntityName").HasDatabaseName("IX_Permission_EntityName");
 
             builder.ToTable(nameof(Permission));
         }

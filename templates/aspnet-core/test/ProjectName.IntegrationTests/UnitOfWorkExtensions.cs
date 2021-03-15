@@ -1,5 +1,3 @@
-using DNTFrameworkCore.EFCore.Context;
-
 namespace ProjectName.IntegrationTests
 {
     public static class UnitOfWorkExtensions

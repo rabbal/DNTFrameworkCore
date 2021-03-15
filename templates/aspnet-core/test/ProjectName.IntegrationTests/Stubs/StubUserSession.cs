@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using DNTFrameworkCore.Runtime;
-
 namespace ProjectName.IntegrationTests.Stubs
 {
     public class StubUserSession : IUserSession

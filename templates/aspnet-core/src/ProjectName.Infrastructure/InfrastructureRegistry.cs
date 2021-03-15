@@ -1,11 +1,11 @@
 using System;
 using DNTFrameworkCore.EFCore;
+using DNTFrameworkCore.EFCore.SqlServer;
 using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectName.Infrastructure.Context;
-using ProjectName.Infrastructure.Interception;
 
 namespace ProjectName.Infrastructure
 {
@@ -16,25 +16,40 @@ namespace ProjectName.Infrastructure
             services.AddEFCore<ProjectNameDbContext>()
                 .WithTrackingHook<long>()
                 .WithDeletedEntityHook()
-                .WithRowIntegrityHook();
+                .WithRowLevelSecurityHook<long>()
+                .WithRowIntegrityHook()
+                .WithNumberingHook(options =>
+                {
+                    // options[typeof(Task)] = new[]
+                    // {
+                    //     new NumberedEntityOption
+                    //     {
+                    //         Prefix = "Task",
+                    //         Fields = new[] {nameof(Task.BranchId)}
+                    //     }
+                    // };
+                });
 
             services.AddDbContext<ProjectNameDbContext>((provider, builder) =>
             {
                 builder.AddInterceptors(provider.GetRequiredService<SecondLevelCacheInterceptor>());
-                builder.AddInterceptors(new PersianYeKeInterceptor());
-                
                 builder.EnableSensitiveDataLogging();
                 builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-                    optionsBuilder =>
+                        optionsBuilder =>
+                        {
+                            var seconds = (int) TimeSpan
+                                .FromMinutes(configuration.GetValue(nameof(optionsBuilder.CommandTimeout),
+                                    3)).TotalSeconds;
+                            optionsBuilder.CommandTimeout(seconds);
+                            optionsBuilder.MigrationsHistoryTable("MigrationHistory", "dbo");
+                        })
+                    .ConfigureWarnings(warnings =>
                     {
-                        var seconds = (int) TimeSpan
-                            .FromMinutes(configuration.GetValue(nameof(optionsBuilder.CommandTimeout),
-                                3)).TotalSeconds;
-                        optionsBuilder.CommandTimeout(seconds);
-                        optionsBuilder.MigrationsHistoryTable("MigrationHistory", "dbo");
+                        //...
                     });
             });
 
+            //TODO: See https://github.com/VahidN/EFCoreSecondLevelCacheInterceptor
             services.AddEFSecondLevelCache(options =>
                 options.UseMemoryCacheProvider(CacheExpirationMode.Absolute, TimeSpan.FromMinutes(10))
                     .DisableLogging(true));

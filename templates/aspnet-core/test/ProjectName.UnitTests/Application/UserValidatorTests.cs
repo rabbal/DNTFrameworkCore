@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using DNTFrameworkCore.Dependency;
-using DNTFrameworkCore.Domain;
-using DNTFrameworkCore.EFCore.Context;
-using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using ProjectName.Application.Identity.Models;
-using ProjectName.Application.Identity.Validators;
-using ProjectName.Domain.Identity;
-using ProjectName.Resources;
-using Shouldly;
-using static ProjectName.UnitTests.TestingHelper;
+﻿using static ProjectName.UnitTests.TestingHelper;
 
 namespace ProjectName.UnitTests.Application
 {

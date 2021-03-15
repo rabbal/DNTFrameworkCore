@@ -1,22 +1,27 @@
 using System;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Localization;
-using DNTFrameworkCore.Web.Filters;
-using DNTFrameworkCore.Web.ModelBinders;
+using DNTFrameworkCore.Web.EFCore.Cryptography;
+using DNTFrameworkCore.Web.ExceptionHandling;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using ProjectName.API.Authentication;
+using ProjectName.Infrastructure.Context;
 
 namespace ProjectName.API
 {
@@ -24,20 +29,7 @@ namespace ProjectName.API
     {
         public static void AddWebApp(this IServiceCollection services)
         {
-            services.Scan(scan => scan
-                .FromCallingAssembly()
-                .AddClasses(classes => classes.AssignableTo<ISingletonDependency>())
-                .AsMatchingInterface()
-                .WithSingletonLifetime()
-                .AddClasses(classes => classes.AssignableTo<IScopedDependency>())
-                .AsMatchingInterface()
-                .WithScopedLifetime()
-                .AddClasses(classes => classes.AssignableTo<ITransientDependency>())
-                .AsMatchingInterface()
-                .WithTransientLifetime()
-                .AddClasses(classes => classes.AssignableTo(typeof(IBusinessEventHandler<>)))
-                .AsImplementedInterfaces()
-                .WithTransientLifetime());
+            AddInternalServices(services);
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -48,31 +40,18 @@ namespace ProjectName.API
 
             services.AddLocalization(setup => setup.ResourcesPath = "Resources");
             services.AddHttpContextAccessor();
-            services.AddMvcCore(options =>
+            services.AddControllers(options =>
                 {
-                    // options.UseYeKeModelBinder();
-                    options.UseDefaultFilteredPagedQueryModelBinder();
-                    options.UseExceptionHandling();
-                })
-                .AddCors(options =>
-                {
-                    options.AddPolicy("CorsPolicy",
-                        builder => builder
-                            .SetIsOriginAllowed(host => true)
-                            .AllowAnyMethod()
-                            .AllowAnyHeader()
-                            .AllowCredentials());
-                })
-                .AddAuthorization()
-                .AddFormatterMappings()
-                .AddJsonFormatters()
-                .AddDataAnnotations()
-                .AddJsonOptions(options =>
-                {
-                    options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Include;
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Error;
+                    //options.UseFilteredPagedRequestModelBinder();
+                    //options.UseExceptionHandling();
+
+                    // remove formatter that turns nulls into 204 - No Content responses
+                    // this formatter breaks SPA's Http response JSON parsing
+                    options.OutputFormatters.RemoveType<HttpNoContentOutputFormatter>();
+                    options.OutputFormatters.Insert(0, new HttpNoContentOutputFormatter
+                    {
+                        TreatNullValueAsNoContent = false
+                    });
                 })
                 .AddDataAnnotationsLocalization(o =>
                 {
@@ -84,16 +63,62 @@ namespace ProjectName.API
                             : factory.Create(localizationResource.Name, localizationResource.Location);
                     };
                 })
-                .ConfigureApiBehaviorOptions(options =>
+                .AddJsonOptions(options =>
                 {
-                    options.SuppressUseValidationProblemDetailsForInvalidModelStateResponses = true;
-                    options.SuppressMapClientErrors = true;
-                    //options.SuppressModelStateInvalidFilter = true;
-                });
+                    options.JsonSerializerOptions.WriteIndented = true;
+                    options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.IgnoreNullValues = false;
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                })
+                .ConfigureApiBehaviorOptions(options => { options.UseFailureProblemDetailResponseFactory(); });
+            // .AddNewtonsoftJson(options =>
+            // {
+            //     options.SerializerSettings.NullValueHandling = NullValueHandling.Include;
+            //     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            //     options.SerializerSettings.Converters.Add(new StringEnumConverter());
+            // });
+
+            services.AddDataProtection().PersistKeysToDbContext<ProjectNameDbContext>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                        .SetIsOriginAllowed(host => true)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
 
             services.AddAntiforgery(x => x.HeaderName = "X-XSRF-TOKEN");
             services.AddSignalR();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "API Documentation",
+                    Description = "ProjectName API Documentation",
+                    Contact = new OpenApiContact
+                    {
+                        Email = "gholamrezarabbal@gmail.com",
+                        Name = "Salar Rabbal",
+                        Url = new Uri("http://github.com/rabbal")
+                    }
+                });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    In = ParameterLocation.Header,
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+            });
         }
+
         public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             var authentication = configuration.GetSection("Authentication");
@@ -101,7 +126,7 @@ namespace ProjectName.API
 
             var signingKey =
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authentication[nameof(TokenOptions.SigningKey)]));
-           
+
             var tokenValidationParameters = new TokenValidationParameters
             {
                 // Ensure the token was issued by a trusted authorization server (default true):
@@ -159,7 +184,7 @@ namespace ProjectName.API
 
                             var path = context.HttpContext.Request.Path;
                             if (!string.IsNullOrEmpty(accessToken) &&
-                                path.StartsWithSegments("/notificationhub"))
+                                path.StartsWithSegments("/hubs"))
                             {
                                 context.Token = accessToken;
                             }
@@ -175,6 +200,24 @@ namespace ProjectName.API
                         }
                     };
                 });
+        }
+
+        private static void AddInternalServices(IServiceCollection services)
+        {
+            services.Scan(scan => scan
+                .FromCallingAssembly()
+                .AddClasses(classes => classes.AssignableTo<ISingletonDependency>())
+                .AsMatchingInterface()
+                .WithSingletonLifetime()
+                .AddClasses(classes => classes.AssignableTo<IScopedDependency>())
+                .AsMatchingInterface()
+                .WithScopedLifetime()
+                .AddClasses(classes => classes.AssignableTo<ITransientDependency>())
+                .AsMatchingInterface()
+                .WithTransientLifetime()
+                .AddClasses(classes => classes.AssignableTo(typeof(IBusinessEventHandler<>)))
+                .AsImplementedInterfaces()
+                .WithTransientLifetime());
         }
     }
 }

@@ -21,9 +21,10 @@ namespace ProjectName.API.Authorization
         public const string Users_Edit = nameof(Users_Edit);
         public const string Users_Delete = nameof(Users_Delete);
 
-        public const string Roles_View = nameof(Roles_View);
-        public const string Roles_Create = nameof(Roles_Create);
-        public const string Roles_Edit = nameof(Roles_Edit);
-        public const string Roles_Delete = nameof(Roles_Delete);
+        //Or based on hexadecimal and packed them to reduce size of token/cookie
+        public const string Roles_View = "00";
+        public const string Roles_Create = "01";
+        public const string Roles_Edit = "02";
+        public const string Roles_Delete = "03";
     }
 }
