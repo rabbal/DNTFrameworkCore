@@ -13,6 +13,7 @@ namespace DNTFrameworkCore.Web.Security
         /// Add XsrfToken in Response.Cookies with 'XSRF-TOKEN' name
         /// </summary>
         void AddToken(IEnumerable<Claim> claims, string authenticationType);
+
         /// <summary>
         /// Remove XsrfToken in Response.Cookies with 'XSRF-TOKEN' name
         /// </summary>
@@ -40,6 +41,7 @@ namespace DNTFrameworkCore.Web.Security
         public void AddToken(IEnumerable<Claim> claims, string authenticationType)
         {
             var httpContext = _context.HttpContext;
+
             httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(claims, authenticationType));
             var tokens = _antiforgery.GetAndStoreTokens(httpContext);
             httpContext.Response.Cookies.Append(
