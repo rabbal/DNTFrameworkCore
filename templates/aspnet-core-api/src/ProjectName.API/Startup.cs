@@ -4,14 +4,10 @@ using DNTFrameworkCore.FluentValidation;
 using DNTFrameworkCore.Web;
 using DNTFrameworkCore.Web.ExceptionHandling;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using ProjectName.API.Hubs;
 using ProjectName.Application;
 using ProjectName.Application.Configuration;
@@ -27,8 +23,7 @@ namespace ProjectName.API
         {
             _configuration = configuration;
         }
-
-
+        
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -100,7 +95,7 @@ namespace ProjectName.API
             app.UseHttpsRedirection();
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProjectName API V1"); });
 
             app.UseRouting();
             app.UseCors("CorsPolicy");

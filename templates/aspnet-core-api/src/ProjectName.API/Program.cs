@@ -17,7 +17,7 @@ namespace ProjectName.API
                 .Run();
         }
 
-        public static IHostBuilder CreateWebHostBuilder(string[] args) =>
+        private static IHostBuilder CreateWebHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>().UseIISIntegration())
                 .UseDefaultServiceProvider((context, options) =>

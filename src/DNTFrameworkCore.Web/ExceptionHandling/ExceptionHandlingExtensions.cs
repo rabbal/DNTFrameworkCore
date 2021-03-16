@@ -27,7 +27,8 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
             return options;
         }
 
-        public static IApplicationBuilder UseExceptionHandling(this IApplicationBuilder app)
+        public static IApplicationBuilder UseExceptionHandling(this IApplicationBuilder app,
+            Action<Exception, ExceptionHandlingContext> handle = null)
         {
             return app.UseExceptionHandler(appException => appException.Run(async context =>
             {
@@ -38,14 +39,23 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
                 var options = app.ApplicationServices.GetRequiredService<IOptions<ExceptionOptions>>();
 
                 // Should always exist, but best to be safe!
-                if (feature?.Error != null)
+                if (feature?.Error == null) return;
+
+                var exception = feature.Error;
+                var detail = FailureProblemDetail.FromHttpContext(context);
+
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                context.Response.ContentType = "application/json";
+
+                var handlingContext = new ExceptionHandlingContext();
+                handle?.Invoke(exception, handlingContext);
+                if (handlingContext.ExceptionHandled)
                 {
-                    var exception = feature.Error;
-                    var detail = FailureProblemDetail.FromHttpContext(context);
-
-                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                    context.Response.ContentType = "application/json";
-
+                    detail.Message = handlingContext.FriendlyMessage;
+                    context.Response.StatusCode = handlingContext.StatusCode;
+                }
+                else
+                {
                     switch (exception)
                     {
                         case OperationCanceledException:
@@ -58,7 +68,8 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
                             logger.LogInformation($"ValidationException: {exception}");
 
                             detail.Message = validationException.Message;
-                            if (validationException.Failures != null) detail.WithFailures(validationException.Failures);
+                            if (validationException.Failures != null)
+                                detail.WithFailures(validationException.Failures);
                             context.Response.StatusCode = StatusCodes.Status400BadRequest;
                             break;
                         case DbConcurrencyException:
@@ -67,7 +78,8 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
                             detail.Message = options.Value.DbConcurrencyException;
                             context.Response.StatusCode = StatusCodes.Status400BadRequest;
                             break;
-                        case DbException dbException when options.Value.TryFindMapping(dbException, out var mapping):
+                        case DbException dbException
+                            when options.Value.TryFindMapping(dbException, out var mapping):
                         {
                             logger.LogInformation($"DbException: {mapping.Message}");
 
@@ -77,7 +89,8 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
                             }
                             else
                             {
-                                detail.WithFailures(new[] {new ValidationFailure(mapping.MemberName, mapping.Message)});
+                                detail.WithFailures(new[]
+                                    {new ValidationFailure(mapping.MemberName, mapping.Message)});
                             }
 
                             context.Response.StatusCode = StatusCodes.Status400BadRequest;
@@ -101,11 +114,18 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
                             break;
                         }
                     }
-
-                    var stream = context.Response.Body;
-                    await JsonSerializer.SerializeAsync(stream, detail);
                 }
+
+                var stream = context.Response.Body;
+                await JsonSerializer.SerializeAsync(stream, detail);
             }));
+        }
+
+        public class ExceptionHandlingContext
+        {
+            public int StatusCode { get; set; }
+            public string FriendlyMessage { get; set; }
+            public bool ExceptionHandled { get; set; }
         }
     }
 }

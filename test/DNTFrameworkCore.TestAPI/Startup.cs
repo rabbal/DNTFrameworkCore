@@ -8,9 +8,12 @@ using DNTFrameworkCore.Web;
 using DNTFrameworkCore.Web.ExceptionHandling;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace DNTFrameworkCore.TestAPI
 {
@@ -63,7 +66,15 @@ namespace DNTFrameworkCore.TestAPI
         {
             app.UseIf(env.IsProduction(), _ => _.UseHsts());
 
-            app.UseExceptionHandling();
+            app.UseExceptionHandling((exception, result) =>
+            {
+                if (exception is SecurityTokenExpiredException)
+                {
+                    result.FriendlyMessage = "authentication token expired";
+                    result.StatusCode = StatusCodes.Status401Unauthorized;
+                    result.ExceptionHandled = true;
+                }
+            });
 
             app.UseHttpsRedirection();
 
