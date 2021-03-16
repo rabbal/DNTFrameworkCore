@@ -1,3 +1,16 @@
+using System;
+using System.Collections.Generic;
+using DNTFrameworkCore.Dependency;
+using DNTFrameworkCore.Domain;
+using DNTFrameworkCore.EFCore.Context;
+using FluentValidation.TestHelper;
+using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
+using ProjectName.Application.Identity.Models;
+using ProjectName.Application.Identity.Validators;
+using ProjectName.Common.Localization;
+using ProjectName.Domain.Identity;
+using Shouldly;
 using static ProjectName.UnitTests.TestingHelper;
 
 namespace ProjectName.UnitTests.Application
@@ -5,22 +18,22 @@ namespace ProjectName.UnitTests.Application
     [TestFixture]
     public class RoleValidatorTests
     {
-        private IMessageLocalizer _localizer;
+        private ITranslationService _translation;
         private IServiceProvider _serviceProvider;
 
         [SetUp]
         public void Init()
         {
-            _serviceProvider = BuildServiceProvider();
-            _localizer = _serviceProvider.GetRequiredService<IMessageLocalizer>();
+            _serviceProvider = PrepareServices();
+            _translation = _serviceProvider.GetRequiredService<ITranslationService>();
         }
 
         [Test]
         public void Should_Have_Error_When_Name_Is_Empty()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
-            var validator = new RoleValidator(unitOfWork, _localizer);
+            var dbContext = _serviceProvider.GetService<IDbContext>();
+            var validator = new RoleValidator(dbContext, _translation);
 
             var model = new RoleModel
             {
@@ -38,8 +51,8 @@ namespace ProjectName.UnitTests.Application
         public void Should_Have_Error_When_Name_Length_Less_Than_Minimum()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
-            var validator = new RoleValidator(unitOfWork, _localizer);
+            var dbContext = _serviceProvider.GetService<IDbContext>();
+            var validator = new RoleValidator(dbContext, _translation);
 
             var model = new RoleModel
             {
@@ -58,8 +71,8 @@ namespace ProjectName.UnitTests.Application
         public void Should_Have_Error_When_Name_Length_More_Than_Maximum()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
-            var validator = new RoleValidator(unitOfWork, _localizer);
+            var dbContext = _serviceProvider.GetService<IDbContext>();
+            var validator = new RoleValidator(dbContext, _translation);
 
             var model = new RoleModel
             {
@@ -78,15 +91,15 @@ namespace ProjectName.UnitTests.Application
         public void Should_Have_Error_When_Name_Is_Not_Unique()
         {
             //Arrange
-            _serviceProvider.RunScoped<IUnitOfWork>(uow =>
+            _serviceProvider.RunScoped<IDbContext>(context =>
             {
-                uow.Set<Role>()
+                context.Set<Role>()
                     .Add(new Role {Name = "ExistingName", NormalizedName = "ExistingName".ToUpperInvariant()});
-                uow.SaveChanges();
+                context.SaveChanges();
             });
 
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
-            var validator = new RoleValidator(unitOfWork, _localizer);
+            var dbContext = _serviceProvider.GetService<IDbContext>();
+            var validator = new RoleValidator(dbContext, _translation);
 
             var model = new RoleModel
             {
@@ -102,14 +115,14 @@ namespace ProjectName.UnitTests.Application
         public void Should_Not_Have_Error_When_Name_Is_Unique()
         {
             //Arrange
-            _serviceProvider.RunScoped<IUnitOfWork>(uow =>
+            _serviceProvider.RunScoped<IDbContext>(context =>
             {
-                uow.Set<Role>().Add(new Role {Name = "ExistingName"});
-                uow.SaveChanges();
+                context.Set<Role>().Add(new Role {Name = "ExistingName"});
+                context.SaveChanges();
             });
 
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
-            var validator = new RoleValidator(unitOfWork, _localizer);
+            var dbContext = _serviceProvider.GetService<IDbContext>();
+            var validator = new RoleValidator(dbContext, _translation);
 
             var model = new RoleModel
             {
@@ -128,8 +141,8 @@ namespace ProjectName.UnitTests.Application
         public void Should_Have_Error_When_Description_Length_More_Than_Maximum()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
-            var validator = new RoleValidator(unitOfWork, _localizer);
+            var dbContext = _serviceProvider.GetService<IDbContext>();
+            var validator = new RoleValidator(dbContext, _translation);
 
             var model = new RoleModel
             {
@@ -148,8 +161,8 @@ namespace ProjectName.UnitTests.Application
         public void Should_Have_Error_When_Permissions_Is_Not_Unique()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
-            var validator = new RoleValidator(unitOfWork, _localizer);
+            var dbContext = _serviceProvider.GetService<IDbContext>();
+            var validator = new RoleValidator(dbContext, _translation);
 
             var model = new RoleModel
             {
@@ -173,8 +186,8 @@ namespace ProjectName.UnitTests.Application
         public void Should_Not_Have_Error_When_Permissions_Is_Not_Unique_But_Exists_In_Deleted_Permissions()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
-            var validator = new RoleValidator(unitOfWork, _localizer);
+            var dbContext = _serviceProvider.GetService<IDbContext>();
+            var validator = new RoleValidator(dbContext, _translation);
 
             var model = new RoleModel
             {

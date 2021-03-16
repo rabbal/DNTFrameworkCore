@@ -23,8 +23,6 @@ namespace ProjectName.Application.Identity.Validators
                 .WithMessage(translation["User.Fields.DisplayName.MinimumLength"])
                 .MaximumLength(User.DisplayNameLength)
                 .WithMessage(translation["User.Fields.DisplayName.MaximumLength"])
-                .Matches(@"^[\u0600-\u06FF,\u0590-\u05FF,0-9\s]*$")
-                .WithMessage(translation["User.Fields.DisplayName.RegularExpression"])
                 .DependentRules(() =>
                 {
                     RuleFor(m => m).Must(model =>
@@ -64,12 +62,12 @@ namespace ProjectName.Application.Identity.Validators
 
         private bool IsUniqueUserName(string userName, long id)
         {
-            return _dbContext.Set<User>().Any(u => u.NormalizedUserName == User.NormalizeUserName(userName) && u.Id != id);
+            return !_dbContext.Set<User>().Any(u => u.NormalizedUserName == User.NormalizeUserName(userName) && u.Id != id);
         }
 
         private bool IsUniqueDisplayName(string displayName, long id)
         {
-            return _dbContext.Set<User>().Any(u => u.NormalizedDisplayName == User.NormalizeDisplayName(displayName) && u.Id != id);
+            return !_dbContext.Set<User>().Any(u => u.NormalizedDisplayName == User.NormalizeDisplayName(displayName) && u.Id != id);
         }
 
         private bool CheckDuplicateRoles(UserModel model)

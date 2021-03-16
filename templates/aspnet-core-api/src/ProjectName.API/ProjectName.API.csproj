@@ -10,6 +10,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.4" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.1.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.4" />
     </ItemGroup>
 
     <ItemGroup>

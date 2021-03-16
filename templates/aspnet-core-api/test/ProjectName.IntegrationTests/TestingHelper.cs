@@ -1,4 +1,20 @@
-﻿using ProjectName.IntegrationTests.Stubs;
+﻿using System;
+using System.IO;
+using System.Reflection;
+using DNTFrameworkCore;
+using DNTFrameworkCore.Dependency;
+using DNTFrameworkCore.EFCore;
+using DNTFrameworkCore.Eventing;
+using DNTFrameworkCore.FluentValidation;
+using DNTFrameworkCore.Web;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using ProjectName.Application;
+using ProjectName.Common.Localization;
+using ProjectName.Infrastructure.Context;
+using ProjectName.IntegrationTests.Stubs;
 
 namespace ProjectName.IntegrationTests
 {
@@ -17,32 +33,17 @@ namespace ProjectName.IntegrationTests
             var services = new ServiceCollection();
 
             services.AddApplication();
-
             services.AddLogging();
-            services.AddLocalization();
-            services.AddNullLocalization();
-            services.AddResources();
+            services.AddScoped(_ => NullTranslationService.Instance);
             services.AddEFCore<ProjectNameDbContext>();
             services.AddFramework()
                 .WithModelValidation()
                 .WithFluentValidation();
             services.AddWebFramework()
                 .WithPasswordHashAlgorithm();
-            services.AddEFSecondLevelCache();
-            services.AddSingleton(typeof(ICacheManager<>), typeof(BaseCacheManager<>));
-            services.AddSingleton(typeof(ICacheManagerConfiguration),
-                new CacheManager.Core.ConfigurationBuilder()
-                    .WithJsonSerializer()
-                    .WithMicrosoftMemoryCacheHandle()
-                    .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromMinutes(10))
-                    .Build());
 
-            var fileName =
-                Path.Combine(
-                    Path.GetDirectoryName(
-                        typeof(TestingHelper).GetTypeInfo().Assembly.Location),
-                    "ProjectIntegrationTesting.mdf");
-
+            var fileName = Path.Combine(Path.GetDirectoryName(typeof(TestingHelper).GetTypeInfo().Assembly.Location),
+                "ProjectIntegrationTesting.mdf");
             switch (database)
             {
                 case DatabaseEngine.LocalDb:
@@ -70,20 +71,20 @@ namespace ProjectName.IntegrationTests
                     throw new ArgumentOutOfRangeException(nameof(database), database, null);
             }
 
-            //exclude business eventHandlers to simplify test-data management 
+            //Exclude business events to simplify test-data management 
             services.Replace(ServiceDescriptor.Singleton<IEventBus, StubEventBus>());
 
             configure?.Invoke(services);
 
-            var serviceProvider = services.BuildServiceProvider();
+            var provider = services.BuildServiceProvider();
 
-            serviceProvider.RunScoped<ProjectNameDbContext>(context =>
+            provider.RunScoped<ProjectNameDbContext>(context =>
             {
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
             });
 
-            return serviceProvider;
+            return provider;
         }
     }
 }

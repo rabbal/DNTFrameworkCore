@@ -3,9 +3,9 @@ using DNTFrameworkCore.Domain;
 namespace ProjectName.Domain.Identity
 {
     /// <summary>
-    ///     Base class for TPH inheritance strategy
+    /// Base class for TPH inheritance strategy
     /// </summary>
-    public abstract class Permission : Entity<long>, IHasRowIntegrity, ICreationTracking, IModificationTracking
+    public abstract class Permission : TrackableEntity<long>, IHasRowIntegrity, ICreationTracking, IModificationTracking
     {
         public const int NameLength = 128;
 

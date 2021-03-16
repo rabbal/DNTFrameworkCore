@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using System.Security.Claims;
+using DNTFrameworkCore.Runtime;
+
 namespace ProjectName.IntegrationTests.Stubs
 {
     public class StubUserSession : IUserSession
@@ -9,12 +13,12 @@ namespace ProjectName.IntegrationTests.Stubs
 
         public bool IsInRole(string role)
         {
-            throw new NotImplementedException();
+            throw new System.NotImplementedException();
         }
 
         public bool IsGranted(string permission)
         {
-            throw new NotImplementedException();
+            throw new System.NotImplementedException();
         }
 
         public bool IsAuthenticated { get; }
@@ -30,5 +34,6 @@ namespace ProjectName.IntegrationTests.Stubs
         public string UserBrowserName { get; }
         public string UserIP { get; }
         public string ImpersonatorUserId { get; }
+        public IDictionary<string, object> Properties { get; }
     }
 }

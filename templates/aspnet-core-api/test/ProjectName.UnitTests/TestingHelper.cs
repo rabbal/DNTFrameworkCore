@@ -1,3 +1,12 @@
+using System;
+using DNTFrameworkCore.Dependency;
+using DNTFrameworkCore.EFCore;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using ProjectName.Common.Localization;
+using ProjectName.Infrastructure.Context;
+
 namespace ProjectName.UnitTests
 {
     public enum DatabaseEngine
@@ -8,24 +17,14 @@ namespace ProjectName.UnitTests
 
     public static class TestingHelper
     {
-        public static IServiceProvider BuildServiceProvider(Action<IServiceCollection> configure = null,
+        public static IServiceProvider PrepareServices(Action<IServiceCollection> configure = null,
             DatabaseEngine database = DatabaseEngine.InMemory, SqliteConnection connection = null)
         {
             var services = new ServiceCollection();
 
             services.AddLogging();
-            services.AddLocalization();
-            services.AddNullLocalization();
-            services.AddResources();
+            services.AddScoped(_ => NullTranslationService.Instance);
             services.AddEFCore<ProjectNameDbContext>();
-            services.AddEFSecondLevelCache();
-            services.AddSingleton(typeof(ICacheManager<>), typeof(BaseCacheManager<>));
-            services.AddSingleton(typeof(ICacheManagerConfiguration),
-                new ConfigurationBuilder()
-                    .WithJsonSerializer()
-                    .WithMicrosoftMemoryCacheHandle()
-                    .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromMinutes(10))
-                    .Build());
 
             switch (database)
             {
@@ -36,7 +35,8 @@ namespace ProjectName.UnitTests
                     break;
                 case DatabaseEngine.InMemory:
                     services.AddEntityFrameworkInMemoryDatabase()
-                        .AddDbContext<ProjectNameDbContext>(builder => builder.UseInMemoryDatabase("SharedDatabaseName"));
+                        .AddDbContext<ProjectNameDbContext>(
+                            builder => builder.UseInMemoryDatabase("SharedDatabaseName"));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(database), database, null);

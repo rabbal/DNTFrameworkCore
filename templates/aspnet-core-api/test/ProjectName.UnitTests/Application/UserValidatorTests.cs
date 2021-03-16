@@ -1,27 +1,39 @@
-﻿using static ProjectName.UnitTests.TestingHelper;
+﻿using System;
+using System.Collections.Generic;
+using DNTFrameworkCore.Dependency;
+using DNTFrameworkCore.Domain;
+using DNTFrameworkCore.EFCore.Context;
+using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
+using ProjectName.Application.Identity.Models;
+using ProjectName.Application.Identity.Validators;
+using ProjectName.Common.Localization;
+using ProjectName.Domain.Identity;
+using Shouldly;
+using static ProjectName.UnitTests.TestingHelper;
 
 namespace ProjectName.UnitTests.Application
 {
     [TestFixture]
     public class UserValidatorTests
     {
-        private IMessageLocalizer _localizer;
+        private ITranslationService _translation;
         private IServiceProvider _serviceProvider;
 
         [SetUp]
         public void Init()
         {
-            _serviceProvider = BuildServiceProvider();
-            _localizer = _serviceProvider.GetRequiredService<IMessageLocalizer>();
+            _serviceProvider = PrepareServices();
+            _translation = _serviceProvider.GetRequiredService<ITranslationService>();
         }
 
         [Test]
         public void Should_Have_Error_When_DisplayName_Is_Empty()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
+            var dbContext = _serviceProvider.GetService<IDbContext>();
 
-            var validator = new UserValidator(unitOfWork, _localizer);
+            var validator = new UserValidator(dbContext, _translation);
             var model = new UserModel
             {
                 DisplayName = null
@@ -38,12 +50,12 @@ namespace ProjectName.UnitTests.Application
         public void Should_Have_Error_When_DisplayName_Length_Less_Than_Minimum()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
+            var dbContext = _serviceProvider.GetService<IDbContext>();
 
-            var validator = new UserValidator(unitOfWork, _localizer);
+            var validator = new UserValidator(dbContext, _translation);
             var model = new UserModel
             {
-                DisplayName = "مس"
+                DisplayName = "a"
             };
 
             //Act
@@ -57,12 +69,12 @@ namespace ProjectName.UnitTests.Application
         public void Should_Have_Error_When_DisplayName_Length_More_Than_Maximum_Length()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
+            var dbContext = _serviceProvider.GetService<IDbContext>();
 
-            var validator = new UserValidator(unitOfWork, _localizer);
+            var validator = new UserValidator(dbContext, _translation);
             var model = new UserModel
             {
-                DisplayName = new string('م', 51)
+                DisplayName = new string('a', 51)
             };
 
             //Act
@@ -73,41 +85,22 @@ namespace ProjectName.UnitTests.Application
         }
 
         [Test]
-        public void Should_Have_Error_When_DisplayName_Expression_Is_Not_Regular()
-        {
-            //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
-
-            var validator = new UserValidator(unitOfWork, _localizer);
-            var model = new UserModel
-            {
-                DisplayName = "AbCd123"
-            };
-
-            //Act
-            var result = validator.Validate(model);
-
-            //Assert
-            result.Errors.ShouldContain(x => x.ErrorMessage == "User.Fields.DisplayName.RegularExpression");
-        }
-
-        [Test]
         public void Should_Have_Error_When_DisplayName_Is_Not_Unique()
         {
             //Arrange
-            _serviceProvider.RunScoped<IUnitOfWork>(uow =>
+            _serviceProvider.RunScoped<IDbContext>(context =>
             {
-                uow.Set<User>().Add(new User {DisplayName = "نام", NormalizedDisplayName = "نام".ToUpperInvariant()});
-                uow.SaveChanges();
+                context.Set<User>().Add(new User {DisplayName = "FirstName", NormalizedDisplayName = User.NormalizeDisplayName("FirstName")});
+                context.SaveChanges();
             });
 
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
+            var dbContext = _serviceProvider.GetService<IDbContext>();
 
-            var validator = new UserValidator(unitOfWork, _localizer);
+            var validator = new UserValidator(dbContext, _translation);
 
             var model = new UserModel
             {
-                DisplayName = "نام"
+                DisplayName = "FirstName"
             };
 
             //Act
@@ -121,17 +114,17 @@ namespace ProjectName.UnitTests.Application
         public void Should_Not_Have_Error_When_DisplayName_Is_Unique()
         {
             //Arrange
-            _serviceProvider.RunScoped<IUnitOfWork>(uow =>
+            _serviceProvider.RunScoped<IDbContext>(context =>
             {
-                uow.Set<User>().Add(new User {DisplayName = "مریم موسالو", NormalizedDisplayName = "مریم موسالو"});
-                uow.SaveChanges();
+                context.Set<User>().Add(new User {DisplayName = "Maryam Mousalou", NormalizedDisplayName = "Maryam Mousalou"});
+                context.SaveChanges();
             });
 
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
-            var validator = new UserValidator(unitOfWork, _localizer);
+            var dbContext = _serviceProvider.GetService<IDbContext>();
+            var validator = new UserValidator(dbContext, _translation);
             var model = new UserModel
             {
-                DisplayName = "مریم"
+                DisplayName = "Maryam Mousalou"
             };
 
             //Act
@@ -145,9 +138,9 @@ namespace ProjectName.UnitTests.Application
         public void Should_Have_Error_When_UserName_Is_Empty()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
+            var dbContext = _serviceProvider.GetService<IDbContext>();
 
-            var validator = new UserValidator(unitOfWork, _localizer);
+            var validator = new UserValidator(dbContext, _translation);
             var model = new UserModel
             {
                 UserName = null
@@ -164,9 +157,9 @@ namespace ProjectName.UnitTests.Application
         public void Should_Have_Error_When_UserName_Length_Less_Than_Minimum()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
+            var dbContext = _serviceProvider.GetService<IDbContext>();
 
-            var validator = new UserValidator(unitOfWork, _localizer);
+            var validator = new UserValidator(dbContext, _translation);
             var model = new UserModel
             {
                 UserName = "AB"
@@ -183,9 +176,9 @@ namespace ProjectName.UnitTests.Application
         public void Should_Have_Error_When_UserName_Length_More_Than_Maximum_Length()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
+            var dbContext = _serviceProvider.GetService<IDbContext>();
 
-            var validator = new UserValidator(unitOfWork, _localizer);
+            var validator = new UserValidator(dbContext, _translation);
             var model = new UserModel
             {
                 UserName = new string('a', 257)
@@ -202,12 +195,12 @@ namespace ProjectName.UnitTests.Application
         public void Should_Have_Error_When_UserName_Expression_Is_Not_Regular()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
+            var dbContext = _serviceProvider.GetService<IDbContext>();
 
-            var validator = new UserValidator(unitOfWork, _localizer);
+            var validator = new UserValidator(dbContext, _translation);
             var model = new UserModel
             {
-                UserName = "سام تکست"
+                UserName = "User Name"
             };
 
             //Act
@@ -221,16 +214,16 @@ namespace ProjectName.UnitTests.Application
         public void Should_Have_Error_When_UserName_Is_Not_Unique()
         {
             //Arrange
-            _serviceProvider.RunScoped<IUnitOfWork>(uow =>
+            _serviceProvider.RunScoped<IDbContext>(context =>
             {
-                uow.Set<User>()
+                context.Set<User>()
                     .Add(new User {UserName = "UserName", NormalizedUserName = "UserName".ToUpperInvariant()});
-                uow.SaveChanges();
+                context.SaveChanges();
             });
 
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
+            var dbContext = _serviceProvider.GetService<IDbContext>();
 
-            var validator = new UserValidator(unitOfWork, _localizer);
+            var validator = new UserValidator(dbContext, _translation);
 
             var model = new UserModel
             {
@@ -248,14 +241,14 @@ namespace ProjectName.UnitTests.Application
         public void Should_Not_Have_Error_When_UserName_Is_Unique()
         {
             //Arrange
-            _serviceProvider.RunScoped<IUnitOfWork>(uow =>
+            _serviceProvider.RunScoped<IDbContext>(context =>
             {
-                uow.Set<User>().Add(new User {UserName = "UserName", NormalizedUserName = "UserName"});
-                uow.SaveChanges();
+                context.Set<User>().Add(new User {UserName = "UserName", NormalizedUserName = "UserName"});
+                context.SaveChanges();
             });
 
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
-            var validator = new UserValidator(unitOfWork, _localizer);
+            var dbContext = _serviceProvider.GetService<IDbContext>();
+            var validator = new UserValidator(dbContext, _translation);
             var model = new UserModel
             {
                 UserName = "User"
@@ -272,9 +265,9 @@ namespace ProjectName.UnitTests.Application
         public void Should_Have_Error_When_Password_Is_Empty()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
+            var dbContext = _serviceProvider.GetService<IDbContext>();
 
-            var validator = new UserValidator(unitOfWork, _localizer);
+            var validator = new UserValidator(dbContext, _translation);
             var model = new UserModel
             {
                 Password = null
@@ -291,9 +284,9 @@ namespace ProjectName.UnitTests.Application
         public void Should_Have_Error_When_Password_Length_Less_Than_Minimum()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
+            var dbContext = _serviceProvider.GetService<IDbContext>();
 
-            var validator = new UserValidator(unitOfWork, _localizer);
+            var validator = new UserValidator(dbContext, _translation);
             var model = new UserModel
             {
                 Password = "AB"
@@ -310,9 +303,9 @@ namespace ProjectName.UnitTests.Application
         public void Should_Have_Error_When_Password_Length_More_Than_Maximum_Length()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
+            var dbContext = _serviceProvider.GetService<IDbContext>();
 
-            var validator = new UserValidator(unitOfWork, _localizer);
+            var validator = new UserValidator(dbContext, _translation);
             var model = new UserModel
             {
                 Password = new string('a', 129)
@@ -329,12 +322,12 @@ namespace ProjectName.UnitTests.Application
         public void Should_Have_Error_When_Roles_Not_Unique()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
+            var dbContext = _serviceProvider.GetService<IDbContext>();
 
-            var validator = new UserValidator(unitOfWork, _localizer);
+            var validator = new UserValidator(dbContext, _translation);
             var model = new UserModel
             {
-                DisplayName = "نام",
+                DisplayName = "DisplayName",
                 UserName = "UserName",
                 Roles = new List<UserRoleModel>
                 {
@@ -364,12 +357,12 @@ namespace ProjectName.UnitTests.Application
         public void Should_Not_Have_Error_When_Roles_Not_Unique_But_Exists_In_Deleted_Roles()
         {
             //Arrange
-            var unitOfWork = _serviceProvider.GetService<IUnitOfWork>();
+            var dbContext = _serviceProvider.GetService<IDbContext>();
 
-            var validator = new UserValidator(unitOfWork, _localizer);
+            var validator = new UserValidator(dbContext, _translation);
             var model = new UserModel
             {
-                DisplayName = "نام",
+                DisplayName = "DisplayName",
                 UserName = "UserName",
                 Roles = new List<UserRoleModel>
                 {

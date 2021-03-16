@@ -42,7 +42,7 @@ namespace ProjectName.Application.Identity.Validators
 
         private bool IsUniqueName(string name, long id)
         {
-            return _dbContext.Set<Role>().Any(u => u.NormalizedName == Role.NormalizeName(name) && u.Id != id);
+            return !_dbContext.Set<Role>().Any(u => u.NormalizedName == Role.NormalizeName(name) && u.Id != id);
         }
 
         private bool CheckDuplicatePermissions(RoleModel model)

@@ -6,12 +6,13 @@ namespace ProjectName.Resources
 {
     public static class LocalizationRegistry
     {
-        public static void AddCustomLocalization(this IServiceCollection services)
+        public static void AddTranslation(this IServiceCollection services)
         {
             services.AddSingleton<IStringLocalizer>(provider =>
                 provider.GetRequiredService<IStringLocalizer<SharedResource>>());
-            services.AddSingleton<IStringLocalizer>(provider =>
-                provider.GetRequiredService<IStringLocalizer<MessagesResource>>());
+            //TODO: Provide mechanism to support multiple resource file
+            // services.AddSingleton<IStringLocalizer>(provider =>
+            //     provider.GetRequiredService<IStringLocalizer<MessagesResource>>());
         }
     }
 }

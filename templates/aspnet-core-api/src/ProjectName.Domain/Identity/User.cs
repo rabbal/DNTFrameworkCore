@@ -18,7 +18,7 @@ namespace ProjectName.Domain.Identity
         public string NormalizedDisplayName { get; set; }
         public string PasswordHash { get; set; }
         public bool IsActive { get; set; }
-        public string SecurityToken { get; set; } = GetSecurityToken();
+        public string SecurityToken { get; set; } = NewSecurityToken();
         public DateTime? LastLoggedInDateTime { get; set; }
 
         public ICollection<UserRole> Roles { get; set; } = new HashSet<UserRole>();
@@ -34,10 +34,10 @@ namespace ProjectName.Domain.Identity
 
         public void ResetSecurityToken()
         {
-            SecurityToken = GetSecurityToken();
+            SecurityToken = NewSecurityToken();
         }
 
-        private static string GetSecurityToken()
+        public static string NewSecurityToken()
         {
             return Guid.NewGuid().ToString("N");
         }

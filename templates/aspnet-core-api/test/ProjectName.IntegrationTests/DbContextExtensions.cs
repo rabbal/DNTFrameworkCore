@@ -1,10 +1,12 @@
-namespace ProjectName.UnitTests
+using DNTFrameworkCore.EFCore.Context;
+
+namespace ProjectName.IntegrationTests
 {
-    public static class UnitOfWorkExtensions
+    public static class DbContextExtensions
     {
-        public static void SetRowVersionOnInsert(this IUnitOfWork uow, string table)
+        public static void SetRowVersionOnInsert(this IDbContext dbContext, string table)
         {
-            uow.ExecuteSqlRawCommand(
+            dbContext.ExecuteSqlRawCommand(
                 $@"
                     CREATE TRIGGER Set{table}RowVersion
                     AFTER INSERT ON {table}
@@ -16,9 +18,9 @@ namespace ProjectName.UnitTests
                     ");
         }
 
-        public static void SetRowVersionOnUpdate(this IUnitOfWork uow, string table)
+        public static void SetRowVersionOnUpdate(this IDbContext dbContext, string table)
         {
-            uow.ExecuteSqlRawCommand(
+            dbContext.ExecuteSqlRawCommand(
                 $@"
                     CREATE TRIGGER Set{table}RowVersion
                     AFTER UPDATE ON {table}

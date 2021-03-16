@@ -1,12 +1,29 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using DNTFrameworkCore.Collections;
+using DNTFrameworkCore.Dependency;
+using DNTFrameworkCore.Domain;
+using DNTFrameworkCore.EFCore.Context;
+using DNTFrameworkCore.Functional;
+using DNTFrameworkCore.Querying;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
+using ProjectName.Application.Identity;
+using ProjectName.Application.Identity.Models;
+using ProjectName.Domain.Identity;
+using Shouldly;
 using static ProjectName.IntegrationTests.TestingHelper;
 
 namespace ProjectName.IntegrationTests.Application
-{
-    [TestFixture]
+{  [TestFixture]
     public class RoleServiceTests
     {
         private IRoleService _service;
-        private IServiceProvider _serviceProvider;
+        private IServiceProvider _provider;
         private SqliteConnection _connection;
 
         [SetUp]
@@ -15,9 +32,9 @@ namespace ProjectName.IntegrationTests.Application
             _connection = new SqliteConnection("DataSource=:memory:");
             _connection.Open();
 
-            _serviceProvider = BuildServiceProvider(DatabaseEngine.SQLite, _connection);
+            _provider = BuildServiceProvider(DatabaseEngine.SQLite, _connection);
 
-            _service = _serviceProvider.GetRequiredService<IRoleService>();
+            _service = _provider.GetRequiredService<IRoleService>();
 
             Seed();
         }
@@ -35,10 +52,10 @@ namespace ProjectName.IntegrationTests.Application
                 Name = "Role1Name",
                 NormalizedName = "Role1Name",
                 Permissions = new List<RolePermission>
-                {
-                    new RolePermission {Name = "Permission1"},
-                    new RolePermission {Name = "Permission2"}
-                }
+                 {
+                     new RolePermission {Name = "Permission1"},
+                     new RolePermission {Name = "Permission2"}
+                 }
             };
 
             var role2 = new Role
@@ -46,19 +63,33 @@ namespace ProjectName.IntegrationTests.Application
                 Name = "Role2Name",
                 NormalizedName = "Role2Name",
                 Permissions = new List<RolePermission>
-                {
-                    new RolePermission {Name = "Permission3"},
-                    new RolePermission {Name = "Permission4"}
-                }
+                 {
+                     new RolePermission {Name = "Permission3"},
+                     new RolePermission {Name = "Permission4"}
+                 }
             };
 
-            _serviceProvider.RunScoped<IUnitOfWork>(uow =>
+            var administrator = new Role
             {
-                uow.SetRowVersionOnInsert(nameof(Role));
+                Name = RoleNames.Administrators,
+                NormalizedName = "Admin",
+                Permissions = new List<RolePermission>
+                 {
+                     new RolePermission {Name = "Permission1"},
+                     new RolePermission {Name = "Permission2"},
+                     new RolePermission {Name = "Permission3"},
+                     new RolePermission {Name = "Permission4"}
+                 }
+            };
 
-                uow.Set<Role>().Add(role1);
-                uow.Set<Role>().Add(role2);
-                uow.SaveChanges();
+            _provider.RunScoped<IDbContext>(content =>
+            {
+                content.SetRowVersionOnInsert(nameof(Role));
+
+                content.Set<Role>().Add(role1);
+                content.Set<Role>().Add(role2);
+                content.Set<Role>().Add(administrator);
+                content.SaveChanges();
             });
         }
 
@@ -70,10 +101,10 @@ namespace ProjectName.IntegrationTests.Application
             {
                 Name = "NewRoleName",
                 Permissions = new List<PermissionModel>
-                {
-                    new PermissionModel {Name = "Permission1", TrackingState = TrackingState.Added},
-                    new PermissionModel {Name = "Permission2", TrackingState = TrackingState.Added}
-                }
+                 {
+                     new PermissionModel {Name = "Permission1", TrackingState = TrackingState.Added},
+                     new PermissionModel {Name = "Permission2", TrackingState = TrackingState.Added}
+                 }
             };
 
             //Act
@@ -81,9 +112,9 @@ namespace ProjectName.IntegrationTests.Application
 
             //Assert
             result.Failed.ShouldBeFalse();
-            _serviceProvider.RunScoped<IUnitOfWork>(uow =>
+            _provider.RunScoped<IDbContext>(content =>
             {
-                var role = uow.Set<Role>().Include(r => r.Permissions).First(a => a.Name == model.Name);
+                var role = content.Set<Role>().Include(r => r.Permissions).First(a => a.Name == model.Name);
                 role.ShouldNotBeNull();
                 role.Permissions.Count.ShouldBe(2);
             });
@@ -106,11 +137,9 @@ namespace ProjectName.IntegrationTests.Application
         public async Task Should_Edit_Role()
         {
             //Arrange
-            var editModel =
-                await _serviceProvider.RunScoped<Task<Maybe<RoleModel>>, IRoleService>(service =>
-                    service.FindAsync(2));
+            var maybe = await _provider.RunScoped<Maybe<RoleModel>, IRoleService>(service => service.FindAsync(2));
 
-            var model = editModel.Value;
+            var model = maybe.Value;
             model.Name = "Role2EditedName";
             foreach (var permission in model.Permissions)
             {
@@ -120,8 +149,8 @@ namespace ProjectName.IntegrationTests.Application
             model.Permissions.AddRange(
                 new[]
                 {
-                    new PermissionModel {Name = "NewPermission1", TrackingState = TrackingState.Added},
-                    new PermissionModel {Name = "NewPermission2", TrackingState = TrackingState.Added}
+                     new PermissionModel {Name = "NewPermission1", TrackingState = TrackingState.Added},
+                     new PermissionModel {Name = "NewPermission2", TrackingState = TrackingState.Added}
                 });
 
             //Act
@@ -130,9 +159,9 @@ namespace ProjectName.IntegrationTests.Application
             //Assert
             result.Failed.ShouldBeFalse();
 
-            _serviceProvider.RunScoped<IUnitOfWork>(uow =>
+            _provider.RunScoped<IDbContext>(content =>
             {
-                var role = uow.Set<Role>().Include(r => r.Permissions).First(a => a.Id == 2);
+                var role = content.Set<Role>().Include(r => r.Permissions).First(a => a.Id == 2);
 
                 role.ShouldNotBeNull();
                 role.Name.ShouldBe("Role2EditedName");
@@ -148,37 +177,33 @@ namespace ProjectName.IntegrationTests.Application
         public async Task Should_Delete_Role()
         {
             //Arrange
-            var role =
-                await _serviceProvider.RunScoped<Task<Maybe<RoleModel>>, IRoleService>(service =>
-                    service.FindAsync(2));
-
             //Act
-            await _serviceProvider.RunScoped<Task<Result>, IRoleService>(service =>
-                service.DeleteAsync(role.Value));
+            var result = await _provider.RunScoped<Result, IRoleService>(service => service.DeleteAsync(2));
 
             //Assert
-            _serviceProvider.RunScoped<IUnitOfWork>(uow =>
+            result.Failed.ShouldBeFalse();
+            _provider.RunScoped<IDbContext>(content =>
             {
-                uow.Set<Role>().Any(a => a.Id == 2).ShouldBeFalse();
-                uow.Set<RolePermission>().Any(a => a.RoleId == 2).ShouldBeFalse();
+                content.Set<Role>().Any(a => a.Id == 2).ShouldBeFalse();
+                content.Set<RolePermission>().Any(a => a.RoleId == 2).ShouldBeFalse();
             });
         }
 
         [Test]
-        public async Task Should_Read_Paged_List_Of_Roles()
+        public async Task Should_Fetch_Paged_List_Of_Roles()
         {
             //Act
-            var roles = await _service.ReadPagedListAsync(new FilteredPagedQueryModel
+            var result = await _service.FetchPagedListAsync(new FilteredPagedRequest
             {
                 PageSize = 10,
                 Page = 1,
-                SortExpression = "Id_ASC"
+                Sorting = "Id_ASC"
             });
 
             //Assert
-            roles.TotalCount.ShouldBe(2);
-            roles.Items.First().Name.ShouldBe("Role1Name");
-            roles.Items.Last().Name.ShouldBe("Role2Name");
+            result.TotalCount.ShouldBe(3);
+            result.ItemList.First().Name.ShouldBe("Role1Name");
+            result.ItemList.Last().Name.ShouldBe(RoleNames.Administrators);
         }
     }
 }
