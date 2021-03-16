@@ -18,8 +18,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using ProjectName.API.Authentication;
 using ProjectName.Infrastructure.Context;
 

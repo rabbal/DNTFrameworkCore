@@ -1,0 +1,1032 @@
+2021-03-16 19:26:52 [Information] ProjectName.Infrastructure.Context.ProjectNameDbContext [0] : Migrating database associated with context ProjectNameDbContext
+2021-03-16 19:26:52 [Information] ProjectName.Infrastructure.Context.ProjectNameDbContext [0] : Migrating database associated with context ProjectNameDbContext
+2021-03-16 19:26:52 [Warning] Microsoft.EntityFrameworkCore.Model.Validation [Microsoft.EntityFrameworkCore.Infrastructure.SensitiveDataLoggingEnabledWarning] : Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2021-03-16 19:26:52 [Warning] Microsoft.EntityFrameworkCore.Model.Validation [Microsoft.EntityFrameworkCore.Infrastructure.SensitiveDataLoggingEnabledWarning] : Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2021-03-16 19:26:53 [Information] Microsoft.EntityFrameworkCore.Infrastructure [Microsoft.EntityFrameworkCore.Infrastructure.ContextInitialized] : Entity Framework Core 5.0.4 initialized 'ProjectNameDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: SensitiveDataLoggingEnabled CommandTimeout=180 MigrationsHistoryTable=dbo.MigrationHistory 
+2021-03-16 19:26:53 [Information] Microsoft.EntityFrameworkCore.Infrastructure [Microsoft.EntityFrameworkCore.Infrastructure.ContextInitialized] : Entity Framework Core 5.0.4 initialized 'ProjectNameDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: SensitiveDataLoggingEnabled CommandTimeout=180 MigrationsHistoryTable=dbo.MigrationHistory 
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (356ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE DATABASE [ProjectNameDb];
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (356ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE DATABASE [ProjectNameDb];
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (115ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+IF SERVERPROPERTY('EngineEdition') <> 5
+BEGIN
+    ALTER DATABASE [ProjectNameDb] SET READ_COMMITTED_SNAPSHOT ON;
+END;
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (115ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+IF SERVERPROPERTY('EngineEdition') <> 5
+BEGIN
+    ALTER DATABASE [ProjectNameDb] SET READ_COMMITTED_SNAPSHOT ON;
+END;
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (12ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT 1
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (12ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT 1
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (12ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [dbo].[MigrationHistory] (
+    [MigrationId] nvarchar(150) NOT NULL,
+    [ProductVersion] nvarchar(32) NOT NULL,
+    CONSTRAINT [PK_MigrationHistory] PRIMARY KEY ([MigrationId])
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (12ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [dbo].[MigrationHistory] (
+    [MigrationId] nvarchar(150) NOT NULL,
+    [ProductVersion] nvarchar(32) NOT NULL,
+    CONSTRAINT [PK_MigrationHistory] PRIMARY KEY ([MigrationId])
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT 1
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT 1
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (30ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT OBJECT_ID(N'[dbo].[MigrationHistory]');
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (30ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT OBJECT_ID(N'[dbo].[MigrationHistory]');
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (6ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [MigrationId], [ProductVersion]
+FROM [dbo].[MigrationHistory]
+ORDER BY [MigrationId];
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (6ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [MigrationId], [ProductVersion]
+FROM [dbo].[MigrationHistory]
+ORDER BY [MigrationId];
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Migrations [Microsoft.EntityFrameworkCore.Migrations.MigrationApplying] : Applying migration '20210315204020_V2021_03_16_0010'.
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Migrations [Microsoft.EntityFrameworkCore.Migrations.MigrationApplying] : Applying migration '20210315204020_V2021_03_16_0010'.
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [dbo].[Cache] (
+    [Id] nvarchar(449) NOT NULL,
+    [Value] varbinary(max) NOT NULL,
+    [ExpiresAtTime] datetimeoffset NOT NULL,
+    [SlidingExpirationInSeconds] bigint NULL,
+    [AbsoluteExpiration] datetimeoffset NULL,
+    CONSTRAINT [PK_Cache] PRIMARY KEY ([Id])
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [dbo].[Cache] (
+    [Id] nvarchar(449) NOT NULL,
+    [Value] varbinary(max) NOT NULL,
+    [ExpiresAtTime] datetimeoffset NOT NULL,
+    [SlidingExpirationInSeconds] bigint NULL,
+    [AbsoluteExpiration] datetimeoffset NULL,
+    CONSTRAINT [PK_Cache] PRIMARY KEY ([Id])
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [dbo].[Log] (
+    [Id] uniqueidentifier NOT NULL,
+    [Message] nvarchar(max) NOT NULL,
+    [Level] nvarchar(50) NOT NULL,
+    [CreationTime] datetime2 NOT NULL,
+    [LoggerName] nvarchar(256) NOT NULL,
+    [UserBrowserName] nvarchar(1024) NULL,
+    [UserIP] nvarchar(256) NULL,
+    [UserId] nvarchar(256) NULL,
+    [UserName] nvarchar(50) NULL,
+    [UserDisplayName] nvarchar(50) NULL,
+    [ImpersonatorUserId] nvarchar(256) NULL,
+    [EventId] int NOT NULL,
+    [TenantId] nvarchar(256) NULL,
+    [TenantName] nvarchar(256) NULL,
+    [ImpersonatorTenantId] nvarchar(256) NULL,
+    CONSTRAINT [PK_Log] PRIMARY KEY ([Id])
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [dbo].[Log] (
+    [Id] uniqueidentifier NOT NULL,
+    [Message] nvarchar(max) NOT NULL,
+    [Level] nvarchar(50) NOT NULL,
+    [CreationTime] datetime2 NOT NULL,
+    [LoggerName] nvarchar(256) NOT NULL,
+    [UserBrowserName] nvarchar(1024) NULL,
+    [UserIP] nvarchar(256) NULL,
+    [UserId] nvarchar(256) NULL,
+    [UserName] nvarchar(50) NULL,
+    [UserDisplayName] nvarchar(50) NULL,
+    [ImpersonatorUserId] nvarchar(256) NULL,
+    [EventId] int NOT NULL,
+    [TenantId] nvarchar(256) NULL,
+    [TenantName] nvarchar(256) NULL,
+    [ImpersonatorTenantId] nvarchar(256) NULL,
+    CONSTRAINT [PK_Log] PRIMARY KEY ([Id])
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [NumberedEntity] (
+    [Id] int NOT NULL IDENTITY,
+    [EntityName] varchar(256) NOT NULL,
+    [NextValue] bigint NOT NULL,
+    CONSTRAINT [PK_NumberedEntity] PRIMARY KEY ([Id])
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [NumberedEntity] (
+    [Id] int NOT NULL IDENTITY,
+    [EntityName] varchar(256) NOT NULL,
+    [NextValue] bigint NOT NULL,
+    CONSTRAINT [PK_NumberedEntity] PRIMARY KEY ([Id])
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [dbo].[ProtectionKey] (
+    [Id] bigint NOT NULL IDENTITY,
+    [FriendlyName] nvarchar(450) NOT NULL,
+    [XmlValue] nvarchar(max) NULL,
+    CONSTRAINT [PK_ProtectionKey] PRIMARY KEY ([Id])
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [dbo].[ProtectionKey] (
+    [Id] bigint NOT NULL IDENTITY,
+    [FriendlyName] nvarchar(450) NOT NULL,
+    [XmlValue] nvarchar(max) NULL,
+    CONSTRAINT [PK_ProtectionKey] PRIMARY KEY ([Id])
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [Role] (
+    [Id] bigint NOT NULL IDENTITY,
+    [Name] nvarchar(50) NOT NULL,
+    [NormalizedName] nvarchar(50) NOT NULL,
+    [Description] nvarchar(1024) NULL,
+    [Version] rowversion NULL,
+    [CreatedByBrowserName] nvarchar(1024) NULL,
+    [CreatedByIP] nvarchar(256) NULL,
+    [CreatedByUserId] bigint NULL,
+    [CreatedDateTime] datetime2 NOT NULL,
+    [Hash] nvarchar(256) NULL,
+    [ModifiedByBrowserName] nvarchar(1024) NULL,
+    [ModifiedByIP] nvarchar(256) NULL,
+    [ModifiedByUserId] bigint NULL,
+    [ModifiedDateTime] datetime2 NULL,
+    CONSTRAINT [PK_Role] PRIMARY KEY ([Id])
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [Role] (
+    [Id] bigint NOT NULL IDENTITY,
+    [Name] nvarchar(50) NOT NULL,
+    [NormalizedName] nvarchar(50) NOT NULL,
+    [Description] nvarchar(1024) NULL,
+    [Version] rowversion NULL,
+    [CreatedByBrowserName] nvarchar(1024) NULL,
+    [CreatedByIP] nvarchar(256) NULL,
+    [CreatedByUserId] bigint NULL,
+    [CreatedDateTime] datetime2 NOT NULL,
+    [Hash] nvarchar(256) NULL,
+    [ModifiedByBrowserName] nvarchar(1024) NULL,
+    [ModifiedByIP] nvarchar(256) NULL,
+    [ModifiedByUserId] bigint NULL,
+    [ModifiedDateTime] datetime2 NULL,
+    CONSTRAINT [PK_Role] PRIMARY KEY ([Id])
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [User] (
+    [Id] bigint NOT NULL IDENTITY,
+    [UserName] nvarchar(256) NOT NULL,
+    [NormalizedUserName] nvarchar(256) NOT NULL,
+    [DisplayName] nvarchar(50) NOT NULL,
+    [NormalizedDisplayName] nvarchar(50) NOT NULL,
+    [PasswordHash] nvarchar(256) NOT NULL,
+    [IsActive] bit NOT NULL,
+    [SecurityToken] nvarchar(128) NOT NULL,
+    [LastLoggedInDateTime] datetime2 NULL,
+    [Version] rowversion NULL,
+    [CreatedByBrowserName] nvarchar(1024) NULL,
+    [CreatedByIP] nvarchar(256) NULL,
+    [CreatedByUserId] bigint NULL,
+    [CreatedDateTime] datetime2 NOT NULL,
+    [Hash] nvarchar(256) NULL,
+    [ModifiedByBrowserName] nvarchar(1024) NULL,
+    [ModifiedByIP] nvarchar(256) NULL,
+    [ModifiedByUserId] bigint NULL,
+    [ModifiedDateTime] datetime2 NULL,
+    CONSTRAINT [PK_User] PRIMARY KEY ([Id])
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [User] (
+    [Id] bigint NOT NULL IDENTITY,
+    [UserName] nvarchar(256) NOT NULL,
+    [NormalizedUserName] nvarchar(256) NOT NULL,
+    [DisplayName] nvarchar(50) NOT NULL,
+    [NormalizedDisplayName] nvarchar(50) NOT NULL,
+    [PasswordHash] nvarchar(256) NOT NULL,
+    [IsActive] bit NOT NULL,
+    [SecurityToken] nvarchar(128) NOT NULL,
+    [LastLoggedInDateTime] datetime2 NULL,
+    [Version] rowversion NULL,
+    [CreatedByBrowserName] nvarchar(1024) NULL,
+    [CreatedByIP] nvarchar(256) NULL,
+    [CreatedByUserId] bigint NULL,
+    [CreatedDateTime] datetime2 NOT NULL,
+    [Hash] nvarchar(256) NULL,
+    [ModifiedByBrowserName] nvarchar(1024) NULL,
+    [ModifiedByIP] nvarchar(256) NULL,
+    [ModifiedByUserId] bigint NULL,
+    [ModifiedDateTime] datetime2 NULL,
+    CONSTRAINT [PK_User] PRIMARY KEY ([Id])
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [Claim] (
+    [Id] bigint NOT NULL IDENTITY,
+    [Type] nvarchar(256) NOT NULL,
+    [Value] nvarchar(max) NOT NULL,
+    [CreatedByBrowserName] nvarchar(1024) NULL,
+    [CreatedByIP] nvarchar(256) NULL,
+    [CreatedByUserId] bigint NULL,
+    [CreatedDateTime] datetime2 NOT NULL,
+    [EntityName] nvarchar(50) NOT NULL,
+    [Hash] nvarchar(256) NULL,
+    [ModifiedByBrowserName] nvarchar(1024) NULL,
+    [ModifiedByIP] nvarchar(256) NULL,
+    [ModifiedByUserId] bigint NULL,
+    [ModifiedDateTime] datetime2 NULL,
+    [RoleId] bigint NULL,
+    [UserId] bigint NULL,
+    CONSTRAINT [PK_Claim] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Claim_Role_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [Role] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_Claim_User_UserId] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]) ON DELETE CASCADE
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [Claim] (
+    [Id] bigint NOT NULL IDENTITY,
+    [Type] nvarchar(256) NOT NULL,
+    [Value] nvarchar(max) NOT NULL,
+    [CreatedByBrowserName] nvarchar(1024) NULL,
+    [CreatedByIP] nvarchar(256) NULL,
+    [CreatedByUserId] bigint NULL,
+    [CreatedDateTime] datetime2 NOT NULL,
+    [EntityName] nvarchar(50) NOT NULL,
+    [Hash] nvarchar(256) NULL,
+    [ModifiedByBrowserName] nvarchar(1024) NULL,
+    [ModifiedByIP] nvarchar(256) NULL,
+    [ModifiedByUserId] bigint NULL,
+    [ModifiedDateTime] datetime2 NULL,
+    [RoleId] bigint NULL,
+    [UserId] bigint NULL,
+    CONSTRAINT [PK_Claim] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Claim_Role_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [Role] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_Claim_User_UserId] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]) ON DELETE CASCADE
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [Permission] (
+    [Id] bigint NOT NULL IDENTITY,
+    [Name] nvarchar(128) NOT NULL,
+    [IsGranted] bit NOT NULL,
+    [CreatedByBrowserName] nvarchar(1024) NULL,
+    [CreatedByIP] nvarchar(256) NULL,
+    [CreatedByUserId] bigint NULL,
+    [CreatedDateTime] datetime2 NOT NULL,
+    [EntityName] nvarchar(50) NOT NULL,
+    [Hash] nvarchar(256) NULL,
+    [ModifiedByBrowserName] nvarchar(1024) NULL,
+    [ModifiedByIP] nvarchar(256) NULL,
+    [ModifiedByUserId] bigint NULL,
+    [ModifiedDateTime] datetime2 NULL,
+    [RoleId] bigint NULL,
+    [UserId] bigint NULL,
+    CONSTRAINT [PK_Permission] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Permission_Role_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [Role] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_Permission_User_UserId] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]) ON DELETE CASCADE
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [Permission] (
+    [Id] bigint NOT NULL IDENTITY,
+    [Name] nvarchar(128) NOT NULL,
+    [IsGranted] bit NOT NULL,
+    [CreatedByBrowserName] nvarchar(1024) NULL,
+    [CreatedByIP] nvarchar(256) NULL,
+    [CreatedByUserId] bigint NULL,
+    [CreatedDateTime] datetime2 NOT NULL,
+    [EntityName] nvarchar(50) NOT NULL,
+    [Hash] nvarchar(256) NULL,
+    [ModifiedByBrowserName] nvarchar(1024) NULL,
+    [ModifiedByIP] nvarchar(256) NULL,
+    [ModifiedByUserId] bigint NULL,
+    [ModifiedDateTime] datetime2 NULL,
+    [RoleId] bigint NULL,
+    [UserId] bigint NULL,
+    CONSTRAINT [PK_Permission] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Permission_Role_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [Role] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_Permission_User_UserId] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]) ON DELETE CASCADE
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [UserRole] (
+    [Id] bigint NOT NULL IDENTITY,
+    [UserId] bigint NOT NULL,
+    [RoleId] bigint NOT NULL,
+    [CreatedByBrowserName] nvarchar(1024) NULL,
+    [CreatedByIP] nvarchar(256) NULL,
+    [CreatedByUserId] bigint NULL,
+    [CreatedDateTime] datetime2 NOT NULL,
+    [Hash] nvarchar(256) NULL,
+    [ModifiedByBrowserName] nvarchar(1024) NULL,
+    [ModifiedByIP] nvarchar(256) NULL,
+    [ModifiedByUserId] bigint NULL,
+    [ModifiedDateTime] datetime2 NULL,
+    CONSTRAINT [PK_UserRole] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_UserRole_Role_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [Role] ([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_UserRole_User_UserId] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]) ON DELETE CASCADE
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [UserRole] (
+    [Id] bigint NOT NULL IDENTITY,
+    [UserId] bigint NOT NULL,
+    [RoleId] bigint NOT NULL,
+    [CreatedByBrowserName] nvarchar(1024) NULL,
+    [CreatedByIP] nvarchar(256) NULL,
+    [CreatedByUserId] bigint NULL,
+    [CreatedDateTime] datetime2 NOT NULL,
+    [Hash] nvarchar(256) NULL,
+    [ModifiedByBrowserName] nvarchar(1024) NULL,
+    [ModifiedByIP] nvarchar(256) NULL,
+    [ModifiedByUserId] bigint NULL,
+    [ModifiedDateTime] datetime2 NULL,
+    CONSTRAINT [PK_UserRole] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_UserRole_Role_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [Role] ([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_UserRole_User_UserId] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]) ON DELETE CASCADE
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [UserToken] (
+    [Id] bigint NOT NULL IDENTITY,
+    [TokenHash] nvarchar(256) NOT NULL,
+    [TokenExpirationDateTime] datetime2 NOT NULL,
+    [UserId] bigint NOT NULL,
+    [CreatedByBrowserName] nvarchar(1024) NULL,
+    [CreatedByIP] nvarchar(256) NULL,
+    [CreatedByUserId] bigint NULL,
+    [CreatedDateTime] datetime2 NOT NULL,
+    [ModifiedByBrowserName] nvarchar(1024) NULL,
+    [ModifiedByIP] nvarchar(256) NULL,
+    [ModifiedByUserId] bigint NULL,
+    [ModifiedDateTime] datetime2 NULL,
+    CONSTRAINT [PK_UserToken] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_UserToken_User_UserId] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]) ON DELETE CASCADE
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE TABLE [UserToken] (
+    [Id] bigint NOT NULL IDENTITY,
+    [TokenHash] nvarchar(256) NOT NULL,
+    [TokenExpirationDateTime] datetime2 NOT NULL,
+    [UserId] bigint NOT NULL,
+    [CreatedByBrowserName] nvarchar(1024) NULL,
+    [CreatedByIP] nvarchar(256) NULL,
+    [CreatedByUserId] bigint NULL,
+    [CreatedDateTime] datetime2 NOT NULL,
+    [ModifiedByBrowserName] nvarchar(1024) NULL,
+    [ModifiedByIP] nvarchar(256) NULL,
+    [ModifiedByUserId] bigint NULL,
+    [ModifiedDateTime] datetime2 NULL,
+    CONSTRAINT [PK_UserToken] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_UserToken_User_UserId] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]) ON DELETE CASCADE
+);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Cache_ExpiresAtTime] ON [dbo].[Cache] ([ExpiresAtTime]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Cache_ExpiresAtTime] ON [dbo].[Cache] ([ExpiresAtTime]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Claim_EntityName] ON [Claim] ([EntityName]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Claim_EntityName] ON [Claim] ([EntityName]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (6ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Claim_RoleId] ON [Claim] ([RoleId]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (6ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Claim_RoleId] ON [Claim] ([RoleId]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Claim_UserId] ON [Claim] ([UserId]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Claim_UserId] ON [Claim] ([UserId]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Log_Level] ON [dbo].[Log] ([Level]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Log_Level] ON [dbo].[Log] ([Level]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Log_LoggerName] ON [dbo].[Log] ([LoggerName]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Log_LoggerName] ON [dbo].[Log] ([LoggerName]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE UNIQUE INDEX [UIX_NumberedEntity_EntityName] ON [NumberedEntity] ([EntityName]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE UNIQUE INDEX [UIX_NumberedEntity_EntityName] ON [NumberedEntity] ([EntityName]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Permission_EntityName] ON [Permission] ([EntityName]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Permission_EntityName] ON [Permission] ([EntityName]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Permission_RoleId] ON [Permission] ([RoleId]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Permission_RoleId] ON [Permission] ([RoleId]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Permission_UserId] ON [Permission] ([UserId]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_Permission_UserId] ON [Permission] ([UserId]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE UNIQUE INDEX [IX_ProtectionKey_FriendlyName] ON [dbo].[ProtectionKey] ([FriendlyName]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE UNIQUE INDEX [IX_ProtectionKey_FriendlyName] ON [dbo].[ProtectionKey] ([FriendlyName]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE UNIQUE INDEX [UIX_Role_NormalizedName] ON [Role] ([NormalizedName]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE UNIQUE INDEX [UIX_Role_NormalizedName] ON [Role] ([NormalizedName]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE UNIQUE INDEX [UIX_User_NormalizedDisplayName] ON [User] ([NormalizedDisplayName]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE UNIQUE INDEX [UIX_User_NormalizedDisplayName] ON [User] ([NormalizedDisplayName]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE UNIQUE INDEX [UIX_User_NormalizedUserName] ON [User] ([NormalizedUserName]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE UNIQUE INDEX [UIX_User_NormalizedUserName] ON [User] ([NormalizedUserName]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (6ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_UserRole_RoleId] ON [UserRole] ([RoleId]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (6ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_UserRole_RoleId] ON [UserRole] ([RoleId]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_UserRole_UserId] ON [UserRole] ([UserId]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_UserRole_UserId] ON [UserRole] ([UserId]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_UserToken_TokenHash] ON [UserToken] ([TokenHash]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_UserToken_TokenHash] ON [UserToken] ([TokenHash]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_UserToken_UserId] ON [UserToken] ([UserId]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+CREATE INDEX [IX_UserToken_UserId] ON [UserToken] ([UserId]);
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+INSERT INTO [dbo].[MigrationHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20210315204020_V2021_03_16_0010', N'5.0.4');
+2021-03-16 19:26:54 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+INSERT INTO [dbo].[MigrationHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20210315204020_V2021_03_16_0010', N'5.0.4');
+2021-03-16 19:26:55 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (8ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [t].[Id], [t].[CreatedByBrowserName], [t].[CreatedByIP], [t].[CreatedByUserId], [t].[CreatedDateTime], [t].[Description], [t].[Hash], [t].[ModifiedByBrowserName], [t].[ModifiedByIP], [t].[ModifiedByUserId], [t].[ModifiedDateTime], [t].[Name], [t].[NormalizedName], [t].[Version], [t0].[Id], [t0].[CreatedByBrowserName], [t0].[CreatedByIP], [t0].[CreatedByUserId], [t0].[CreatedDateTime], [t0].[EntityName], [t0].[Hash], [t0].[IsGranted], [t0].[ModifiedByBrowserName], [t0].[ModifiedByIP], [t0].[ModifiedByUserId], [t0].[ModifiedDateTime], [t0].[Name], [t0].[RoleId]
+FROM (
+    SELECT TOP(1) [r].[Id], [r].[CreatedByBrowserName], [r].[CreatedByIP], [r].[CreatedByUserId], [r].[CreatedDateTime], [r].[Description], [r].[Hash], [r].[ModifiedByBrowserName], [r].[ModifiedByIP], [r].[ModifiedByUserId], [r].[ModifiedDateTime], [r].[Name], [r].[NormalizedName], [r].[Version]
+    FROM [Role] AS [r]
+    WHERE [r].[Name] = N'Administrators'
+) AS [t]
+LEFT JOIN (
+    SELECT [p].[Id], [p].[CreatedByBrowserName], [p].[CreatedByIP], [p].[CreatedByUserId], [p].[CreatedDateTime], [p].[EntityName], [p].[Hash], [p].[IsGranted], [p].[ModifiedByBrowserName], [p].[ModifiedByIP], [p].[ModifiedByUserId], [p].[ModifiedDateTime], [p].[Name], [p].[RoleId]
+    FROM [Permission] AS [p]
+    WHERE [p].[EntityName] = N'RolePermission'
+) AS [t0] ON [t].[Id] = [t0].[RoleId]
+ORDER BY [t].[Id], [t0].[Id]
+2021-03-16 19:26:55 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (8ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [t].[Id], [t].[CreatedByBrowserName], [t].[CreatedByIP], [t].[CreatedByUserId], [t].[CreatedDateTime], [t].[Description], [t].[Hash], [t].[ModifiedByBrowserName], [t].[ModifiedByIP], [t].[ModifiedByUserId], [t].[ModifiedDateTime], [t].[Name], [t].[NormalizedName], [t].[Version], [t0].[Id], [t0].[CreatedByBrowserName], [t0].[CreatedByIP], [t0].[CreatedByUserId], [t0].[CreatedDateTime], [t0].[EntityName], [t0].[Hash], [t0].[IsGranted], [t0].[ModifiedByBrowserName], [t0].[ModifiedByIP], [t0].[ModifiedByUserId], [t0].[ModifiedDateTime], [t0].[Name], [t0].[RoleId]
+FROM (
+    SELECT TOP(1) [r].[Id], [r].[CreatedByBrowserName], [r].[CreatedByIP], [r].[CreatedByUserId], [r].[CreatedDateTime], [r].[Description], [r].[Hash], [r].[ModifiedByBrowserName], [r].[ModifiedByIP], [r].[ModifiedByUserId], [r].[ModifiedDateTime], [r].[Name], [r].[NormalizedName], [r].[Version]
+    FROM [Role] AS [r]
+    WHERE [r].[Name] = N'Administrators'
+) AS [t]
+LEFT JOIN (
+    SELECT [p].[Id], [p].[CreatedByBrowserName], [p].[CreatedByIP], [p].[CreatedByUserId], [p].[CreatedDateTime], [p].[EntityName], [p].[Hash], [p].[IsGranted], [p].[ModifiedByBrowserName], [p].[ModifiedByIP], [p].[ModifiedByUserId], [p].[ModifiedDateTime], [p].[Name], [p].[RoleId]
+    FROM [Permission] AS [p]
+    WHERE [p].[EntityName] = N'RolePermission'
+) AS [t0] ON [t].[Id] = [t0].[RoleId]
+ORDER BY [t].[Id], [t0].[Id]
+2021-03-16 19:26:55 [Information] ProjectName.API.Application.DbSetup [0] : Seed: newPermissions: Users_View
+Users_Create
+Users_Edit
+Users_Delete
+00
+01
+02
+03
+2021-03-16 19:26:55 [Information] ProjectName.API.Application.DbSetup [0] : Seed: newPermissions: Users_View
+Users_Create
+Users_Edit
+Users_Delete
+00
+01
+02
+03
+2021-03-16 19:26:55 [Warning] Microsoft.EntityFrameworkCore.Query [Microsoft.EntityFrameworkCore.Query.MultipleCollectionIncludeWarning] : Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'
+2021-03-16 19:26:55 [Warning] Microsoft.EntityFrameworkCore.Query [Microsoft.EntityFrameworkCore.Query.MultipleCollectionIncludeWarning] : Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'
+2021-03-16 19:26:55 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (31ms) [Parameters=[@__ToUpperInvariant_0='ADMIN' (Size = 256)], CommandType='Text', CommandTimeout='180']
+SELECT [t].[Id], [t].[CreatedByBrowserName], [t].[CreatedByIP], [t].[CreatedByUserId], [t].[CreatedDateTime], [t].[DisplayName], [t].[Hash], [t].[IsActive], [t].[LastLoggedInDateTime], [t].[ModifiedByBrowserName], [t].[ModifiedByIP], [t].[ModifiedByUserId], [t].[ModifiedDateTime], [t].[NormalizedDisplayName], [t].[NormalizedUserName], [t].[PasswordHash], [t].[SecurityToken], [t].[UserName], [t].[Version], [t0].[Id], [t0].[CreatedByBrowserName], [t0].[CreatedByIP], [t0].[CreatedByUserId], [t0].[CreatedDateTime], [t0].[EntityName], [t0].[Hash], [t0].[IsGranted], [t0].[ModifiedByBrowserName], [t0].[ModifiedByIP], [t0].[ModifiedByUserId], [t0].[ModifiedDateTime], [t0].[Name], [t0].[UserId], [u0].[Id], [u0].[CreatedByBrowserName], [u0].[CreatedByIP], [u0].[CreatedByUserId], [u0].[CreatedDateTime], [u0].[Hash], [u0].[ModifiedByBrowserName], [u0].[ModifiedByIP], [u0].[ModifiedByUserId], [u0].[ModifiedDateTime], [u0].[RoleId], [u0].[UserId]
+FROM (
+    SELECT TOP(1) [u].[Id], [u].[CreatedByBrowserName], [u].[CreatedByIP], [u].[CreatedByUserId], [u].[CreatedDateTime], [u].[DisplayName], [u].[Hash], [u].[IsActive], [u].[LastLoggedInDateTime], [u].[ModifiedByBrowserName], [u].[ModifiedByIP], [u].[ModifiedByUserId], [u].[ModifiedDateTime], [u].[NormalizedDisplayName], [u].[NormalizedUserName], [u].[PasswordHash], [u].[SecurityToken], [u].[UserName], [u].[Version]
+    FROM [User] AS [u]
+    WHERE [u].[NormalizedUserName] = @__ToUpperInvariant_0
+) AS [t]
+LEFT JOIN (
+    SELECT [p].[Id], [p].[CreatedByBrowserName], [p].[CreatedByIP], [p].[CreatedByUserId], [p].[CreatedDateTime], [p].[EntityName], [p].[Hash], [p].[IsGranted], [p].[ModifiedByBrowserName], [p].[ModifiedByIP], [p].[ModifiedByUserId], [p].[ModifiedDateTime], [p].[Name], [p].[UserId]
+    FROM [Permission] AS [p]
+    WHERE [p].[EntityName] = N'UserPermission'
+) AS [t0] ON [t].[Id] = [t0].[UserId]
+LEFT JOIN [UserRole] AS [u0] ON [t].[Id] = [u0].[UserId]
+ORDER BY [t].[Id], [t0].[Id], [u0].[Id]
+2021-03-16 19:26:55 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (31ms) [Parameters=[@__ToUpperInvariant_0='ADMIN' (Size = 256)], CommandType='Text', CommandTimeout='180']
+SELECT [t].[Id], [t].[CreatedByBrowserName], [t].[CreatedByIP], [t].[CreatedByUserId], [t].[CreatedDateTime], [t].[DisplayName], [t].[Hash], [t].[IsActive], [t].[LastLoggedInDateTime], [t].[ModifiedByBrowserName], [t].[ModifiedByIP], [t].[ModifiedByUserId], [t].[ModifiedDateTime], [t].[NormalizedDisplayName], [t].[NormalizedUserName], [t].[PasswordHash], [t].[SecurityToken], [t].[UserName], [t].[Version], [t0].[Id], [t0].[CreatedByBrowserName], [t0].[CreatedByIP], [t0].[CreatedByUserId], [t0].[CreatedDateTime], [t0].[EntityName], [t0].[Hash], [t0].[IsGranted], [t0].[ModifiedByBrowserName], [t0].[ModifiedByIP], [t0].[ModifiedByUserId], [t0].[ModifiedDateTime], [t0].[Name], [t0].[UserId], [u0].[Id], [u0].[CreatedByBrowserName], [u0].[CreatedByIP], [u0].[CreatedByUserId], [u0].[CreatedDateTime], [u0].[Hash], [u0].[ModifiedByBrowserName], [u0].[ModifiedByIP], [u0].[ModifiedByUserId], [u0].[ModifiedDateTime], [u0].[RoleId], [u0].[UserId]
+FROM (
+    SELECT TOP(1) [u].[Id], [u].[CreatedByBrowserName], [u].[CreatedByIP], [u].[CreatedByUserId], [u].[CreatedDateTime], [u].[DisplayName], [u].[Hash], [u].[IsActive], [u].[LastLoggedInDateTime], [u].[ModifiedByBrowserName], [u].[ModifiedByIP], [u].[ModifiedByUserId], [u].[ModifiedDateTime], [u].[NormalizedDisplayName], [u].[NormalizedUserName], [u].[PasswordHash], [u].[SecurityToken], [u].[UserName], [u].[Version]
+    FROM [User] AS [u]
+    WHERE [u].[NormalizedUserName] = @__ToUpperInvariant_0
+) AS [t]
+LEFT JOIN (
+    SELECT [p].[Id], [p].[CreatedByBrowserName], [p].[CreatedByIP], [p].[CreatedByUserId], [p].[CreatedDateTime], [p].[EntityName], [p].[Hash], [p].[IsGranted], [p].[ModifiedByBrowserName], [p].[ModifiedByIP], [p].[ModifiedByUserId], [p].[ModifiedDateTime], [p].[Name], [p].[UserId]
+    FROM [Permission] AS [p]
+    WHERE [p].[EntityName] = N'UserPermission'
+) AS [t0] ON [t].[Id] = [t0].[UserId]
+LEFT JOIN [UserRole] AS [u0] ON [t].[Id] = [u0].[UserId]
+ORDER BY [t].[Id], [t0].[Id], [u0].[Id]
+2021-03-16 19:26:55 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (9ms) [Parameters=[@p0=NULL (Size = 1024), @p1=NULL (Size = 256), @p2='0' (Nullable = true), @p3='2021-03-16T19:26:55.5798128Z', @p4='Removing default system role cause problems!' (Size = 1024), @p5=NULL (Size = 256), @p6=NULL (Size = 1024), @p7=NULL (Size = 256), @p8=NULL (DbType = Int64), @p9=NULL (DbType = DateTime2), @p10='Administrators' (Nullable = false) (Size = 50), @p11='ADMINISTRATORS' (Nullable = false) (Size = 50)], CommandType='Text', CommandTimeout='180']
+SET NOCOUNT ON;
+INSERT INTO [Role] ([CreatedByBrowserName], [CreatedByIP], [CreatedByUserId], [CreatedDateTime], [Description], [Hash], [ModifiedByBrowserName], [ModifiedByIP], [ModifiedByUserId], [ModifiedDateTime], [Name], [NormalizedName])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11);
+SELECT [Id], [Version]
+FROM [Role]
+WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
+2021-03-16 19:26:55 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (9ms) [Parameters=[@p0=NULL (Size = 1024), @p1=NULL (Size = 256), @p2='0' (Nullable = true), @p3='2021-03-16T19:26:55.5798128Z', @p4='Removing default system role cause problems!' (Size = 1024), @p5=NULL (Size = 256), @p6=NULL (Size = 1024), @p7=NULL (Size = 256), @p8=NULL (DbType = Int64), @p9=NULL (DbType = DateTime2), @p10='Administrators' (Nullable = false) (Size = 50), @p11='ADMINISTRATORS' (Nullable = false) (Size = 50)], CommandType='Text', CommandTimeout='180']
+SET NOCOUNT ON;
+INSERT INTO [Role] ([CreatedByBrowserName], [CreatedByIP], [CreatedByUserId], [CreatedDateTime], [Description], [Hash], [ModifiedByBrowserName], [ModifiedByIP], [ModifiedByUserId], [ModifiedDateTime], [Name], [NormalizedName])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11);
+SELECT [Id], [Version]
+FROM [Role]
+WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
+2021-03-16 19:26:55 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (9ms) [Parameters=[@p0=NULL (Size = 1024), @p1=NULL (Size = 256), @p2='0' (Nullable = true), @p3='2021-03-16T19:26:55.5817793Z', @p4='مدیر سیستم' (Nullable = false) (Size = 50), @p5=NULL (Size = 256), @p6='True', @p7=NULL (DbType = DateTime2), @p8=NULL (Size = 1024), @p9=NULL (Size = 256), @p10=NULL (DbType = Int64), @p11=NULL (DbType = DateTime2), @p12='مدیر سیستم' (Nullable = false) (Size = 50), @p13='ADMIN' (Nullable = false) (Size = 256), @p14='AQAAAAEAACcQAAAAEHEFfD2k/dL0qaNXbPYnQhK51fFeAZcBgqffxqWV+wgyEG75eOFqNS6/WSnhOYJsAw==' (Nullable = false) (Size = 256), @p15='1597b773b2f1474eb4daf8cc565ce919' (Nullable = false) (Size = 128), @p16='Admin' (Nullable = false) (Size = 256)], CommandType='Text', CommandTimeout='180']
+SET NOCOUNT ON;
+INSERT INTO [User] ([CreatedByBrowserName], [CreatedByIP], [CreatedByUserId], [CreatedDateTime], [DisplayName], [Hash], [IsActive], [LastLoggedInDateTime], [ModifiedByBrowserName], [ModifiedByIP], [ModifiedByUserId], [ModifiedDateTime], [NormalizedDisplayName], [NormalizedUserName], [PasswordHash], [SecurityToken], [UserName])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT [Id], [Version]
+FROM [User]
+WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
+2021-03-16 19:26:55 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (9ms) [Parameters=[@p0=NULL (Size = 1024), @p1=NULL (Size = 256), @p2='0' (Nullable = true), @p3='2021-03-16T19:26:55.5817793Z', @p4='مدیر سیستم' (Nullable = false) (Size = 50), @p5=NULL (Size = 256), @p6='True', @p7=NULL (DbType = DateTime2), @p8=NULL (Size = 1024), @p9=NULL (Size = 256), @p10=NULL (DbType = Int64), @p11=NULL (DbType = DateTime2), @p12='مدیر سیستم' (Nullable = false) (Size = 50), @p13='ADMIN' (Nullable = false) (Size = 256), @p14='AQAAAAEAACcQAAAAEHEFfD2k/dL0qaNXbPYnQhK51fFeAZcBgqffxqWV+wgyEG75eOFqNS6/WSnhOYJsAw==' (Nullable = false) (Size = 256), @p15='1597b773b2f1474eb4daf8cc565ce919' (Nullable = false) (Size = 128), @p16='Admin' (Nullable = false) (Size = 256)], CommandType='Text', CommandTimeout='180']
+SET NOCOUNT ON;
+INSERT INTO [User] ([CreatedByBrowserName], [CreatedByIP], [CreatedByUserId], [CreatedDateTime], [DisplayName], [Hash], [IsActive], [LastLoggedInDateTime], [ModifiedByBrowserName], [ModifiedByIP], [ModifiedByUserId], [ModifiedDateTime], [NormalizedDisplayName], [NormalizedUserName], [PasswordHash], [SecurityToken], [UserName])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16);
+SELECT [Id], [Version]
+FROM [User]
+WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
+2021-03-16 19:26:55 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (87ms) [Parameters=[@p17=NULL (Size = 1024), @p18=NULL (Size = 256), @p19='0' (Nullable = true), @p20='2021-03-16T19:26:55.5824515Z', @p21='RolePermission' (Nullable = false) (Size = 50), @p22=NULL (Size = 256), @p23='True', @p24=NULL (Size = 1024), @p25=NULL (Size = 256), @p26=NULL (DbType = Int64), @p27=NULL (DbType = DateTime2), @p28='Users_View' (Nullable = false) (Size = 128), @p29='1' (Nullable = true), @p30=NULL (Size = 1024), @p31=NULL (Size = 256), @p32='0' (Nullable = true), @p33='2021-03-16T19:26:55.5827402Z', @p34='RolePermission' (Nullable = false) (Size = 50), @p35=NULL (Size = 256), @p36='True', @p37=NULL (Size = 1024), @p38=NULL (Size = 256), @p39=NULL (DbType = Int64), @p40=NULL (DbType = DateTime2), @p41='Users_Create' (Nullable = false) (Size = 128), @p42='1' (Nullable = true), @p43=NULL (Size = 1024), @p44=NULL (Size = 256), @p45='0' (Nullable = true), @p46='2021-03-16T19:26:55.5827808Z', @p47='RolePermission' (Nullable = false) (Size = 50), @p48=NULL (Size = 256), @p49='True', @p50=NULL (Size = 1024), @p51=NULL (Size = 256), @p52=NULL (DbType = Int64), @p53=NULL (DbType = DateTime2), @p54='Users_Edit' (Nullable = false) (Size = 128), @p55='1' (Nullable = true), @p56=NULL (Size = 1024), @p57=NULL (Size = 256), @p58='0' (Nullable = true), @p59='2021-03-16T19:26:55.5828148Z', @p60='RolePermission' (Nullable = false) (Size = 50), @p61=NULL (Size = 256), @p62='True', @p63=NULL (Size = 1024), @p64=NULL (Size = 256), @p65=NULL (DbType = Int64), @p66=NULL (DbType = DateTime2), @p67='Users_Delete' (Nullable = false) (Size = 128), @p68='1' (Nullable = true), @p69=NULL (Size = 1024), @p70=NULL (Size = 256), @p71='0' (Nullable = true), @p72='2021-03-16T19:26:55.5828482Z', @p73='RolePermission' (Nullable = false) (Size = 50), @p74=NULL (Size = 256), @p75='True', @p76=NULL (Size = 1024), @p77=NULL (Size = 256), @p78=NULL (DbType = Int64), @p79=NULL (DbType = DateTime2), @p80='00' (Nullable = false) (Size = 128), @p81='1' (Nullable = true), @p82=NULL (Size = 1024), @p83=NULL (Size = 256), @p84='0' (Nullable = true), @p85='2021-03-16T19:26:55.5828815Z', @p86='RolePermission' (Nullable = false) (Size = 50), @p87=NULL (Size = 256), @p88='True', @p89=NULL (Size = 1024), @p90=NULL (Size = 256), @p91=NULL (DbType = Int64), @p92=NULL (DbType = DateTime2), @p93='01' (Nullable = false) (Size = 128), @p94='1' (Nullable = true), @p95=NULL (Size = 1024), @p96=NULL (Size = 256), @p97='0' (Nullable = true), @p98='2021-03-16T19:26:55.5829166Z', @p99='RolePermission' (Nullable = false) (Size = 50), @p100=NULL (Size = 256), @p101='True', @p102=NULL (Size = 1024), @p103=NULL (Size = 256), @p104=NULL (DbType = Int64), @p105=NULL (DbType = DateTime2), @p106='02' (Nullable = false) (Size = 128), @p107='1' (Nullable = true), @p108=NULL (Size = 1024), @p109=NULL (Size = 256), @p110='0' (Nullable = true), @p111='2021-03-16T19:26:55.5829516Z', @p112='RolePermission' (Nullable = false) (Size = 50), @p113=NULL (Size = 256), @p114='True', @p115=NULL (Size = 1024), @p116=NULL (Size = 256), @p117=NULL (DbType = Int64), @p118=NULL (DbType = DateTime2), @p119='03' (Nullable = false) (Size = 128), @p120='1' (Nullable = true), @p121=NULL (Size = 1024), @p122=NULL (Size = 256), @p123='0' (Nullable = true), @p124='2021-03-16T19:26:55.5821656Z', @p125=NULL (Size = 256), @p126=NULL (Size = 1024), @p127=NULL (Size = 256), @p128=NULL (DbType = Int64), @p129=NULL (DbType = DateTime2), @p130='1', @p131='1'], CommandType='Text', CommandTimeout='180']
+SET NOCOUNT ON;
+DECLARE @inserted0 TABLE ([Id] bigint, [_Position] [int]);
+MERGE [Permission] USING (
+VALUES (@p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, 0),
+(@p30, @p31, @p32, @p33, @p34, @p35, @p36, @p37, @p38, @p39, @p40, @p41, @p42, 1),
+(@p43, @p44, @p45, @p46, @p47, @p48, @p49, @p50, @p51, @p52, @p53, @p54, @p55, 2),
+(@p56, @p57, @p58, @p59, @p60, @p61, @p62, @p63, @p64, @p65, @p66, @p67, @p68, 3),
+(@p69, @p70, @p71, @p72, @p73, @p74, @p75, @p76, @p77, @p78, @p79, @p80, @p81, 4),
+(@p82, @p83, @p84, @p85, @p86, @p87, @p88, @p89, @p90, @p91, @p92, @p93, @p94, 5),
+(@p95, @p96, @p97, @p98, @p99, @p100, @p101, @p102, @p103, @p104, @p105, @p106, @p107, 6),
+(@p108, @p109, @p110, @p111, @p112, @p113, @p114, @p115, @p116, @p117, @p118, @p119, @p120, 7)) AS i ([CreatedByBrowserName], [CreatedByIP], [CreatedByUserId], [CreatedDateTime], [EntityName], [Hash], [IsGranted], [ModifiedByBrowserName], [ModifiedByIP], [ModifiedByUserId], [ModifiedDateTime], [Name], [RoleId], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([CreatedByBrowserName], [CreatedByIP], [CreatedByUserId], [CreatedDateTime], [EntityName], [Hash], [IsGranted], [ModifiedByBrowserName], [ModifiedByIP], [ModifiedByUserId], [ModifiedDateTime], [Name], [RoleId])
+VALUES (i.[CreatedByBrowserName], i.[CreatedByIP], i.[CreatedByUserId], i.[CreatedDateTime], i.[EntityName], i.[Hash], i.[IsGranted], i.[ModifiedByBrowserName], i.[ModifiedByIP], i.[ModifiedByUserId], i.[ModifiedDateTime], i.[Name], i.[RoleId])
+OUTPUT INSERTED.[Id], i._Position
+INTO @inserted0;
+
+SELECT [t].[Id] FROM [Permission] t
+INNER JOIN @inserted0 i ON ([t].[Id] = [i].[Id])
+ORDER BY [i].[_Position];
+
+INSERT INTO [UserRole] ([CreatedByBrowserName], [CreatedByIP], [CreatedByUserId], [CreatedDateTime], [Hash], [ModifiedByBrowserName], [ModifiedByIP], [ModifiedByUserId], [ModifiedDateTime], [RoleId], [UserId])
+VALUES (@p121, @p122, @p123, @p124, @p125, @p126, @p127, @p128, @p129, @p130, @p131);
+SELECT [Id]
+FROM [UserRole]
+WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
+2021-03-16 19:26:55 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (87ms) [Parameters=[@p17=NULL (Size = 1024), @p18=NULL (Size = 256), @p19='0' (Nullable = true), @p20='2021-03-16T19:26:55.5824515Z', @p21='RolePermission' (Nullable = false) (Size = 50), @p22=NULL (Size = 256), @p23='True', @p24=NULL (Size = 1024), @p25=NULL (Size = 256), @p26=NULL (DbType = Int64), @p27=NULL (DbType = DateTime2), @p28='Users_View' (Nullable = false) (Size = 128), @p29='1' (Nullable = true), @p30=NULL (Size = 1024), @p31=NULL (Size = 256), @p32='0' (Nullable = true), @p33='2021-03-16T19:26:55.5827402Z', @p34='RolePermission' (Nullable = false) (Size = 50), @p35=NULL (Size = 256), @p36='True', @p37=NULL (Size = 1024), @p38=NULL (Size = 256), @p39=NULL (DbType = Int64), @p40=NULL (DbType = DateTime2), @p41='Users_Create' (Nullable = false) (Size = 128), @p42='1' (Nullable = true), @p43=NULL (Size = 1024), @p44=NULL (Size = 256), @p45='0' (Nullable = true), @p46='2021-03-16T19:26:55.5827808Z', @p47='RolePermission' (Nullable = false) (Size = 50), @p48=NULL (Size = 256), @p49='True', @p50=NULL (Size = 1024), @p51=NULL (Size = 256), @p52=NULL (DbType = Int64), @p53=NULL (DbType = DateTime2), @p54='Users_Edit' (Nullable = false) (Size = 128), @p55='1' (Nullable = true), @p56=NULL (Size = 1024), @p57=NULL (Size = 256), @p58='0' (Nullable = true), @p59='2021-03-16T19:26:55.5828148Z', @p60='RolePermission' (Nullable = false) (Size = 50), @p61=NULL (Size = 256), @p62='True', @p63=NULL (Size = 1024), @p64=NULL (Size = 256), @p65=NULL (DbType = Int64), @p66=NULL (DbType = DateTime2), @p67='Users_Delete' (Nullable = false) (Size = 128), @p68='1' (Nullable = true), @p69=NULL (Size = 1024), @p70=NULL (Size = 256), @p71='0' (Nullable = true), @p72='2021-03-16T19:26:55.5828482Z', @p73='RolePermission' (Nullable = false) (Size = 50), @p74=NULL (Size = 256), @p75='True', @p76=NULL (Size = 1024), @p77=NULL (Size = 256), @p78=NULL (DbType = Int64), @p79=NULL (DbType = DateTime2), @p80='00' (Nullable = false) (Size = 128), @p81='1' (Nullable = true), @p82=NULL (Size = 1024), @p83=NULL (Size = 256), @p84='0' (Nullable = true), @p85='2021-03-16T19:26:55.5828815Z', @p86='RolePermission' (Nullable = false) (Size = 50), @p87=NULL (Size = 256), @p88='True', @p89=NULL (Size = 1024), @p90=NULL (Size = 256), @p91=NULL (DbType = Int64), @p92=NULL (DbType = DateTime2), @p93='01' (Nullable = false) (Size = 128), @p94='1' (Nullable = true), @p95=NULL (Size = 1024), @p96=NULL (Size = 256), @p97='0' (Nullable = true), @p98='2021-03-16T19:26:55.5829166Z', @p99='RolePermission' (Nullable = false) (Size = 50), @p100=NULL (Size = 256), @p101='True', @p102=NULL (Size = 1024), @p103=NULL (Size = 256), @p104=NULL (DbType = Int64), @p105=NULL (DbType = DateTime2), @p106='02' (Nullable = false) (Size = 128), @p107='1' (Nullable = true), @p108=NULL (Size = 1024), @p109=NULL (Size = 256), @p110='0' (Nullable = true), @p111='2021-03-16T19:26:55.5829516Z', @p112='RolePermission' (Nullable = false) (Size = 50), @p113=NULL (Size = 256), @p114='True', @p115=NULL (Size = 1024), @p116=NULL (Size = 256), @p117=NULL (DbType = Int64), @p118=NULL (DbType = DateTime2), @p119='03' (Nullable = false) (Size = 128), @p120='1' (Nullable = true), @p121=NULL (Size = 1024), @p122=NULL (Size = 256), @p123='0' (Nullable = true), @p124='2021-03-16T19:26:55.5821656Z', @p125=NULL (Size = 256), @p126=NULL (Size = 1024), @p127=NULL (Size = 256), @p128=NULL (DbType = Int64), @p129=NULL (DbType = DateTime2), @p130='1', @p131='1'], CommandType='Text', CommandTimeout='180']
+SET NOCOUNT ON;
+DECLARE @inserted0 TABLE ([Id] bigint, [_Position] [int]);
+MERGE [Permission] USING (
+VALUES (@p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, 0),
+(@p30, @p31, @p32, @p33, @p34, @p35, @p36, @p37, @p38, @p39, @p40, @p41, @p42, 1),
+(@p43, @p44, @p45, @p46, @p47, @p48, @p49, @p50, @p51, @p52, @p53, @p54, @p55, 2),
+(@p56, @p57, @p58, @p59, @p60, @p61, @p62, @p63, @p64, @p65, @p66, @p67, @p68, 3),
+(@p69, @p70, @p71, @p72, @p73, @p74, @p75, @p76, @p77, @p78, @p79, @p80, @p81, 4),
+(@p82, @p83, @p84, @p85, @p86, @p87, @p88, @p89, @p90, @p91, @p92, @p93, @p94, 5),
+(@p95, @p96, @p97, @p98, @p99, @p100, @p101, @p102, @p103, @p104, @p105, @p106, @p107, 6),
+(@p108, @p109, @p110, @p111, @p112, @p113, @p114, @p115, @p116, @p117, @p118, @p119, @p120, 7)) AS i ([CreatedByBrowserName], [CreatedByIP], [CreatedByUserId], [CreatedDateTime], [EntityName], [Hash], [IsGranted], [ModifiedByBrowserName], [ModifiedByIP], [ModifiedByUserId], [ModifiedDateTime], [Name], [RoleId], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([CreatedByBrowserName], [CreatedByIP], [CreatedByUserId], [CreatedDateTime], [EntityName], [Hash], [IsGranted], [ModifiedByBrowserName], [ModifiedByIP], [ModifiedByUserId], [ModifiedDateTime], [Name], [RoleId])
+VALUES (i.[CreatedByBrowserName], i.[CreatedByIP], i.[CreatedByUserId], i.[CreatedDateTime], i.[EntityName], i.[Hash], i.[IsGranted], i.[ModifiedByBrowserName], i.[ModifiedByIP], i.[ModifiedByUserId], i.[ModifiedDateTime], i.[Name], i.[RoleId])
+OUTPUT INSERTED.[Id], i._Position
+INTO @inserted0;
+
+SELECT [t].[Id] FROM [Permission] t
+INNER JOIN @inserted0 i ON ([t].[Id] = [i].[Id])
+ORDER BY [i].[_Position];
+
+INSERT INTO [UserRole] ([CreatedByBrowserName], [CreatedByIP], [CreatedByUserId], [CreatedDateTime], [Hash], [ModifiedByBrowserName], [ModifiedByIP], [ModifiedByUserId], [ModifiedDateTime], [RoleId], [UserId])
+VALUES (@p121, @p122, @p123, @p124, @p125, @p126, @p127, @p128, @p129, @p130, @p131);
+SELECT [Id]
+FROM [UserRole]
+WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
+2021-03-16 19:26:56 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (115ms) [Parameters=[@p1='1', @p0='+J5/+YmqKHCKlhOcMVRxpgXKAbJesaui1oBTOTAtKTU=' (Size = 256), @p3='2', @p2='79FekHYBKtwXGHFvWbb6NKVkvhJBruKYJ5yS3laQoz8=' (Size = 256), @p5='3', @p4='dKlNKTOvfum6mMP+4u5EtMYYy/foH7cx4jTA7ApTcH8=' (Size = 256), @p7='4', @p6='X1c1JuaSdDZHs1VnkRn68T2IhD/45NVbpBA546CdxWk=' (Size = 256), @p9='5', @p8='W4MWFeY6mVGGGCo3cEJG2O80ZrG7cQzLGaGhsEXbdk4=' (Size = 256), @p11='6', @p10='DnWq1Lh0O2/OtElvv3uNTfe3jNANMB+54D6wr+lTSs8=' (Size = 256), @p13='7', @p12='/rtV2owsnH0UV4oYP82rH+IVWIVfQavtnZ1f8NLn5GU=' (Size = 256), @p15='8', @p14='5v1PbPAfgr19tfx/DG17IshQKR0pvhjTUZyiEIVDLjg=' (Size = 256), @p17='1', @p16='d7BxA0HCFGxCqbCNykxZ0In6kq5pbC/KCjnxsLdhvAg=' (Size = 256), @p18='0x00000000000007D1' (Size = 8), @p20='1', @p19='HhUnOY2GQ2+2SBH+0umoLcMxX8CXynYGjLAPLDAJki0=' (Size = 256), @p21='0x00000000000007D2' (Size = 8), @p23='1', @p22='hFs2yluYHqy0Fv5v0vfPDE4rhx4G5yH+hJK2/p5B+vs=' (Size = 256)], CommandType='Text', CommandTimeout='180']
+SET NOCOUNT ON;
+UPDATE [Permission] SET [Hash] = @p0
+WHERE [Id] = @p1;
+SELECT @@ROWCOUNT;
+
+UPDATE [Permission] SET [Hash] = @p2
+WHERE [Id] = @p3;
+SELECT @@ROWCOUNT;
+
+UPDATE [Permission] SET [Hash] = @p4
+WHERE [Id] = @p5;
+SELECT @@ROWCOUNT;
+
+UPDATE [Permission] SET [Hash] = @p6
+WHERE [Id] = @p7;
+SELECT @@ROWCOUNT;
+
+UPDATE [Permission] SET [Hash] = @p8
+WHERE [Id] = @p9;
+SELECT @@ROWCOUNT;
+
+UPDATE [Permission] SET [Hash] = @p10
+WHERE [Id] = @p11;
+SELECT @@ROWCOUNT;
+
+UPDATE [Permission] SET [Hash] = @p12
+WHERE [Id] = @p13;
+SELECT @@ROWCOUNT;
+
+UPDATE [Permission] SET [Hash] = @p14
+WHERE [Id] = @p15;
+SELECT @@ROWCOUNT;
+
+UPDATE [Role] SET [Hash] = @p16
+WHERE [Id] = @p17 AND [Version] = @p18;
+SELECT [Version]
+FROM [Role]
+WHERE @@ROWCOUNT = 1 AND [Id] = @p17;
+
+UPDATE [User] SET [Hash] = @p19
+WHERE [Id] = @p20 AND [Version] = @p21;
+SELECT [Version]
+FROM [User]
+WHERE @@ROWCOUNT = 1 AND [Id] = @p20;
+
+UPDATE [UserRole] SET [Hash] = @p22
+WHERE [Id] = @p23;
+SELECT @@ROWCOUNT;
+2021-03-16 19:26:56 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (115ms) [Parameters=[@p1='1', @p0='+J5/+YmqKHCKlhOcMVRxpgXKAbJesaui1oBTOTAtKTU=' (Size = 256), @p3='2', @p2='79FekHYBKtwXGHFvWbb6NKVkvhJBruKYJ5yS3laQoz8=' (Size = 256), @p5='3', @p4='dKlNKTOvfum6mMP+4u5EtMYYy/foH7cx4jTA7ApTcH8=' (Size = 256), @p7='4', @p6='X1c1JuaSdDZHs1VnkRn68T2IhD/45NVbpBA546CdxWk=' (Size = 256), @p9='5', @p8='W4MWFeY6mVGGGCo3cEJG2O80ZrG7cQzLGaGhsEXbdk4=' (Size = 256), @p11='6', @p10='DnWq1Lh0O2/OtElvv3uNTfe3jNANMB+54D6wr+lTSs8=' (Size = 256), @p13='7', @p12='/rtV2owsnH0UV4oYP82rH+IVWIVfQavtnZ1f8NLn5GU=' (Size = 256), @p15='8', @p14='5v1PbPAfgr19tfx/DG17IshQKR0pvhjTUZyiEIVDLjg=' (Size = 256), @p17='1', @p16='d7BxA0HCFGxCqbCNykxZ0In6kq5pbC/KCjnxsLdhvAg=' (Size = 256), @p18='0x00000000000007D1' (Size = 8), @p20='1', @p19='HhUnOY2GQ2+2SBH+0umoLcMxX8CXynYGjLAPLDAJki0=' (Size = 256), @p21='0x00000000000007D2' (Size = 8), @p23='1', @p22='hFs2yluYHqy0Fv5v0vfPDE4rhx4G5yH+hJK2/p5B+vs=' (Size = 256)], CommandType='Text', CommandTimeout='180']
+SET NOCOUNT ON;
+UPDATE [Permission] SET [Hash] = @p0
+WHERE [Id] = @p1;
+SELECT @@ROWCOUNT;
+
+UPDATE [Permission] SET [Hash] = @p2
+WHERE [Id] = @p3;
+SELECT @@ROWCOUNT;
+
+UPDATE [Permission] SET [Hash] = @p4
+WHERE [Id] = @p5;
+SELECT @@ROWCOUNT;
+
+UPDATE [Permission] SET [Hash] = @p6
+WHERE [Id] = @p7;
+SELECT @@ROWCOUNT;
+
+UPDATE [Permission] SET [Hash] = @p8
+WHERE [Id] = @p9;
+SELECT @@ROWCOUNT;
+
+UPDATE [Permission] SET [Hash] = @p10
+WHERE [Id] = @p11;
+SELECT @@ROWCOUNT;
+
+UPDATE [Permission] SET [Hash] = @p12
+WHERE [Id] = @p13;
+SELECT @@ROWCOUNT;
+
+UPDATE [Permission] SET [Hash] = @p14
+WHERE [Id] = @p15;
+SELECT @@ROWCOUNT;
+
+UPDATE [Role] SET [Hash] = @p16
+WHERE [Id] = @p17 AND [Version] = @p18;
+SELECT [Version]
+FROM [Role]
+WHERE @@ROWCOUNT = 1 AND [Id] = @p17;
+
+UPDATE [User] SET [Hash] = @p19
+WHERE [Id] = @p20 AND [Version] = @p21;
+SELECT [Version]
+FROM [User]
+WHERE @@ROWCOUNT = 1 AND [Id] = @p20;
+
+UPDATE [UserRole] SET [Hash] = @p22
+WHERE [Id] = @p23;
+SELECT @@ROWCOUNT;
+2021-03-16 19:26:56 [Information] ProjectName.Infrastructure.Context.ProjectNameDbContext [0] : Migrated database associated with context ProjectNameDbContext
+2021-03-16 19:26:56 [Information] ProjectName.Infrastructure.Context.ProjectNameDbContext [0] : Migrated database associated with context ProjectNameDbContext
+2021-03-16 19:26:56 [Information] DNTFrameworkCore.Web.Hosting.QueuedHostedService [0] : Queued Hosted Service is starting.
+2021-03-16 19:26:56 [Information] DNTFrameworkCore.Web.Hosting.QueuedHostedService [0] : Queued Hosted Service is starting.
+2021-03-16 19:26:56 [Information] Microsoft.EntityFrameworkCore.Infrastructure [Microsoft.EntityFrameworkCore.Infrastructure.ContextInitialized] : Entity Framework Core 5.0.4 initialized 'ProjectNameDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: SensitiveDataLoggingEnabled CommandTimeout=180 MigrationsHistoryTable=dbo.MigrationHistory 
+2021-03-16 19:26:56 [Information] Microsoft.EntityFrameworkCore.Infrastructure [Microsoft.EntityFrameworkCore.Infrastructure.ContextInitialized] : Entity Framework Core 5.0.4 initialized 'ProjectNameDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: SensitiveDataLoggingEnabled CommandTimeout=180 MigrationsHistoryTable=dbo.MigrationHistory 
+2021-03-16 19:26:56 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [p].[XmlValue]
+FROM [dbo].[ProtectionKey] AS [p]
+2021-03-16 19:26:56 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [p].[XmlValue]
+FROM [dbo].[ProtectionKey] AS [p]
+2021-03-16 19:26:56 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager [CreatingKey] : Creating key {6c10cf26-5f59-4bd1-97ea-e10e1a9db702} with creation date 2021-03-16 19:26:56Z, activation date 2021-03-16 19:26:56Z, and expiration date 2021-06-14 19:26:56Z.
+2021-03-16 19:26:56 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager [CreatingKey] : Creating key {6c10cf26-5f59-4bd1-97ea-e10e1a9db702} with creation date 2021-03-16 19:26:56Z, activation date 2021-03-16 19:26:56Z, and expiration date 2021-06-14 19:26:56Z.
+2021-03-16 19:26:56 [Warning] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager [NoXMLEncryptorConfiguredKeyMayBePersistedToStorageInUnencryptedForm] : No XML encryptor configured. Key {6c10cf26-5f59-4bd1-97ea-e10e1a9db702} may be persisted to storage in unencrypted form.
+2021-03-16 19:26:56 [Warning] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager [NoXMLEncryptorConfiguredKeyMayBePersistedToStorageInUnencryptedForm] : No XML encryptor configured. Key {6c10cf26-5f59-4bd1-97ea-e10e1a9db702} may be persisted to storage in unencrypted form.
+2021-03-16 19:26:56 [Information] Microsoft.EntityFrameworkCore.Infrastructure [Microsoft.EntityFrameworkCore.Infrastructure.ContextInitialized] : Entity Framework Core 5.0.4 initialized 'ProjectNameDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: SensitiveDataLoggingEnabled CommandTimeout=180 MigrationsHistoryTable=dbo.MigrationHistory 
+2021-03-16 19:26:56 [Information] Microsoft.EntityFrameworkCore.Infrastructure [Microsoft.EntityFrameworkCore.Infrastructure.ContextInitialized] : Entity Framework Core 5.0.4 initialized 'ProjectNameDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: SensitiveDataLoggingEnabled CommandTimeout=180 MigrationsHistoryTable=dbo.MigrationHistory 
+2021-03-16 19:26:56 [Debug] DNTFrameworkCore.Web.EFCore.Cryptography.XmlRepository [SavingKeyToDbContext] : Saving key 'key-6c10cf26-5f59-4bd1-97ea-e10e1a9db702' to 'ProjectNameDbContext'.
+2021-03-16 19:26:56 [Debug] DNTFrameworkCore.Web.EFCore.Cryptography.XmlRepository [SavingKeyToDbContext] : Saving key 'key-6c10cf26-5f59-4bd1-97ea-e10e1a9db702' to 'ProjectNameDbContext'.
+2021-03-16 19:26:56 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (58ms) [Parameters=[@p0='key-6c10cf26-5f59-4bd1-97ea-e10e1a9db702' (Nullable = false) (Size = 450), @p1='<key id="6c10cf26-5f59-4bd1-97ea-e10e1a9db702" version="1"><creationDate>2021-03-16T19:26:56.0985213Z</creationDate><activationDate>2021-03-16T19:26:56.0547916Z</activationDate><expirationDate>2021-06-14T19:26:56.0547916Z</expirationDate><descriptor deserializerType="Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptorDeserializer, Microsoft.AspNetCore.DataProtection, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60"><descriptor><encryption algorithm="AES_256_CBC" /><validation algorithm="HMACSHA256" /><masterKey p4:requiresEncryption="true" xmlns:p4="http://schemas.asp.net/2015/03/dataProtection"><!-- Warning: the key below is in an unencrypted form. --><value>GsekgPHKVUQpN4YRJNx4KA+g4MuhiueukYMuWGMyeI1reY7tIJUcYq5EUh6E/ssmqk58tdF9Xsj1EFbtE71yHw==</value></masterKey></descriptor></descriptor></key>' (Size = 4000)], CommandType='Text', CommandTimeout='180']
+SET NOCOUNT ON;
+INSERT INTO [dbo].[ProtectionKey] ([FriendlyName], [XmlValue])
+VALUES (@p0, @p1);
+SELECT [Id]
+FROM [dbo].[ProtectionKey]
+WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
+2021-03-16 19:26:56 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (58ms) [Parameters=[@p0='key-6c10cf26-5f59-4bd1-97ea-e10e1a9db702' (Nullable = false) (Size = 450), @p1='<key id="6c10cf26-5f59-4bd1-97ea-e10e1a9db702" version="1"><creationDate>2021-03-16T19:26:56.0985213Z</creationDate><activationDate>2021-03-16T19:26:56.0547916Z</activationDate><expirationDate>2021-06-14T19:26:56.0547916Z</expirationDate><descriptor deserializerType="Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptorDeserializer, Microsoft.AspNetCore.DataProtection, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60"><descriptor><encryption algorithm="AES_256_CBC" /><validation algorithm="HMACSHA256" /><masterKey p4:requiresEncryption="true" xmlns:p4="http://schemas.asp.net/2015/03/dataProtection"><!-- Warning: the key below is in an unencrypted form. --><value>GsekgPHKVUQpN4YRJNx4KA+g4MuhiueukYMuWGMyeI1reY7tIJUcYq5EUh6E/ssmqk58tdF9Xsj1EFbtE71yHw==</value></masterKey></descriptor></descriptor></key>' (Size = 4000)], CommandType='Text', CommandTimeout='180']
+SET NOCOUNT ON;
+INSERT INTO [dbo].[ProtectionKey] ([FriendlyName], [XmlValue])
+VALUES (@p0, @p1);
+SELECT [Id]
+FROM [dbo].[ProtectionKey]
+WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
+2021-03-16 19:26:56 [Information] Microsoft.EntityFrameworkCore.Infrastructure [Microsoft.EntityFrameworkCore.Infrastructure.ContextInitialized] : Entity Framework Core 5.0.4 initialized 'ProjectNameDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: SensitiveDataLoggingEnabled CommandTimeout=180 MigrationsHistoryTable=dbo.MigrationHistory 
+2021-03-16 19:26:56 [Information] Microsoft.EntityFrameworkCore.Infrastructure [Microsoft.EntityFrameworkCore.Infrastructure.ContextInitialized] : Entity Framework Core 5.0.4 initialized 'ProjectNameDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: SensitiveDataLoggingEnabled CommandTimeout=180 MigrationsHistoryTable=dbo.MigrationHistory 
+2021-03-16 19:26:56 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [p].[XmlValue]
+FROM [dbo].[ProtectionKey] AS [p]
+2021-03-16 19:26:56 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [p].[XmlValue]
+FROM [dbo].[ProtectionKey] AS [p]
+2021-03-16 19:26:56 [Information] Microsoft.Hosting.Lifetime [0] : Now listening on: https://localhost:6001
+2021-03-16 19:26:56 [Information] Microsoft.Hosting.Lifetime [0] : Now listening on: https://localhost:6001
+2021-03-16 19:26:56 [Information] Microsoft.Hosting.Lifetime [0] : Now listening on: http://localhost:6000
+2021-03-16 19:26:56 [Information] Microsoft.Hosting.Lifetime [0] : Now listening on: http://localhost:6000
+2021-03-16 19:26:56 [Information] Microsoft.Hosting.Lifetime [0] : Application started. Press Ctrl+C to shut down.
+2021-03-16 19:26:56 [Information] Microsoft.Hosting.Lifetime [0] : Application started. Press Ctrl+C to shut down.
+2021-03-16 19:26:56 [Information] Microsoft.Hosting.Lifetime [0] : Hosting environment: Development
+2021-03-16 19:26:56 [Information] Microsoft.Hosting.Lifetime [0] : Hosting environment: Development
+2021-03-16 19:26:56 [Information] Microsoft.Hosting.Lifetime [0] : Content root path: C:\Projects\DNTFrameworkCore\templates\aspnet-core-api\src\ProjectName.API
+2021-03-16 19:26:56 [Information] Microsoft.Hosting.Lifetime [0] : Content root path: C:\Projects\DNTFrameworkCore\templates\aspnet-core-api\src\ProjectName.API
+2021-03-16 19:27:05 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestStarting] : Request starting HTTP/2 GET https://localhost:6001/ - -
+2021-03-16 19:27:05 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestStarting] : Request starting HTTP/2 GET https://localhost:6001/ - -
+2021-03-16 19:27:05 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestFinished] : Request finished HTTP/2 GET https://localhost:6001/ - - - 404 0 - 461.4250ms
+2021-03-16 19:27:05 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestFinished] : Request finished HTTP/2 GET https://localhost:6001/ - - - 404 0 - 461.4250ms
+2021-03-16 19:29:19 [Information] ProjectName.Infrastructure.Context.ProjectNameDbContext [0] : Migrating database associated with context ProjectNameDbContext
+2021-03-16 19:29:19 [Information] ProjectName.Infrastructure.Context.ProjectNameDbContext [0] : Migrating database associated with context ProjectNameDbContext
+2021-03-16 19:29:20 [Warning] Microsoft.EntityFrameworkCore.Model.Validation [Microsoft.EntityFrameworkCore.Infrastructure.SensitiveDataLoggingEnabledWarning] : Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2021-03-16 19:29:20 [Warning] Microsoft.EntityFrameworkCore.Model.Validation [Microsoft.EntityFrameworkCore.Infrastructure.SensitiveDataLoggingEnabledWarning] : Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2021-03-16 19:29:20 [Information] Microsoft.EntityFrameworkCore.Infrastructure [Microsoft.EntityFrameworkCore.Infrastructure.ContextInitialized] : Entity Framework Core 5.0.4 initialized 'ProjectNameDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: SensitiveDataLoggingEnabled CommandTimeout=180 MigrationsHistoryTable=dbo.MigrationHistory 
+2021-03-16 19:29:20 [Information] Microsoft.EntityFrameworkCore.Infrastructure [Microsoft.EntityFrameworkCore.Infrastructure.ContextInitialized] : Entity Framework Core 5.0.4 initialized 'ProjectNameDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: SensitiveDataLoggingEnabled CommandTimeout=180 MigrationsHistoryTable=dbo.MigrationHistory 
+2021-03-16 19:29:20 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (37ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT 1
+2021-03-16 19:29:20 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (37ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT 1
+2021-03-16 19:29:20 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (21ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT OBJECT_ID(N'[dbo].[MigrationHistory]');
+2021-03-16 19:29:20 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (21ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT OBJECT_ID(N'[dbo].[MigrationHistory]');
+2021-03-16 19:29:20 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT 1
+2021-03-16 19:29:20 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT 1
+2021-03-16 19:29:20 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT OBJECT_ID(N'[dbo].[MigrationHistory]');
+2021-03-16 19:29:20 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT OBJECT_ID(N'[dbo].[MigrationHistory]');
+2021-03-16 19:29:20 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [MigrationId], [ProductVersion]
+FROM [dbo].[MigrationHistory]
+ORDER BY [MigrationId];
+2021-03-16 19:29:20 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [MigrationId], [ProductVersion]
+FROM [dbo].[MigrationHistory]
+ORDER BY [MigrationId];
+2021-03-16 19:29:20 [Information] Microsoft.EntityFrameworkCore.Migrations [Microsoft.EntityFrameworkCore.Migrations.MigrationsNotApplied] : No migrations were applied. The database is already up to date.
+2021-03-16 19:29:20 [Information] Microsoft.EntityFrameworkCore.Migrations [Microsoft.EntityFrameworkCore.Migrations.MigrationsNotApplied] : No migrations were applied. The database is already up to date.
+2021-03-16 19:29:21 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (25ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [t].[Id], [t].[CreatedByBrowserName], [t].[CreatedByIP], [t].[CreatedByUserId], [t].[CreatedDateTime], [t].[Description], [t].[Hash], [t].[ModifiedByBrowserName], [t].[ModifiedByIP], [t].[ModifiedByUserId], [t].[ModifiedDateTime], [t].[Name], [t].[NormalizedName], [t].[Version], [t0].[Id], [t0].[CreatedByBrowserName], [t0].[CreatedByIP], [t0].[CreatedByUserId], [t0].[CreatedDateTime], [t0].[EntityName], [t0].[Hash], [t0].[IsGranted], [t0].[ModifiedByBrowserName], [t0].[ModifiedByIP], [t0].[ModifiedByUserId], [t0].[ModifiedDateTime], [t0].[Name], [t0].[RoleId]
+FROM (
+    SELECT TOP(1) [r].[Id], [r].[CreatedByBrowserName], [r].[CreatedByIP], [r].[CreatedByUserId], [r].[CreatedDateTime], [r].[Description], [r].[Hash], [r].[ModifiedByBrowserName], [r].[ModifiedByIP], [r].[ModifiedByUserId], [r].[ModifiedDateTime], [r].[Name], [r].[NormalizedName], [r].[Version]
+    FROM [Role] AS [r]
+    WHERE [r].[Name] = N'Administrators'
+) AS [t]
+LEFT JOIN (
+    SELECT [p].[Id], [p].[CreatedByBrowserName], [p].[CreatedByIP], [p].[CreatedByUserId], [p].[CreatedDateTime], [p].[EntityName], [p].[Hash], [p].[IsGranted], [p].[ModifiedByBrowserName], [p].[ModifiedByIP], [p].[ModifiedByUserId], [p].[ModifiedDateTime], [p].[Name], [p].[RoleId]
+    FROM [Permission] AS [p]
+    WHERE [p].[EntityName] = N'RolePermission'
+) AS [t0] ON [t].[Id] = [t0].[RoleId]
+ORDER BY [t].[Id], [t0].[Id]
+2021-03-16 19:29:21 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (25ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [t].[Id], [t].[CreatedByBrowserName], [t].[CreatedByIP], [t].[CreatedByUserId], [t].[CreatedDateTime], [t].[Description], [t].[Hash], [t].[ModifiedByBrowserName], [t].[ModifiedByIP], [t].[ModifiedByUserId], [t].[ModifiedDateTime], [t].[Name], [t].[NormalizedName], [t].[Version], [t0].[Id], [t0].[CreatedByBrowserName], [t0].[CreatedByIP], [t0].[CreatedByUserId], [t0].[CreatedDateTime], [t0].[EntityName], [t0].[Hash], [t0].[IsGranted], [t0].[ModifiedByBrowserName], [t0].[ModifiedByIP], [t0].[ModifiedByUserId], [t0].[ModifiedDateTime], [t0].[Name], [t0].[RoleId]
+FROM (
+    SELECT TOP(1) [r].[Id], [r].[CreatedByBrowserName], [r].[CreatedByIP], [r].[CreatedByUserId], [r].[CreatedDateTime], [r].[Description], [r].[Hash], [r].[ModifiedByBrowserName], [r].[ModifiedByIP], [r].[ModifiedByUserId], [r].[ModifiedDateTime], [r].[Name], [r].[NormalizedName], [r].[Version]
+    FROM [Role] AS [r]
+    WHERE [r].[Name] = N'Administrators'
+) AS [t]
+LEFT JOIN (
+    SELECT [p].[Id], [p].[CreatedByBrowserName], [p].[CreatedByIP], [p].[CreatedByUserId], [p].[CreatedDateTime], [p].[EntityName], [p].[Hash], [p].[IsGranted], [p].[ModifiedByBrowserName], [p].[ModifiedByIP], [p].[ModifiedByUserId], [p].[ModifiedDateTime], [p].[Name], [p].[RoleId]
+    FROM [Permission] AS [p]
+    WHERE [p].[EntityName] = N'RolePermission'
+) AS [t0] ON [t].[Id] = [t0].[RoleId]
+ORDER BY [t].[Id], [t0].[Id]
+2021-03-16 19:29:21 [Information] ProjectName.API.Application.DbSetup [0] : Seed: `Administrators` role already exists.
+2021-03-16 19:29:21 [Information] ProjectName.API.Application.DbSetup [0] : Seed: `Administrators` role already exists.
+2021-03-16 19:29:21 [Information] ProjectName.API.Application.DbSetup [0] : Seed: newPermissions: 
+2021-03-16 19:29:21 [Information] ProjectName.API.Application.DbSetup [0] : Seed: newPermissions: 
+2021-03-16 19:29:21 [Warning] Microsoft.EntityFrameworkCore.Query [Microsoft.EntityFrameworkCore.Query.MultipleCollectionIncludeWarning] : Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'
+2021-03-16 19:29:21 [Warning] Microsoft.EntityFrameworkCore.Query [Microsoft.EntityFrameworkCore.Query.MultipleCollectionIncludeWarning] : Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'
+2021-03-16 19:29:21 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (44ms) [Parameters=[@__ToUpperInvariant_0='ADMIN' (Size = 256)], CommandType='Text', CommandTimeout='180']
+SELECT [t].[Id], [t].[CreatedByBrowserName], [t].[CreatedByIP], [t].[CreatedByUserId], [t].[CreatedDateTime], [t].[DisplayName], [t].[Hash], [t].[IsActive], [t].[LastLoggedInDateTime], [t].[ModifiedByBrowserName], [t].[ModifiedByIP], [t].[ModifiedByUserId], [t].[ModifiedDateTime], [t].[NormalizedDisplayName], [t].[NormalizedUserName], [t].[PasswordHash], [t].[SecurityToken], [t].[UserName], [t].[Version], [t0].[Id], [t0].[CreatedByBrowserName], [t0].[CreatedByIP], [t0].[CreatedByUserId], [t0].[CreatedDateTime], [t0].[EntityName], [t0].[Hash], [t0].[IsGranted], [t0].[ModifiedByBrowserName], [t0].[ModifiedByIP], [t0].[ModifiedByUserId], [t0].[ModifiedDateTime], [t0].[Name], [t0].[UserId], [u0].[Id], [u0].[CreatedByBrowserName], [u0].[CreatedByIP], [u0].[CreatedByUserId], [u0].[CreatedDateTime], [u0].[Hash], [u0].[ModifiedByBrowserName], [u0].[ModifiedByIP], [u0].[ModifiedByUserId], [u0].[ModifiedDateTime], [u0].[RoleId], [u0].[UserId]
+FROM (
+    SELECT TOP(1) [u].[Id], [u].[CreatedByBrowserName], [u].[CreatedByIP], [u].[CreatedByUserId], [u].[CreatedDateTime], [u].[DisplayName], [u].[Hash], [u].[IsActive], [u].[LastLoggedInDateTime], [u].[ModifiedByBrowserName], [u].[ModifiedByIP], [u].[ModifiedByUserId], [u].[ModifiedDateTime], [u].[NormalizedDisplayName], [u].[NormalizedUserName], [u].[PasswordHash], [u].[SecurityToken], [u].[UserName], [u].[Version]
+    FROM [User] AS [u]
+    WHERE [u].[NormalizedUserName] = @__ToUpperInvariant_0
+) AS [t]
+LEFT JOIN (
+    SELECT [p].[Id], [p].[CreatedByBrowserName], [p].[CreatedByIP], [p].[CreatedByUserId], [p].[CreatedDateTime], [p].[EntityName], [p].[Hash], [p].[IsGranted], [p].[ModifiedByBrowserName], [p].[ModifiedByIP], [p].[ModifiedByUserId], [p].[ModifiedDateTime], [p].[Name], [p].[UserId]
+    FROM [Permission] AS [p]
+    WHERE [p].[EntityName] = N'UserPermission'
+) AS [t0] ON [t].[Id] = [t0].[UserId]
+LEFT JOIN [UserRole] AS [u0] ON [t].[Id] = [u0].[UserId]
+ORDER BY [t].[Id], [t0].[Id], [u0].[Id]
+2021-03-16 19:29:21 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (44ms) [Parameters=[@__ToUpperInvariant_0='ADMIN' (Size = 256)], CommandType='Text', CommandTimeout='180']
+SELECT [t].[Id], [t].[CreatedByBrowserName], [t].[CreatedByIP], [t].[CreatedByUserId], [t].[CreatedDateTime], [t].[DisplayName], [t].[Hash], [t].[IsActive], [t].[LastLoggedInDateTime], [t].[ModifiedByBrowserName], [t].[ModifiedByIP], [t].[ModifiedByUserId], [t].[ModifiedDateTime], [t].[NormalizedDisplayName], [t].[NormalizedUserName], [t].[PasswordHash], [t].[SecurityToken], [t].[UserName], [t].[Version], [t0].[Id], [t0].[CreatedByBrowserName], [t0].[CreatedByIP], [t0].[CreatedByUserId], [t0].[CreatedDateTime], [t0].[EntityName], [t0].[Hash], [t0].[IsGranted], [t0].[ModifiedByBrowserName], [t0].[ModifiedByIP], [t0].[ModifiedByUserId], [t0].[ModifiedDateTime], [t0].[Name], [t0].[UserId], [u0].[Id], [u0].[CreatedByBrowserName], [u0].[CreatedByIP], [u0].[CreatedByUserId], [u0].[CreatedDateTime], [u0].[Hash], [u0].[ModifiedByBrowserName], [u0].[ModifiedByIP], [u0].[ModifiedByUserId], [u0].[ModifiedDateTime], [u0].[RoleId], [u0].[UserId]
+FROM (
+    SELECT TOP(1) [u].[Id], [u].[CreatedByBrowserName], [u].[CreatedByIP], [u].[CreatedByUserId], [u].[CreatedDateTime], [u].[DisplayName], [u].[Hash], [u].[IsActive], [u].[LastLoggedInDateTime], [u].[ModifiedByBrowserName], [u].[ModifiedByIP], [u].[ModifiedByUserId], [u].[ModifiedDateTime], [u].[NormalizedDisplayName], [u].[NormalizedUserName], [u].[PasswordHash], [u].[SecurityToken], [u].[UserName], [u].[Version]
+    FROM [User] AS [u]
+    WHERE [u].[NormalizedUserName] = @__ToUpperInvariant_0
+) AS [t]
+LEFT JOIN (
+    SELECT [p].[Id], [p].[CreatedByBrowserName], [p].[CreatedByIP], [p].[CreatedByUserId], [p].[CreatedDateTime], [p].[EntityName], [p].[Hash], [p].[IsGranted], [p].[ModifiedByBrowserName], [p].[ModifiedByIP], [p].[ModifiedByUserId], [p].[ModifiedDateTime], [p].[Name], [p].[UserId]
+    FROM [Permission] AS [p]
+    WHERE [p].[EntityName] = N'UserPermission'
+) AS [t0] ON [t].[Id] = [t0].[UserId]
+LEFT JOIN [UserRole] AS [u0] ON [t].[Id] = [u0].[UserId]
+ORDER BY [t].[Id], [t0].[Id], [u0].[Id]
+2021-03-16 19:29:21 [Information] ProjectName.API.Application.DbSetup [0] : Seed: admin user already exists.
+2021-03-16 19:29:21 [Information] ProjectName.API.Application.DbSetup [0] : Seed: admin user already exists.
+2021-03-16 19:29:21 [Information] ProjectName.API.Application.DbSetup [0] : Seed: admin user already is assigned to `Administrators` role.
+2021-03-16 19:29:21 [Information] ProjectName.API.Application.DbSetup [0] : Seed: admin user already is assigned to `Administrators` role.
+2021-03-16 19:29:21 [Information] ProjectName.Infrastructure.Context.ProjectNameDbContext [0] : Migrated database associated with context ProjectNameDbContext
+2021-03-16 19:29:21 [Information] ProjectName.Infrastructure.Context.ProjectNameDbContext [0] : Migrated database associated with context ProjectNameDbContext
+2021-03-16 19:29:21 [Information] DNTFrameworkCore.Web.Hosting.QueuedHostedService [0] : Queued Hosted Service is starting.
+2021-03-16 19:29:21 [Information] DNTFrameworkCore.Web.Hosting.QueuedHostedService [0] : Queued Hosted Service is starting.
+2021-03-16 19:29:21 [Information] Microsoft.EntityFrameworkCore.Infrastructure [Microsoft.EntityFrameworkCore.Infrastructure.ContextInitialized] : Entity Framework Core 5.0.4 initialized 'ProjectNameDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: SensitiveDataLoggingEnabled CommandTimeout=180 MigrationsHistoryTable=dbo.MigrationHistory 
+2021-03-16 19:29:21 [Information] Microsoft.EntityFrameworkCore.Infrastructure [Microsoft.EntityFrameworkCore.Infrastructure.ContextInitialized] : Entity Framework Core 5.0.4 initialized 'ProjectNameDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: SensitiveDataLoggingEnabled CommandTimeout=180 MigrationsHistoryTable=dbo.MigrationHistory 
+2021-03-16 19:29:21 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [p].[XmlValue]
+FROM [dbo].[ProtectionKey] AS [p]
+2021-03-16 19:29:21 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [p].[XmlValue]
+FROM [dbo].[ProtectionKey] AS [p]
+2021-03-16 19:29:22 [Information] Microsoft.Hosting.Lifetime [0] : Now listening on: https://localhost:6001
+2021-03-16 19:29:22 [Information] Microsoft.Hosting.Lifetime [0] : Now listening on: https://localhost:6001
+2021-03-16 19:29:22 [Information] Microsoft.Hosting.Lifetime [0] : Now listening on: http://localhost:6000
+2021-03-16 19:29:22 [Information] Microsoft.Hosting.Lifetime [0] : Now listening on: http://localhost:6000
+2021-03-16 19:29:22 [Information] Microsoft.Hosting.Lifetime [0] : Application started. Press Ctrl+C to shut down.
+2021-03-16 19:29:22 [Information] Microsoft.Hosting.Lifetime [0] : Application started. Press Ctrl+C to shut down.
+2021-03-16 19:29:22 [Information] Microsoft.Hosting.Lifetime [0] : Hosting environment: Development
+2021-03-16 19:29:22 [Information] Microsoft.Hosting.Lifetime [0] : Hosting environment: Development
+2021-03-16 19:29:22 [Information] Microsoft.Hosting.Lifetime [0] : Content root path: C:\Projects\DNTFrameworkCore\templates\aspnet-core-api\src\ProjectName.API
+2021-03-16 19:29:22 [Information] Microsoft.Hosting.Lifetime [0] : Content root path: C:\Projects\DNTFrameworkCore\templates\aspnet-core-api\src\ProjectName.API
+2021-03-16 19:31:15 [Information] ProjectName.Infrastructure.Context.ProjectNameDbContext [0] : Migrating database associated with context ProjectNameDbContext
+2021-03-16 19:31:15 [Information] ProjectName.Infrastructure.Context.ProjectNameDbContext [0] : Migrating database associated with context ProjectNameDbContext
+2021-03-16 19:31:16 [Warning] Microsoft.EntityFrameworkCore.Model.Validation [Microsoft.EntityFrameworkCore.Infrastructure.SensitiveDataLoggingEnabledWarning] : Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2021-03-16 19:31:16 [Warning] Microsoft.EntityFrameworkCore.Model.Validation [Microsoft.EntityFrameworkCore.Infrastructure.SensitiveDataLoggingEnabledWarning] : Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2021-03-16 19:31:16 [Information] Microsoft.EntityFrameworkCore.Infrastructure [Microsoft.EntityFrameworkCore.Infrastructure.ContextInitialized] : Entity Framework Core 5.0.4 initialized 'ProjectNameDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: SensitiveDataLoggingEnabled CommandTimeout=180 MigrationsHistoryTable=dbo.MigrationHistory 
+2021-03-16 19:31:16 [Information] Microsoft.EntityFrameworkCore.Infrastructure [Microsoft.EntityFrameworkCore.Infrastructure.ContextInitialized] : Entity Framework Core 5.0.4 initialized 'ProjectNameDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: SensitiveDataLoggingEnabled CommandTimeout=180 MigrationsHistoryTable=dbo.MigrationHistory 
+2021-03-16 19:31:17 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (51ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT 1
+2021-03-16 19:31:17 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (51ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT 1
+2021-03-16 19:31:17 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (31ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT OBJECT_ID(N'[dbo].[MigrationHistory]');
+2021-03-16 19:31:17 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (31ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT OBJECT_ID(N'[dbo].[MigrationHistory]');
+2021-03-16 19:31:17 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT 1
+2021-03-16 19:31:17 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT 1
+2021-03-16 19:31:17 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT OBJECT_ID(N'[dbo].[MigrationHistory]');
+2021-03-16 19:31:17 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT OBJECT_ID(N'[dbo].[MigrationHistory]');
+2021-03-16 19:31:17 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [MigrationId], [ProductVersion]
+FROM [dbo].[MigrationHistory]
+ORDER BY [MigrationId];
+2021-03-16 19:31:17 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [MigrationId], [ProductVersion]
+FROM [dbo].[MigrationHistory]
+ORDER BY [MigrationId];
+2021-03-16 19:31:17 [Information] Microsoft.EntityFrameworkCore.Migrations [Microsoft.EntityFrameworkCore.Migrations.MigrationsNotApplied] : No migrations were applied. The database is already up to date.
+2021-03-16 19:31:17 [Information] Microsoft.EntityFrameworkCore.Migrations [Microsoft.EntityFrameworkCore.Migrations.MigrationsNotApplied] : No migrations were applied. The database is already up to date.
+2021-03-16 19:31:18 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (9ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [t].[Id], [t].[CreatedByBrowserName], [t].[CreatedByIP], [t].[CreatedByUserId], [t].[CreatedDateTime], [t].[Description], [t].[Hash], [t].[ModifiedByBrowserName], [t].[ModifiedByIP], [t].[ModifiedByUserId], [t].[ModifiedDateTime], [t].[Name], [t].[NormalizedName], [t].[Version], [t0].[Id], [t0].[CreatedByBrowserName], [t0].[CreatedByIP], [t0].[CreatedByUserId], [t0].[CreatedDateTime], [t0].[EntityName], [t0].[Hash], [t0].[IsGranted], [t0].[ModifiedByBrowserName], [t0].[ModifiedByIP], [t0].[ModifiedByUserId], [t0].[ModifiedDateTime], [t0].[Name], [t0].[RoleId]
+FROM (
+    SELECT TOP(1) [r].[Id], [r].[CreatedByBrowserName], [r].[CreatedByIP], [r].[CreatedByUserId], [r].[CreatedDateTime], [r].[Description], [r].[Hash], [r].[ModifiedByBrowserName], [r].[ModifiedByIP], [r].[ModifiedByUserId], [r].[ModifiedDateTime], [r].[Name], [r].[NormalizedName], [r].[Version]
+    FROM [Role] AS [r]
+    WHERE [r].[Name] = N'Administrators'
+) AS [t]
+LEFT JOIN (
+    SELECT [p].[Id], [p].[CreatedByBrowserName], [p].[CreatedByIP], [p].[CreatedByUserId], [p].[CreatedDateTime], [p].[EntityName], [p].[Hash], [p].[IsGranted], [p].[ModifiedByBrowserName], [p].[ModifiedByIP], [p].[ModifiedByUserId], [p].[ModifiedDateTime], [p].[Name], [p].[RoleId]
+    FROM [Permission] AS [p]
+    WHERE [p].[EntityName] = N'RolePermission'
+) AS [t0] ON [t].[Id] = [t0].[RoleId]
+ORDER BY [t].[Id], [t0].[Id]
+2021-03-16 19:31:18 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (9ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [t].[Id], [t].[CreatedByBrowserName], [t].[CreatedByIP], [t].[CreatedByUserId], [t].[CreatedDateTime], [t].[Description], [t].[Hash], [t].[ModifiedByBrowserName], [t].[ModifiedByIP], [t].[ModifiedByUserId], [t].[ModifiedDateTime], [t].[Name], [t].[NormalizedName], [t].[Version], [t0].[Id], [t0].[CreatedByBrowserName], [t0].[CreatedByIP], [t0].[CreatedByUserId], [t0].[CreatedDateTime], [t0].[EntityName], [t0].[Hash], [t0].[IsGranted], [t0].[ModifiedByBrowserName], [t0].[ModifiedByIP], [t0].[ModifiedByUserId], [t0].[ModifiedDateTime], [t0].[Name], [t0].[RoleId]
+FROM (
+    SELECT TOP(1) [r].[Id], [r].[CreatedByBrowserName], [r].[CreatedByIP], [r].[CreatedByUserId], [r].[CreatedDateTime], [r].[Description], [r].[Hash], [r].[ModifiedByBrowserName], [r].[ModifiedByIP], [r].[ModifiedByUserId], [r].[ModifiedDateTime], [r].[Name], [r].[NormalizedName], [r].[Version]
+    FROM [Role] AS [r]
+    WHERE [r].[Name] = N'Administrators'
+) AS [t]
+LEFT JOIN (
+    SELECT [p].[Id], [p].[CreatedByBrowserName], [p].[CreatedByIP], [p].[CreatedByUserId], [p].[CreatedDateTime], [p].[EntityName], [p].[Hash], [p].[IsGranted], [p].[ModifiedByBrowserName], [p].[ModifiedByIP], [p].[ModifiedByUserId], [p].[ModifiedDateTime], [p].[Name], [p].[RoleId]
+    FROM [Permission] AS [p]
+    WHERE [p].[EntityName] = N'RolePermission'
+) AS [t0] ON [t].[Id] = [t0].[RoleId]
+ORDER BY [t].[Id], [t0].[Id]
+2021-03-16 19:31:18 [Information] ProjectName.API.Application.DbSetup [0] : Seed: `Administrators` role already exists.
+2021-03-16 19:31:18 [Information] ProjectName.API.Application.DbSetup [0] : Seed: `Administrators` role already exists.
+2021-03-16 19:31:18 [Information] ProjectName.API.Application.DbSetup [0] : Seed: newPermissions: 
+2021-03-16 19:31:18 [Information] ProjectName.API.Application.DbSetup [0] : Seed: newPermissions: 
+2021-03-16 19:31:18 [Warning] Microsoft.EntityFrameworkCore.Query [Microsoft.EntityFrameworkCore.Query.MultipleCollectionIncludeWarning] : Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'
+2021-03-16 19:31:18 [Warning] Microsoft.EntityFrameworkCore.Query [Microsoft.EntityFrameworkCore.Query.MultipleCollectionIncludeWarning] : Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'
+2021-03-16 19:31:18 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (45ms) [Parameters=[@__ToUpperInvariant_0='ADMIN' (Size = 256)], CommandType='Text', CommandTimeout='180']
+SELECT [t].[Id], [t].[CreatedByBrowserName], [t].[CreatedByIP], [t].[CreatedByUserId], [t].[CreatedDateTime], [t].[DisplayName], [t].[Hash], [t].[IsActive], [t].[LastLoggedInDateTime], [t].[ModifiedByBrowserName], [t].[ModifiedByIP], [t].[ModifiedByUserId], [t].[ModifiedDateTime], [t].[NormalizedDisplayName], [t].[NormalizedUserName], [t].[PasswordHash], [t].[SecurityToken], [t].[UserName], [t].[Version], [t0].[Id], [t0].[CreatedByBrowserName], [t0].[CreatedByIP], [t0].[CreatedByUserId], [t0].[CreatedDateTime], [t0].[EntityName], [t0].[Hash], [t0].[IsGranted], [t0].[ModifiedByBrowserName], [t0].[ModifiedByIP], [t0].[ModifiedByUserId], [t0].[ModifiedDateTime], [t0].[Name], [t0].[UserId], [u0].[Id], [u0].[CreatedByBrowserName], [u0].[CreatedByIP], [u0].[CreatedByUserId], [u0].[CreatedDateTime], [u0].[Hash], [u0].[ModifiedByBrowserName], [u0].[ModifiedByIP], [u0].[ModifiedByUserId], [u0].[ModifiedDateTime], [u0].[RoleId], [u0].[UserId]
+FROM (
+    SELECT TOP(1) [u].[Id], [u].[CreatedByBrowserName], [u].[CreatedByIP], [u].[CreatedByUserId], [u].[CreatedDateTime], [u].[DisplayName], [u].[Hash], [u].[IsActive], [u].[LastLoggedInDateTime], [u].[ModifiedByBrowserName], [u].[ModifiedByIP], [u].[ModifiedByUserId], [u].[ModifiedDateTime], [u].[NormalizedDisplayName], [u].[NormalizedUserName], [u].[PasswordHash], [u].[SecurityToken], [u].[UserName], [u].[Version]
+    FROM [User] AS [u]
+    WHERE [u].[NormalizedUserName] = @__ToUpperInvariant_0
+) AS [t]
+LEFT JOIN (
+    SELECT [p].[Id], [p].[CreatedByBrowserName], [p].[CreatedByIP], [p].[CreatedByUserId], [p].[CreatedDateTime], [p].[EntityName], [p].[Hash], [p].[IsGranted], [p].[ModifiedByBrowserName], [p].[ModifiedByIP], [p].[ModifiedByUserId], [p].[ModifiedDateTime], [p].[Name], [p].[UserId]
+    FROM [Permission] AS [p]
+    WHERE [p].[EntityName] = N'UserPermission'
+) AS [t0] ON [t].[Id] = [t0].[UserId]
+LEFT JOIN [UserRole] AS [u0] ON [t].[Id] = [u0].[UserId]
+ORDER BY [t].[Id], [t0].[Id], [u0].[Id]
+2021-03-16 19:31:18 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (45ms) [Parameters=[@__ToUpperInvariant_0='ADMIN' (Size = 256)], CommandType='Text', CommandTimeout='180']
+SELECT [t].[Id], [t].[CreatedByBrowserName], [t].[CreatedByIP], [t].[CreatedByUserId], [t].[CreatedDateTime], [t].[DisplayName], [t].[Hash], [t].[IsActive], [t].[LastLoggedInDateTime], [t].[ModifiedByBrowserName], [t].[ModifiedByIP], [t].[ModifiedByUserId], [t].[ModifiedDateTime], [t].[NormalizedDisplayName], [t].[NormalizedUserName], [t].[PasswordHash], [t].[SecurityToken], [t].[UserName], [t].[Version], [t0].[Id], [t0].[CreatedByBrowserName], [t0].[CreatedByIP], [t0].[CreatedByUserId], [t0].[CreatedDateTime], [t0].[EntityName], [t0].[Hash], [t0].[IsGranted], [t0].[ModifiedByBrowserName], [t0].[ModifiedByIP], [t0].[ModifiedByUserId], [t0].[ModifiedDateTime], [t0].[Name], [t0].[UserId], [u0].[Id], [u0].[CreatedByBrowserName], [u0].[CreatedByIP], [u0].[CreatedByUserId], [u0].[CreatedDateTime], [u0].[Hash], [u0].[ModifiedByBrowserName], [u0].[ModifiedByIP], [u0].[ModifiedByUserId], [u0].[ModifiedDateTime], [u0].[RoleId], [u0].[UserId]
+FROM (
+    SELECT TOP(1) [u].[Id], [u].[CreatedByBrowserName], [u].[CreatedByIP], [u].[CreatedByUserId], [u].[CreatedDateTime], [u].[DisplayName], [u].[Hash], [u].[IsActive], [u].[LastLoggedInDateTime], [u].[ModifiedByBrowserName], [u].[ModifiedByIP], [u].[ModifiedByUserId], [u].[ModifiedDateTime], [u].[NormalizedDisplayName], [u].[NormalizedUserName], [u].[PasswordHash], [u].[SecurityToken], [u].[UserName], [u].[Version]
+    FROM [User] AS [u]
+    WHERE [u].[NormalizedUserName] = @__ToUpperInvariant_0
+) AS [t]
+LEFT JOIN (
+    SELECT [p].[Id], [p].[CreatedByBrowserName], [p].[CreatedByIP], [p].[CreatedByUserId], [p].[CreatedDateTime], [p].[EntityName], [p].[Hash], [p].[IsGranted], [p].[ModifiedByBrowserName], [p].[ModifiedByIP], [p].[ModifiedByUserId], [p].[ModifiedDateTime], [p].[Name], [p].[UserId]
+    FROM [Permission] AS [p]
+    WHERE [p].[EntityName] = N'UserPermission'
+) AS [t0] ON [t].[Id] = [t0].[UserId]
+LEFT JOIN [UserRole] AS [u0] ON [t].[Id] = [u0].[UserId]
+ORDER BY [t].[Id], [t0].[Id], [u0].[Id]
+2021-03-16 19:31:18 [Information] ProjectName.API.Application.DbSetup [0] : Seed: admin user already exists.
+2021-03-16 19:31:18 [Information] ProjectName.API.Application.DbSetup [0] : Seed: admin user already exists.
+2021-03-16 19:31:18 [Information] ProjectName.API.Application.DbSetup [0] : Seed: admin user already is assigned to `Administrators` role.
+2021-03-16 19:31:18 [Information] ProjectName.API.Application.DbSetup [0] : Seed: admin user already is assigned to `Administrators` role.
+2021-03-16 19:31:18 [Information] ProjectName.Infrastructure.Context.ProjectNameDbContext [0] : Migrated database associated with context ProjectNameDbContext
+2021-03-16 19:31:18 [Information] ProjectName.Infrastructure.Context.ProjectNameDbContext [0] : Migrated database associated with context ProjectNameDbContext
+2021-03-16 19:31:18 [Information] DNTFrameworkCore.Web.Hosting.QueuedHostedService [0] : Queued Hosted Service is starting.
+2021-03-16 19:31:18 [Information] DNTFrameworkCore.Web.Hosting.QueuedHostedService [0] : Queued Hosted Service is starting.
+2021-03-16 19:31:18 [Information] Microsoft.EntityFrameworkCore.Infrastructure [Microsoft.EntityFrameworkCore.Infrastructure.ContextInitialized] : Entity Framework Core 5.0.4 initialized 'ProjectNameDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: SensitiveDataLoggingEnabled CommandTimeout=180 MigrationsHistoryTable=dbo.MigrationHistory 
+2021-03-16 19:31:18 [Information] Microsoft.EntityFrameworkCore.Infrastructure [Microsoft.EntityFrameworkCore.Infrastructure.ContextInitialized] : Entity Framework Core 5.0.4 initialized 'ProjectNameDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: SensitiveDataLoggingEnabled CommandTimeout=180 MigrationsHistoryTable=dbo.MigrationHistory 
+2021-03-16 19:31:18 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [p].[XmlValue]
+FROM [dbo].[ProtectionKey] AS [p]
+2021-03-16 19:31:18 [Information] Microsoft.EntityFrameworkCore.Database.Command [Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted] : Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='180']
+SELECT [p].[XmlValue]
+FROM [dbo].[ProtectionKey] AS [p]
+2021-03-16 19:31:19 [Information] Microsoft.Hosting.Lifetime [0] : Now listening on: https://localhost:6001
+2021-03-16 19:31:19 [Information] Microsoft.Hosting.Lifetime [0] : Now listening on: https://localhost:6001
+2021-03-16 19:31:19 [Information] Microsoft.Hosting.Lifetime [0] : Now listening on: http://localhost:6000
+2021-03-16 19:31:19 [Information] Microsoft.Hosting.Lifetime [0] : Now listening on: http://localhost:6000
+2021-03-16 19:31:19 [Information] Microsoft.Hosting.Lifetime [0] : Application started. Press Ctrl+C to shut down.
+2021-03-16 19:31:19 [Information] Microsoft.Hosting.Lifetime [0] : Application started. Press Ctrl+C to shut down.
+2021-03-16 19:31:19 [Information] Microsoft.Hosting.Lifetime [0] : Hosting environment: Development
+2021-03-16 19:31:19 [Information] Microsoft.Hosting.Lifetime [0] : Hosting environment: Development
+2021-03-16 19:31:19 [Information] Microsoft.Hosting.Lifetime [0] : Content root path: C:\Projects\DNTFrameworkCore\templates\aspnet-core-api\src\ProjectName.API
+2021-03-16 19:31:19 [Information] Microsoft.Hosting.Lifetime [0] : Content root path: C:\Projects\DNTFrameworkCore\templates\aspnet-core-api\src\ProjectName.API
+2021-03-16 19:31:19 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestStarting] : Request starting HTTP/2 GET https://localhost:6001/swagger - -
+2021-03-16 19:31:19 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestStarting] : Request starting HTTP/2 GET https://localhost:6001/swagger - -
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestFinished] : Request finished HTTP/2 GET https://localhost:6001/swagger - - - 301 0 - 81.9796ms
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestFinished] : Request finished HTTP/2 GET https://localhost:6001/swagger - - - 301 0 - 81.9796ms
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestStarting] : Request starting HTTP/2 GET https://localhost:6001/swagger/index.html - -
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestStarting] : Request starting HTTP/2 GET https://localhost:6001/swagger/index.html - -
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestFinished] : Request finished HTTP/2 GET https://localhost:6001/swagger/index.html - - - 200 - text/html;charset=utf-8 160.6547ms
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestFinished] : Request finished HTTP/2 GET https://localhost:6001/swagger/index.html - - - 200 - text/html;charset=utf-8 160.6547ms
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestStarting] : Request starting HTTP/2 GET https://localhost:6001/swagger/swagger-ui.css - -
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestStarting] : Request starting HTTP/2 GET https://localhost:6001/swagger/swagger-ui.css - -
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestStarting] : Request starting HTTP/2 GET https://localhost:6001/swagger/swagger-ui-bundle.js - -
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestStarting] : Request starting HTTP/2 GET https://localhost:6001/swagger/swagger-ui-bundle.js - -
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestStarting] : Request starting HTTP/2 GET https://localhost:6001/swagger/swagger-ui-standalone-preset.js - -
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestStarting] : Request starting HTTP/2 GET https://localhost:6001/swagger/swagger-ui-standalone-preset.js - -
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware [FileServed] : Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware [FileServed] : Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestFinished] : Request finished HTTP/2 GET https://localhost:6001/swagger/swagger-ui.css - - - 200 143212 text/css 50.2881ms
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestFinished] : Request finished HTTP/2 GET https://localhost:6001/swagger/swagger-ui.css - - - 200 143212 text/css 50.2881ms
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware [FileServed] : Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware [FileServed] : Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware [FileServed] : Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware [FileServed] : Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestFinished] : Request finished HTTP/2 GET https://localhost:6001/swagger/swagger-ui-bundle.js - - - 200 1061588 application/javascript 70.4459ms
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestFinished] : Request finished HTTP/2 GET https://localhost:6001/swagger/swagger-ui-bundle.js - - - 200 1061588 application/javascript 70.4459ms
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestFinished] : Request finished HTTP/2 GET https://localhost:6001/swagger/swagger-ui-standalone-preset.js - - - 200 332952 application/javascript 71.3792ms
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestFinished] : Request finished HTTP/2 GET https://localhost:6001/swagger/swagger-ui-standalone-preset.js - - - 200 332952 application/javascript 71.3792ms
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestStarting] : Request starting HTTP/2 GET https://localhost:6001/swagger/v1/swagger.json - -
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestStarting] : Request starting HTTP/2 GET https://localhost:6001/swagger/v1/swagger.json - -
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestStarting] : Request starting HTTP/2 GET https://localhost:6001/swagger/favicon-32x32.png - -
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestStarting] : Request starting HTTP/2 GET https://localhost:6001/swagger/favicon-32x32.png - -
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware [FileServed] : Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware [FileServed] : Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestFinished] : Request finished HTTP/2 GET https://localhost:6001/swagger/favicon-32x32.png - - - 200 628 image/png 0.9688ms
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestFinished] : Request finished HTTP/2 GET https://localhost:6001/swagger/favicon-32x32.png - - - 200 628 image/png 0.9688ms
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestFinished] : Request finished HTTP/2 GET https://localhost:6001/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 238.2771ms
+2021-03-16 19:31:20 [Information] Microsoft.AspNetCore.Hosting.Diagnostics [RequestFinished] : Request finished HTTP/2 GET https://localhost:6001/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 238.2771ms

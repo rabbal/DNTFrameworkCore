@@ -12,15 +12,15 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/",
+      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "DNTFrameworkCoreTemplateAPI.API": {
+    "ProjectName.API": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/",
+      "launchUrl": "swagger",
       "applicationUrl": "https://localhost:6001;http://localhost:6000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

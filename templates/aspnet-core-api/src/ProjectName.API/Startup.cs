@@ -5,9 +5,11 @@ using DNTFrameworkCore.Web;
 using DNTFrameworkCore.Web.ExceptionHandling;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using ProjectName.API.Hubs;
 using ProjectName.Application;
 using ProjectName.Application.Configuration;
@@ -23,7 +25,7 @@ namespace ProjectName.API
         {
             _configuration = configuration;
         }
-        
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -57,7 +59,6 @@ namespace ProjectName.API
             //     options.SchemaName = "dbo";
             //     options.TableName = "Cache";
             // });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,38 +66,21 @@ namespace ProjectName.API
         {
             app.UseIf(env.IsProduction(), _ => _.UseHsts());
 
-            app.UseExceptionHandling();
-            // var error = context.Features[typeof(IExceptionHandlerFeature)] as IExceptionHandlerFeature;
-            // if (error?.Error is SecurityTokenExpiredException)
-            // {
-            //     context.Response.StatusCode = 401;
-            //     context.Response.ContentType = "application/json";
-            //     await context.Response.WriteAsync(JsonConvert.SerializeObject(new
-            //     {
-            //         Message = "authentication token expired"
-            //     }));
-            // }
-            // else if (error?.Error != null)
-            // {
-            //     context.Response.StatusCode = 500;
-            //     context.Response.ContentType = "application/json";
-            //     const string message = "متأسفانه مشکلی در فرآیند انجام درخواست شما پیش آمده است!";
-            //
-            //     await context.Response.WriteAsync(JsonConvert.SerializeObject(new
-            //     {
-            //         Message = message
-            //     }));
-            // }
-            // else
-            // {
-            //     await next();
-            // }
-            
+            app.UseExceptionHandling((exception, result) =>
+            {
+                if (exception is SecurityTokenExpiredException)
+                {
+                    result.FriendlyMessage = "authentication token expired";
+                    result.StatusCode = StatusCodes.Status401Unauthorized;
+                    result.ExceptionHandled = true;
+                }
+            });
+
             app.UseHttpsRedirection();
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProjectName API V1"); });
-
+            app.UseIf(env.IsDevelopment(), _ => _.UseSwagger());
+            app.UseIf(env.IsDevelopment(), _ => _.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1"); }));
+            
             app.UseRouting();
             app.UseCors("CorsPolicy");
 
