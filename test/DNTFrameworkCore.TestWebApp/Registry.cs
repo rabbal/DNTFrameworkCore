@@ -14,7 +14,7 @@ namespace DNTFrameworkCore.TestWebApp
 {
     public static class Registry
     {
-        public static void AddWeb(this IServiceCollection services)
+        public static void AddWebApp(this IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
             {

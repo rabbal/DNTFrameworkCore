@@ -30,6 +30,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Blogging
         public override Task<IPagedResult<BlogModel>> FetchPagedListAsync(FilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
+            request.SortingIfNullOrEmpty("Id DESC");
             return EntitySet.AsNoTracking()
                 .Select(b => new BlogModel
                 {

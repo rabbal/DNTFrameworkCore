@@ -6,7 +6,7 @@ namespace DNTFrameworkCore.Validation
     {
         public ValidationFailure(string memberName, string message)
         {
-            MemberName = Ensure.IsNotNullOrEmpty(memberName, nameof(memberName));
+            MemberName = memberName ?? string.Empty;
             Message = Ensure.IsNotNullOrEmpty(message, nameof(message));
         }
 

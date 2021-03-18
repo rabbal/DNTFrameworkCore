@@ -34,6 +34,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Catalog
         public override Task<IPagedResult<ProductModel>> FetchPagedListAsync(FilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
+            request.SortingIfNullOrEmpty("Id DESC");
             return EntitySet.AsNoTracking().Select(p => new ProductModel
             {
                 Id = p.Id,

@@ -42,7 +42,7 @@ namespace DNTFrameworkCore.TestWebApp
             services.AddInfrastructure(Configuration);
             services.AddApplication(Configuration);
             services.AddResources();
-            services.AddWeb();
+            services.AddWebApp();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,16 +60,19 @@ namespace DNTFrameworkCore.TestWebApp
                 app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
+
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseHttpsRedirection();
+
             app.UseFileServer(new FileServerOptions
             {
                 // Don't expose file system
                 EnableDirectoryBrowsing = false
             });
+            
             app.UseCookiePolicy();
 
             app.UseEndpoints(routes =>

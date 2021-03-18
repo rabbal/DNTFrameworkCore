@@ -46,5 +46,11 @@ namespace DNTFrameworkCore.Querying
             return _regex.Split(sorting).Where(sort => !string.IsNullOrWhiteSpace(sort))
                 .Select(SortExpression.FromString).ToList();
         }
+
+        public void SortingIfNullOrEmpty(string sorting)
+        {
+            if (!string.IsNullOrEmpty(Sorting)) return;
+            Sorting = sorting;
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity.Models
         [Required, StringLength(50)] 
         public string Name { get; set; }
         public string Description { get; set; }
-        public ICollection<string> Permissions { get; set; } = new HashSet<string>();
+        public ICollection<string> PermissionNames { get; set; } = new HashSet<string>();
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

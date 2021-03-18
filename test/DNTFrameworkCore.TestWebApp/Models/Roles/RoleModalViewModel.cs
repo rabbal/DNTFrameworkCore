@@ -1,11 +1,10 @@
-using System.Collections.Generic;
-using DNTFrameworkCore.Common;
 using DNTFrameworkCore.TestWebApp.Application.Identity.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DNTFrameworkCore.TestWebApp.Models.Roles
 {
     public class RoleModalViewModel : RoleModel
     {
-        public IReadOnlyList<LookupItem> PermissionList { get; set; }
+        public SelectList Permissions { get; set; }
     }
 }

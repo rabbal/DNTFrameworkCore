@@ -31,7 +31,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
     {
         private readonly ITokenService _token;
         private readonly IDbContext _dbContext;
-        private readonly IAntiXsrf _antiforgery;
+        private readonly IAntiXsrf _antiXsrf;
         private readonly IOptionsSnapshot<TokenOptions> _options;
         private readonly IMessageLocalizer _localizer;
         private readonly IUserPasswordHashAlgorithm _password;
@@ -42,7 +42,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
         public AuthenticationService(
             ITokenService token,
             IDbContext dbContext,
-            IAntiXsrf antiforgery,
+            IAntiXsrf antiXsrf,
             IOptionsSnapshot<TokenOptions> options,
             IMessageLocalizer localizer,
             IUserPasswordHashAlgorithm password,
@@ -50,7 +50,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
         {
             _token = token ?? throw new ArgumentNullException(nameof(token));
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            _antiforgery = antiforgery ?? throw new ArgumentNullException(nameof(antiforgery));
+            _antiXsrf = antiXsrf ?? throw new ArgumentNullException(nameof(antiXsrf));
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
             _password = password ?? throw new ArgumentNullException(nameof(password));
@@ -84,7 +84,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
 
             var claims = await BuildClaimsAsync(userId);
             var token = await _token.NewTokenAsync(userId, claims);
-            _antiforgery.AddToken(claims,JwtBearerDefaults.AuthenticationScheme);
+            _antiXsrf.AddToken(claims,JwtBearerDefaults.AuthenticationScheme);
 
             return SignInResult.Ok(token);
         }
@@ -97,7 +97,7 @@ namespace DNTFrameworkCore.TestAPI.Authentication
         {
             await _token.RevokeTokensAsync(_session.UserId.FromString<long>());
 
-            _antiforgery.RemoveToken();
+            _antiXsrf.RemoveToken();
         }
 
         private async Task<IList<Claim>> BuildClaimsAsync(long userId)

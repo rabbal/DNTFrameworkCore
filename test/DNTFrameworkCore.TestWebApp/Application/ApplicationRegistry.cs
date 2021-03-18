@@ -1,5 +1,4 @@
 using System.Linq;
-using AutoMapper;
 using Castle.DynamicProxy;
 using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Dependency;

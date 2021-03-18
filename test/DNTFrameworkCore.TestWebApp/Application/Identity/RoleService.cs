@@ -13,7 +13,6 @@ using DNTFrameworkCore.Collections;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
-using DNTFrameworkCore.EFCore.Linq;
 using DNTFrameworkCore.EFCore.Querying;
 using DNTFrameworkCore.Querying;
 
@@ -39,18 +38,19 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
 
         protected override IQueryable<Role> FindEntityQueryable => base.FindEntityQueryable.Include(r => r.Permissions);
 
-        public override Task<IPagedResult<RoleReadModel>> FetchPagedListAsync(RoleFilteredPagedRequest model,
+        public override Task<IPagedResult<RoleReadModel>> FetchPagedListAsync(RoleFilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
+            request.SortingIfNullOrEmpty("Id DESC");
             return EntitySet.AsNoTracking()
-                .WhereIf(model.Permissions != null && model.Permissions.Any(),
-                    r => r.Permissions.Any(p => model.Permissions.Contains(p.Name)))
+                .WhereIf(request.Permissions != null && request.Permissions.Any(),
+                    r => r.Permissions.Any(p => request.Permissions.Contains(p.Name)))
                 .Select(r => new RoleReadModel
                 {
                     Id = r.Id,
                     Name = r.Name,
                     Description = r.Description
-                }).ToPagedListAsync(model, cancellationToken);
+                }).ToPagedListAsync(request, cancellationToken);
         }
 
         protected override void MapToEntity(RoleModel model, Role role)
@@ -61,7 +61,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
 
         private static void MapPermissions(RoleModel model, Role role)
         {
-            var addedPermissions = model.Permissions.Where(permissionName =>
+            var addedPermissions = model.PermissionNames.Where(permissionName =>
                     !role.Permissions.Select(_ => _.Name).Contains(permissionName))
                 .Select(permissionName => new RolePermission
                 {
@@ -71,7 +71,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
                 });
             role.Permissions.AddRange(addedPermissions);
 
-            var removedPermissions = role.Permissions.Where(p => !model.Permissions.Contains(p.Name));
+            var removedPermissions = role.Permissions.Where(p => !model.PermissionNames.Contains(p.Name));
             foreach (var removedPermission in removedPermissions)
             {
                 removedPermission.TrackingState = TrackingState.Deleted;

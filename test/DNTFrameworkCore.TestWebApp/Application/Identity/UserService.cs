@@ -7,7 +7,6 @@ using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Cryptography;
 using DNTFrameworkCore.EFCore.Application;
 using DNTFrameworkCore.EFCore.Context;
-using DNTFrameworkCore.EFCore.Linq;
 using DNTFrameworkCore.EFCore.Querying;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Querying;
@@ -42,6 +41,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
         public override Task<IPagedResult<UserReadModel>> FetchPagedListAsync(FilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
+            request.SortingIfNullOrEmpty("Id DESC");
             return EntitySet.AsNoTracking()
                 .Select(u => new UserReadModel
                 {
