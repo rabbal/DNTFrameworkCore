@@ -1,7 +1,7 @@
 # DNTFrameworkCore 
 
 [![.NET](https://github.com/rabbal/DNTFrameworkCore/actions/workflows/dotnet.yml/badge.svg)](https://github.com/rabbal/DNTFrameworkCore/actions/workflows/dotnet.yml)
-
+![Nuget](https://img.shields.io/nuget/v/DNTFrameworkCore)
 ### What is DNTFrameworkCore?
 
 `DNTFrameworkCore` is a Lightweight and 
