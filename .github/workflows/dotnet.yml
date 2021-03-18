@@ -1,0 +1,25 @@
+name: .NET
+
+on:
+  push:
+    tags:        
+      - '*'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore DNTFrameworkCorePack.sln
+    - name: Build
+      run: dotnet build DNTFrameworkCorePack.sln --no-restore --configuration Release
+    #- name: Test
+     # run: dotnet test --no-build --verbosity normal
+    - name: Build NuGet Packages
+      run: dotnet pack DNTFrameworkCorePack.sln -o nupkg --configuration Release
+    - name: Deploy NuGet Packages
+      run: dotnet nuget push ./nupkg/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
