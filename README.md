@@ -1,5 +1,6 @@
 # DNTFrameworkCore 
 
+[![.NET](https://github.com/rabbal/DNTFrameworkCore/actions/workflows/dotnet.yml/badge.svg)](https://github.com/rabbal/DNTFrameworkCore/actions/workflows/dotnet.yml)
 
 ### What is DNTFrameworkCore?
 
