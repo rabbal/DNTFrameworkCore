@@ -15,7 +15,7 @@ Extensible Infrastructure for Building High Quality Web Applications Based on AS
 * Reduce the training time of the new developer with low knowledge about OOP and OOD
  
 Application Service
-```csharp
+```c#
 public interface IBlogService : IEntityService<int, BlogModel>
 {
 }
@@ -59,7 +59,7 @@ public class BlogService : EntityService<Blog, int, BlogModel>, IBlogService
  ``` 
  
 ASP.NET Core WebAPI
-```csharp
+```c#
 [Route("api/[controller]")]
 public class BlogsController : EntityController<IBlogService, int, BlogModel>
 {
@@ -75,7 +75,7 @@ public class BlogsController : EntityController<IBlogService, int, BlogModel>
  ```
  
  ASP.NET Core MVC
- ```csharp
+ ```c#
 public class BlogsController : EntityController<IBlogService, int, BlogModel>
 {
     public BlogsController(IBlogService service) : base(service)
@@ -285,6 +285,7 @@ public class TaskService : EntityService<Task, int, TaskReadModel, TaskModel, Ta
     public override Task<IPagedResult<TaskReadModel>> FetchPagedListAsync(TaskFilteredPagedRequest request,
         CancellationToken cancellationToken = default)
     {
+        request.SortingIfNullOrEmpty("Id DESC");
         return EntitySet.AsNoTracking()
             .WhereIf(model.State.HasValue, t => t.State == model.State)
             .Select(t => new TaskReadModel
