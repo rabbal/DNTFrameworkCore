@@ -10,7 +10,8 @@ namespace DNTFrameworkCore.EFCore
 {
     public static class HostExtensions
     {
-        public static IHost MigrateDbContext<TContext>(this IHost host) where TContext : DbContext
+        public static IHost MigrateDbContext<TContext>(this IHost host, Action<IServiceProvider> postMigration = null)
+            where TContext : DbContext
         {
             using (var scope = host.Services.CreateScope())
             {
@@ -41,6 +42,7 @@ namespace DNTFrameworkCore.EFCore
                     {
                         context.Database.Migrate();
                         setup?.Seed();
+                        postMigration?.Invoke(provider);
                     });
 
                     logger.LogInformation($"Migrated database associated with context {typeof(TContext).Name}");

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\common.props" />
+  <PropertyGroup>
+    <PackageType>Template</PackageType>
+    <PackageId>DNTFrameworkCoreTemplateAPI</PackageId>
+    <Title>DNTFrameworkCoreTemplateAPI</Title>
+    <Authors>Salar Rabbal (https://www.linkedin.com/in/rabbal/)</Authors>
+    <Description>Empty project based on DNTFrameworkCore and ASP.NET Core WebAPI</Description>
+    <PackageTags>dotnet-new;templates;DNTFrameworkCore;dotnet;</PackageTags>
+	<PackageProjectUrl>https://github.com/Rabbal/DNTFrameworkCore</PackageProjectUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <TargetFramework>net5.0</TargetFramework>
+
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="content\**\*" Exclude="content\**\bin\**;content\**\obj\**" />
+    <Compile Remove="**\*" />
+  </ItemGroup>
+
+</Project>
