@@ -1,0 +1,24 @@
+name: build aspnet-core-api template
+
+on:
+  push:
+    paths:
+    - 'templates/aspnet-core-api/**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.200
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build templates/aspnet-core-api/content/ProjectName.sln --configuration Release
+    - name: Pack
+    - run: dotnet pack templates/aspnet-core-api/nupkg.csproj -o templates/aspnet-core-api
+    - name: Push Packages
+    - run: dotnet nuget push templates/aspnet-core-api/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+
