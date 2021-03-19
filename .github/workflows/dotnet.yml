@@ -14,12 +14,12 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore DNTFrameworkCorePack.sln
+      run: dotnet restore nupkg.sln
     - name: Build
-      run: dotnet build DNTFrameworkCorePack.sln --no-restore --configuration Release
+      run: dotnet build nupkg.sln --no-restore --configuration Release
     #- name: Test
      # run: dotnet test --no-build --verbosity normal
     - name: Pack
-      run: dotnet pack DNTFrameworkCorePack.sln -o nupkg --configuration Release
+      run: dotnet pack nupkg.sln -o nupkg --configuration Release
     - name: Push Packages
       run: dotnet nuget push ./nupkg/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
