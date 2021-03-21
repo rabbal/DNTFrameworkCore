@@ -97,7 +97,7 @@ namespace DNTFrameworkCore.EFCore.Transaction
             try
             {
                 await task.ConfigureAwait(false);
-                dbContext.CommitTransaction();
+                await dbContext.CommitTransactionAsync();
             }
             catch (Exception)
             {
@@ -117,7 +117,7 @@ namespace DNTFrameworkCore.EFCore.Transaction
                 }
                 else
                 {
-                    dbContext.CommitTransaction();
+                    await dbContext.CommitTransactionAsync();
                 }
 
                 return result;

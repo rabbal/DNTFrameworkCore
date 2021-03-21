@@ -45,9 +45,9 @@ namespace DNTFrameworkCore.EFCore.Context
         where TUserId : IEquatable<TUserId>
     {
         private readonly IUserSession _session;
-        private readonly IClock _clock;
+        private readonly ISystemClock _clock;
 
-        public PreInsertCreationTrackingHook(IUserSession session, IClock clock)
+        public PreInsertCreationTrackingHook(IUserSession session, ISystemClock clock)
         {
             _session = session ?? throw new ArgumentNullException(nameof(session));
             _clock = clock ?? throw new ArgumentNullException(nameof(clock));
@@ -68,9 +68,9 @@ namespace DNTFrameworkCore.EFCore.Context
         where TUserId : IEquatable<TUserId>
     {
         private readonly IUserSession _session;
-        private readonly IClock _clock;
+        private readonly ISystemClock _clock;
 
-        public PreUpdateModificationTrackingHook(IUserSession session, IClock clock)
+        public PreUpdateModificationTrackingHook(IUserSession session, ISystemClock clock)
         {
             _session = session ?? throw new ArgumentNullException(nameof(session));
             _clock = clock ?? throw new ArgumentNullException(nameof(clock));

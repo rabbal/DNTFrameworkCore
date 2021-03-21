@@ -27,7 +27,7 @@ namespace DNTFrameworkCore.EFCore.Tests.Context.Hooks
         public void Should_PreInsertHook_InterfaceHook_Calls_Into_GenericMethod()
         {
             var hook = new TimestampPreInsertHook();
-            var entity = new TimestampedSoftDeletedEntity();
+            var entity = new TrackingDeletedEntity();
 
             ((IHook) hook).Hook(entity, null);
             Assert.AreEqual(DateTimeOffset.UtcNow.Date, entity.CreationDateTime.Date);

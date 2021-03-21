@@ -1,7 +1,9 @@
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EFCore.Context;
+using DNTFrameworkCore.EFCore.SqlServer;
 using DNTFrameworkCore.Numbering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -27,7 +29,7 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
                 using (var transaction = dbContext.BeginTransaction())
                 {
                     var task = new TestTask();
-                    dbContext.AddRange(new[] {task});
+                    dbContext.Set<TestTask>().Add(task);
                     dbContext.SaveChanges();
                     task.Number.ShouldBe("Task-100");
 
@@ -44,7 +46,7 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
             provider.RunScoped<IDbContext>(dbContext =>
             {
                 var task = new TestTask {Number = "Task-Number"};
-                dbContext.AddRange(new[] {task});
+                dbContext.Set<TestTask>().Add(task);
                 dbContext.SaveChanges();
             });
 
@@ -52,14 +54,14 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
             provider.RunScoped<IDbContext>(dbContext =>
             {
                 var task = new TestTask {Number = "Task-NewNumber"};
-                dbContext.UpdateRange(new[] {task});
+                dbContext.Set<TestTask>().Update(task);
                 dbContext.SaveChanges();
             });
 
             //Assert
             provider.RunScoped<IDbContext>(dbContext =>
             {
-                var task = dbContext.Set<TestTask>().SingleOrDefault(t=>t.Number=="Task-Number");
+                var task = dbContext.Set<TestTask>().FirstOrDefault(t => t.Number == "Task-Number");
                 task.ShouldNotBeNull();
             });
         }
@@ -79,7 +81,7 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
                     using (var transaction = dbContext.BeginTransaction())
                     {
                         var task = new TestTask();
-                        dbContext.AddRange(new[] {task});
+                        dbContext.Set<TestTask>().Add(task);
                         dbContext.SaveChanges();
 
                         transaction.Commit();
@@ -101,16 +103,19 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
         private static ServiceProvider BuildServiceProvider()
         {
             var services = new ServiceCollection();
-            services.AddFramework();
-            // services.AddNumbering(options =>
-            // {
-            //     options.NumberedEntityMap[typeof(TestTask)] = new NumberedEntityOption
-            //     {
-            //         Start = 100,
-            //         Prefix = "Task-",
-            //         IncrementBy = 5
-            //     };
-            // });
+            services.AddEFCore<NumberingDbContext>()
+                .WithNumberingHook(options =>
+                {
+                    options[typeof(TestTask)] = new[]
+                    {
+                        new NumberedEntityOption
+                        {
+                            Prefix = "Task-",
+                            Start = 100,
+                            IncrementBy = 5
+                        }
+                    };
+                });
 
             var fileName =
                 Path.Combine(
@@ -121,13 +126,8 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
             services.AddEntityFrameworkSqlServer()
                 .AddDbContext<NumberingDbContext>(builder =>
                     builder.UseSqlServer(
-                            $@"Data Source=(LocalDB)\MSSQLLocalDb;Initial Catalog=NumberingTestDb;Integrated Security=True;
-                                    MultipleActiveResultSets=true;AttachDbFileName={fileName}")
-                        .ConfigureWarnings(warnings =>
-                        {
-                            warnings.Throw(RelationalEventId.QueryClientEvaluationWarning);
-                            warnings.Throw(CoreEventId.IncludeIgnoredWarning);
-                        }));
+                        $@"Data Source=(LocalDB)\MSSQLLocalDb;Initial Catalog=NumberingTestDb;Integrated Security=True;
+                                    MultipleActiveResultSets=true;AttachDbFileName={fileName}"));
 
             var provider = services.BuildServiceProvider();
 

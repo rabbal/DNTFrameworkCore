@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.EFCore.Tests.Context.Hooks
         {
             var hook = new SoftDeletePreDeleteHook();
             var metadata = new HookEntityMetadata(EntityState.Deleted);
-            var entity = new TimestampedSoftDeletedEntity();
+            var entity = new TrackingDeletedEntity();
             hook.Hook(entity, metadata);
 
             Assert.AreEqual(true, metadata.HasStateChanged);

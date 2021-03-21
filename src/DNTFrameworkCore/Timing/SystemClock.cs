@@ -3,16 +3,13 @@ using DNTFrameworkCore.Dependency;
 
 namespace DNTFrameworkCore.Timing
 {
-    /// <summary>
-    /// Defines the required contract for implementing a clock.
-    /// </summary>
-    public interface IClock : ITransientDependency
+    public interface ISystemClock : ISingletonDependency
     {
         DateTime Now { get; }
         DateTime Normalize(DateTime dateTime);
     }
 
-    internal sealed class Clock : IClock
+    internal sealed class SystemClock : ISystemClock
     {
         public DateTime Now => SystemTime.Now();
 

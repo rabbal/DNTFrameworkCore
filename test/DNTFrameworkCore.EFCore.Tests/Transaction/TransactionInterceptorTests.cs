@@ -1,13 +1,18 @@
 using System;
+using System.Data;
 using System.Threading.Tasks;
 using Castle.DynamicProxy;
 using DNTFrameworkCore.Application;
+using DNTFrameworkCore.EFCore.Context;
+using DNTFrameworkCore.EFCore.Transaction;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Transaction;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using Shouldly;
 
 namespace DNTFrameworkCore.EFCore.Tests.Transaction
 {
@@ -15,397 +20,169 @@ namespace DNTFrameworkCore.EFCore.Tests.Transaction
     public class TransactionInterceptorTests
     {
         [Test]
-        public void Should_Intercept_As_AmbientTransaction()
+        public void Should_Intercept_And_Commit_Transaction_On_Sync_Method_That_Return_Void()
         {
-            var services = new ServiceCollection();
-            var proxyGenerator = new ProxyGenerator();
+            //Arrange
+            var (dbContext, service) = ArrangeObjects();
 
-            services.AddFramework();
-
-            var transactionMock = new Mock<ITransaction>();
-            transactionMock.Setup(transaction => transaction.Commit());
-            transactionMock.Setup(transaction => transaction.Rollback());
-
-            var transactionProviderMock = new Mock<ITransactionProvider>();
-
-            transactionProviderMock.Setup(transactionProvider =>
-                    transactionProvider.BeginTransaction(IsolationLevel.ReadCommitted))
-                .Returns(() => transactionMock.Object);
-            transactionProviderMock.SetupGet(transactionProvider =>
-                transactionProvider.CurrentTransaction).Returns(transactionMock.Object);
-
-            services.Replace(ServiceDescriptor.Scoped(provider => transactionProviderMock.Object));
-
-            services.AddScoped<IPartyService, PartyService>();
-
-            services.Decorate<IPartyService>((target, provider) =>
-                (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
-                    target,
-                    provider.GetService<TransactionInterceptorBase>()));
-
-            var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
-
+            //Act
             service.VoidSyncMethod();
-            transactionProviderMock.Verify(transaction => transaction.BeginTransaction(IsolationLevel.ReadCommitted),
-                Times.Never);
-            transactionProviderMock.Verify(transaction => transaction.CurrentTransaction, Times.Once);
-            transactionMock.Verify(transaction => transaction.Commit(), Times.Never);
-            transactionMock.Verify(transaction => transaction.Rollback(), Times.Never);
+
+            //Assert
+            dbContext.Verify(context => context.BeginTransaction(IsolationLevel.ReadCommitted));
+            dbContext.Verify(context => context.CommitTransaction());
+            dbContext.Verify(context => context.RollbackTransaction(), Times.Never);
         }
 
         [Test]
         public void Should_Not_Intercept_Method_When_Method_Has_Not_Transactional_Attribute()
         {
-            var services = new ServiceCollection();
-            var proxyGenerator = new ProxyGenerator();
+            //Arrange
+            var (dbContext, service) = ArrangeObjects();
 
-            services.AddDNTFrameworkCore();
-
-            var transactionMock = new Mock<ITransaction>();
-            transactionMock.Setup(transaction => transaction.Commit());
-            transactionMock.Setup(transaction => transaction.Rollback());
-
-            var transactionProviderMock = new Mock<ITransactionProvider>();
-
-            transactionProviderMock.Setup(transactionProvider =>
-                    transactionProvider.BeginTransaction(IsolationLevel.ReadCommitted))
-                .Returns(() => transactionMock.Object).Callback(() =>
-                {
-                    transactionProviderMock.SetupGet(transactionProvider =>
-                        transactionProvider.CurrentTransaction).Returns(transactionMock.Object);
-                });
-
-            services.Replace(ServiceDescriptor.Scoped(provider => transactionProviderMock.Object));
-
-            services.AddScoped<IPartyService, PartyService>();
-
-            services.Decorate<IPartyService>((target, provider) =>
-                (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
-                    target,
-                    provider.GetService<TransactionInterceptorBase>()));
-
-            var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
-
+            //Act
             service.MethodWithoutTransactionalAttribute();
-            transactionProviderMock.Verify(transaction => transaction.BeginTransaction(IsolationLevel.ReadCommitted),
-                Times.Never);
-            transactionProviderMock.Verify(transaction => transaction.CurrentTransaction, Times.Never);
-            transactionMock.Verify(transaction => transaction.Commit(), Times.Never);
-            transactionMock.Verify(transaction => transaction.Rollback(), Times.Never);
+
+            //Assert
+            dbContext.Verify(context => context.BeginTransaction(IsolationLevel.ReadCommitted), Times.Never);
+            dbContext.Verify(context => context.BeginTransactionAsync(IsolationLevel.ReadCommitted), Times.Never);
+            dbContext.Verify(context => context.CommitTransaction(), Times.Never);
+            dbContext.Verify(context => context.RollbackTransaction(), Times.Never);
         }
 
         [Test]
         public void Should_Intercept_And_Commit_Transaction_On_Sync_Method_That_Return_Ok_Result()
         {
-            var services = new ServiceCollection();
-            var proxyGenerator = new ProxyGenerator();
+            //Arrange
+            var (dbContext, service) = ArrangeObjects();
 
-            services.AddDNTFrameworkCore();
+            //Act
+            var result = service.SyncMethodWithOkResult();
 
-            var transactionMock = new Mock<ITransaction>();
-            transactionMock.Setup(transaction => transaction.Commit());
-            transactionMock.Setup(transaction => transaction.Rollback());
-
-            var transactionProviderMock = new Mock<ITransactionProvider>();
-
-            transactionProviderMock.Setup(transactionProvider =>
-                    transactionProvider.BeginTransaction(IsolationLevel.ReadCommitted))
-                .Returns(() => transactionMock.Object).Callback(() =>
-                {
-                    transactionProviderMock.SetupGet(transactionProvider =>
-                        transactionProvider.CurrentTransaction).Returns(transactionMock.Object);
-                });
-
-            services.Replace(ServiceDescriptor.Scoped(provider => transactionProviderMock.Object));
-
-            services.AddScoped<IPartyService, PartyService>();
-
-            services.Decorate<IPartyService>((target, provider) =>
-                (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
-                    target,
-                    provider.GetService<TransactionInterceptorBase>()));
-
-            var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
-
-            service.SyncMethodWithOkResult();
-            transactionProviderMock.Verify(transaction => transaction.BeginTransaction(IsolationLevel.ReadCommitted));
-            transactionProviderMock.Verify(transaction => transaction.CurrentTransaction);
-            transactionMock.Verify(transaction => transaction.Commit());
+            //Assert
+            result.Failed.ShouldBe(false);
+            dbContext.Verify(context => context.BeginTransaction(IsolationLevel.ReadCommitted));
+            dbContext.Verify(context => context.CommitTransaction());
         }
 
         [Test]
         public async Task Should_Intercept_And_Commit_Transaction_On_Async_Method_That_Return_Ok_TaskResult()
         {
-            var services = new ServiceCollection();
-            var proxyGenerator = new ProxyGenerator();
+            //Arrange
+            var (dbContext, service) = ArrangeObjects();
 
-            services.AddDNTFrameworkCore();
+            //Act
+            var result = await service.AsyncMethodWithOkResult();
 
-            var transactionMock = new Mock<ITransaction>();
-            transactionMock.Setup(transaction => transaction.Commit());
-            transactionMock.Setup(transaction => transaction.Rollback());
-
-            var transactionProviderMock = new Mock<ITransactionProvider>();
-
-            transactionProviderMock.Setup(transactionProvider =>
-                    transactionProvider.BeginTransaction(IsolationLevel.ReadCommitted))
-                .Returns(() => transactionMock.Object).Callback(() =>
-                {
-                    transactionProviderMock.SetupGet(transactionProvider =>
-                        transactionProvider.CurrentTransaction).Returns(transactionMock.Object);
-                });
-
-            services.Replace(ServiceDescriptor.Scoped(provider => transactionProviderMock.Object));
-
-            services.AddScoped<IPartyService, PartyService>();
-
-            services.Decorate<IPartyService>((target, provider) =>
-                (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
-                    target,
-                    provider.GetService<TransactionInterceptorBase>()));
-
-            var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
-
-            await service.AsyncMethodWithOkResult();
-            transactionProviderMock.Verify(transaction => transaction.BeginTransaction(IsolationLevel.ReadCommitted));
-            transactionProviderMock.Verify(transaction => transaction.CurrentTransaction);
-            transactionMock.Verify(transaction => transaction.Commit());
+            //Assert
+            result.Failed.ShouldBe(false);
+            dbContext.Verify(context => context.BeginTransaction(IsolationLevel.ReadCommitted));
+            dbContext.Verify(context => context.CommitTransactionAsync());
         }
 
         [Test]
         public void Should_Intercept_And_Rollback_Transaction_On_Sync_Method_That_Return_Failed_Result()
         {
-            var services = new ServiceCollection();
-            var proxyGenerator = new ProxyGenerator();
+            //Arrange
+            var (dbContext, service) = ArrangeObjects();
 
-            services.AddDNTFrameworkCore();
+            //Act
+            var result = service.SyncMethodWithFailedResult();
 
-            var transactionMock = new Mock<ITransaction>();
-            transactionMock.Setup(transaction => transaction.Commit());
-            transactionMock.Setup(transaction => transaction.Rollback());
-
-            var transactionProviderMock = new Mock<ITransactionProvider>();
-
-            transactionProviderMock.Setup(transactionProvider =>
-                    transactionProvider.BeginTransaction(IsolationLevel.ReadCommitted))
-                .Returns(() => transactionMock.Object).Callback(() =>
-                {
-                    transactionProviderMock.SetupGet(transactionProvider =>
-                        transactionProvider.CurrentTransaction).Returns(transactionMock.Object);
-                });
-
-            services.Replace(ServiceDescriptor.Scoped(provider => transactionProviderMock.Object));
-
-            services.AddScoped<IPartyService, PartyService>();
-
-            services.Decorate<IPartyService>((target, provider) =>
-                (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
-                    target,
-                    provider.GetService<TransactionInterceptorBase>()));
-
-            var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
-
-            service.SyncMethodWithFailedResult();
-            transactionProviderMock.Verify(transaction => transaction.BeginTransaction(IsolationLevel.ReadCommitted));
-            transactionProviderMock.Verify(transaction => transaction.CurrentTransaction);
-            transactionMock.Verify(transaction => transaction.Rollback());
+            //Assert
+            result.Failed.ShouldBe(true);
+            dbContext.Verify(context => context.BeginTransaction(IsolationLevel.ReadCommitted));
+            dbContext.Verify(context => context.CommitTransaction(), Times.Never);
+            dbContext.Verify(context => context.RollbackTransaction());
         }
 
         [Test]
         public async Task Should_Intercept_And_Rollback_Transaction_On_Async_Method_That_Return_Failed_TaskResult()
         {
-            var services = new ServiceCollection();
-            var proxyGenerator = new ProxyGenerator();
+            //Arrange
+            var (dbContext, service) = ArrangeObjects();
 
-            services.AddDNTFrameworkCore();
+            //Act
+            var result = await service.AsyncMethodWithFailedResult();
 
-            var transactionMock = new Mock<ITransaction>();
-            transactionMock.Setup(transaction => transaction.Commit());
-            transactionMock.Setup(transaction => transaction.Rollback());
-
-            var transactionProviderMock = new Mock<ITransactionProvider>();
-
-            transactionProviderMock.Setup(transactionProvider =>
-                    transactionProvider.BeginTransaction(IsolationLevel.ReadCommitted))
-                .Returns(() => transactionMock.Object).Callback(() =>
-                {
-                    transactionProviderMock.SetupGet(transactionProvider =>
-                        transactionProvider.CurrentTransaction).Returns(transactionMock.Object);
-                });
-
-            services.Replace(ServiceDescriptor.Scoped(provider => transactionProviderMock.Object));
-
-            services.AddScoped<IPartyService, PartyService>();
-
-            services.Decorate<IPartyService>((target, provider) =>
-                (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
-                    target,
-                    provider.GetService<TransactionInterceptorBase>()));
-
-            var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
-
-            await service.AsyncMethodWithFailedResult();
-            transactionProviderMock.Verify(transaction => transaction.BeginTransaction(IsolationLevel.ReadCommitted));
-            transactionProviderMock.Verify(transaction => transaction.CurrentTransaction);
-            transactionMock.Verify(transaction => transaction.Rollback());
-        }
-
-        [Test]
-        public void Should_Intercept_And_Commit_Transaction_On_Sync_Method_That_Return_Void()
-        {
-            var services = new ServiceCollection();
-            var proxyGenerator = new ProxyGenerator();
-
-            services.AddDNTFrameworkCore();
-
-            var transactionMock = new Mock<ITransaction>();
-            transactionMock.Setup(transaction => transaction.Commit());
-            transactionMock.Setup(transaction => transaction.Rollback());
-
-            var transactionProviderMock = new Mock<ITransactionProvider>();
-
-            transactionProviderMock.Setup(transactionProvider =>
-                    transactionProvider.BeginTransaction(IsolationLevel.ReadCommitted))
-                .Returns(() => transactionMock.Object).Callback(() =>
-                {
-                    transactionProviderMock.SetupGet(transactionProvider =>
-                        transactionProvider.CurrentTransaction).Returns(transactionMock.Object);
-                });
-
-            services.Replace(ServiceDescriptor.Scoped(provider => transactionProviderMock.Object));
-
-            services.AddScoped<IPartyService, PartyService>();
-
-            services.Decorate<IPartyService>((target, provider) =>
-                (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
-                    target,
-                    provider.GetService<TransactionInterceptorBase>()));
-
-            var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
-
-            service.VoidSyncMethod();
-            transactionProviderMock.Verify(transaction => transaction.BeginTransaction(IsolationLevel.ReadCommitted));
-            transactionProviderMock.Verify(transaction => transaction.CurrentTransaction);
-            transactionMock.Verify(transaction => transaction.Commit());
+            //Assert
+            result.Failed.ShouldBe(true);
+            dbContext.Verify(context => context.BeginTransaction(IsolationLevel.ReadCommitted));
+            dbContext.Verify(context => context.CommitTransactionAsync(), Times.Never);
+            dbContext.Verify(context => context.CommitTransaction(), Times.Never);
+            dbContext.Verify(context => context.RollbackTransaction());
         }
 
         [Test]
         public async Task Should_Intercept_And_Commit_Transaction_On_Async_Method_That_Return_Task()
         {
-            var services = new ServiceCollection();
-            var proxyGenerator = new ProxyGenerator();
+            //Arrange
+            var (dbContext, service) = ArrangeObjects();
 
-            services.AddDNTFrameworkCore();
-
-            var transactionMock = new Mock<ITransaction>();
-            transactionMock.Setup(transaction => transaction.Commit());
-            transactionMock.Setup(transaction => transaction.Rollback());
-
-            var transactionProviderMock = new Mock<ITransactionProvider>();
-
-            transactionProviderMock.Setup(transactionProvider =>
-                    transactionProvider.BeginTransaction(IsolationLevel.ReadCommitted))
-                .Returns(() => transactionMock.Object).Callback(() =>
-                {
-                    transactionProviderMock.SetupGet(transactionProvider =>
-                        transactionProvider.CurrentTransaction).Returns(transactionMock.Object);
-                });
-
-            services.Replace(ServiceDescriptor.Scoped(provider => transactionProviderMock.Object));
-
-            services.AddScoped<IPartyService, PartyService>();
-
-            services.Decorate<IPartyService>((target, provider) =>
-                (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
-                    target,
-                    provider.GetService<TransactionInterceptorBase>()));
-
-            var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
-
+            //Act
             await service.TaskAsyncMethod();
-            transactionProviderMock.Verify(transaction => transaction.BeginTransaction(IsolationLevel.ReadCommitted));
-            transactionProviderMock.Verify(transaction => transaction.CurrentTransaction);
-            transactionMock.Verify(transaction => transaction.Commit());
+
+            //Assert
+            dbContext.Verify(context => context.BeginTransaction(IsolationLevel.ReadCommitted));
+            dbContext.Verify(context => context.CommitTransaction(), Times.Never);
+            dbContext.Verify(context => context.CommitTransactionAsync());
         }
 
         [Test]
         public void Should_Intercept_And_Rollback_Transaction_On_Sync_Method_That_Throw_Exception()
         {
-            var services = new ServiceCollection();
-            var proxyGenerator = new ProxyGenerator();
+            //Arrange
+            var (dbContext, service) = ArrangeObjects();
 
-            services.AddDNTFrameworkCore();
-
-            var transactionMock = new Mock<ITransaction>();
-            transactionMock.Setup(transaction => transaction.Commit());
-            transactionMock.Setup(transaction => transaction.Rollback());
-
-            var transactionProviderMock = new Mock<ITransactionProvider>();
-
-            transactionProviderMock.Setup(transactionProvider =>
-                    transactionProvider.BeginTransaction(IsolationLevel.ReadCommitted))
-                .Returns(() => transactionMock.Object).Callback(() =>
-                {
-                    transactionProviderMock.SetupGet(transactionProvider =>
-                        transactionProvider.CurrentTransaction).Returns(transactionMock.Object);
-                });
-
-            services.Replace(ServiceDescriptor.Scoped(provider => transactionProviderMock.Object));
-
-            services.AddScoped<IPartyService, PartyService>();
-
-            services.Decorate<IPartyService>((target, provider) =>
-                (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
-                    target,
-                    provider.GetService<TransactionInterceptorBase>()));
-
-            var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
-
+            //Act & Assert
             Assert.Throws<Exception>(() => { service.VoidSyncMethodWithException(); },
                 nameof(IPartyService.VoidSyncMethodWithException));
-            transactionProviderMock.Verify(transaction => transaction.BeginTransaction(IsolationLevel.ReadCommitted));
-            transactionProviderMock.Verify(transaction => transaction.CurrentTransaction);
-            transactionMock.Verify(transaction => transaction.Rollback());
+            dbContext.Verify(context => context.BeginTransaction(IsolationLevel.ReadCommitted));
+            dbContext.Verify(context => context.CommitTransaction(), Times.Never);
+            dbContext.Verify(context => context.CommitTransactionAsync(), Times.Never);
+            dbContext.Verify(context => context.RollbackTransaction());
         }
 
         [Test]
         public void Should_Intercept_And_Rollback_Transaction_On_Async_Method_That_Throw_Exception()
         {
+            //Arrange
+            var (dbContext, service) = ArrangeObjects();
+
+            //Act & Assert
+            Assert.ThrowsAsync<Exception>(async () => { await service.TaskAsyncMethodWithException(); },
+                nameof(IPartyService.TaskAsyncMethodWithException));
+            dbContext.Verify(context => context.BeginTransaction(IsolationLevel.ReadCommitted));
+            dbContext.Verify(context => context.CommitTransaction(), Times.Never);
+            dbContext.Verify(context => context.CommitTransactionAsync(), Times.Never);
+            dbContext.Verify(context => context.RollbackTransaction());
+        }
+
+        private static (Mock<IDbContext> dbContext, IPartyService service) ArrangeObjects()
+        {
             var services = new ServiceCollection();
             var proxyGenerator = new ProxyGenerator();
 
-            services.AddDNTFrameworkCore();
+            var loggerFactory = new Mock<ILoggerFactory>();
+            var logger = new Mock<ILogger>();
+            loggerFactory.Setup(factory => factory.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+            var dbContextTransaction = new Mock<IDbContextTransaction>();
+            var dbContext = new Mock<IDbContext>();
 
-            var transactionMock = new Mock<ITransaction>();
-            transactionMock.Setup(transaction => transaction.Commit());
-            transactionMock.Setup(transaction => transaction.Rollback());
-
-            var transactionProviderMock = new Mock<ITransactionProvider>();
-
-            transactionProviderMock.Setup(transactionProvider =>
-                    transactionProvider.BeginTransaction(IsolationLevel.ReadCommitted))
-                .Returns(() => transactionMock.Object).Callback(() =>
-                {
-                    transactionProviderMock.SetupGet(transactionProvider =>
-                        transactionProvider.CurrentTransaction).Returns(transactionMock.Object);
-                });
-
-            services.Replace(ServiceDescriptor.Scoped(provider => transactionProviderMock.Object));
+            dbContext.SetupGet(context => context.Transaction).Returns(dbContextTransaction.Object);
+            dbContext.Setup(context => context.BeginTransaction(IsolationLevel.ReadCommitted))
+                .Returns(() => dbContextTransaction.Object);
+            dbContext.Setup(context => context.BeginTransactionAsync(IsolationLevel.ReadCommitted))
+                .Returns(() => Task.FromResult(dbContextTransaction.Object));
+            dbContext.SetupGet(context => context.Transaction).Returns(dbContextTransaction.Object);
 
             services.AddScoped<IPartyService, PartyService>();
-
-            services.Decorate<IPartyService>((target, provider) =>
+            services.Decorate<IPartyService>((target, _) =>
                 (IPartyService) proxyGenerator.CreateInterfaceProxyWithTarget(typeof(IPartyService),
                     target,
-                    provider.GetService<TransactionInterceptorBase>()));
-
+                    new TransactionInterceptor(dbContext.Object, loggerFactory.Object)));
             var service = services.BuildServiceProvider().GetRequiredService<IPartyService>();
-            Assert.ThrowsAsync<Exception>(async () => { await service.TaskAsyncMethodWithException(); },
-                nameof(IPartyService.TaskAsyncMethodWithException));
-
-            transactionProviderMock.Verify(transaction => transaction.BeginTransaction(IsolationLevel.ReadCommitted));
-            transactionProviderMock.Verify(transaction => transaction.CurrentTransaction);
-            transactionMock.Verify(transaction => transaction.Rollback());
+            return (dbContext, service);
         }
     }
 
