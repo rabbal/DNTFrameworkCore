@@ -26,6 +26,7 @@ namespace DNTFrameworkCore.TestAPI.Infrastructure
                     {
                         new NumberedEntityOption
                         {
+                            FieldName = nameof(Task.Number),
                             Prefix = "Task",
                             Fields = new[] {nameof(Task.BranchId)}
                         }

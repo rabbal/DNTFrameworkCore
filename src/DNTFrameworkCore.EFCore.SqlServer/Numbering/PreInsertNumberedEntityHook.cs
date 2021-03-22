@@ -48,13 +48,12 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
             IDbContext dbContext)
         {
             fields = fields.ToList();
-            using (var command = dbContext.Connection.CreateCommand())
-            {
-                var parameterNames = fields.Aggregate(string.Empty,
-                    (current, fieldName) => $"{current} AND [t0].[{fieldName}] = @{fieldName} ");
+            using var command = dbContext.Connection.CreateCommand();
+            var parameterNames = fields.Aggregate(string.Empty,
+                (current, fieldName) => $"{current} AND [t0].[{fieldName}] = @{fieldName} ");
 
-                var tableName = dbContext.Entry(entity).Metadata.GetTableName();
-                command.CommandText = $@"SELECT
+            var tableName = dbContext.Entry(entity).Metadata.GetTableName();
+            command.CommandText = $@"SELECT
                     (CASE
                 WHEN EXISTS(
                     SELECT NULL AS [EMPTY]
@@ -64,31 +63,30 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
                 ELSE 0
                 END) [Value]";
 
-                var parameter = command.CreateParameter();
-                parameter.ParameterName = "@Number";
-                parameter.Value = number;
-                parameter.DbType = DbType.String;
-                command.Parameters.Add(parameter);
+            var parameter = command.CreateParameter();
+            parameter.ParameterName = "@Number";
+            parameter.Value = number;
+            parameter.DbType = DbType.String;
+            command.Parameters.Add(parameter);
 
-                foreach (var field in fields)
-                {
-                    var p = command.CreateParameter();
+            foreach (var field in fields)
+            {
+                var p = command.CreateParameter();
 
-                    var value = dbContext.Entry(entity).Property(field).CurrentValue;
+                var value = dbContext.Entry(entity).Property(field).CurrentValue;
 
-                    p.Value = NormalizeValue(value);
-                    p.ParameterName = $"@{field}";
-                    p.DbType = SqlHelper.TypeMapping[value.GetType()];
+                p.Value = value;
+                p.ParameterName = $"@{field}";
+                p.DbType = SqlHelper.TypeMapping[value.GetType()];
 
-                    command.Parameters.Add(p);
-                }
-
-                command.Transaction = dbContext.Transaction.GetDbTransaction();
-
-                var result = command.ExecuteScalar();
-
-                return !Convert.ToBoolean(result);
+                command.Parameters.Add(p);
             }
+
+            command.Transaction = dbContext.Transaction.GetDbTransaction();
+
+            var result = command.ExecuteScalar();
+
+            return !Convert.ToBoolean(result);
         }
 
         private static string NewNumber(INumberedEntity entity, NumberedEntityOption option, IDbContext dbContext)

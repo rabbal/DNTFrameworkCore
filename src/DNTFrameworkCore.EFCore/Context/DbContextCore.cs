@@ -138,12 +138,10 @@ namespace DNTFrameworkCore.EFCore.Context
         protected virtual string EntityHash<TEntity>(Dictionary<string, object> row) where TEntity : class
         {
             var json = JsonSerializer.Serialize(row, new JsonSerializerOptions {WriteIndented = true});
-            using (var hashAlgorithm = SHA256.Create())
-            {
-                var byteValue = Encoding.UTF8.GetBytes(json);
-                var byteHash = hashAlgorithm.ComputeHash(byteValue);
-                return Convert.ToBase64String(byteHash);
-            }
+            using var hashAlgorithm = SHA256.Create();
+            var byteValue = Encoding.UTF8.GetBytes(json);
+            var byteHash = hashAlgorithm.ComputeHash(byteValue);
+            return Convert.ToBase64String(byteHash);
         }
 
         public void TrackGraph(object rootEntity, Action<EntityEntryGraphNode> callback)

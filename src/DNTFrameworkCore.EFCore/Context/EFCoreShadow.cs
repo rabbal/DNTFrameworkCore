@@ -3,6 +3,7 @@ using System.Linq;
 using DNTFrameworkCore.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+
 // ReSharper disable InconsistentNaming
 
 namespace DNTFrameworkCore.EFCore.Context
@@ -24,6 +25,10 @@ namespace DNTFrameworkCore.EFCore.Context
         public const string IsDeleted = nameof(IsDeleted);
         public const string Version = nameof(Version);
         public const string Hash = nameof(Hash);
+        public const string Number = nameof(Number);
+
+        public static readonly Func<object, string> PropertyNumber =
+            entity => EF.Property<string>(entity, Number);
 
         public static readonly Func<object, byte[]> PropertyVersion =
             entity => EF.Property<byte[]>(entity, Version);

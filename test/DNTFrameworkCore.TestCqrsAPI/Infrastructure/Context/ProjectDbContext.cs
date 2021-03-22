@@ -27,7 +27,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Infrastructure.Context
             //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             modelBuilder.NormalizeDateTime();
-            modelBuilder.NormalizeDecimalPrecision();
+            modelBuilder.NormalizeDecimal();
 
             base.OnModelCreating(modelBuilder);
         }

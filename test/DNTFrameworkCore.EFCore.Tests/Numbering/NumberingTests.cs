@@ -1,3 +1,5 @@
+using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -5,9 +7,12 @@ using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.SqlServer;
 using DNTFrameworkCore.Numbering;
+using DNTFrameworkCore.Runtime;
+using DNTFrameworkCore.Tenancy;
+using DNTFrameworkCore.Timing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using NUnit.Framework;
 using Shouldly;
 using static DNTFrameworkCore.EFCore.Tests.TestingHelper;
@@ -17,52 +22,166 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
     [TestFixture]
     public class NumberingTests
     {
-        [Test]
+         [Test]
         public void Should_Fill_Number_When_Number_Property_Is_Empty()
         {
             //Arrange
-            var provider = BuildServiceProvider();
+            var dateTime = new DateTime(2021, 1, 1);
+            var provider = BuildServiceProvider(dateTime);
 
             //Act, Assert
             provider.RunScoped<IDbContext>(dbContext =>
             {
-                using (var transaction = dbContext.BeginTransaction())
+                using var transaction = dbContext.BeginTransaction();
+                var task1 = new NumberingTestEntity
                 {
-                    var task = new TestTask();
-                    dbContext.Set<TestTask>().Add(task);
-                    dbContext.SaveChanges();
-                    task.Number.ShouldBe("Task-100");
+                    DateTime = dateTime,
+                    BranchId = 1
+                };
+                var task2 = new NumberingTestEntity
+                {
+                    DateTime = dateTime,
+                    BranchId = 1
+                };
+                dbContext.Set<NumberingTestEntity>().Add(task1);
+                dbContext.Set<NumberingTestEntity>().Add(task2);
+                dbContext.SaveChanges();
 
-                    transaction.Commit();
-                }
+                task1.Number.ShouldBe("Prefix-100");
+             
+                task2.Number.ShouldBe("Prefix-105");
+            
+                dbContext.Set<NumberedEntity>().Any(_ => _.EntityName == $"{typeof(NumberingTestEntity).FullName}")
+                    .ShouldBeTrue();
+                
+                transaction.Commit();
+            });
+        }
+        
+        [Test]
+        public void Should_Fill_All_NumberingFields_BasedOn_NumberingOptions()
+        {
+            //Arrange
+            var dateTime = new DateTime(2021, 1, 1);
+            var provider = BuildServiceProvider(dateTime);
+
+            //Act, Assert
+            provider.RunScoped<IDbContext>(dbContext =>
+            {
+                using var transaction = dbContext.BeginTransaction();
+                var task1 = new NumberingTestEntity
+                {
+                    DateTime = dateTime,
+                    BranchId = 1
+                };
+                var task2 = new NumberingTestEntity
+                {
+                    DateTime = dateTime,
+                    BranchId = 1
+                };
+                dbContext.Set<NumberingTestEntity>().Add(task1);
+                dbContext.Set<NumberingTestEntity>().Add(task2);
+                dbContext.SaveChanges();
+
+                task1.Number.ShouldBe("Prefix-100");
+                task1.NumberBasedOnBranchId.ShouldBe("10");
+                task1.NumberBasedOnBranchIdDateTime.ShouldBe("1");
+                task1.NumberBasedOnBranchIdCreatedDateTime.ShouldBe("1");
+
+                task2.Number.ShouldBe("Prefix-105");
+                task2.NumberBasedOnBranchId.ShouldBe("20");
+                task2.NumberBasedOnBranchIdDateTime.ShouldBe("2");
+                task2.NumberBasedOnBranchIdCreatedDateTime.ShouldBe("2");
+
+                dbContext.Set<NumberedEntity>().Any(_ => _.EntityName == $"{typeof(NumberingTestEntity).FullName}")
+                    .ShouldBeTrue();
+                dbContext.Set<NumberedEntity>()
+                    .Any(_ => _.EntityName == $"{typeof(NumberingTestEntity).FullName}_BranchId_1")
+                    .ShouldBeTrue();
+                dbContext.Set<NumberedEntity>()
+                    .Any(_ => _.EntityName == $"{typeof(NumberingTestEntity).FullName}_BranchId_1_DateTime_20210101")
+                    .ShouldBeTrue();
+                dbContext.Set<NumberedEntity>()
+                    .Any(_ => _.EntityName ==
+                              $"{typeof(NumberingTestEntity).FullName}_BranchId_1_CreatedDateTime_20210101")
+                    .ShouldBeTrue();
+                dbContext.Set<NumberedEntity>()
+                    .Any(_ => _.EntityName ==
+                              $"{typeof(NumberingTestEntity).FullName}_BranchId_1_CreatedDateTime_20210101" &&
+                              _.NextValue == 3)
+                    .ShouldBeTrue();
+                transaction.Commit();
             });
         }
 
         [Test]
-        public void Should_Prevent_Modify_Number_On_Update()
+        public void Should_Reset_Number_When_ResetFields_Changed()
         {
             //Arrange
-            var provider = BuildServiceProvider();
-            provider.RunScoped<IDbContext>(dbContext =>
-            {
-                var task = new TestTask {Number = "Task-Number"};
-                dbContext.Set<TestTask>().Add(task);
-                dbContext.SaveChanges();
-            });
+            var dateTime = new DateTime(2021, 1, 1);
+            var provider = BuildServiceProvider(dateTime);
 
-            //Act
+            //Act, Assert
             provider.RunScoped<IDbContext>(dbContext =>
             {
-                var task = new TestTask {Number = "Task-NewNumber"};
-                dbContext.Set<TestTask>().Update(task);
+                using var transaction = dbContext.BeginTransaction();
+                var task1 = new NumberingTestEntity
+                {
+                    DateTime = dateTime,
+                    BranchId = 1
+                };
+                var task2 = new NumberingTestEntity
+                {
+                    DateTime = dateTime,
+                    BranchId = 2
+                };
+                dbContext.Set<NumberingTestEntity>().Add(task1);
+                dbContext.Set<NumberingTestEntity>().Add(task2);
                 dbContext.SaveChanges();
-            });
 
-            //Assert
-            provider.RunScoped<IDbContext>(dbContext =>
-            {
-                var task = dbContext.Set<TestTask>().FirstOrDefault(t => t.Number == "Task-Number");
-                task.ShouldNotBeNull();
+                task1.Number.ShouldBe("Prefix-100");
+                task1.NumberBasedOnBranchId.ShouldBe("10");
+                task1.NumberBasedOnBranchIdDateTime.ShouldBe("1");
+                task1.NumberBasedOnBranchIdCreatedDateTime.ShouldBe("1");
+
+                task2.Number.ShouldBe("Prefix-105");
+                task2.NumberBasedOnBranchId.ShouldBe("10");
+                task2.NumberBasedOnBranchIdDateTime.ShouldBe("1");
+                task2.NumberBasedOnBranchIdCreatedDateTime.ShouldBe("1");
+
+                dbContext.Set<NumberedEntity>().Any(_ => _.EntityName == $"{typeof(NumberingTestEntity).FullName}")
+                    .ShouldBeTrue();
+                dbContext.Set<NumberedEntity>()
+                    .Any(_ => _.EntityName == $"{typeof(NumberingTestEntity).FullName}_BranchId_1")
+                    .ShouldBeTrue();
+                dbContext.Set<NumberedEntity>()
+                    .Any(_ => _.EntityName == $"{typeof(NumberingTestEntity).FullName}_BranchId_2")
+                    .ShouldBeTrue();
+                dbContext.Set<NumberedEntity>()
+                    .Any(_ => _.EntityName == $"{typeof(NumberingTestEntity).FullName}_BranchId_1_DateTime_20210101")
+                    .ShouldBeTrue();
+                dbContext.Set<NumberedEntity>()
+                    .Any(_ => _.EntityName == $"{typeof(NumberingTestEntity).FullName}_BranchId_2_DateTime_20210101")
+                    .ShouldBeTrue();
+                dbContext.Set<NumberedEntity>()
+                    .Any(_ => _.EntityName ==
+                              $"{typeof(NumberingTestEntity).FullName}_BranchId_1_CreatedDateTime_20210101")
+                    .ShouldBeTrue();
+                dbContext.Set<NumberedEntity>()
+                    .Any(_ => _.EntityName ==
+                              $"{typeof(NumberingTestEntity).FullName}_BranchId_2_CreatedDateTime_20210101")
+                    .ShouldBeTrue();
+                dbContext.Set<NumberedEntity>()
+                    .Any(_ => _.EntityName ==
+                              $"{typeof(NumberingTestEntity).FullName}_BranchId_1_CreatedDateTime_20210101" &&
+                              _.NextValue == 2)
+                    .ShouldBeTrue();
+                dbContext.Set<NumberedEntity>()
+                    .Any(_ => _.EntityName ==
+                              $"{typeof(NumberingTestEntity).FullName}_BranchId_2_CreatedDateTime_20210101" &&
+                              _.NextValue == 2)
+                    .ShouldBeTrue();
+                transaction.Commit();
             });
         }
 
@@ -71,48 +190,91 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
             Should_Fill_Numbers_Without_Gap_When_Concurrent_Transactions_Want_Insert_Instance_Of_INumberedEntity()
         {
             //Arrange
-            var provider = BuildServiceProvider();
+            var dateTime = new DateTime(2021, 1, 1);
+            var provider = BuildServiceProvider(dateTime);
 
             //Act
             ExecuteInParallel(delegate
             {
                 provider.RunScoped<IDbContext>(dbContext =>
                 {
-                    using (var transaction = dbContext.BeginTransaction())
-                    {
-                        var task = new TestTask();
-                        dbContext.Set<TestTask>().Add(task);
-                        dbContext.SaveChanges();
+                    using var transaction = dbContext.BeginTransaction();
+                    var task = new NumberingTestEntity {DateTime = dateTime};
+                    dbContext.Set<NumberingTestEntity>().Add(task);
+                    dbContext.SaveChanges();
 
-                        transaction.Commit();
-                    }
+                    transaction.Commit();
                 });
             });
 
             //Assert
             provider.RunScoped<IDbContext>(dbContext =>
             {
-                var tasks = dbContext.Set<TestTask>().OrderBy(a => a.Id).ToList();
+                var tasks = dbContext.Set<NumberingTestEntity>().OrderBy(a => a.Id).ToList();
                 tasks.Count.ShouldBe(10);
-                tasks[0].Number.ShouldBe("Task-100");
-                tasks[5].Number.ShouldBe("Task-125");
-                tasks[9].Number.ShouldBe("Task-145");
+                tasks[0].Number.ShouldBe("Prefix-100");
+                tasks[5].Number.ShouldBe("Prefix-125");
+                tasks[9].Number.ShouldBe("Prefix-145");
             });
         }
 
-        private static ServiceProvider BuildServiceProvider()
+        private static ServiceProvider BuildServiceProvider(DateTime now, long tenantId = 1)
         {
             var services = new ServiceCollection();
+
+            var clock = new Mock<ISystemClock>();
+            clock.SetupGet(c => c.Now).Returns(now);
+            services.AddSingleton(_ => clock.Object);
+
+            var tenantSession = new Mock<ITenantSession>();
+            tenantSession.SetupGet(session => session.TenantId)
+                .Returns(tenantId.ToString(CultureInfo.InvariantCulture));
+            services.AddScoped(_ => tenantSession.Object);
+
+            var userSession = new Mock<IUserSession>();
+            userSession.SetupGet(session => session.UserId).Returns("1");
+            userSession.SetupGet(session => session.UserIP).Returns("127.0.0.1");
+            userSession.SetupGet(session => session.UserBrowserName).Returns("Numbering Test-Engine");
+            services.AddScoped(_ => userSession.Object);
+
             services.AddEFCore<NumberingDbContext>()
+                .WithTenancyHook<long>()
+                .WithTrackingHook<long>()
                 .WithNumberingHook(options =>
                 {
-                    options[typeof(TestTask)] = new[]
+                    options[typeof(NumberingTestEntity)] = new[]
                     {
                         new NumberedEntityOption
                         {
-                            Prefix = "Task-",
+                            FieldName = nameof(NumberingTestEntity.Number),
+                            Prefix = "Prefix-",
                             Start = 100,
                             IncrementBy = 5
+                        },
+                        new NumberedEntityOption
+                        {
+                            FieldName = nameof(NumberingTestEntity.NumberBasedOnBranchId),
+                            Start = 10,
+                            IncrementBy = 10,
+                            Fields = new[] {nameof(NumberingTestEntity.BranchId)}
+                        },
+                        new NumberedEntityOption
+                        {
+                            FieldName = nameof(NumberingTestEntity.NumberBasedOnBranchIdDateTime),
+                            Fields = new[]
+                            {
+                                nameof(NumberingTestEntity.BranchId),
+                                nameof(NumberingTestEntity.DateTime)
+                            }
+                        },
+                        new NumberedEntityOption
+                        {
+                            FieldName = nameof(NumberingTestEntity.NumberBasedOnBranchIdCreatedDateTime),
+                            Fields = new[]
+                            {
+                                nameof(NumberingTestEntity.BranchId),
+                                EFCoreShadow.CreatedDateTime
+                            }
                         }
                     };
                 });

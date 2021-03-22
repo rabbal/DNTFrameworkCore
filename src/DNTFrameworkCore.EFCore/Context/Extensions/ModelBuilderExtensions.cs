@@ -10,7 +10,7 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 {
     public static class ModelBuilderExtensions
     {
-        public static void NormalizeDecimalPrecision(this ModelBuilder builder, int precision = 20, int scale = 6)
+        public static void NormalizeDecimal(this ModelBuilder builder, int precision = 20, int scale = 6)
         {
             var propertyList = builder.Model.GetEntityTypes().SelectMany(t => t.GetProperties())
                 .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?))
@@ -18,7 +18,8 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 
             foreach (var property in propertyList)
             {
-                property.SetColumnType($"decimal({precision}, {scale})");
+                property.SetPrecision(precision);
+                property.SetScale(scale);
             }
         }
 

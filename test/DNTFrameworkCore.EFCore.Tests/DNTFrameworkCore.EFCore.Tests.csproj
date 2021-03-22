@@ -21,4 +21,16 @@
       <ProjectReference Include="..\..\src\DNTFrameworkCore.EFCore\DNTFrameworkCore.EFCore.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Context\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Context\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Context\**" />
+    </ItemGroup>
+
 </Project>

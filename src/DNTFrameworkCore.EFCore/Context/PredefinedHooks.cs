@@ -54,6 +54,7 @@ namespace DNTFrameworkCore.EFCore.Context
         }
 
         public override string Name => HookNames.CreationTracking;
+        public override int Order => int.MinValue;
 
         protected override void Hook(ICreationTracking entity, HookEntityMetadata metadata, IDbContext dbContext)
         {
@@ -77,7 +78,7 @@ namespace DNTFrameworkCore.EFCore.Context
         }
 
         public override string Name => HookNames.ModificationTracking;
-
+        public override int Order => int.MinValue;
         protected override void Hook(IModificationTracking entity, HookEntityMetadata metadata, IDbContext dbContext)
         {
             metadata.Entry.Property(EFCoreShadow.ModifiedDateTime).CurrentValue = _clock.Now;
