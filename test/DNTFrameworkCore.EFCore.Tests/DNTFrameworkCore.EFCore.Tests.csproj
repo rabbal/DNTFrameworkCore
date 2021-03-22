@@ -22,15 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Context\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Remove="Context\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Context\**" />
+      <Folder Include="Context\Hooks" />
     </ItemGroup>
 
 </Project>
