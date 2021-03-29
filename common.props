@@ -1,11 +1,11 @@
 <Project>
     <PropertyGroup>
-        <VersionPrefix>5.1.2</VersionPrefix>
+        <VersionPrefix>5.1.3</VersionPrefix>
         <Authors>Salar Rabbal</Authors>
         <TargetFramework>net5.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
-        <PackageIconUrl>icon.png</PackageIconUrl>
+        <PackageIconUrl>https://github.com/rabbal/DNTFrameworkCore/blob/72a6075168eefdd05d4882ff755bd611e03ff963/nupkg.png</PackageIconUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
