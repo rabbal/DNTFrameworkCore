@@ -5,6 +5,7 @@
         <TargetFramework>net5.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
+        <PackageIconUrl>icon.png</PackageIconUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
@@ -14,6 +15,7 @@
         <PlatformTarget>anycpu</PlatformTarget>
     </PropertyGroup>
     <ItemGroup>
+        
         <Content Include="README.md">
             <Pack>true</Pack>
             <PackagePath>README.md</PackagePath>
