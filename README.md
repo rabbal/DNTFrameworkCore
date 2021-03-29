@@ -1,7 +1,6 @@
-# DNTFrameworkCore 
 <img src="logo.png" height="64"/>
 
----
+
 [![.NET](https://github.com/rabbal/DNTFrameworkCore/actions/workflows/dotnet.yml/badge.svg)](https://github.com/rabbal/DNTFrameworkCore/actions/workflows/dotnet.yml)
 ![Nuget](https://img.shields.io/nuget/v/DNTFrameworkCore)
 [![build aspnet-core-api template](https://github.com/rabbal/DNTFrameworkCore/actions/workflows/aspnet-core-api-template.yml/badge.svg)](https://github.com/rabbal/DNTFrameworkCore/actions/workflows/aspnet-core-api-template.yml)
