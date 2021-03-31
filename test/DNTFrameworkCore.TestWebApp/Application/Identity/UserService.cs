@@ -41,7 +41,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
         public override Task<IPagedResult<UserReadModel>> FetchPagedListAsync(FilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
-            request.SortingIfNullOrEmpty("Id DESC");
+            request.SortingIfEmpty("Id DESC");
             return EntitySet.AsNoTracking()
                 .Select(u => new UserReadModel
                 {

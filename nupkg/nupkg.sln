@@ -5,21 +5,21 @@ VisualStudioVersion = 16.6.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{721527BF-943C-4B7B-94EB-E21251A2B646}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore", "src\DNTFrameworkCore\DNTFrameworkCore.csproj", "{FA2B8909-1794-44E5-817B-B46E93070FA8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore", "..\src\DNTFrameworkCore\DNTFrameworkCore.csproj", "{FA2B8909-1794-44E5-817B-B46E93070FA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.EFCore", "src\DNTFrameworkCore.EFCore\DNTFrameworkCore.EFCore.csproj", "{D76CF357-4559-43B1-8B5D-0E327EAA0407}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.EFCore", "..\src\DNTFrameworkCore.EFCore\DNTFrameworkCore.EFCore.csproj", "{D76CF357-4559-43B1-8B5D-0E327EAA0407}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.EFCore.SqlServer", "src\DNTFrameworkCore.EFCore.SqlServer\DNTFrameworkCore.EFCore.SqlServer.csproj", "{D2F163AF-2A4B-453C-AD8F-239C98FF17AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.EFCore.SqlServer", "..\src\DNTFrameworkCore.EFCore.SqlServer\DNTFrameworkCore.EFCore.SqlServer.csproj", "{D2F163AF-2A4B-453C-AD8F-239C98FF17AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.FluentValidation", "src\DNTFrameworkCore.FluentValidation\DNTFrameworkCore.FluentValidation.csproj", "{ED13D5D8-7D72-4542-8C1A-141B4ADD08AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.FluentValidation", "..\src\DNTFrameworkCore.FluentValidation\DNTFrameworkCore.FluentValidation.csproj", "{ED13D5D8-7D72-4542-8C1A-141B4ADD08AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Licensing", "src\DNTFrameworkCore.Licensing\DNTFrameworkCore.Licensing.csproj", "{01979AC7-5289-4834-8EC5-35AC05EA3AFD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Licensing", "..\src\DNTFrameworkCore.Licensing\DNTFrameworkCore.Licensing.csproj", "{01979AC7-5289-4834-8EC5-35AC05EA3AFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Web", "src\DNTFrameworkCore.Web\DNTFrameworkCore.Web.csproj", "{8AB70223-BE5C-46FF-832E-9D940889ABFE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Web", "..\src\DNTFrameworkCore.Web\DNTFrameworkCore.Web.csproj", "{8AB70223-BE5C-46FF-832E-9D940889ABFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Web.EFCore", "src\DNTFrameworkCore.Web.EFCore\DNTFrameworkCore.Web.EFCore.csproj", "{CAD3F34E-A367-492C-9084-6C89D0F1B378}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Web.EFCore", "..\src\DNTFrameworkCore.Web.EFCore\DNTFrameworkCore.Web.EFCore.csproj", "{CAD3F34E-A367-492C-9084-6C89D0F1B378}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Web.Tenancy", "src\DNTFrameworkCore.Web.Tenancy\DNTFrameworkCore.Web.Tenancy.csproj", "{9B6965CB-BFC8-428D-B26B-9D19404833E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNTFrameworkCore.Web.Tenancy", "..\src\DNTFrameworkCore.Web.Tenancy\DNTFrameworkCore.Web.Tenancy.csproj", "{9B6965CB-BFC8-428D-B26B-9D19404833E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

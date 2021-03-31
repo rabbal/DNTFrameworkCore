@@ -6,11 +6,6 @@ test/DNTFrameworkCore.TestAPI/Logs
 !test/DNTFrameworkCore.TestWebApp/wwwroot/lib/
 test/DNTFrameworkCore.TestWebApp/wwwroot/lib/*
 
-# Nuget packages
-nupkg/
-nupkg/*.nupkg
-nupkg/push.bat
-
 # User-specific files
 *.suo
 *.user

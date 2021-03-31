@@ -1,4 +1,4 @@
-<img src="logo.png" height="64"/>
+<img src="docs/logo.png" height="64"/>
 
 
 [![.NET](https://github.com/rabbal/DNTFrameworkCore/actions/workflows/dotnet.yml/badge.svg)](https://github.com/rabbal/DNTFrameworkCore/actions/workflows/dotnet.yml)

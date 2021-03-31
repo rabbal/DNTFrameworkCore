@@ -12,15 +12,15 @@ namespace DNTFrameworkCore.EFCore.Querying
         public static Task<IPagedResult<T>> ToPagedListAsync<T>(this IQueryable<T> query, IPagedRequest request,
             CancellationToken cancellationToken = default)
         {
-            return query.ToPagedListAsync(request.Page, request.PageSize, request.ParsedSorting, null,
+            return query.ToPagedListAsync(request.Page, request.PageSize, request.GetSortExpressions(), null,
                 cancellationToken);
         }
 
         public static Task<IPagedResult<T>> ToPagedListAsync<T>(this IQueryable<T> query, IFilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
-            return query.ToPagedListAsync(request.Page, request.PageSize, request.ParsedSorting,
-                request.ParsedFiltering, cancellationToken);
+            return query.ToPagedListAsync(request.Page, request.PageSize, request.GetSortExpressions(),
+                request.GetFilterExpressions(), cancellationToken);
         }
 
         public static async Task<IPagedResult<T>> ToPagedListAsync<T>(this IQueryable<T> query,

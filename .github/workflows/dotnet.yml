@@ -16,10 +16,10 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore nupkg.sln
     - name: Build
-      run: dotnet build nupkg.sln --no-restore --configuration Release
+      run: dotnet build nupkg/nupkg.sln --no-restore --configuration Release
     #- name: Test
      # run: dotnet test --no-build --verbosity normal
     - name: Pack
-      run: dotnet pack nupkg.sln -o nupkg --configuration Release
+      run: dotnet pack nupkg/nupkg.sln -o temp_nupkg --configuration Release
     - name: Push Packages
-      run: dotnet nuget push ./nupkg/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push ./temp_nupkg/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json

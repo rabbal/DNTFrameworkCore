@@ -35,7 +35,7 @@ namespace DNTFrameworkCore.TestAPI.Application.Tasks
         public override Task<IPagedResult<TaskReadModel>> FetchPagedListAsync(TaskFilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
-            request.SortingIfNullOrEmpty("Id DESC");
+            request.SortingIfEmpty("Id DESC");
             return EntitySet.AsNoTracking()
                 .WhereIf(request.State.HasValue, t => t.State == request.State)
                 .Select(t => new TaskReadModel

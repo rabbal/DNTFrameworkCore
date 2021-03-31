@@ -41,7 +41,7 @@ namespace DNTFrameworkCore.TestWebApp.Application.Identity
         public override Task<IPagedResult<RoleReadModel>> FetchPagedListAsync(RoleFilteredPagedRequest request,
             CancellationToken cancellationToken = default)
         {
-            request.SortingIfNullOrEmpty("Id DESC");
+            request.SortingIfEmpty("Id DESC");
             return EntitySet.AsNoTracking()
                 .WhereIf(request.Permissions != null && request.Permissions.Any(),
                     r => r.Permissions.Any(p => request.Permissions.Contains(p.Name)))

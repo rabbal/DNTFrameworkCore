@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DNTFrameworkCore.GuardToolkit;
 
 namespace DNTFrameworkCore.Querying
 {
@@ -10,17 +11,18 @@ namespace DNTFrameworkCore.Querying
         int Page { get; set; }
         int PageSize { get; set; }
         string Sorting { get; set; }
-        IReadOnlyList<SortExpression> ParsedSorting { get; }
+        IEnumerable<SortExpression> GetSortExpressions();
+        void SetSortExpressions(IEnumerable<SortExpression> expressions);
     }
 
     public class PagedRequest : IPagedRequest
     {
         private const string EscapedCommaPattern = @"(?<!($|[^\\])(\\\\)*?\\),";
 
-        private static readonly Regex _regex = new Regex(EscapedCommaPattern,
+        private static readonly Regex _regex = new(EscapedCommaPattern,
             RegexOptions.Compiled | RegexOptions.IgnoreCase, TimeSpan.FromSeconds(2));
 
-        private List<SortExpression> _parsedSorting = new List<SortExpression>();
+        private List<SortExpression> _expressions = new();
         private string _sorting;
 
         public int Page { get; set; } = 1;
@@ -35,11 +37,17 @@ namespace DNTFrameworkCore.Querying
 
                 if (string.IsNullOrEmpty(value)) return;
 
-                _parsedSorting = ParseSorting(_sorting);
+                _expressions = ParseSorting(_sorting);
             }
         }
 
-        public IReadOnlyList<SortExpression> ParsedSorting => _parsedSorting.AsReadOnly();
+        public IEnumerable<SortExpression> GetSortExpressions() => _expressions;
+
+        public void SetSortExpressions(IEnumerable<SortExpression> expressions)
+        {
+            //TODO: maybe use add-range method
+            _expressions = expressions?.ToList() ?? throw new ArgumentNullException(nameof(expressions));
+        }
 
         protected virtual List<SortExpression> ParseSorting(string sorting)
         {
@@ -47,9 +55,11 @@ namespace DNTFrameworkCore.Querying
                 .Select(SortExpression.FromString).ToList();
         }
 
-        public void SortingIfNullOrEmpty(string sorting)
+        public void SortingIfEmpty(string sorting)
         {
+            Ensure.IsNotNullOrEmpty(sorting, nameof(sorting));
             if (!string.IsNullOrEmpty(Sorting)) return;
+
             Sorting = sorting;
         }
     }
