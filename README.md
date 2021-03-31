@@ -8,8 +8,8 @@
 ### What is DNTFrameworkCore?
 
 `DNTFrameworkCore` is a Lightweight and 
-Extensible Infrastructure for Building High Quality Web Applications Based on ASP.NET Core and has the following goals:
-* Common structures in various applications like Cross-Cutting Concerns and etc
+Extensible Infrastructure for Building High-Quality Web Applications Based on ASP.NET Core and has the following goals:
+* Common structures in various applications like Cross-Cutting Concerns, etc
 * Follow DRY principle to focus on main business logic
 * Reduce the development time
 * Less bug and stop bug propagation 
@@ -145,11 +145,11 @@ OR
 
 ```dotnet new dntcore-api```
 
-Now you have a solution like below that contains complete identity management feature include user,role and dynamic permission management and also integrated with persistent JWT authentication machanism:
+Now you have a solution like below that contains complete identity management feature includes user, role, and dynamic permission management and also integrated with persistent JWT authentication mechanism:
 
 ![Solution Structure](https://github.com/rabbal/DNTFrameworkCore/blob/master/docs/dnt-solution.jpg)
 
-For more info about templates you can watch [DNTFrameworkCoreTemplate repository](https://github.com/rabbal/DNTFrameworkCoreTemplate)
+For more info about templates, you can watch [DNTFrameworkCoreTemplate repository](https://github.com/rabbal/DNTFrameworkCoreTemplate)
 
 ## Features
 
@@ -242,7 +242,7 @@ public class TaskModel : MasterModel<int>, IValidatableObject
 }
 ```
 
-Note: Based on validation infrastructure, you can validate Model/DTO with various approach, using by DataAnnotation ValidateAttribute, Implementing IValidatableObject or Implement IModelValidator<T> that exist in DNTFrameworkCore package.
+Note: Based on validation infrastructure, you can validate Model/DTO with various approaches, using by DataAnnotation ValidateAttribute, Implementing IValidatableObject, or Implement IModelValidator<T> that exist in DNTFrameworkCore package.
 
 ```c#
 public class TaskValidator : ModelValidator<TaskModel>
@@ -257,7 +257,7 @@ public class TaskValidator : ModelValidator<TaskModel>
 }
 ```
 
-Also in most cases, one Model/DTO can be enough for your requirements about Create/Edit/View an entity. However you can create ReadModel like below:
+Also in most cases, one Model/DTO can be enough for your requirements about Create/Edit/View an entity. However, you can create ReadModel like below:
 ```c#
 public class TaskReadModel : ReadModel<int>
 {
