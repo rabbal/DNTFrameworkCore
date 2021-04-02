@@ -3,8 +3,8 @@ name: build aspnet-core-api template
 on:
   workflow_dispatch:
   push:
-    paths:
-    - 'templates/aspnet-core-api/**'
+    tags:        
+      - v*
 jobs:
   build:
     runs-on: ubuntu-latest

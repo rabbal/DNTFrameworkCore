@@ -3,7 +3,7 @@
   "classifications": [".NET Core", "ASP.NET Core", "Web API", "EFCore"],
   "name": "ASP.NET CORE WebAPI template",
   "identity": "DNTFrameworkCore.WebAPI",
-  "shortName": "dnt-webapi",
+  "shortName": "dntcore-api",
   "tags": {
     "language": "C#"
   },
