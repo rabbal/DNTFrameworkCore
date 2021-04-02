@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using ProjectName.Application.Identity.Models;
 using ProjectName.Application.Identity.Validators;
-using ProjectName.Common.Localization;
+using ProjectName.Application.Localization;
 using ProjectName.Domain.Identity;
 using Shouldly;
 using static ProjectName.UnitTests.TestingHelper;

@@ -12,14 +12,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ProjectName.Application
 {
-    public static class ApplicationRegistry
+    public static class DependencyInjection
     {
-        private static readonly ProxyGenerator ProxyGenerator = new ProxyGenerator();
+        private static readonly ProxyGenerator ProxyGenerator = new();
 
         public static void AddApplication(this IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(ApplicationRegistry));
-            services.AddValidatorsFromAssembly(typeof(ApplicationRegistry).Assembly);
+            services.AddAutoMapper(typeof(DependencyInjection));
+            services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
             services.Scan(scan => scan
                 .FromCallingAssembly()

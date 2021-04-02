@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\common.props"/>
+  <Import Project="..\..\common.props" />
   <PropertyGroup>
     <Title>DNTFrameworkCore.Web.Tenancy</Title>
     <Description>This Library Contains Infrastructure for Tenant Resolution,Building HttpPipline Per Tenant,TenantScoped Lifetime Service Registration and etc for Building MultiTenant Web Applications based on ASP.NET Core</Description>

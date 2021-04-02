@@ -1,6 +1,6 @@
 ﻿using DNTFrameworkCore.Dependency;
 
-namespace ProjectName.Common.Localization
+namespace ProjectName.Application.Localization
 {
     public interface ITranslationService : ISingletonDependency
     {
@@ -11,7 +11,7 @@ namespace ProjectName.Common.Localization
 
     public class NullTranslationService : ITranslationService
     {
-        public static ITranslationService Instance = new NullTranslationService();
+        public static readonly ITranslationService Instance = new NullTranslationService();
         public string this[string index] => index;
         public string Translate(string key, params object[] arguments) => key;
         public string Translate(string key) => key;

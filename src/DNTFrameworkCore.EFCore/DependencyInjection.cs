@@ -15,7 +15,7 @@ namespace DNTFrameworkCore.EFCore
     /// <summary>
     ///     Nice method to create the EFCore builder
     /// </summary>
-    public static class ServiceCollectionExtensions
+    public static class DependencyInjection
     {
         /// <summary>
         ///     Add the services (application specific tenant class)

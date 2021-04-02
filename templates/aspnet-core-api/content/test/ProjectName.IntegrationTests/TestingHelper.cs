@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ProjectName.Application;
-using ProjectName.Common.Localization;
+using ProjectName.Application.Localization;
 using ProjectName.Infrastructure.Context;
 using ProjectName.IntegrationTests.Stubs;
 

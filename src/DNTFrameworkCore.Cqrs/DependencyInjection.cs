@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.Cqrs
 {
-    public static class ServiceCollectionExtensions
+    public static class DependencyInjection
     {
         public static IServiceCollection AddCqrs(this IServiceCollection services)
         {

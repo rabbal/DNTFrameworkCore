@@ -9,7 +9,7 @@ using ProjectName.Infrastructure.Context;
 
 namespace ProjectName.Infrastructure
 {
-    public static class InfrastructureRegistry
+    public static class DependencyInjection
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {

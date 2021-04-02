@@ -4,7 +4,7 @@ using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.FluentValidation;
 using FluentValidation;
 using ProjectName.Application.Identity.Models;
-using ProjectName.Common.Localization;
+using ProjectName.Application.Localization;
 using ProjectName.Domain.Identity;
 
 namespace ProjectName.Application.Identity.Validators

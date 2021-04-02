@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Globalization;
-using System.Reflection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using ProjectName.Common.Localization;
+using ProjectName.Application.Localization;
 using ProjectName.Resources.Resources;
 
-namespace ProjectName.Resources.Localization
+namespace ProjectName.API.Localization
 {
     /// <summary>
-    /// TODO: Provide mechanism to support multiple resource file
+    /// TODO: Provide a mechanism to support multiple resource file
     /// </summary>
     internal sealed class TranslationService : ITranslationService
     {

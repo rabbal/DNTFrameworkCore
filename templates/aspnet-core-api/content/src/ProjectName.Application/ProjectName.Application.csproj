@@ -5,8 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DNTFrameworkCore.EFCore" Version="5.1.2" />
-        <PackageReference Include="DNTFrameworkCore.FluentValidation" Version="5.1.2" />
+        <PackageReference Include="DNTFrameworkCore.EFCore" Version="5.1.6" />
+        <PackageReference Include="DNTFrameworkCore.FluentValidation" Version="5.1.6" />
         <PackageReference Include="Scrutor" Version="3.3.0" />
         <PackageReference Include="AutoMapper" Version="10.1.1" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
@@ -15,7 +15,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\ProjectName.Domain\ProjectName.Domain.csproj" />
-        <ProjectReference Include="..\ProjectName.Resources\ProjectName.Resources.csproj" />
     </ItemGroup>
 
     <ItemGroup>

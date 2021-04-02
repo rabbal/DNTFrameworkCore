@@ -25,13 +25,13 @@ namespace ProjectName.API.Authentication
     {
         private readonly IDbContext _dbContext;
         private readonly IOptionsSnapshot<TokenOptions> _options;
-        private readonly IClock _clock;
+        private readonly ISystemClock _clock;
         private readonly ISecurityService _security;
         private readonly DbSet<UserToken> _tokens;
 
         public TokenService(IDbContext dbContext,
             IOptionsSnapshot<TokenOptions> options,
-            IClock clock,
+            ISystemClock clock,
             ISecurityService security)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));

@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -15,20 +16,28 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProjectName.API.Authentication;
+using ProjectName.API.Localization;
 using ProjectName.Infrastructure.Context;
+using ProjectName.Resources.Resources;
+using ITranslationService = ProjectName.Application.Localization.ITranslationService;
 
 namespace ProjectName.API
 {
-    public static class Registry
+    public static class DependencyInjection
     {
         public static void AddWebApp(this IServiceCollection services)
         {
             AddInternalServices(services);
 
+            services.AddLocalization(options => { options.ResourcesPath = "Resources"; });
+            services.AddScoped<IStringLocalizer>(provider => provider.GetRequiredService<IStringLocalizer<SharedResource>>());
+            services.AddSingleton<ITranslationService, TranslationService>();
+            
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -53,11 +62,13 @@ namespace ProjectName.API
                 })
                 .AddDataAnnotationsLocalization(o =>
                 {
+                    var location = new AssemblyName(typeof(SharedResource).GetTypeInfo().Assembly.FullName).Name;
+
                     o.DataAnnotationLocalizerProvider = (type, factory) =>
                     {
                         var localizationResource = type.GetTypeAttribute<LocalizationResourceAttribute>();
                         return localizationResource == null
-                            ? factory.Create(type)
+                            ? factory.Create(nameof(SharedResource), location)
                             : factory.Create(localizationResource.Name, localizationResource.Location);
                     };
                 })

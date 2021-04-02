@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\common.props"/>
+  <Import Project="..\..\common.props" />
   <PropertyGroup>
     <Title>DNTFrameworkCore.Web</Title>
     <Description>This Library Contains Infrastructures for Permission-based Authorization,Building CRUD API,Building CRUD Mvc Controller and etc based on ASP.NET Core</Description>

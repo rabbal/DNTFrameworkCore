@@ -4,7 +4,7 @@ using ProjectName.Resources.Resources;
 
 namespace ProjectName.Resources
 {
-    public static class LocalizationRegistry
+    public static class DependencyInjection
     {
         public static void AddTranslation(this IServiceCollection services)
         {

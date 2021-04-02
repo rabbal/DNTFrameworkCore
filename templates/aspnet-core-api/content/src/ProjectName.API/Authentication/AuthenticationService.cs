@@ -16,7 +16,7 @@ using DNTFrameworkCore.Web.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using ProjectName.Common.Localization;
+using ProjectName.Application.Localization;
 using ProjectName.Domain.Identity;
 using Claim = System.Security.Claims.Claim;
 

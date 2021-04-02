@@ -4,7 +4,7 @@ using DNTFrameworkCore.EFCore;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using ProjectName.Common.Localization;
+using ProjectName.Application.Localization;
 using ProjectName.Infrastructure.Context;
 
 namespace ProjectName.UnitTests

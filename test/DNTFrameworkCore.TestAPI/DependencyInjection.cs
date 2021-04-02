@@ -25,7 +25,7 @@ using Newtonsoft.Json.Converters;
 
 namespace DNTFrameworkCore.TestAPI
 {
-    public static class Registry
+    public static class DependencyInjection
     {
         public static void AddWebApp(this IServiceCollection services)
         {

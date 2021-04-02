@@ -5,8 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DNTFrameworkCore.Web" Version="5.1.2" />
-        <PackageReference Include="DNTFrameworkCore.Web.EFCore" Version="5.1.2" />
+        <PackageReference Include="DNTFrameworkCore.Web" Version="5.1.6" />
+        <PackageReference Include="DNTFrameworkCore.Web.EFCore" Version="5.1.6" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.4" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.1.1" />
@@ -16,6 +16,20 @@
     <ItemGroup>
         <ProjectReference Include="..\ProjectName.Application\ProjectName.Application.csproj" />
         <ProjectReference Include="..\ProjectName.Infrastructure\ProjectName.Infrastructure.csproj" />
-        <ProjectReference Include="..\ProjectName.Resources\ProjectName.Resources.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\MessagesResource.en-us.resx">
+        <DependentUpon>MessagesResource.cs</DependentUpon>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\MessagesResource.fa-ir.resx">
+        <DependentUpon>MessagesResource.cs</DependentUpon>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\SharedResource.en-us.resx">
+        <DependentUpon>SharedResource.cs</DependentUpon>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\SharedResource.fa-ir.resx">
+        <DependentUpon>SharedResource.cs</DependentUpon>
+      </EmbeddedResource>
     </ItemGroup>
 </Project>

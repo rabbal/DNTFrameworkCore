@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore
 {
-    public static class ServiceCollectionExtensions
+    public static class DependencyInjection
     {
         // ReSharper disable once InconsistentNaming
         public static FrameworkBuilder AddFramework(this IServiceCollection services)

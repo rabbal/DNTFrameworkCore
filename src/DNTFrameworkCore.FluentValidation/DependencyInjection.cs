@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.FluentValidation
 {
-    public static class Extensions
+    public static class DependencyInjection
     {
         public static FrameworkBuilder WithFluentValidation(this FrameworkBuilder builder)
         {

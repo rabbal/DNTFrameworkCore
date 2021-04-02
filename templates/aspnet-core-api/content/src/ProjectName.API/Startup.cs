@@ -1,4 +1,5 @@
-﻿using DNTFrameworkCore;
+﻿using System.Globalization;
+using DNTFrameworkCore;
 using DNTFrameworkCore.Exceptions;
 using DNTFrameworkCore.FluentValidation;
 using DNTFrameworkCore.Web;
@@ -6,6 +7,7 @@ using DNTFrameworkCore.Web.ExceptionHandling;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,7 +33,7 @@ namespace ProjectName.API
         {
             services.Configure<ProjectOptions>(_configuration.Bind);
             services.Configure<ExceptionOptions>(_configuration.GetSection("Exception"));
-
+            
             services.AddFramework()
                 .WithModelValidation()
                 .WithFluentValidation()
@@ -66,6 +68,8 @@ namespace ProjectName.API
         {
             app.UseIf(env.IsProduction(), _ => _.UseHsts());
 
+            UseLocalization(app);
+            
             app.UseExceptionHandling((exception, result) =>
             {
                 if (exception is SecurityTokenExpiredException)
@@ -92,6 +96,25 @@ namespace ProjectName.API
                 endpoints.MapControllers();
                 endpoints.MapHub<NotificationHub>("/hubs/notification");
             });
+        }
+
+        private static void UseLocalization(IApplicationBuilder app)
+        {
+            var requestLocalizationOptions = new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(new CultureInfo("fa-IR")),
+                SupportedCultures = new[]
+                {
+                    new CultureInfo("en-US"),
+                    new CultureInfo("fa-IR")
+                },
+                SupportedUICultures = new[]
+                {
+                    new CultureInfo("en-US"),
+                    new CultureInfo("fa-IR")
+                }
+            };
+            app.UseRequestLocalization(requestLocalizationOptions);
         }
     }
 }

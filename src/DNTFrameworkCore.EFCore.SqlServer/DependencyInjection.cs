@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.EFCore.SqlServer
 {
-    public static class ServiceCollectionExtensions
+    public static class DependencyInjection
     {
         public static EFCoreBuilder WithNumberingHook(this EFCoreBuilder builder, Action<NumberingOptions> options)
         {

@@ -29,4 +29,8 @@
       <ProjectReference Include="..\ProjectName.Common\ProjectName.Common.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Localization" />
+    </ItemGroup>
+
 </Project>

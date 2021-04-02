@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DNTFrameworkCore.Web
 {
-    public static class ServiceCollectionExtensions
+    public static class DependencyInjection
     {
         public static WebFrameworkBuilder AddWebFramework(this IServiceCollection services)
         {

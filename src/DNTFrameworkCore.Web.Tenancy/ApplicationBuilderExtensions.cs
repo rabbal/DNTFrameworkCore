@@ -8,7 +8,7 @@ namespace DNTFrameworkCore.Web.Tenancy
     /// <summary>
     ///     Nice method to register our middleware
     /// </summary>
-    public static class ApplicationBuilderExtensions
+    public static class DependencyInjection
     {
         /// <summary>
         ///     Use the Tenant Middleware to process the request
