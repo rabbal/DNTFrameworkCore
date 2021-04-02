@@ -14,7 +14,7 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore nupkg.sln
+      run: dotnet restore nupkg/nupkg.sln
     - name: Build
       run: dotnet build nupkg/nupkg.sln --no-restore --configuration Release
     #- name: Test
