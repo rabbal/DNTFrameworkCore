@@ -3,7 +3,7 @@
     <PropertyGroup>
         <Title>DNTFrameworkCore</Title>
         <Description>DNTFrameworkCore is a Lightweight and Extensible Infrastructure for Building Web Applications</Description>
-        <PackageTags>.NETCore;EFCore;Tenancy;Validation;Transaction;Logging</PackageTags>
+        <PackageTags>.NET;EFCore;Tenancy;Validation;Transaction;Logging</PackageTags>
         <AssemblyName>DNTFrameworkCore</AssemblyName>
         <RootNamespace>DNTFrameworkCore</RootNamespace>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

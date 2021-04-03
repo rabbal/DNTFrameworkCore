@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\..\common.props"/>
-  <PropertyGroup>
-    <Title>DNTFrameworkCore.Licensing</Title>
-    <Description>Lightweight Library for Build and Read Signed License based on SignedXml</Description>
-    <PackageTags>.NETCore;Licensing;License</PackageTags>
-    <AssemblyName>DNTFrameworkCore.Licensing</AssemblyName>
-    <RootNamespace>DNTFrameworkCore.Licensing</RootNamespace>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="System.Management" Version="5.0.0" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="5.0.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DNTFrameworkCore\DNTFrameworkCore.csproj" />
-  </ItemGroup>
+    <Import Project="..\..\common.props"/>
+    <PropertyGroup>
+        <Title>DNTFrameworkCore.Licensing</Title>
+        <Description>Lightweight Library for Build and Read Signed License based on SignedXml</Description>
+        <PackageTags>.NET;Licensing;License</PackageTags>
+        <AssemblyName>DNTFrameworkCore.Licensing</AssemblyName>
+        <RootNamespace>DNTFrameworkCore.Licensing</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Management" Version="5.0.0"/>
+        <PackageReference Include="System.Security.Cryptography.Xml" Version="5.0.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\DNTFrameworkCore\DNTFrameworkCore.csproj"/>
+    </ItemGroup>
 </Project>

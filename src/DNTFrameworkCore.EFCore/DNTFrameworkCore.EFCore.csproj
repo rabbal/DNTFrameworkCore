@@ -3,7 +3,7 @@
     <PropertyGroup>
         <Title>DNTFrameworkCore.EFCore</Title>
         <Description>This Library Contains Implementations of IEntityService,Logging and Transaction Interception based on EFCore</Description>
-        <PackageTags>.NETCore;EFCore;CRUD;Transaction;Logging</PackageTags>
+        <PackageTags>.NET;EFCore;CRUD;Transaction;Logging</PackageTags>
         <AssemblyName>DNTFrameworkCore.EFCore</AssemblyName>
         <RootNamespace>DNTFrameworkCore.EFCore</RootNamespace>
     </PropertyGroup>

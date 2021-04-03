@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Title>DNTFrameworkCore.FluentValidation</Title>
     <Description>This Library Contains Implementation of IModelValidator based on FluentValidation Library</Description>
-    <PackageTags>.NETCore;Validation;FluentValidation</PackageTags>
+    <PackageTags>.NET;Validation;FluentValidation</PackageTags>
     <AssemblyName>DNTFrameworkCore.FluentValidation</AssemblyName>
     <RootNamespace>DNTFrameworkCore.FluentValidation</RootNamespace>
   </PropertyGroup>

@@ -5,8 +5,7 @@ namespace DNTFrameworkCore.Extensibility
 {
     public static class ExtensionFields
     {
-        private static readonly ConditionalWeakTable<object, Dictionary<string, object>> _fields =
-            new ConditionalWeakTable<object, Dictionary<string, object>>();
+        private static readonly ConditionalWeakTable<object, Dictionary<string, object>> _fields = new();
 
         public static void ExtensionField<T>(this T instance, string name, object value) where T : class
         {

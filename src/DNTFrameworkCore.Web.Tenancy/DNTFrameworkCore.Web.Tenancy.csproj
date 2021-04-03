@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Title>DNTFrameworkCore.Web.Tenancy</Title>
     <Description>This Library Contains Infrastructure for Tenant Resolution,Building HttpPipline Per Tenant,TenantScoped Lifetime Service Registration and etc for Building MultiTenant Web Applications based on ASP.NET Core</Description>
-    <PackageTags>.NETCore;Tenancy;ASP.NET Core</PackageTags>
+    <PackageTags>.NET;Tenancy;ASP.NET Core</PackageTags>
     <AssemblyName>DNTFrameworkCore.Web.Tenancy</AssemblyName>
     <RootNamespace>DNTFrameworkCore.Web.Tenancy</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

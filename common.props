@@ -5,7 +5,7 @@
         <TargetFramework>net5.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
-        <PackageIconUrl>https://raw.githubusercontent.com/rabbal/DNTFrameworkCore/master/nupkg/nupkg.png</PackageIconUrl>
+        <PackageIcon>nupkg.png</PackageIcon>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
@@ -14,6 +14,9 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <PlatformTarget>anycpu</PlatformTarget>
     </PropertyGroup>
+    <ItemGroup>
+        <None Include="..\..\nupkg\nupkg.png" Pack="true" PackagePath=""/>
+    </ItemGroup>
     <ItemGroup>
         
         <Content Include="README.md">

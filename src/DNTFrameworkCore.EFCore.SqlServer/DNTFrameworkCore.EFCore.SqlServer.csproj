@@ -3,7 +3,7 @@
     <PropertyGroup>
         <Title>DNTFrameworkCore.EFCore.SqlServer</Title>
         <Description>This Library Contains Infrastructures Like Resource Locking or Numbering that They are Related to EFCore and SqlServer</Description>
-        <PackageTags>.NETCore;EFCore;SqlServer;Numbering</PackageTags>
+        <PackageTags>.NET;EFCore;SqlServer;Numbering</PackageTags>
         <AssemblyName>DNTFrameworkCore.EFCore.SqlServer</AssemblyName>
         <RootNamespace>DNTFrameworkCore.EFCore.SqlServer</RootNamespace>
     </PropertyGroup>

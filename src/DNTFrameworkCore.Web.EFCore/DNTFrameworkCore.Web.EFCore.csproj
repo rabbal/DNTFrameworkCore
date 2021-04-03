@@ -3,14 +3,14 @@
     <PropertyGroup>
         <Title>DNTFrameworkCore.Web.EFCore</Title>
         <Description>This Library Contains Infrastructures that Related to ASP.NET Core and EFCore</Description>
-        <PackageTags>.NETCore;ASP.NET Core;EFCore</PackageTags>
+        <PackageTags>.NET;ASP.NET Core;EFCore</PackageTags>
         <AssemblyName>DNTFrameworkCore.Web.EFCore</AssemblyName>
         <RootNamespace>DNTFrameworkCore.Web.EFCore</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\DNTFrameworkCore.EFCore\DNTFrameworkCore.EFCore.csproj" />
+        <ProjectReference Include="..\DNTFrameworkCore.EFCore\DNTFrameworkCore.EFCore.csproj"/>
     </ItemGroup>
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
 </Project>

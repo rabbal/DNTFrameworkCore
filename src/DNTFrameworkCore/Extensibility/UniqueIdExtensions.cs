@@ -6,8 +6,7 @@ namespace DNTFrameworkCore.Extensibility
 {
     public static class UniqueIdExtensions<T> where T : class
     {
-        private static readonly ConditionalWeakTable<T, string> _ids =
-            new ConditionalWeakTable<T, string>();
+        private static readonly ConditionalWeakTable<T, string> _ids = new();
 
         // A static field is shared across all instances of the `same` type or T here.
         // This behavior is useful to produce unique auto increment Id's per each different object reference.

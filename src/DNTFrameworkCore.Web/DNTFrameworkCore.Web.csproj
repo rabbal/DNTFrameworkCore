@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Title>DNTFrameworkCore.Web</Title>
     <Description>This Library Contains Infrastructures for Permission-based Authorization,Building CRUD API,Building CRUD Mvc Controller and etc based on ASP.NET Core</Description>
-    <PackageTags>.NETCore;ASP.NET Core;API;MVC;CRUD</PackageTags>
+    <PackageTags>.NET;ASP.NET Core;API;MVC;CRUD</PackageTags>
     <AssemblyName>DNTFrameworkCore.Web</AssemblyName>
     <RootNamespace>DNTFrameworkCore.Web</RootNamespace>
   </PropertyGroup>

@@ -7,8 +7,7 @@ namespace DNTFrameworkCore.Extensibility
 {
     public static class ExtensionProperties
     {
-        private static readonly ConditionalWeakTable<object, List<ExtraPropertyInfo>> _properties =
-            new ConditionalWeakTable<object, List<ExtraPropertyInfo>>();
+        private static readonly ConditionalWeakTable<object, List<ExtraPropertyInfo>> _properties = new();
 
         private sealed class ExtraPropertyInfo
         {
