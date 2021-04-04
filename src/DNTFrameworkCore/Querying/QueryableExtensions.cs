@@ -1,13 +1,18 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
+using System.Reflection;
+using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.Querying
 {
     public static class QueryableExtensions
     {
+        private static readonly ConcurrentDictionary<Type, PropertyInfo[]> _properties = new();
+
         public static IQueryable<T> Filter<T>(this IQueryable<T> query, IEnumerable<FilterExpression> filters)
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
@@ -29,8 +34,10 @@ namespace DNTFrameworkCore.Querying
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
             if (sorts == null) throw new ArgumentNullException(nameof(sorts));
-
+            
+            
             var ordering = string.Join(",", sorts);
+            if (string.IsNullOrEmpty(ordering)) ordering = GetDefaultSorting(typeof(T)).ToString();
             return query.OrderBy(ordering);
         }
 
@@ -106,5 +113,20 @@ namespace DNTFrameworkCore.Querying
             {"contains", "Contains"},
             {"doesnotcontain", "Contains"}
         };
+
+
+        private static SortExpression GetDefaultSorting(Type type)
+        {
+            var properties =
+                _properties.GetOrAdd(type, t => t.GetProperties(BindingFlags.Instance | BindingFlags.Public));
+
+            var property =
+                properties.FirstOrDefault(p => string.Equals(p.Name, "id", StringComparison.OrdinalIgnoreCase));
+            if (property == null)
+                property = properties.FirstOrDefault() ??
+                           throw new InvalidOperationException("There is not any property for sorting");
+
+            return new SortExpression(property.Name, true);
+        }
     }
 }

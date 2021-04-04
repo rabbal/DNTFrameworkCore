@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DNTFrameworkCore.Querying
 {
@@ -9,7 +8,7 @@ namespace DNTFrameworkCore.Querying
         public string Operator { get; set; }
         public object Value { get; set; }
     }
-    
+
     public class FilterExpression
     {
         public string Field { get; set; }
@@ -29,7 +28,7 @@ namespace DNTFrameworkCore.Querying
 
         private void Collect(ICollection<FilterExpression> output)
         {
-            if (Filters != null && Filters.Any())
+            if (Filters != null && Filters.Count > 0)
             {
                 foreach (var filter in Filters)
                 {
