@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <VersionPrefix>5.1.9</VersionPrefix>
+        <VersionPrefix>5.1.10</VersionPrefix>
         <Authors>Salar Rabbal</Authors>
         <TargetFramework>net5.0</TargetFramework>
         <LangVersion>latest</LangVersion>
