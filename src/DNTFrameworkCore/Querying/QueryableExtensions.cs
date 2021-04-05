@@ -6,6 +6,7 @@ using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Reflection;
 using DNTFrameworkCore.Domain;
+using DNTFrameworkCore.Extensions;
 
 namespace DNTFrameworkCore.Querying
 {
@@ -34,8 +35,7 @@ namespace DNTFrameworkCore.Querying
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
             if (sorts == null) throw new ArgumentNullException(nameof(sorts));
-            
-            
+
             var ordering = string.Join(",", sorts);
             if (string.IsNullOrEmpty(ordering)) ordering = GetDefaultSorting(typeof(T)).ToString();
             return query.OrderBy(ordering);
@@ -123,8 +123,8 @@ namespace DNTFrameworkCore.Querying
             var property =
                 properties.FirstOrDefault(p => string.Equals(p.Name, "id", StringComparison.OrdinalIgnoreCase));
             if (property == null)
-                property = properties.FirstOrDefault() ??
-                           throw new InvalidOperationException("There is not any property for sorting");
+                property = properties.FirstOrDefault(p => p.PropertyType.IsPredefinedType()) ??
+                           throw new NotSupportedException("There is not any public property of primitive type for sorting");
 
             return new SortExpression(property.Name, true);
         }
