@@ -5,8 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DNTFrameworkCore.Web" Version="5.1.9" />
-        <PackageReference Include="DNTFrameworkCore.Web.EFCore" Version="5.1.9" />
+        <PackageReference Include="DNTFrameworkCore.Web" Version="5.1.10" />
+        <PackageReference Include="DNTFrameworkCore.Web.EFCore" Version="5.1.10" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.4" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.1.1" />
