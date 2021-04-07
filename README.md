@@ -36,7 +36,6 @@ public class BlogService : EntityService<Blog, int, BlogModel>, IBlogService
     public override Task<IPagedResult<BlogModel>> FetchPagedListAsync(FilteredPagedRequest request,
         CancellationToken cancellationToken = default)
     {
-        request.SortingIfEmpty("Id DESC");
         return EntitySet.AsNoTracking()
             .Select(b => new BlogModel
             {
@@ -286,7 +285,6 @@ public class TaskService : EntityService<Task, int, TaskReadModel, TaskModel, Ta
     public override Task<IPagedResult<TaskReadModel>> FetchPagedListAsync(TaskFilteredPagedRequest request,
         CancellationToken cancellationToken = default)
     {
-        request.SortingIfEmpty("Id DESC");
         return EntitySet.AsNoTracking()
             .WhereIf(model.State.HasValue, t => t.State == model.State)
             .Select(t => new TaskReadModel
