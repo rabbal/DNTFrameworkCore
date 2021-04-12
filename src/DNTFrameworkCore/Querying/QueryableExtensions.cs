@@ -3,9 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Linq.Expressions;
 using System.Reflection;
-using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Extensions;
 
 namespace DNTFrameworkCore.Querying
@@ -38,6 +36,7 @@ namespace DNTFrameworkCore.Querying
 
             var ordering = string.Join(",", sorts);
             if (string.IsNullOrEmpty(ordering)) ordering = GetDefaultSorting(typeof(T)).ToString();
+
             return query.OrderBy(ordering);
         }
 
@@ -59,61 +58,6 @@ namespace DNTFrameworkCore.Querying
 
             return query.Skip(skip).Take(take);
         }
-
-        private static Expression<Func<TElement, bool>> ToLambdaExpression<TElement>(
-            this FilterExpression filterExpression)
-        {
-            var flattenList = filterExpression.ToFlatList();
-            var predicate = filterExpression.ToExpression((item) => flattenList.IndexOf(item));
-            var values = flattenList.Select(f => f.Value).ToArray();
-
-            return DynamicExpressionParser.ParseLambda<TElement, bool>(new ParsingConfig(), false, predicate, values);
-        }
-
-        /// <summary>
-        /// Converts the filter expression to a predicate suitable for Dynamic Linq e.g. "Field1 = @1 and Field2.Contains(@2)"
-        /// </summary>
-        private static string ToExpression(this FilterExpression filterExpression,
-            Func<FilterExpression, int> indexFactory)
-        {
-            if (filterExpression.Filters != null && filterExpression.Filters.Any())
-            {
-                return "(" + string.Join(" " + filterExpression.Logic + " ",
-                           filterExpression.Filters.Select(filter => filter.ToExpression(indexFactory)).ToArray()) +
-                       ")";
-            }
-
-            var index = indexFactory(filterExpression);
-
-            var comparison = _operators[filterExpression.Operator];
-
-            if (filterExpression.Operator == "doesnotcontain")
-            {
-                return $"!{filterExpression.Field}.{comparison}(@{index})";
-            }
-
-            if (comparison == "StartsWith" || comparison == "EndsWith" || comparison == "Contains")
-            {
-                return $"{filterExpression.Field}.{comparison}(@{index})";
-            }
-
-            return $"{filterExpression.Field} {comparison} @{index}";
-        }
-
-        private static readonly IDictionary<string, string> _operators = new Dictionary<string, string>
-        {
-            {"eq", "="},
-            {"neq", "!="},
-            {"lt", "<"},
-            {"lte", "<="},
-            {"gt", ">"},
-            {"gte", ">="},
-            {"startswith", "StartsWith"},
-            {"endswith", "EndsWith"},
-            {"contains", "Contains"},
-            {"doesnotcontain", "Contains"}
-        };
-
 
         private static SortExpression GetDefaultSorting(Type type)
         {

@@ -3,7 +3,7 @@
 namespace DNTFrameworkCore.Querying
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class ViewFieldAttribute : Attribute
+    public class QueryFieldAttribute : Attribute
     {
         public string Name { get; set; }
         public bool Sorting { get; set; }
