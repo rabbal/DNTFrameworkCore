@@ -8,7 +8,7 @@ using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 {
-    public class Product : AggregateRoot<long>
+    public class Product : AggregateRoot<long>, INumberedEntity
     {
         private readonly List<ProductPrice> _prices = new List<ProductPrice>();
 
@@ -22,7 +22,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
         }
 
         private ProductPrice Price => _prices.Find(p => p.IsDefault);
-        public Title Title { get; }
+        public Title Title { get; private set; }
         public IReadOnlyList<ProductPrice> Prices => _prices.AsReadOnly();
 
         public static Result<Product> New(Title title, IProductPolicy policy)
@@ -82,8 +82,6 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
             return price?.Price ?? Price.Price;
         }
 
-        public string Number { get; set; }
-        
-        
+        public string Number { get; private set; }
     }
 }

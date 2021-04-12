@@ -29,15 +29,12 @@ namespace DNTFrameworkCore.Functional
         public Result WithFailure(string memberName, string message)
         {
             if (!Failed) throw new InvalidOperationException("Can not add failure to ok result!");
-            
+
             _failures.Add(new ValidationFailure(memberName, message));
             return this;
         }
 
-        public static Result Ok()
-        {
-            return _ok;
-        }
+        public static Result Ok() => _ok;
 
         public static Result Ok(string message)
         {
@@ -86,22 +83,19 @@ namespace DNTFrameworkCore.Functional
             return Fail(message, failures);
         }
 
-
         public static Result Combine(params Result[] results)
         {
             return Combine(", ", results);
         }
-
 
         public static Result Combine<T>(params Result<T>[] results)
         {
             return Combine(", ", results);
         }
 
-
         public static Result Combine<T>(string symbol, params Result<T>[] results)
         {
-            var untyped = results.Select(result => (Result) result).ToArray();
+            var untyped = results.Select(result => (Result)result).ToArray();
             return Combine(symbol, untyped);
         }
 

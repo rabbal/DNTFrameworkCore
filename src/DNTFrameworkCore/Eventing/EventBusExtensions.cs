@@ -15,8 +15,8 @@ namespace DNTFrameworkCore.Eventing
 
         public static async Task PublishAsync(this IEventBus bus, IAggregateRoot aggregateRoot)
         {
-            await bus.TriggerAsync(aggregateRoot.Events);
-            aggregateRoot.EmptyEvents();
+            await bus.TriggerAsync(aggregateRoot.DomainEvents);
+            aggregateRoot.EmptyDomainEvents();
         }
     }
 }

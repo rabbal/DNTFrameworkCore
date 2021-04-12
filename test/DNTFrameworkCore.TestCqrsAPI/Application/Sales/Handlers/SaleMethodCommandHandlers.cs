@@ -1,22 +1,24 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Cqrs.Commands;
-using DNTFrameworkCore.Data;
 using DNTFrameworkCore.Functional;
+using DNTFrameworkCore.Persistence;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Sales;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Sales.Commands;
+using DNTFrameworkCore.TestCqrsAPI.Domain.Sales.Repositories;
 using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Application.Sales.Handlers
 {
-    public class NewSaleMethodHandler : CommandHandler<NewSaleMethod>
+    public class SaleMethodCommandHandlers : CommandHandlerBase<NewSaleMethod>
     {
-        private readonly IRepository<SaleMethod, int> _repository;
+        private readonly IUnitOfWork _uow;
+        private readonly ISaleMethodRepository _repository;
 
-        public NewSaleMethodHandler(IRepository<SaleMethod, int> repository)
+        public SaleMethodCommandHandlers(IUnitOfWork uow, ISaleMethodRepository repository)
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _uow = uow;
+            _repository = repository;
         }
 
         public override async Task<Result> Handle(NewSaleMethod command, CancellationToken cancellationToken)
@@ -28,7 +30,8 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Sales.Handlers
 
             if (saleMethod.Failed) return Fail(saleMethod.Message, saleMethod.Failures);
 
-            await _repository.InsertAsync(saleMethod.Value);
+            await _repository.AddAsync(saleMethod.Value);
+            await _uow.SaveChangesAsync(cancellationToken);
 
             return Ok();
         }
