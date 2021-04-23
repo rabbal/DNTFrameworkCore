@@ -3,7 +3,9 @@ using DNTFrameworkCore.Configuration;
 using DNTFrameworkCore.EFCore.Configuration;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Context.Hooks;
+using DNTFrameworkCore.EFCore.Persistence;
 using DNTFrameworkCore.EFCore.Transaction;
+using DNTFrameworkCore.Persistence;
 using DNTFrameworkCore.Transaction;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -79,6 +81,12 @@ namespace DNTFrameworkCore.EFCore
         public EFCoreBuilder WithDeletedEntityHook()
         {
             Services.AddTransient<IHook, PreDeleteDeletedEntityHook>();
+            return this;
+        }
+
+        public EFCoreBuilder WithUnitOfWork()
+        {
+            Services.AddScoped<IUnitOfWork, UnitOfWork>();
             return this;
         }
     }

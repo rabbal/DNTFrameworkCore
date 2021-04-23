@@ -3,10 +3,10 @@ using DNTFrameworkCore.Cqrs.Commands;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Commands
 {
-    public sealed class NewPriceType : CommandBase
+    public sealed class CreatePriceTypeCommand : CommandBase
     {
         public string Title { get; }
         [JsonConstructor]
-        public NewPriceType(string title) => Title = title;
+        public CreatePriceTypeCommand(string title) => Title = title;
     }
 }

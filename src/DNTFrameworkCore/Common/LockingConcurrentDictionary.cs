@@ -5,16 +5,21 @@ using System.Threading;
 
 namespace DNTFrameworkCore.Common
 {
-    public class ThreadSafeDictionary<TKey, TValue>
+    /// <summary>
+    /// 'GetOrAdd' call on the ConcurrentDictionary is not thread safe and we might end up creating the GetterInfo more than
+    /// once. To prevent this Lazy<> is used. In the worst case multiple Lazy<> objects are created for multiple
+    /// threads but only one of the objects succeeds in creating a GetterInfo.
+    /// </summary>
+    public class LockingConcurrentDictionary<TKey, TValue>
     {
         private readonly ConcurrentDictionary<TKey, Lazy<TValue>> _dictionary;
 
-        public ThreadSafeDictionary()
+        public LockingConcurrentDictionary()
         {
             _dictionary = new ConcurrentDictionary<TKey, Lazy<TValue>>();
         }
 
-        public ThreadSafeDictionary(IEqualityComparer<TKey> comparer)
+        public LockingConcurrentDictionary(IEqualityComparer<TKey> comparer)
         {
             _dictionary = new ConcurrentDictionary<TKey, Lazy<TValue>>(comparer);
         }

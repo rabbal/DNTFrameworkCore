@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\..\common.props" />
+    <PropertyGroup>
+        <Title>DNTFrameworkCore.Cqrs.Web</Title>
+        <Description>This Library Contains Infrastructures that Related to ASP.NET Core and CQRS</Description>
+        <PackageTags>.NET;ASP.NET Core;CQRS</PackageTags>
+        <AssemblyName>DNTFrameworkCore.Cqrs.Web</AssemblyName>
+        <RootNamespace>DNTFrameworkCore.Cqrs.Web</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\DNTFrameworkCore.Cqrs\DNTFrameworkCore.Cqrs.csproj" />
+        <ProjectReference Include="..\DNTFrameworkCore.Web\DNTFrameworkCore.Web.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+</Project>

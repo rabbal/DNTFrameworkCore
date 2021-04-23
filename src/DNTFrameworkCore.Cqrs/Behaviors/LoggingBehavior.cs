@@ -1,5 +1,4 @@
 ﻿using DNTFrameworkCore.Cqrs.Commands;
-using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.Functional;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -17,11 +16,11 @@ namespace DNTFrameworkCore.Cqrs.Behaviors
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            _logger.LogInformation("----- Handling command {CommandName} ({@Command})", request.GetGenericTypeName(), request);
+            _logger.LogInformation("----- Handling command {CommandName} ({@Command})", typeof(TRequest).Name, request);
 
             var response = await next();
 
-            _logger.LogInformation("----- Command {CommandName} handled - response: {@Response}", request.GetGenericTypeName(), response);
+            _logger.LogInformation("----- Handled command {CommandName} - response: {@Response}", typeof(TRequest).Name, response);
 
             return response;
         }

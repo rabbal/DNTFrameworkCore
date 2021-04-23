@@ -5,7 +5,7 @@ using DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Repositories;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Infrastructure.Repositories.Catalog
 {
-    public class PriceTypeRepository : RepositoryBase<Product, long>, IProductRepository
+    public class PriceTypeRepository : RepositoryBase<PriceType, long>, IPriceTypeRepository
     {
         public PriceTypeRepository(IDbContext dbContext) : base(dbContext)
         {

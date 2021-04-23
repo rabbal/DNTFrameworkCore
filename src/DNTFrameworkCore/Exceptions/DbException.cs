@@ -3,9 +3,9 @@
 namespace DNTFrameworkCore.Exceptions
 {
     [Serializable]
-    public class DbException : DNTException
+    public class DbException : Exception
     {
-        public DbException(string message, Exception innerException) 
+        public DbException(string message, Exception innerException)
         : base(message, innerException)
         {
         }

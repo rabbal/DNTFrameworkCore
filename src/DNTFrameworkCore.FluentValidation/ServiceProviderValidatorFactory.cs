@@ -9,16 +9,16 @@ namespace DNTFrameworkCore.FluentValidation
     /// </summary>
     internal class ServiceProviderValidatorFactory : ValidatorFactoryBase, ITransientDependency
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceProvider _provider;
 
-        public ServiceProviderValidatorFactory(IServiceProvider serviceProvider)
+        public ServiceProviderValidatorFactory(IServiceProvider provider)
         {
-            _serviceProvider = serviceProvider;
+            _provider = provider;
         }
 
         public override IValidator CreateInstance(Type validatorType)
         {
-            return _serviceProvider.GetService(validatorType) as IValidator;
+            return _provider.GetService(validatorType) as IValidator;
         }
     }
 }

@@ -79,7 +79,7 @@ namespace DNTFrameworkCore.Application
         {
             ArgumentNotNull(model, nameof(model));
 
-            return CreateAsync(new[] {model}, cancellationToken);
+            return CreateAsync(new[] { model }, cancellationToken);
         }
 
         [Transactional]
@@ -114,7 +114,7 @@ namespace DNTFrameworkCore.Application
         {
             ArgumentNotNull(model, nameof(model));
 
-            return EditAsync(new[] {model}, cancellationToken);
+            return EditAsync(new[] { model }, cancellationToken);
         }
 
         [Transactional]
@@ -149,17 +149,15 @@ namespace DNTFrameworkCore.Application
             return result;
         }
 
-        [Transactional]
-        [SkipValidation]
+        [Transactional, SkipValidation]
         public Task<Result> DeleteAsync(TModel model, CancellationToken cancellationToken = default)
         {
             ArgumentNotNull(model, nameof(model));
 
-            return DeleteAsync(new[] {model}, cancellationToken);
+            return DeleteAsync(new[] { model }, cancellationToken);
         }
 
-        [Transactional]
-        [SkipValidation]
+        [Transactional, SkipValidation]
         public virtual async Task<Result> DeleteAsync(IEnumerable<TModel> models,
             CancellationToken cancellationToken = default)
         {
@@ -183,8 +181,7 @@ namespace DNTFrameworkCore.Application
             return result;
         }
 
-        [Transactional]
-        [SkipValidation]
+        [Transactional, SkipValidation]
         public async Task<Result> DeleteAsync(TKey id, CancellationToken cancellationToken = default)
         {
             var model = await FindAsync(id, cancellationToken);
@@ -193,8 +190,7 @@ namespace DNTFrameworkCore.Application
             return Ok();
         }
 
-        [Transactional]
-        [SkipValidation]
+        [Transactional, SkipValidation]
         public async Task<Result> DeleteAsync(IEnumerable<TKey> ids, CancellationToken cancellationToken = default)
         {
             var models = await FindListAsync(ids, cancellationToken);

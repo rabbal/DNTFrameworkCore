@@ -20,8 +20,7 @@ namespace DNTFrameworkCore.Validation.Interception
         public ValidationInterceptor(MethodInvocationValidator validator, ILoggerFactory loggerFactory)
         {
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
-            _logger = Ensure.IsNotNull(loggerFactory, nameof(loggerFactory))
-                .CreateLogger("DNTFrameworkCore.Validation.Interception");
+            _logger = Ensure.IsNotNull(loggerFactory, nameof(loggerFactory)).CreateLogger(GetType().Namespace);
         }
 
         public void Intercept(IInvocation invocation)
@@ -43,7 +42,7 @@ namespace DNTFrameworkCore.Validation.Interception
             }
 
             _logger.LogInformation(
-                $"Starting Validation: {invocation.TargetType?.FullName}.{method.Name}");
+                "Starting Validation: {TypeName}.{MethodName}", invocation.TargetType?.FullName, method.Name);
 
             var failures = _validator.Validate(method, invocation.Arguments);
 
@@ -54,14 +53,16 @@ namespace DNTFrameworkCore.Validation.Interception
             if (!result.Failed)
             {
                 _logger.LogInformation(
-                    $"Validation Completed Successfully: {invocation.TargetType?.FullName}.{method.Name}");
+                    "Validation Completed Successfully: {TypeName}.{MethodName}", invocation.TargetType?.FullName,
+                    method.Name);
 
                 invocation.Proceed();
                 return;
             }
 
             _logger.LogInformation(
-                $"Validation Failed: {invocation.TargetType?.FullName}.{method.Name} {result.Failures.Select(f => f.ToString()).PackToString(",")}");
+                "Validation Failed: {TypeName}.{MethodName} {@Failures}", invocation.TargetType?.FullName, method.Name,
+                result.Failures);
 
             if (invocation.Method.IsAsync())
             {

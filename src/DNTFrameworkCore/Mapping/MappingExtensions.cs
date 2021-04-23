@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using DNTFrameworkCore.Application;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Exceptions;
+using DNTFrameworkCore.Reflection;
 
 namespace DNTFrameworkCore.Mapping
 {
     public static class MappingExtensions
     {
-        private static readonly Dictionary<Type, PropertyInfo[]> _properties = new Dictionary<Type, PropertyInfo[]>();
-
         public static void Map<TSource, TDestination>(IReadOnlyList<TSource> source,
             IEnumerable<TDestination> destination,
             Func<TSource, TDestination> map)
@@ -22,12 +20,8 @@ namespace DNTFrameworkCore.Mapping
                 var sourceItem = source[i++];
                 var mappedItem = map(sourceItem);
 
-                if (!_properties.TryGetValue(typeof(TDestination), out var properties))
-                {
-                    properties = typeof(TDestination).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                        .Where(p => p.CanRead && p.CanWrite).ToArray();
-                    _properties[typeof(TDestination)] = properties;
-                }
+                var properties = FastReflection.Instance.GetProperties(typeof(TDestination))
+                    .Where(p => p.CanRead && p.CanWrite);
 
                 foreach (var property in properties) property.SetValue(destinationItem, property.GetValue(mappedItem));
             }

@@ -1,18 +1,17 @@
 using System;
-using System.Collections.Generic;
-using DNTFrameworkCore.Validation;
 
 namespace DNTFrameworkCore.Exceptions
 {
     [Serializable]
-    public class BusinessRuleException : ValidationException
+    public class BusinessRuleException : Exception
     {
+        public string Details { get; }
         public BusinessRuleException(string message) : base(message)
         {
         }
-
-        public BusinessRuleException(string message, IEnumerable<ValidationFailure> failures) : base(message, failures)
+        public BusinessRuleException(string message, string details) : base(message)
         {
+            Details = details;
         }
     }
 }

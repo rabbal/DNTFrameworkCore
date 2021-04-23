@@ -36,8 +36,8 @@ namespace DNTFrameworkCore.Web.Mvc
     {
         private readonly IActionDescriptorCollectionProvider _actionProvider;
 
-        private readonly ThreadSafeDictionary<string, ICollection<ControllerMetadata>>
-            _actionsWithPolicy = new ThreadSafeDictionary<string, ICollection<ControllerMetadata>>();
+        private readonly LockingConcurrentDictionary<string, ICollection<ControllerMetadata>>
+            _actionsWithPolicy = new LockingConcurrentDictionary<string, ICollection<ControllerMetadata>>();
 
         public WebMetadataService(IActionDescriptorCollectionProvider actionProvider)
         {

@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,21 +8,20 @@ namespace DNTFrameworkCore.Cqrs.Behaviors
 {
     public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
-        private readonly ILogger _logger;
-        public PerformanceBehavior(ILoggerFactory loggerFactory)
-        {
-            _logger = loggerFactory.CreateLogger("PerformanceBehavior");
-        }
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        private readonly ILogger<PerformanceBehavior<TRequest, TResponse>> _logger;
+        public PerformanceBehavior(ILogger<PerformanceBehavior<TRequest, TResponse>> logger) => _logger = logger;
+
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+            RequestHandlerDelegate<TResponse> next)
         {
             var stopwatch = Stopwatch.StartNew();
-            
+
             var response = await next();
 
             stopwatch.Stop();
 
-            _logger.LogInformation($"{request}: {stopwatch.ElapsedMilliseconds} ms");
-            
+            _logger.LogInformation("{@Request}: {ElapsedMilliseconds} ms", request, stopwatch.ElapsedMilliseconds);
+
             return response;
         }
     }

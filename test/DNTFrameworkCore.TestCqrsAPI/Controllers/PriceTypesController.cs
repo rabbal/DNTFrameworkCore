@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class PriceTypesController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -17,8 +17,19 @@ namespace DNTFrameworkCore.TestCqrsAPI.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost, PermissionAuthorize(Permissions.PriceTypes_New)]
-        public async Task<IActionResult> Post(NewPriceType command)
+        //[HttpPost, PermissionAuthorize(Permissions.PriceTypes_Create)]
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreatePriceTypeCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            if (result.Failed) return BadRequest(result.Message);
+
+            return Ok();
+        }
+
+        [HttpPost, PermissionAuthorize(Permissions.PriceTypes_Remove)]
+        public async Task<IActionResult> Remove([FromBody] RemovePriceTypeCommand command)
         {
             var result = await _mediator.Send(command);
 

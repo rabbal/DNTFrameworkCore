@@ -77,7 +77,6 @@ namespace DNTFrameworkCore.EFCore.Persistence
             await EntitySet.AddRangeAsync(entityList, cancellationToken);
         }
 
-
         public virtual void Remove(TEntity entity)
         {
             EntitySet.Remove(entity);

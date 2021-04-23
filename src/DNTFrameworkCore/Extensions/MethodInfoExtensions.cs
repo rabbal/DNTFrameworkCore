@@ -1,6 +1,6 @@
 using System.Reflection;
 using DNTFrameworkCore.Collections;
-using DNTFrameworkCore.ReflectionToolkit;
+using DNTFrameworkCore.Reflection;
 using DNTFrameworkCore.Validation;
 
 namespace DNTFrameworkCore.Extensions

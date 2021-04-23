@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace DNTFrameworkCore.ReflectionToolkit
+namespace DNTFrameworkCore.Reflection
 {
     internal static class TypeHelper
     {

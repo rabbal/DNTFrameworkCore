@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace DNTFrameworkCore.ReflectionToolkit
+namespace DNTFrameworkCore.Reflection
 {
     public static class ReflectionHelper
     {

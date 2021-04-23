@@ -13,14 +13,14 @@ using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
 {
-    public class PriceTypeCommandHandlersBase : CommandHandlerBase<RemovePriceType>, ICommandHandler<NewPriceType>
+    public class PriceTypeCommandHandlers : CommandHandlerBase<RemovePriceTypeCommand>, ICommandHandler<CreatePriceTypeCommand>
     {
         private readonly IUnitOfWork _uow;
         private readonly IPriceTypeRepository _repository;
         private readonly IPriceTypePolicy _policy;
         private readonly IEventBus _bus;
 
-        public PriceTypeCommandHandlersBase(IUnitOfWork uow, IPriceTypeRepository repository,
+        public PriceTypeCommandHandlers(IUnitOfWork uow, IPriceTypeRepository repository,
             IPriceTypePolicy policy, IEventBus bus)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
@@ -29,7 +29,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
             _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         }
 
-        public override async Task<Result> Handle(RemovePriceType command, CancellationToken cancellationToken)
+        public override async Task<Result> Handle(RemovePriceTypeCommand command, CancellationToken cancellationToken)
         {
             var priceType = await _repository.FindAsync(command.PriceTypeId, cancellationToken);
             if (!priceType.HasValue) return Fail($"PriceType with id:{command.Id} not found");
@@ -41,7 +41,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
             return Ok();
         }
 
-        public async Task<Result> Handle(NewPriceType command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(CreatePriceTypeCommand command, CancellationToken cancellationToken)
         {
             var titleResult = Title.New(command.Title);
             if (titleResult.Failed) return titleResult;

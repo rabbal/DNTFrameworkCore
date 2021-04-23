@@ -4,13 +4,13 @@ using DNTFrameworkCore.Cqrs.Commands;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Commands
 {
-    public class NewProduct : CommandBase
+    public class CreateProductCommand : CommandBase
     {
         public string Title { get; }
         public IEnumerable<ProductPriceDTO> Prices { get; }
 
         [JsonConstructor]
-        public NewProduct(string title, IEnumerable<ProductPriceDTO> prices)
+        public CreateProductCommand(string title, IEnumerable<ProductPriceDTO> prices)
         {
             Title = title;
             Prices = prices;

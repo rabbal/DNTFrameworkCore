@@ -5,7 +5,7 @@ using Castle.DynamicProxy;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.GuardToolkit;
-using DNTFrameworkCore.ReflectionToolkit;
+using DNTFrameworkCore.Reflection;
 using DNTFrameworkCore.Threading;
 using DNTFrameworkCore.Transaction;
 using Microsoft.Extensions.Logging;

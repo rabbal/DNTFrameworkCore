@@ -13,8 +13,8 @@ namespace DNTFrameworkCore.Web.Tenancy.Internal
         private readonly IApplicationBuilder _rootApp;
         private readonly Action<Tenant, IApplicationBuilder> _configuration;
 
-        private readonly ThreadSafeDictionary<Tenant, RequestDelegate> _pipelines
-            = new ThreadSafeDictionary<Tenant, RequestDelegate>();
+        private readonly LockingConcurrentDictionary<Tenant, RequestDelegate> _pipelines
+            = new LockingConcurrentDictionary<Tenant, RequestDelegate>();
 
         public TenantPipelineMiddleware(
             RequestDelegate next,

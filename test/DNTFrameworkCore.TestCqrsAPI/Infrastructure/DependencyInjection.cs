@@ -1,6 +1,8 @@
 using System;
 using DNTFrameworkCore.EFCore;
+using DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Repositories;
 using DNTFrameworkCore.TestCqrsAPI.Infrastructure.Context;
+using DNTFrameworkCore.TestCqrsAPI.Infrastructure.Repositories.Catalog;
 using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,8 +18,11 @@ namespace DNTFrameworkCore.TestCqrsAPI.Infrastructure
                 .WithTrackingHook<long>()
                 .WithDeletedEntityHook()
                 .WithRowLevelSecurityHook<long>()
-                .WithRowIntegrityHook();
+                .WithRowIntegrityHook()
+                .WithUnitOfWork();
 
+            services.AddScoped<IPriceTypeRepository, PriceTypeRepository>();
+            
             services.AddDbContext<ProjectDbContext>((provider, builder) =>
             {
                 builder.AddInterceptors(provider.GetRequiredService<SecondLevelCacheInterceptor>());

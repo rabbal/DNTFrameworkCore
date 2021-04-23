@@ -6,7 +6,7 @@ using System.Reflection;
 using DNTFrameworkCore.Common;
 using DNTFrameworkCore.Extensions;
 
-namespace DNTFrameworkCore.ReflectionToolkit
+namespace DNTFrameworkCore.Reflection
 {
     /// <summary>
     /// A helper class for dumping nested property values
@@ -27,10 +27,10 @@ namespace DNTFrameworkCore.ReflectionToolkit
         {
             if (data == null) return null;
 
-            var propertyGetters = FastReflection.Instance.GetGetterDelegates(data.GetType());
+            var propertyGetters = FastReflection.Instance.GetProperties(data.GetType());
             foreach (var propertyGetter in propertyGetters)
             {
-                var dataValue = propertyGetter.GetterFunc(data);
+                var dataValue = propertyGetter.GetValue(data);
                 var name = $"{parent}{propertyGetter.Name}";
                 if (dataValue == null)
                 {

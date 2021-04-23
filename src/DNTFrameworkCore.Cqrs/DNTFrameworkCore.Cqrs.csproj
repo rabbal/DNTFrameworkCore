@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="..\..\common.props" />
+    <Import Project="..\..\common.props"/>
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="9.5.2" />
-      <PackageReference Include="MediatR" Version="9.0.0" />
+        <PackageReference Include="FluentValidation" Version="9.5.2"/>
+        <PackageReference Include="MediatR" Version="9.0.0"/>
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DNTFrameworkCore\DNTFrameworkCore.csproj" />
+        <ProjectReference Include="..\DNTFrameworkCore\DNTFrameworkCore.csproj"/>
     </ItemGroup>
 
 </Project>

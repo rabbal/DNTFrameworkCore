@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 
-namespace DNTFrameworkCore.ReflectionToolkit
+namespace DNTFrameworkCore.Reflection
 {
     /// <summary>
     ///     Helps to get and set property values on objects through reflection.
