@@ -20,7 +20,7 @@ namespace DNTFrameworkCore.Mapping
                 var sourceItem = source[i++];
                 var mappedItem = map(sourceItem);
 
-                var properties = FastReflection.Instance.GetProperties(typeof(TDestination))
+                var properties = typeof(TDestination).GetFastProperties()
                     .Where(p => p.CanRead && p.CanWrite);
 
                 foreach (var property in properties) property.SetValue(destinationItem, property.GetValue(mappedItem));
