@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 using Castle.DynamicProxy;
 using DNTFrameworkCore.Application;
@@ -45,7 +46,9 @@ namespace DNTFrameworkCore.EFCore.Tests.Transaction
 
             //Assert
             dbContext.Verify(context => context.BeginTransaction(IsolationLevel.ReadCommitted), Times.Never);
-            dbContext.Verify(context => context.BeginTransactionAsync(IsolationLevel.ReadCommitted), Times.Never);
+            dbContext.Verify(
+                context => context.BeginTransactionAsync(IsolationLevel.ReadCommitted, CancellationToken.None),
+                Times.Never);
             dbContext.Verify(context => context.CommitTransaction(), Times.Never);
             dbContext.Verify(context => context.RollbackTransaction(), Times.Never);
         }
@@ -77,7 +80,7 @@ namespace DNTFrameworkCore.EFCore.Tests.Transaction
             //Assert
             result.Failed.ShouldBe(false);
             dbContext.Verify(context => context.BeginTransaction(IsolationLevel.ReadCommitted));
-            dbContext.Verify(context => context.CommitTransactionAsync());
+            dbContext.Verify(context => context.CommitTransactionAsync(CancellationToken.None));
         }
 
         [Test]
@@ -108,7 +111,7 @@ namespace DNTFrameworkCore.EFCore.Tests.Transaction
             //Assert
             result.Failed.ShouldBe(true);
             dbContext.Verify(context => context.BeginTransaction(IsolationLevel.ReadCommitted));
-            dbContext.Verify(context => context.CommitTransactionAsync(), Times.Never);
+            dbContext.Verify(context => context.CommitTransactionAsync(CancellationToken.None), Times.Never);
             dbContext.Verify(context => context.CommitTransaction(), Times.Never);
             dbContext.Verify(context => context.RollbackTransaction());
         }
@@ -125,7 +128,7 @@ namespace DNTFrameworkCore.EFCore.Tests.Transaction
             //Assert
             dbContext.Verify(context => context.BeginTransaction(IsolationLevel.ReadCommitted));
             dbContext.Verify(context => context.CommitTransaction(), Times.Never);
-            dbContext.Verify(context => context.CommitTransactionAsync());
+            dbContext.Verify(context => context.CommitTransactionAsync(CancellationToken.None));
         }
 
         [Test]
@@ -139,7 +142,7 @@ namespace DNTFrameworkCore.EFCore.Tests.Transaction
                 nameof(IPartyService.VoidSyncMethodWithException));
             dbContext.Verify(context => context.BeginTransaction(IsolationLevel.ReadCommitted));
             dbContext.Verify(context => context.CommitTransaction(), Times.Never);
-            dbContext.Verify(context => context.CommitTransactionAsync(), Times.Never);
+            dbContext.Verify(context => context.CommitTransactionAsync(CancellationToken.None), Times.Never);
             dbContext.Verify(context => context.RollbackTransaction());
         }
 
@@ -154,7 +157,7 @@ namespace DNTFrameworkCore.EFCore.Tests.Transaction
                 nameof(IPartyService.TaskAsyncMethodWithException));
             dbContext.Verify(context => context.BeginTransaction(IsolationLevel.ReadCommitted));
             dbContext.Verify(context => context.CommitTransaction(), Times.Never);
-            dbContext.Verify(context => context.CommitTransactionAsync(), Times.Never);
+            dbContext.Verify(context => context.CommitTransactionAsync(CancellationToken.None), Times.Never);
             dbContext.Verify(context => context.RollbackTransaction());
         }
 
@@ -172,7 +175,8 @@ namespace DNTFrameworkCore.EFCore.Tests.Transaction
             dbContext.SetupGet(context => context.Transaction).Returns(dbContextTransaction.Object);
             dbContext.Setup(context => context.BeginTransaction(IsolationLevel.ReadCommitted))
                 .Returns(() => dbContextTransaction.Object);
-            dbContext.Setup(context => context.BeginTransactionAsync(IsolationLevel.ReadCommitted))
+            dbContext.Setup(context =>
+                    context.BeginTransactionAsync(IsolationLevel.ReadCommitted, CancellationToken.None))
                 .Returns(() => Task.FromResult(dbContextTransaction.Object));
             dbContext.SetupGet(context => context.Transaction).Returns(dbContextTransaction.Object);
 

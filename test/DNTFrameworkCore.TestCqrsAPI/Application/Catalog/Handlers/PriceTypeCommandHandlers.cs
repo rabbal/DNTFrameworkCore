@@ -2,9 +2,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Cqrs.Commands;
+using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Functional;
-using DNTFrameworkCore.Persistence;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Catalog;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Commands;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Policies;
@@ -13,15 +13,19 @@ using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
 {
-    public class PriceTypeCommandHandlers : CommandHandlerBase<RemovePriceTypeCommand>, ICommandHandler<CreatePriceTypeCommand>
+    public class PriceTypeCommandHandlers : ICommandHandler<RemovePriceTypeCommand, Result>,
+        ICommandHandler<CreatePriceTypeCommand, Result>
     {
         private readonly IUnitOfWork _uow;
         private readonly IPriceTypeRepository _repository;
         private readonly IPriceTypePolicy _policy;
         private readonly IEventBus _bus;
 
-        public PriceTypeCommandHandlers(IUnitOfWork uow, IPriceTypeRepository repository,
-            IPriceTypePolicy policy, IEventBus bus)
+        public PriceTypeCommandHandlers(
+            IUnitOfWork uow,
+            IPriceTypeRepository repository,
+            IPriceTypePolicy policy,
+            IEventBus bus)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
@@ -29,16 +33,16 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
             _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         }
 
-        public override async Task<Result> Handle(RemovePriceTypeCommand command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(RemovePriceTypeCommand command, CancellationToken cancellationToken)
         {
             var priceType = await _repository.FindAsync(command.PriceTypeId, cancellationToken);
-            if (!priceType.HasValue) return Fail($"PriceType with id:{command.Id} not found");
+            if (priceType is null) Result.Fail($"PriceType with id:{command.PriceTypeId} not found");
 
-            _repository.Remove(priceType.Value);
+            _repository.Remove(priceType);
+            
+            await _uow.Complete(cancellationToken);
 
-            await _uow.SaveChangesAsync(cancellationToken);
-
-            return Ok();
+            return Result.Ok();
         }
 
         public async Task<Result> Handle(CreatePriceTypeCommand command, CancellationToken cancellationToken)
@@ -53,13 +57,14 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
             if (priceTypeResult.Failed) return priceTypeResult;
 
             var priceType = priceTypeResult.Value;
-            await _repository.AddAsync(priceType, cancellationToken);
+            _repository.Add(priceType);
+            
+            await _uow.Complete(cancellationToken);
 
-            await _uow.SaveChangesAsync(cancellationToken);
+            //Todo: Move into _uow.Complete
+            await _bus.Publish(priceType, cancellationToken);
 
-            await _bus.PublishAsync(priceType);
-
-            return Ok();
+            return Result.Ok();
         }
     }
 }

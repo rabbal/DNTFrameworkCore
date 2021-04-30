@@ -22,6 +22,5 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Locking" />
-      <Folder Include="Persistence" />
     </ItemGroup>
 </Project>

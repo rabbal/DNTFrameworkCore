@@ -25,9 +25,9 @@ namespace DNTFrameworkCore.Web.Authorization
                 return await base.GetPolicyAsync(policyName);
             }
 
-            var policy = _policies.GetOrAdd(policyName, name =>
+            var policy = _policies.GetOrAdd(policyName, static name =>
             {
-                var permissions = policyName.Substring(PermissionConstant.PolicyPrefix.Length)
+                var permissions = name.Substring(PermissionConstant.PolicyPrefix.Length)
                     .UnpackFromString(PermissionConstant.PolicyNameSplitSymbol);
 
                 return new AuthorizationPolicyBuilder()

@@ -22,25 +22,7 @@ namespace DNTFrameworkCore.EFCore.Context
         public const string Tenancy = nameof(Tenancy);
         public const string DomainEvent = nameof(DomainEvent);
     }
-
-    //Under development
-    internal sealed class DomainEventHook : PostActionHook<IAggregateRoot>
-    {
-        private readonly IEventBus _bus;
-        public override string Name => HookNames.DomainEvent;
-        public override EntityState HookState => EntityState.Unchanged;
-
-        public DomainEventHook(IEventBus bus)
-        {
-            _bus = bus;
-        }
-
-        protected override void Hook(IAggregateRoot entity, HookEntityMetadata metadata, IDbContext context)
-        {
-            //todo: async issue
-        }
-    }
-
+    
     internal sealed class PreInsertCreationTrackingHook<TUserId> : PreInsertHook<ICreationTracking>
         where TUserId : IEquatable<TUserId>
     {

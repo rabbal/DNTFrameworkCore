@@ -11,8 +11,7 @@ namespace DNTFrameworkCore.EFCore.Context
         private ResilientTransaction(DbContext context) =>
             _context = context ?? throw new ArgumentNullException(nameof(context));
 
-        public static ResilientTransaction New(DbContext context) =>
-            new ResilientTransaction(context);
+        public static ResilientTransaction New(DbContext context) => new(context);
 
         public async Task ExecuteAsync(Func<Task> action)
         {
@@ -21,9 +20,9 @@ namespace DNTFrameworkCore.EFCore.Context
             var strategy = _context.Database.CreateExecutionStrategy();
             await strategy.ExecuteAsync(async () =>
             {
-                await using var transaction = _context.Database.BeginTransaction();
+                await using var transaction = await _context.Database.BeginTransactionAsync();
                 await action();
-                transaction.Commit();
+                await transaction.CommitAsync();
             });
         }
     }

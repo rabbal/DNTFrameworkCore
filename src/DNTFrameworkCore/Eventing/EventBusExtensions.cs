@@ -7,15 +7,15 @@ namespace DNTFrameworkCore.Eventing
 {
     public static class EventBusExtensions
     {
-        public static Task TriggerAsync(this IEventBus bus, IEnumerable<IDomainEvent> events)
+        public static Task Publish(this IEventBus bus, IEnumerable<IDomainEvent> events)
         {
-            var tasks = events.Select(async domainEvent => await bus.TriggerAsync(domainEvent));
+            var tasks = events.Select(async domainEvent => await bus.Publish(domainEvent));
             return Task.WhenAll(tasks);
         }
 
-        public static async Task PublishAsync(this IEventBus bus, IAggregateRoot aggregateRoot)
+        public static async Task Publish(this IEventBus bus, IAggregateRoot aggregateRoot)
         {
-            await bus.TriggerAsync(aggregateRoot.DomainEvents);
+            await bus.Publish(aggregateRoot.DomainEvents);
             aggregateRoot.EmptyDomainEvents();
         }
     }

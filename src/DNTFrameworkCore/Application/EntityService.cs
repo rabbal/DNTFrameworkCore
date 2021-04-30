@@ -13,7 +13,7 @@ using DNTFrameworkCore.Transaction;
 using DNTFrameworkCore.Validation;
 using static DNTFrameworkCore.GuardToolkit.Guard;
 using static DNTFrameworkCore.Mapping.MappingExtensions;
-
+using static DNTFrameworkCore.Extensions.EntityExtensions;
 namespace DNTFrameworkCore.Application
 {
     public abstract class EntityServiceBase<TEntity, TKey, TReadModel, TModel,
@@ -38,7 +38,7 @@ namespace DNTFrameworkCore.Application
 
         public async Task<Maybe<TModel>> FindAsync(TKey id, CancellationToken cancellationToken = default)
         {
-            var models = await FindAsync(IdEqualityExpression(id), cancellationToken);
+            var models = await FindAsync(IdEqualityExpression<TEntity,TKey>(id), cancellationToken);
 
             return models.FirstOrDefault();
         }
@@ -277,17 +277,5 @@ namespace DNTFrameworkCore.Application
 
         protected abstract Task RemoveEntityListAsync(IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken);
-
-        private static Expression<Func<TEntity, bool>> IdEqualityExpression(TKey id)
-        {
-            var lambdaParam = Expression.Parameter(typeof(TEntity));
-
-            var lambdaBody = Expression.Equal(
-                Expression.PropertyOrField(lambdaParam, nameof(Entity<TKey>.Id)),
-                Expression.Constant(id, typeof(TKey))
-            );
-
-            return Expression.Lambda<Func<TEntity, bool>>(lambdaBody, lambdaParam);
-        }
     }
 }

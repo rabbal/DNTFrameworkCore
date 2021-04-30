@@ -4,7 +4,7 @@ using DNTFrameworkCore.Cqrs.Commands;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Commands
 {
-    public class CreateProductCommand : CommandBase
+    public class CreateProductCommand : ICommand
     {
         public string Title { get; }
         public IEnumerable<ProductPriceDTO> Prices { get; }

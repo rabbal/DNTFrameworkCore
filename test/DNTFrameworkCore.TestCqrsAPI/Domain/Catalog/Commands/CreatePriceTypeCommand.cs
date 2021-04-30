@@ -1,9 +1,10 @@
 using System.Text.Json.Serialization;
 using DNTFrameworkCore.Cqrs.Commands;
+using DNTFrameworkCore.Functional;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Commands
 {
-    public sealed class CreatePriceTypeCommand : CommandBase
+    public sealed class CreatePriceTypeCommand : ICommand
     {
         public string Title { get; }
         [JsonConstructor]

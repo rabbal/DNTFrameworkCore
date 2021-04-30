@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Cqrs.Commands;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.Functional;
+using DNTFrameworkCore.Transaction;
 using MediatR;
 
 namespace DNTFrameworkCore.Cqrs.EFCore.Behaviors
@@ -19,71 +21,75 @@ namespace DNTFrameworkCore.Cqrs.EFCore.Behaviors
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+        public async Task<TResponse> Handle(TRequest command, CancellationToken cancellationToken,
             RequestHandlerDelegate<TResponse> next)
         {
+            var attribute = typeof(TRequest).GetCustomAttribute<TransactionalAttribute>(true);
+
             //If there is a running transaction, just run the method
-            //if (!attribute.HasValue || _dbContext.HasTransaction)
-            //            {
-            //                return next();
-            //            }
+            if (attribute == null || _dbContext.HasTransaction)
+            {
+                return await next();
+            }
+
+            await _dbContext.BeginTransactionAsync(attribute.IsolationLevel, cancellationToken);
+
+            try
+            {
+                var result = await next();
+                await _dbContext.CommitTransactionAsync(cancellationToken);
+                return result;
+            }
+            catch
+            {
+                _dbContext.RollbackTransaction();
+                throw;
+            }
+            
+            //Todo: Use ExecutionStrategy    
+            // var response = default(TResponse);
+            // var typeName = request.GetGenericTypeName();
             //
-            //            _dbContext.BeginTransaction(attribute.IsolationLevel);
+            // try
+            // {
+            //     if (_dbContext.HasTransaction)
+            //     {
+            //         return await next();
+            //     }
             //
-            //            try
-            //            {
-            //                return next();
-            //            }
-            //            catch (Exception)
-            //            {
-            //                _dbContext.RollbackTransaction();
-            //                throw;
-            //            }
+            //     var strategy = _dbContext.Database.CreateExecutionStrategy();
             //
-            //            var response = default(TResponse);
-            //            var typeName = request.GetGenericTypeName();
+            //     await strategy.ExecuteAsync(async () =>
+            //     {
+            //         Guid transactionId;
             //
-            //            try
-            //            {
-            //                if (_dbContext.HasTransaction)
-            //                {
-            //                    return await next();
-            //                }
+            //         using (var transaction = await _dbContext.BeginTransactionAsync())
+            //         using (LogContext.PushProperty("TransactionContext", transaction.TransactionId))
+            //         {
+            //             _logger.LogInformation("----- Begin transaction {TransactionId} for {CommandName} ({@Command})",
+            //                 transaction.TransactionId, typeName, request);
             //
-            //                var strategy = _dbContext.Database.CreateExecutionStrategy();
+            //             response = await next();
             //
-            //                await strategy.ExecuteAsync(async () =>
-            //                {
-            //                    Guid transactionId;
+            //             _logger.LogInformation("----- Commit transaction {TransactionId} for {CommandName}",
+            //                 transaction.TransactionId, typeName);
             //
-            //                    using (var transaction = await _dbContext.BeginTransactionAsync())
-            //                    using (LogContext.PushProperty("TransactionContext", transaction.TransactionId))
-            //                    {
-            //                        _logger.LogInformation("----- Begin transaction {TransactionId} for {CommandName} ({@Command})",
-            //                            transaction.TransactionId, typeName, request);
+            //             await _dbContext.CommitTransactionAsync(transaction);
             //
-            //                        response = await next();
+            //             transactionId = transaction.TransactionId;
+            //         }
             //
-            //                        _logger.LogInformation("----- Commit transaction {TransactionId} for {CommandName}",
-            //                            transaction.TransactionId, typeName);
+            //         await _orderingIntegrationEventService.PublishEventsThroughEventBusAsync(transactionId);
+            //     });
             //
-            //                        await _dbContext.CommitTransactionAsync(transaction);
+            //     return response;
+            // }
+            // catch (Exception ex)
+            // {
+            //     _logger.LogError(ex, "ERROR Handling transaction for {CommandName} ({@Command})", typeName, request);
             //
-            //                        transactionId = transaction.TransactionId;
-            //                    }
-            //
-            //                    await _orderingIntegrationEventService.PublishEventsThroughEventBusAsync(transactionId);
-            //                });
-            //
-            //                return response;
-            //            }
-            //            catch (Exception ex)
-            //            {
-            //                _logger.LogError(ex, "ERROR Handling transaction for {CommandName} ({@Command})", typeName, request);
-            //
-            //                throw;
-            //            }
-            throw new NotImplementedException();
+            //     throw;
+            // }
         }
     }
 }

@@ -41,11 +41,12 @@ namespace DNTFrameworkCore.EFCore.Context
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync(
-            IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+            IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default)
         {
             if (HasTransaction) return Transaction;
 
-            return Transaction = await Database.BeginTransactionAsync(isolationLevel);
+            return Transaction =
+                await Database.BeginTransactionAsync(isolationLevel, cancellationToken);
         }
 
         public void CommitTransaction()
@@ -71,13 +72,13 @@ namespace DNTFrameworkCore.EFCore.Context
             }
         }
 
-        public async Task CommitTransactionAsync()
+        public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
         {
             if (!HasTransaction) throw new NullReferenceException("Please call `BeginTransaction()` method first.");
 
             try
             {
-                await Transaction.CommitAsync();
+                await Transaction.CommitAsync(cancellationToken);
             }
             catch
             {
@@ -155,7 +156,6 @@ namespace DNTFrameworkCore.EFCore.Context
             try
             {
                 var entryList = this.FindChangedEntries();
-                var names = entryList.FindEntityNames();
 
                 ExecuteHooks<IPreActionHook>(entryList);
 
@@ -167,8 +167,6 @@ namespace DNTFrameworkCore.EFCore.Context
 
                 //for RowIntegrity scenarios
                 await base.SaveChangesAsync(true, cancellationToken);
-
-                OnSaveCompleted(new EntityChangeContext(names, entryList));
             }
             catch (DbUpdateConcurrencyException e)
             {
@@ -188,7 +186,6 @@ namespace DNTFrameworkCore.EFCore.Context
             try
             {
                 var entryList = this.FindChangedEntries();
-                var names = entryList.FindEntityNames();
 
                 ExecuteHooks<IPreActionHook>(entryList);
 
@@ -200,8 +197,6 @@ namespace DNTFrameworkCore.EFCore.Context
 
                 //for RowIntegrity scenarios
                 base.SaveChanges(true);
-
-                OnSaveCompleted(new EntityChangeContext(names, entryList));
             }
             catch (DbUpdateConcurrencyException e)
             {
@@ -233,10 +228,6 @@ namespace DNTFrameworkCore.EFCore.Context
         public Task<int> ExecuteSqlRawCommandAsync(string query, params object[] parameters)
         {
             return Database.ExecuteSqlRawAsync(query, parameters);
-        }
-
-        protected virtual void OnSaveCompleted(EntityChangeContext context)
-        {
         }
 
         protected virtual void ExecuteHooks<THook>(IEnumerable<EntityEntry> entryList) where THook : IHook

@@ -80,11 +80,9 @@ namespace DNTFrameworkCore.Reflection
         /// <param name="memberInfo">MemberInfo</param>
         /// <param name="defaultValue">Default value (null as default)</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
-        public static TAttribute GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<TAttribute>(MemberInfo memberInfo,
-            TAttribute defaultValue = default, bool inherit = true)
+        public static TAttribute GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<TAttribute>(this MemberInfo memberInfo, bool inherit = true)
             where TAttribute : Attribute
         {
-            //Get attribute on the member
             if (memberInfo.IsDefined(typeof(TAttribute), inherit))
             {
                 return memberInfo.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>().First();
@@ -97,7 +95,7 @@ namespace DNTFrameworkCore.Reflection
                     .First();
             }
 
-            return defaultValue;
+            return default;
         }
 
         /// <summary>

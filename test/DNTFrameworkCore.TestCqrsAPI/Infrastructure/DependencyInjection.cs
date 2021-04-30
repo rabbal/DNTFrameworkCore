@@ -18,8 +18,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Infrastructure
                 .WithTrackingHook<long>()
                 .WithDeletedEntityHook()
                 .WithRowLevelSecurityHook<long>()
-                .WithRowIntegrityHook()
-                .WithUnitOfWork();
+                .WithRowIntegrityHook();
 
             services.AddScoped<IPriceTypeRepository, PriceTypeRepository>();
             

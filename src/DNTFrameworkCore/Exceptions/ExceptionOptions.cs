@@ -8,8 +8,8 @@ namespace DNTFrameworkCore.Exceptions
 {
     public class ExceptionOptions
     {
-        private static readonly Regex _regex = new Regex(@"\W", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        public List<ExceptionMapItem> Mappings { get; } = new List<ExceptionMapItem>();
+        private static readonly Regex _regex = new(@"\W", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public List<ExceptionMapItem> Mappings { get; } = new();
         [Required] public string DbException { get; set; }
         [Required] public string DbConcurrencyException { get; set; }
         [Required] public string InternalServerIssue { get; set; }

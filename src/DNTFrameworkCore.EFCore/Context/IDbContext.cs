@@ -28,9 +28,12 @@ namespace DNTFrameworkCore.EFCore.Context
         DbConnection Connection { get; }
         IDbContextTransaction Transaction { get; }
         IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
-        Task<IDbContextTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
+
+        Task<IDbContextTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted,
+            CancellationToken cancellationToken = default);
+
         void CommitTransaction();
-        Task CommitTransactionAsync();
+        Task CommitTransactionAsync(CancellationToken cancellationToken = default);
         void RollbackTransaction();
         void IgnoreHook(string hookName);
     }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Extensions;
@@ -67,7 +68,8 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
                 .ToListAsync();
 
             return entityList
-                .Where(entity => dbContext.EntityHash(entity) != dbContext.PropertyValue<string>(entity, EFCoreShadow.Hash))
+                .Where(entity =>
+                    dbContext.EntityHash(entity) != dbContext.PropertyValue<string>(entity, EFCoreShadow.Hash))
                 .ToList();
         }
 
@@ -126,14 +128,15 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
 
         public static async Task<TResult> RunInTransactionAsync<TResult>(this IDbContext dbContext,
             Func<Task<TResult>> action,
+            CancellationToken cancellationToken = default,
             IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
             TResult result;
             try
             {
-                await dbContext.BeginTransactionAsync(isolationLevel);
+                await dbContext.BeginTransactionAsync(isolationLevel, cancellationToken);
                 result = await action.Invoke();
-                dbContext.CommitTransaction();
+                await dbContext.CommitTransactionAsync(cancellationToken);
             }
             catch (Exception)
             {
@@ -381,8 +384,8 @@ namespace DNTFrameworkCore.EFCore.Context.Extensions
                 property.IsModified = trackable.ModifiedProperties.Any(p =>
                     string.Compare(p, property.Metadata.Name, StringComparison.InvariantCultureIgnoreCase) == 0);
         }
-        
-          /// <summary>
+
+        /// <summary>
         /// Using the ChangeTracker to find names of the changed entities.
         /// </summary>
         public static IEnumerable<string> FindChangedEntityNames(this DbContext dbContext)

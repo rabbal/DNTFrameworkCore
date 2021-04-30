@@ -54,9 +54,9 @@ namespace DNTFrameworkCore.Application
         private static Task<Result> TriggerAsync(IEventBus bus, Type eventType, object model,
             CancellationToken cancellationToken = default)
         {
-            var businessEvent = (IBusinessEvent) Activator.CreateInstance(eventType, model);
+            var businessEvent = (IBusinessEvent)Activator.CreateInstance(eventType, model);
 
-            return bus.TriggerAsync(businessEvent, cancellationToken);
+            return bus.Publish(businessEvent, cancellationToken);
         }
     }
 }

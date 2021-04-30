@@ -3,7 +3,7 @@ using DNTFrameworkCore.Cqrs.Commands;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Commands
 {
-    public class RemoveProductCommand : CommandBase
+    public class RemoveProductCommand : ICommand
     {
         public long ProductId { get; }
 

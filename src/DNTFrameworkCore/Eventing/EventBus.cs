@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DNTFrameworkCore.Common;
 using DNTFrameworkCore.Dependency;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
@@ -11,56 +13,148 @@ namespace DNTFrameworkCore.Eventing
 {
     public interface IEventBus : IScopedDependency
     {
-        Task<Result> TriggerAsync(IBusinessEvent businessEvent, CancellationToken cancellationToken = default);
-        Task TriggerAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default);
+        Task<Result> Publish(IBusinessEvent businessEvent, CancellationToken cancellationToken = default);
+
+        Task Publish<TDomainEvent>(TDomainEvent domainEvent, CancellationToken cancellationToken = default)
+            where TDomainEvent : IDomainEvent;
+
+        Task Publish(object domainEvent, CancellationToken cancellationToken = default);
     }
 
-    internal sealed class EventBus : IEventBus
+    public class EventBus : IEventBus
     {
-        private const string MethodName = "Handle";
-        private readonly IServiceProvider _provider;
+        private static readonly LockingConcurrentDictionary<Type, DomainEventHandlers> _domainEventHandlers = new();
+        private static readonly LockingConcurrentDictionary<Type, BusinessEventHandlers> _businessEventHandlers = new();
 
-        public EventBus(IServiceProvider provider)
-        {
-            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
-        }
+        private readonly IServiceProvider _serviceFactory;
 
-        public async Task<Result> TriggerAsync(IBusinessEvent businessEvent,
+        public EventBus(IServiceProvider provider) => _serviceFactory = provider;
+
+        public Task<Result> Publish(IBusinessEvent businessEvent,
             CancellationToken cancellationToken = default)
         {
-            var eventType = businessEvent.GetType();
-            var handlerType = typeof(IBusinessEventHandler<>).MakeGenericType(eventType);
+            if (businessEvent == null) throw new ArgumentNullException(nameof(businessEvent));
 
-            var method = handlerType.GetMethod(MethodName, new[] {eventType, typeof(CancellationToken)});
-            if (method == null) throw new InvalidOperationException();
+            return PublishBusinessEvent(businessEvent, cancellationToken);
+        }
 
-            var handlers = _provider.GetServices(handlerType);
-
-            foreach (var handler in handlers)
+        public Task Publish<TDomainEvent>(TDomainEvent domainEvent, CancellationToken cancellationToken = default)
+            where TDomainEvent : IDomainEvent
+        {
+            if (domainEvent == null)
             {
-                var result =
-                    await (Task<Result>) method.Invoke(handler, new object[] {businessEvent, cancellationToken});
+                throw new ArgumentNullException(nameof(domainEvent));
+            }
 
+            return PublishDomainEvent(domainEvent, cancellationToken);
+        }
+
+        public Task Publish(object domainEvent, CancellationToken cancellationToken = default)
+        {
+            return domainEvent switch
+            {
+                null => throw new ArgumentNullException(nameof(domainEvent)),
+                IDomainEvent instance => PublishDomainEvent(instance, cancellationToken),
+                _ => throw new ArgumentException($"{nameof(domainEvent)} does not implement ${nameof(IDomainEvent)}")
+            };
+        }
+
+        protected virtual async Task<Result> PublishInternal(
+            IEnumerable<Func<IBusinessEvent, CancellationToken, Task<Result>>> handlers,
+            IBusinessEvent businessEvent, CancellationToken cancellationToken = default)
+        {
+            foreach (var handle in handlers)
+            {
+                var result = await handle(businessEvent, cancellationToken);
                 if (result.Failed) return result;
             }
 
             return Result.Ok();
         }
 
-        public Task TriggerAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default)
+        private Task<Result> PublishBusinessEvent(IBusinessEvent businessEvent,
+            CancellationToken cancellationToken = default)
         {
-            var eventType = domainEvent.GetType();
-            var handlerType = typeof(IDomainEventHandler<>).MakeGenericType(eventType);
+            var domainEventType = businessEvent.GetType();
+            var handlers = _businessEventHandlers.GetOrAdd(domainEventType,
+                static type => (BusinessEventHandlers) Activator.CreateInstance(typeof(BusinessEventHandlersImpl<>)
+                                   .MakeGenericType(type)) ??
+                               throw new InvalidOperationException($"Could not create handlers for type {type}"));
 
-            var method = handlerType.GetMethod(MethodName, new[] {eventType, typeof(CancellationToken)});
-            if (method == null) throw new InvalidOperationException();
+            return handlers.Handle(businessEvent, cancellationToken, _serviceFactory, PublishInternal);
+        }
 
-            var handlers = _provider.GetServices(handlerType);
+        protected virtual Task PublishInternal(IEnumerable<Func<IDomainEvent, CancellationToken, Task>> handlers,
+            IDomainEvent domainEvent, CancellationToken cancellationToken = default)
+        {
+            var handles = handlers.Select(async handle => await handle(domainEvent, cancellationToken));
 
-            var tasks = handlers.Select(
-                async handler => await (Task) method.Invoke(handler, new object[] {domainEvent, cancellationToken}));
+            return Task.WhenAll(handles);
+        }
 
-            return Task.WhenAll(tasks);
+        private Task PublishDomainEvent(IDomainEvent domainEvent, CancellationToken cancellationToken = default)
+        {
+            var domainEventType = domainEvent.GetType();
+            var handlers = _domainEventHandlers.GetOrAdd(domainEventType,
+                static type => (DomainEventHandlers) Activator.CreateInstance(typeof(DomainEventHandlersImpl<>)
+                                   .MakeGenericType(type)) ??
+                               throw new InvalidOperationException($"Could not create handlers for type {type}"));
+
+            return handlers.Handle(domainEvent, cancellationToken, _serviceFactory, PublishInternal);
+        }
+
+
+        private abstract class BusinessEventHandlers
+        {
+            public abstract Task<Result> Handle(IBusinessEvent businessEvent, CancellationToken cancellationToken,
+                IServiceProvider serviceFactory,
+                Func<IEnumerable<Func<IBusinessEvent, CancellationToken, Task<Result>>>, IBusinessEvent,
+                        CancellationToken, Task<Result>>
+                    publish);
+        }
+
+        private class BusinessEventHandlersImpl<TBusinessEvent> : BusinessEventHandlers
+            where TBusinessEvent : IBusinessEvent
+        {
+            public override Task<Result> Handle(IBusinessEvent businessEvent, CancellationToken cancellationToken,
+                IServiceProvider serviceFactory,
+                Func<IEnumerable<Func<IBusinessEvent, CancellationToken, Task<Result>>>, IBusinessEvent,
+                        CancellationToken, Task<Result>>
+                    publish)
+            {
+                var handlers = serviceFactory.GetServices<IBusinessEventHandler<TBusinessEvent>>()
+                    .Select(handler => new Func<IBusinessEvent, CancellationToken, Task<Result>>(
+                        (theBusinessEvent, theCancellationToken) =>
+                            handler.Handle((TBusinessEvent) theBusinessEvent, theCancellationToken)));
+
+
+                return publish(handlers, businessEvent, cancellationToken);
+            }
+        }
+
+        private abstract class DomainEventHandlers
+        {
+            public abstract Task Handle(IDomainEvent domainEvent, CancellationToken cancellationToken,
+                IServiceProvider serviceFactory,
+                Func<IEnumerable<Func<IDomainEvent, CancellationToken, Task>>, IDomainEvent, CancellationToken, Task>
+                    publish);
+        }
+
+        private class DomainEventHandlersImpl<TDomainEvent> : DomainEventHandlers where TDomainEvent : IDomainEvent
+        {
+            public override Task Handle(IDomainEvent domainEvent, CancellationToken cancellationToken,
+                IServiceProvider serviceFactory,
+                Func<IEnumerable<Func<IDomainEvent, CancellationToken, Task>>, IDomainEvent, CancellationToken, Task>
+                    publish)
+            {
+                var handlers = serviceFactory.GetServices<IDomainEventHandler<TDomainEvent>>()
+                    .Select(handler => new Func<IDomainEvent, CancellationToken, Task>(
+                        (theDomainEvent, theCancellationToken) =>
+                            handler.Handle((TDomainEvent) theDomainEvent, theCancellationToken)));
+
+
+                return publish(handlers, domainEvent, cancellationToken);
+            }
         }
     }
 }

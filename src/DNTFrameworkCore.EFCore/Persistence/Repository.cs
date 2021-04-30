@@ -6,9 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.EFCore.Context;
-using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Querying;
 using Microsoft.EntityFrameworkCore;
+using static DNTFrameworkCore.Extensions.EntityExtensions;
 
 namespace DNTFrameworkCore.EFCore.Persistence
 {
@@ -35,9 +35,9 @@ namespace DNTFrameworkCore.EFCore.Persistence
             return FindEntityQueryable.Where(predicate).OrderBy(e => e.Id).Page(page, pageSize).ToList();
         }
 
-        public Maybe<TEntity> Find(TKey id)
+        public TEntity Find(TKey id)
         {
-            return FindEntityQueryable.FirstOrDefault(IdEqualityExpression(id));
+            return FindEntityQueryable.FirstOrDefault(IdEqualityExpression<TEntity, TKey>(id));
         }
 
         public async Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate,
@@ -49,12 +49,13 @@ namespace DNTFrameworkCore.EFCore.Persistence
         public async Task<IReadOnlyList<TEntity>> FindPagedListAsync(Expression<Func<TEntity, bool>> predicate,
             int page, int pageSize, CancellationToken cancellationToken = default)
         {
-            return await FindEntityQueryable.Where(predicate).OrderBy(e => e.Id).Page(page, pageSize).ToListAsync(cancellationToken: cancellationToken);
+            return await FindEntityQueryable.Where(predicate).OrderBy(e => e.Id).Page(page, pageSize)
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<Maybe<TEntity>> FindAsync(TKey id, CancellationToken cancellationToken = default)
+        public Task<TEntity> FindAsync(TKey id, CancellationToken cancellationToken = default)
         {
-            return await FindEntityQueryable.FirstOrDefaultAsync(IdEqualityExpression(id), cancellationToken: cancellationToken);
+            return FindEntityQueryable.FirstOrDefaultAsync(IdEqualityExpression<TEntity, TKey>(id), cancellationToken);
         }
 
         public virtual void Add(TEntity entity)
@@ -87,39 +88,6 @@ namespace DNTFrameworkCore.EFCore.Persistence
             EntitySet.RemoveRange(entityList);
         }
 
-        public long Count()
-        {
-            return EntitySet.LongCount();
-        }
-
-        public long Count(Expression<Func<TEntity, bool>> predicate)
-        {
-            return EntitySet.LongCount(predicate);
-        }
-
-        public Task<long> CountAsync(CancellationToken cancellationToken = default)
-        {
-            return EntitySet.LongCountAsync(cancellationToken);
-        }
-
-        public Task<long> CountAsync(Expression<Func<TEntity, bool>> predicate,
-            CancellationToken cancellationToken = default)
-        {
-            return EntitySet.LongCountAsync(predicate, cancellationToken);
-        }
-
         protected virtual IQueryable<TEntity> FindEntityQueryable => EntitySet;
-
-        private static Expression<Func<TEntity, bool>> IdEqualityExpression(TKey id)
-        {
-            var lambdaParam = Expression.Parameter(typeof(TEntity));
-
-            var lambdaBody = Expression.Equal(
-                Expression.PropertyOrField(lambdaParam, nameof(Entity<TKey>.Id)),
-                Expression.Constant(id, typeof(TKey))
-            );
-
-            return Expression.Lambda<Func<TEntity, bool>>(lambdaBody, lambdaParam);
-        }
     }
 }

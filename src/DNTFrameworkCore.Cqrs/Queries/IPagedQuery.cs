@@ -6,7 +6,7 @@ namespace DNTFrameworkCore.Cqrs.Queries
     {
     }
 
-    public class PagedQuery<TReadModel> : PagedRequest, IPagedQuery<TReadModel>
+    public abstract class PagedQuery<TReadModel> : PagedRequest, IPagedQuery<TReadModel>
     {
     }
 }

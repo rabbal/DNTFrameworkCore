@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DNTFrameworkCore.Validation;
 
 namespace DNTFrameworkCore.Functional
 {
     public class Result
     {
-        private static readonly Result _ok = new Result(false, string.Empty);
+        private static readonly Result _ok = new(false, string.Empty);
         private readonly List<ValidationFailure> _failures;
+
+        public static readonly Result None = new(false, string.Empty);
+        public static readonly Task<Result> NoneTask = Task.FromResult(None);
 
         protected Result(bool failed, string message) : this(failed, message,
             Enumerable.Empty<ValidationFailure>())
@@ -38,37 +42,37 @@ namespace DNTFrameworkCore.Functional
 
         public static Result Ok(string message)
         {
-            return new Result(false, message);
+            return new(false, message);
         }
 
         public static Result Fail(string message)
         {
-            return new Result(true, message);
+            return new(true, message);
         }
 
         public static Result Fail(string message, IEnumerable<ValidationFailure> failures)
         {
-            return new Result(true, message, failures);
+            return new(true, message, failures);
         }
 
         public static Result<T> Fail<T>(string message)
         {
-            return new Result<T>(default, true, message);
+            return new(default, true, message);
         }
 
         public static Result<T> Fail<T>(string message, IEnumerable<ValidationFailure> failures)
         {
-            return new Result<T>(default, true, message, failures);
+            return new(default, true, message, failures);
         }
 
         public static Result<T> Ok<T>(T value)
         {
-            return new Result<T>(value, false, string.Empty);
+            return new(value, false, string.Empty);
         }
 
         public static Result<T> Ok<T>(string message, T value)
         {
-            return new Result<T>(value, false, message);
+            return new(value, false, message);
         }
 
         public static Result Combine(string symbol, params Result[] results)
@@ -95,7 +99,7 @@ namespace DNTFrameworkCore.Functional
 
         public static Result Combine<T>(string symbol, params Result<T>[] results)
         {
-            var untyped = results.Select(result => (Result)result).ToArray();
+            var untyped = results.Select(result => (Result) result).ToArray();
             return Combine(symbol, untyped);
         }
 

@@ -1,56 +1,47 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.EFCore.Context;
-using DNTFrameworkCore.Persistence;
+using DNTFrameworkCore.Eventing;
 
 namespace DNTFrameworkCore.EFCore.Persistence
 {
-    internal class UnitOfWork : IUnitOfWork
+    internal sealed class UnitOfWork : IUnitOfWork
     {
         private bool _disposed;
         private readonly IDbContext _dbContext;
-        public UnitOfWork(IDbContext dbContext)
+        private readonly IEventBus _bus;
+
+        public UnitOfWork(IDbContext dbContext, IEventBus bus)
         {
             _dbContext = dbContext;
+            _bus = bus;
         }
 
-        public void SaveChanges()
-        {
-            _dbContext.SaveChanges();
-        }
-
-        public Task SaveChangesAsync(CancellationToken cancellationToken = default)
+        public Task Complete(CancellationToken cancellationToken = default)
         {
             return _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects)
-                    _dbContext.Dispose();
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
-                _disposed = true;
-            }
-        }
-
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~UnitOfWork()
-        // {
-        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        //     Dispose(disposing: false);
-        // }
-
         public void Dispose()
         {
-            Dispose(disposing: true);
-            System.GC.SuppressFinalize(this);
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
+
+        private void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+
+            if (disposing)
+            {
+                _dbContext.Dispose();
+            }
+
+            _disposed = true;
+        }
+
+        ~UnitOfWork() => Dispose(false);
     }
 }

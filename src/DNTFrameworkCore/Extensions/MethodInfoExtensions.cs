@@ -20,8 +20,8 @@ namespace DNTFrameworkCore.Extensions
                 return false;
             }
 
-            return ReflectionHelper
-                       .GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<SkipValidationAttribute>(method) != null;
+            return method
+                       .GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<SkipValidationAttribute>() != null;
         }
     }
 }

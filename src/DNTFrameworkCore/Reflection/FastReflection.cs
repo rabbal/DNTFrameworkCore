@@ -31,7 +31,7 @@ namespace DNTFrameworkCore.Reflection
         /// </summary>
         public FastPropertyInfo[] GetProperties(Type type)
         {
-            return _properties.GetOrAdd(type, _ =>
+            return _properties.GetOrAdd(type, static type =>
             {
                 var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 return properties.Select(FastPropertyInfo.From).ToArray();
@@ -43,7 +43,7 @@ namespace DNTFrameworkCore.Reflection
         /// </summary>
         public FastFieldInfo[] GetFields(Type type)
         {
-            return _fields.GetOrAdd(type, _ =>
+            return _fields.GetOrAdd(type, static type =>
             {
                 var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public);
                 return fields.Select(FastFieldInfo.From).ToArray();
@@ -52,7 +52,7 @@ namespace DNTFrameworkCore.Reflection
 
         public FastPropertyInfo GetProperty(PropertyInfo property)
         {
-            return _propertyStore.GetOrAdd(property, _ => FastPropertyInfo.From(property));
+            return _propertyStore.GetOrAdd(property, FastPropertyInfo.From);
         }
     }
 
