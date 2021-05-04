@@ -20,7 +20,7 @@ namespace DNTFrameworkCore.Tests.Eventing
             services.AddTransient<IBusinessEventHandler<SimpleBusinessEvent>, SimpleBusinessEventHandler2>();
             var bus = services.BuildServiceProvider().GetRequiredService<IEventBus>();
 
-            var result = await bus.Publish(new SimpleBusinessEvent("TestValue"));
+            var result = await bus.Dispatch(new SimpleBusinessEvent("TestValue"));
             result.Failed.ShouldBeFalse();
             SimpleBusinessEventHandler1.HandleCount.ShouldBe(1);
             SimpleBusinessEventHandler2.HandleCount.ShouldBe(1);
@@ -34,7 +34,7 @@ namespace DNTFrameworkCore.Tests.Eventing
             services.AddTransient<IBusinessEventHandler<SimpleBusinessEvent>, FailedSimpleBusinessEventHandler>();
             var bus = services.BuildServiceProvider().GetRequiredService<IEventBus>();
 
-            var result = await bus.Publish(new SimpleBusinessEvent("TestValue"));
+            var result = await bus.Dispatch(new SimpleBusinessEvent("TestValue"));
             result.Failed.ShouldBeTrue();
             FailedSimpleBusinessEventHandler.HandleCount.ShouldBe(1);
             result.Message.ShouldBe(nameof(FailedSimpleBusinessEventHandler));

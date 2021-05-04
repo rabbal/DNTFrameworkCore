@@ -33,10 +33,10 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
             return app.UseExceptionHandler(appException => appException.Run(async context =>
             {
                 var feature = context.Features[typeof(IExceptionHandlerFeature)] as IExceptionHandlerFeature;
-                var logger = app.ApplicationServices.GetRequiredService<ILoggerFactory>()
+                var logger = context.RequestServices.GetRequiredService<ILoggerFactory>()
                     .CreateLogger("ExceptionHandling");
-                var env = app.ApplicationServices.GetRequiredService<IHostEnvironment>();
-                var options = app.ApplicationServices.GetRequiredService<IOptions<ExceptionOptions>>();
+                var env = context.RequestServices.GetRequiredService<IHostEnvironment>();
+                var options = context.RequestServices.GetRequiredService<IOptions<ExceptionOptions>>();
 
                 // Should always exist, but best to be safe!
                 if (feature?.Error == null) return;
@@ -44,7 +44,6 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
                 var exception = feature.Error;
                 var detail = FailureProblemDetail.FromHttpContext(context);
 
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = "application/json";
 
                 var handlingContext = new ExceptionHandlingContext();
@@ -80,39 +79,39 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
                             break;
                         case DbException dbException
                             when options.Value.TryFindMapping(dbException, out var mapping):
-                        {
-                            logger.LogInformation($"DbException: {mapping.Message}");
-
-                            if (string.IsNullOrEmpty(mapping.MemberName))
                             {
-                                detail.Message = mapping.Message;
-                            }
-                            else
-                            {
-                                detail.WithFailures(new[]
-                                    {new ValidationFailure(mapping.MemberName, mapping.Message)});
-                            }
+                                logger.LogInformation($"DbException: {mapping.Message}");
 
-                            context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                            break;
-                        }
+                                if (string.IsNullOrEmpty(mapping.MemberName))
+                                {
+                                    detail.Message = mapping.Message;
+                                }
+                                else
+                                {
+                                    detail.WithFailures(new[]
+                                        {new ValidationFailure(mapping.MemberName, mapping.Message)});
+                                }
+
+                                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                                break;
+                            }
                         default:
-                        {
-                            logger.LogError(new EventId(exception.HResult), exception,
-                                $"InternalServerIssue: {exception.Message}");
-
-                            detail.Message = exception is DbException
-                                ? options.Value.DbException
-                                : options.Value.InternalServerIssue;
-
-                            if (env.IsDevelopment())
                             {
-                                detail.DevelopmentMessage = exception.ToString();
-                            }
+                                logger.LogError(new EventId(exception.HResult), exception,
+                                    $"InternalServerIssue: {exception.Message}");
 
-                            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                            break;
-                        }
+                                detail.Message = exception is DbException
+                                    ? options.Value.DbException
+                                    : options.Value.InternalServerIssue;
+
+                                if (env.IsDevelopment())
+                                {
+                                    detail.DevelopmentMessage = exception.ToString();
+                                }
+
+                                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                                break;
+                            }
                     }
                 }
 

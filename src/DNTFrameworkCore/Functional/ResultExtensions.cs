@@ -29,7 +29,7 @@ namespace DNTFrameworkCore.Functional
             return result;
         }
 
-        public static T OnBoth<T>(this Result result, Func<Result, T> func)
+        public static T Finally<T>(this Result result, Func<Result, T> func)
         {
             return func(result);
         }
@@ -83,33 +83,33 @@ namespace DNTFrameworkCore.Functional
             return result.Failed ? Result.Fail<T>(result.Message, result.Failures) : Result.Ok(func());
         }
 
-        public static TK OnBoth<T, TK>(this Result<T> result, Func<Result<T>, TK> func)
+        public static TK Finally<T, TK>(this Result<T> result, Func<Result<T>, TK> func)
         {
             return func(result);
         }
 
-        public static Result<T> OnFailed<T>(this Result<T> result, Action action)
+        public static Result<T> Catch<T>(this Result<T> result, Action action)
         {
             if (result.Failed) action();
 
             return result;
         }
 
-        public static Result OnFailed(this Result result, Action action)
+        public static Result Catch(this Result result, Action action)
         {
             if (result.Failed) action();
 
             return result;
         }
 
-        public static Result<T> OnFailed<T>(this Result<T> result, Action<string> action)
+        public static Result<T> Catch<T>(this Result<T> result, Action<string> action)
         {
             if (result.Failed) action(result.Message);
 
             return result;
         }
 
-        public static Result OnFailed(this Result result, Action<string> action)
+        public static Result Catch(this Result result, Action<string> action)
         {
             if (result.Failed) action(result.Message);
 
@@ -155,7 +155,7 @@ namespace DNTFrameworkCore.Functional
             return result;
         }
 
-        public static async Task<T> OnBoth<T>(this Task<Result> resultTask, Func<Result, Task<T>> func)
+        public static async Task<T> Finally<T>(this Task<Result> resultTask, Func<Result, Task<T>> func)
         {
             var result = await resultTask.ConfigureAwait(false);
 
@@ -244,14 +244,14 @@ namespace DNTFrameworkCore.Functional
             return result.Then(func);
         }
 
-        public static async Task<TK> OnBoth<T, TK>(this Task<Result<T>> resultTask, Func<Result<T>, Task<TK>> func)
+        public static async Task<TK> Finally<T, TK>(this Task<Result<T>> resultTask, Func<Result<T>, Task<TK>> func)
         {
             var result = await resultTask.ConfigureAwait(false);
 
             return await func(result).ConfigureAwait(false);
         }
 
-        public static async Task<Result<T>> OnFailed<T>(this Task<Result<T>> resultTask, Func<Task> action)
+        public static async Task<Result<T>> Catch<T>(this Task<Result<T>> resultTask, Func<Task> action)
         {
             var result = await resultTask.ConfigureAwait(false);
 
@@ -260,7 +260,7 @@ namespace DNTFrameworkCore.Functional
             return result;
         }
 
-        public static async Task<Result> OnFailed(this Task<Result> resultTask, Func<Task> action)
+        public static async Task<Result> Catch(this Task<Result> resultTask, Func<Task> action)
         {
             var result = await resultTask.ConfigureAwait(false);
 
@@ -269,7 +269,7 @@ namespace DNTFrameworkCore.Functional
             return result;
         }
 
-        public static async Task<Result<T>> OnFailed<T>(this Task<Result<T>> resultTask, Func<string, Task> action)
+        public static async Task<Result<T>> Catch<T>(this Task<Result<T>> resultTask, Func<string, Task> action)
         {
             var result = await resultTask.ConfigureAwait(false);
 
@@ -278,7 +278,7 @@ namespace DNTFrameworkCore.Functional
             return result;
         }
 
-        public static async Task<Result> OnFailed(this Task<Result> resultTask, Func<string, Task> action)
+        public static async Task<Result> Catch(this Task<Result> resultTask, Func<string, Task> action)
         {
             var result = await resultTask.ConfigureAwait(false);
 
@@ -314,11 +314,11 @@ namespace DNTFrameworkCore.Functional
             return result.Then(action);
         }
 
-        public static async Task<T> OnBoth<T>(this Task<Result> resultTask, Func<Result, T> func)
+        public static async Task<T> Finally<T>(this Task<Result> resultTask, Func<Result, T> func)
         {
             var result = await resultTask.ConfigureAwait(false);
 
-            return result.OnBoth(func);
+            return result.Finally(func);
         }
 
         public static async Task<Result> Then(this Task<Result> resultTask, Action action)
@@ -382,39 +382,39 @@ namespace DNTFrameworkCore.Functional
             return resultTask.Then(func);
         }
 
-        public static async Task<TK> OnBoth<T, TK>(this Task<Result<T>> resultTask, Func<Result<T>, TK> func)
+        public static async Task<TK> Finally<T, TK>(this Task<Result<T>> resultTask, Func<Result<T>, TK> func)
         {
             var result = await resultTask.ConfigureAwait(false);
 
-            return result.OnBoth(func);
+            return result.Finally(func);
         }
 
-        public static async Task<Result<T>> OnFailed<T>(this Task<Result<T>> resultTask, Action action)
+        public static async Task<Result<T>> Catch<T>(this Task<Result<T>> resultTask, Action action)
         {
             var result = await resultTask.ConfigureAwait(false);
 
-            return result.OnFailed(action);
+            return result.Catch(action);
         }
 
-        public static async Task<Result> OnFailed(this Task<Result> resultTask, Action action)
+        public static async Task<Result> Catch(this Task<Result> resultTask, Action action)
         {
             var result = await resultTask.ConfigureAwait(false);
 
-            return result.OnFailed(action);
+            return result.Catch(action);
         }
 
-        public static async Task<Result<T>> OnFailed<T>(this Task<Result<T>> resultTask, Action<string> action)
+        public static async Task<Result<T>> Catch<T>(this Task<Result<T>> resultTask, Action<string> action)
         {
             var result = await resultTask.ConfigureAwait(false);
 
-            return result.OnFailed(action);
+            return result.Catch(action);
         }
 
-        public static async Task<Result> OnFailed(this Task<Result> resultTask, Action<string> action)
+        public static async Task<Result> Catch(this Task<Result> resultTask, Action<string> action)
         {
             var result = await resultTask.ConfigureAwait(false);
 
-            return result.OnFailed(action);
+            return result.Catch(action);
         }
 
         public static async Task<Result<TK>> Then<T, TK>(this Result<T> result, Func<T, Task<TK>> func)
@@ -450,7 +450,7 @@ namespace DNTFrameworkCore.Functional
             return result;
         }
 
-        public static async Task<T> OnBoth<T>(this Result result, Func<Result, Task<T>> func)
+        public static async Task<T> Finally<T>(this Result result, Func<Result, Task<T>> func)
         {
             return await func(result).ConfigureAwait(false);
         }
@@ -518,33 +518,33 @@ namespace DNTFrameworkCore.Functional
             return result.Then(func);
         }
 
-        public static async Task<TK> OnBoth<T, TK>(this Result<T> result, Func<Result<T>, Task<TK>> func)
+        public static async Task<TK> Finally<T, TK>(this Result<T> result, Func<Result<T>, Task<TK>> func)
         {
             return await func(result).ConfigureAwait(false);
         }
 
-        public static async Task<Result<T>> OnFailed<T>(this Result<T> result, Func<Task> action)
+        public static async Task<Result<T>> Catch<T>(this Result<T> result, Func<Task> action)
         {
             if (result.Failed) await action().ConfigureAwait(false);
 
             return result;
         }
 
-        public static async Task<Result> OnFailed(this Result result, Func<Task> action)
+        public static async Task<Result> Catch(this Result result, Func<Task> action)
         {
             if (result.Failed) await action().ConfigureAwait(false);
 
             return result;
         }
 
-        public static async Task<Result<T>> OnFailed<T>(this Result<T> result, Func<string, Task> action)
+        public static async Task<Result<T>> Catch<T>(this Result<T> result, Func<string, Task> action)
         {
             if (result.Failed) await action(result.Message).ConfigureAwait(false);
 
             return result;
         }
 
-        public static async Task<Result> OnFailed(this Result result, Func<string, Task> action)
+        public static async Task<Result> Catch(this Result result, Func<string, Task> action)
         {
             if (result.Failed) await action(result.Message).ConfigureAwait(false);
 

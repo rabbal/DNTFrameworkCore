@@ -19,7 +19,7 @@ using DbException = DNTFrameworkCore.Exceptions.DbException;
 
 namespace DNTFrameworkCore.EFCore.Context
 {
-    public abstract class DbContextCore : DbContext, IDbContext
+    public abstract class DbContextCore : DbContext, IDbContext,IUnitOfWork
     {
         private readonly IEnumerable<IHook> _hooks;
         private readonly List<string> _ignoredHookList = new();
@@ -244,6 +244,11 @@ namespace DNTFrameworkCore.EFCore.Context
                     hook.Hook(entry.Entity, metadata, this);
                 }
             }
+        }
+
+        public Task<int> Complete(CancellationToken cancellationToken = default)
+        {
+            return SaveChangesAsync(cancellationToken);
         }
     }
 }

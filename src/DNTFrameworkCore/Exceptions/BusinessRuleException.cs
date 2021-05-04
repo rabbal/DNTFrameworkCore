@@ -13,5 +13,10 @@ namespace DNTFrameworkCore.Exceptions
         {
             Details = details;
         }
+
+        public static void ThrowRuleException(string message)
+        {
+            throw new BusinessRuleException(message);
+        }
     }
 }

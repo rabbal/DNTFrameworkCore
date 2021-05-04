@@ -20,13 +20,13 @@ namespace DNTFrameworkCore.Domain
         public IEnumerable<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
         public virtual void EmptyDomainEvents() => _domainEvents?.Clear();
 
-        protected virtual void RaiseDomainEvent(IDomainEvent domainEvent)
+        protected void AddDomainEvent(IDomainEvent domainEvent)
         {
             _domainEvents ??= new List<IDomainEvent>();
             _domainEvents.Add(domainEvent);
         }
 
-        protected virtual void RemoveDomainEvent(IDomainEvent domainEvent) => _domainEvents?.Remove(domainEvent);
+        protected void RemoveDomainEvent(IDomainEvent domainEvent) => _domainEvents?.Remove(domainEvent);
     }
 
     public interface IAggregateRootRowVersion

@@ -5,12 +5,12 @@ using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Events;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Policies;
 using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
-
+using static DNTFrameworkCore.Functional.Result;
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 {
     public class Product : AggregateRoot<long>, INumberedEntity
     {
-        private readonly List<ProductPrice> _prices = new List<ProductPrice>();
+        private readonly List<ProductPrice> _prices = new();
 
         protected Product() //ORM
         {
@@ -22,7 +22,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
         }
 
         private ProductPrice Price => _prices.Find(p => p.IsDefault);
-        public Title Title { get; private set; }
+        public Title Title { get; }
         public IReadOnlyList<ProductPrice> Prices => _prices.AsReadOnly();
 
         public static Result<Product> New(Title title, IProductPolicy policy)
@@ -33,7 +33,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
             var product = new Product(title);
             if (!policy.IsUnique(product)) return Fail<Product>("Product Title Should Be Unique");
 
-            product.RaiseDomainEvent(new ProductCreated(product));
+            product.AddDomainEvent(new ProductCreated(product));
 
             return Ok(product);
         }

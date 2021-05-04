@@ -1,7 +1,6 @@
 using System;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.EFCore.Context.Hooks;
-using DNTFrameworkCore.Eventing;
 using DNTFrameworkCore.Extensions;
 using DNTFrameworkCore.Runtime;
 using DNTFrameworkCore.Tenancy;
@@ -22,7 +21,7 @@ namespace DNTFrameworkCore.EFCore.Context
         public const string Tenancy = nameof(Tenancy);
         public const string DomainEvent = nameof(DomainEvent);
     }
-    
+
     internal sealed class PreInsertCreationTrackingHook<TUserId> : PreInsertHook<ICreationTracking>
         where TUserId : IEquatable<TUserId>
     {

@@ -7,7 +7,7 @@ using DNTFrameworkCore.TestCqrsAPI.Domain.Parties;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Sales;
 using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 using DNTFrameworkCore.Timing;
-
+using static DNTFrameworkCore.Functional.Result;
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
 {
     public class Order : AggregateRoot<long>

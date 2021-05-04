@@ -14,7 +14,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer
             if (options == null) throw new ArgumentNullException(nameof(options));
 
             builder.Services.Configure(options);
-            builder.Services.AddTransient<IHook, PreInsertNumberedEntityHook>();
+            builder.Services.AddScoped<IHook, PreInsertNumberedEntityHook>();
 
             return builder;
         }

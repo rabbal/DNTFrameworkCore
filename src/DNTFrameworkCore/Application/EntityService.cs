@@ -38,7 +38,7 @@ namespace DNTFrameworkCore.Application
 
         public async Task<Maybe<TModel>> FindAsync(TKey id, CancellationToken cancellationToken = default)
         {
-            var models = await FindAsync(IdEqualityExpression<TEntity,TKey>(id), cancellationToken);
+            var models = await FindAsync(IdEqualityExpression<TEntity, TKey>(id), cancellationToken);
 
             return models.FirstOrDefault();
         }
@@ -94,7 +94,7 @@ namespace DNTFrameworkCore.Application
 
             await AfterMappingAsync(modelList, entityList, cancellationToken);
 
-            result = await EventBus.TriggerCreatingEventAsync<TModel, TKey>(modelList, cancellationToken);
+            result = await EventBus.DispatchCreatingEvent<TModel, TKey>(modelList, cancellationToken);
             if (result.Failed) return result;
 
             await CreateEntityListAsync(entityList, cancellationToken);
@@ -104,7 +104,7 @@ namespace DNTFrameworkCore.Application
             result = await AfterCreateAsync(modelList, cancellationToken);
             if (result.Failed) return result;
 
-            result = await EventBus.TriggerCreatedEventAsync<TModel, TKey>(modelList, cancellationToken);
+            result = await EventBus.DispatchCreatedEvent<TModel, TKey>(modelList, cancellationToken);
 
             return result;
         }
@@ -134,7 +134,7 @@ namespace DNTFrameworkCore.Application
 
             await AfterMappingAsync(modelList, entityList, cancellationToken);
 
-            result = await EventBus.TriggerEditingEventAsync<TModel, TKey>(modifiedList, cancellationToken);
+            result = await EventBus.DispatchEditingEvent<TModel, TKey>(modifiedList, cancellationToken);
             if (result.Failed) return result;
 
             await UpdateEntityListAsync(entityList, cancellationToken);
@@ -144,7 +144,7 @@ namespace DNTFrameworkCore.Application
             result = await AfterEditAsync(modifiedList, entityList, cancellationToken);
             if (result.Failed) return result;
 
-            result = await EventBus.TriggerEditedEventAsync<TModel, TKey>(modifiedList, cancellationToken);
+            result = await EventBus.DispatchEditedEvent<TModel, TKey>(modifiedList, cancellationToken);
 
             return result;
         }
@@ -168,7 +168,7 @@ namespace DNTFrameworkCore.Application
 
             var entityList = modelList.MapReadOnlyList<TModel, TEntity>(MapToEntity);
 
-            result = await EventBus.TriggerDeletingEventAsync<TModel, TKey>(modelList, cancellationToken);
+            result = await EventBus.DispatchDeletingEvent<TModel, TKey>(modelList, cancellationToken);
             if (result.Failed) return result;
 
             await RemoveEntityListAsync(entityList, cancellationToken);
@@ -176,7 +176,7 @@ namespace DNTFrameworkCore.Application
             result = await AfterDeleteAsync(modelList, cancellationToken);
             if (result.Failed) return result;
 
-            result = await EventBus.TriggerDeletedEventAsync<TModel, TKey>(modelList, cancellationToken);
+            result = await EventBus.DispatchDeletedEvent<TModel, TKey>(modelList, cancellationToken);
 
             return result;
         }
@@ -225,39 +225,39 @@ namespace DNTFrameworkCore.Application
         protected virtual Task<Result> BeforeCreateAsync(IReadOnlyList<TModel> models,
             CancellationToken cancellationToken)
         {
-            return Task.FromResult(Ok());
+            return Result.NoneTask;
         }
 
         protected virtual Task<Result> AfterCreateAsync(IReadOnlyList<TModel> models,
             CancellationToken cancellationToken)
         {
-            return Task.FromResult(Ok());
+            return Result.NoneTask;
         }
 
         protected virtual Task<Result> BeforeEditAsync(IReadOnlyList<ModifiedModel<TModel>> models,
             IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken)
         {
-            return Task.FromResult(Ok());
+            return Result.NoneTask;
         }
 
         protected virtual Task<Result> AfterEditAsync(IReadOnlyList<ModifiedModel<TModel>> models,
             IReadOnlyList<TEntity> entityList,
             CancellationToken cancellationToken)
         {
-            return Task.FromResult(Ok());
+            return Result.NoneTask;
         }
 
         protected virtual Task<Result> BeforeDeleteAsync(IReadOnlyList<TModel> models,
             CancellationToken cancellationToken)
         {
-            return Task.FromResult(Ok());
+            return Result.NoneTask;
         }
 
         protected virtual Task<Result> AfterDeleteAsync(IReadOnlyList<TModel> models,
             CancellationToken cancellationToken)
         {
-            return Task.FromResult(Ok());
+            return Result.NoneTask;
         }
 
         protected abstract void MapToEntity(TModel model, TEntity entity);

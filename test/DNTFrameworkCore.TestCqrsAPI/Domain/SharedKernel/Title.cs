@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DNTFrameworkCore.Domain;
+using DNTFrameworkCore.Exceptions;
 using DNTFrameworkCore.Functional;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel
@@ -10,25 +11,29 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel
         {
         }
 
-        private Title(string value)
+        public Title(string value)
         {
-            Value = value;
+            value ??= string.Empty;
+
+            if (value.Length == 0) throw new BusinessRuleException("title should not be empty");
+
+            if (value.Length > 100) throw new BusinessRuleException("title is too long");
         }
 
-        public string Value { get; }
+        public string Value { get; private set; }
 
         protected override IEnumerable<object> EqualityValues
         {
             get { yield return Value; }
         }
 
-        public static Result<Title> New(string title)
+        public static Result<Title> New(string value)
         {
-            title ??= string.Empty;
+            value ??= string.Empty;
 
-            if (title.Length == 0) return Fail<Title>("title should not be empty");
+            if (value.Length == 0) return Fail<Title>("title should not be empty");
 
-            return title.Length > 100 ? Fail<Title>("title is too long") : Ok(new Title(title));
+            return value.Length > 100 ? Fail<Title>("title is too long") : Ok(new Title { Value = value });
         }
 
         public static implicit operator string(Title title)

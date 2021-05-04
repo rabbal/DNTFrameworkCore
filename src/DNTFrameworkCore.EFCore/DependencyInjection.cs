@@ -1,10 +1,8 @@
 using System;
 using DNTFrameworkCore.Configuration;
-using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.EFCore.Configuration;
 using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Context.Hooks;
-using DNTFrameworkCore.EFCore.Persistence;
 using DNTFrameworkCore.EFCore.Transaction;
 using DNTFrameworkCore.Transaction;
 using Microsoft.EntityFrameworkCore;
@@ -28,10 +26,10 @@ namespace DNTFrameworkCore.EFCore
             where TDbContext : DbContext, IDbContext
         {
             services.AddScoped(provider => (IDbContext) provider.GetRequiredService(typeof(TDbContext)));
-            services.AddScoped<IUnitOfWork,UnitOfWork>();
+            services.AddScoped(provider => (IUnitOfWork) provider.GetRequiredService(typeof(TDbContext)));
             services.AddTransient<TransactionInterceptor>();
             services.AddScoped<IKeyValueService, KeyValueService>();
-            services.AddTransient<IHook, PreUpdateRowVersionHook>();
+            services.AddScoped<IHook, PreUpdateRowVersionHook>();
 
             return new EFCoreBuilder(services, typeof(TDbContext));
         }
@@ -56,32 +54,32 @@ namespace DNTFrameworkCore.EFCore
 
         public EFCoreBuilder WithRowLevelSecurityHook<TUserId>() where TUserId : IEquatable<TUserId>
         {
-            Services.AddTransient<IHook, PreInsertRowLevelSecurityHook<TUserId>>();
+            Services.AddScoped<IHook, PreInsertRowLevelSecurityHook<TUserId>>();
             return this;
         }
 
         public EFCoreBuilder WithTrackingHook<TUserId>() where TUserId : IEquatable<TUserId>
         {
-            Services.AddTransient<IHook, PreInsertCreationTrackingHook<TUserId>>();
-            Services.AddTransient<IHook, PreUpdateModificationTrackingHook<TUserId>>();
+            Services.AddScoped<IHook, PreInsertCreationTrackingHook<TUserId>>();
+            Services.AddScoped<IHook, PreUpdateModificationTrackingHook<TUserId>>();
             return this;
         }
 
         public EFCoreBuilder WithTenancyHook<TTenantId>() where TTenantId : IEquatable<TTenantId>
         {
-            Services.AddTransient<IHook, PreInsertTenantEntityHook<TTenantId>>();
+            Services.AddScoped<IHook, PreInsertTenantEntityHook<TTenantId>>();
             return this;
         }
 
         public EFCoreBuilder WithRowIntegrityHook()
         {
-            Services.AddTransient<IHook, RowIntegrityHook>();
+            Services.AddScoped<IHook, RowIntegrityHook>();
             return this;
         }
 
         public EFCoreBuilder WithDeletedEntityHook()
         {
-            Services.AddTransient<IHook, PreDeleteDeletedEntityHook>();
+            Services.AddScoped<IHook, PreDeleteDeletedEntityHook>();
             return this;
         }
     }

@@ -8,28 +8,31 @@ namespace DNTFrameworkCore.Functional
 {
     public class Result
     {
-        private static readonly Result _ok = new(false, string.Empty);
+        private static readonly Result _ok = new(false, string.Empty, string.Empty);
         private readonly List<ValidationFailure> _failures;
 
-        public static readonly Result None = new(false, string.Empty);
+        public static readonly Result None = new(false, string.Empty, string.Empty);
         public static readonly Task<Result> NoneTask = Task.FromResult(None);
 
-        protected Result(bool failed, string message) : this(failed, message,
+        protected Result(bool failed, string message, string details) : this(failed, message, details,
             Enumerable.Empty<ValidationFailure>())
         {
         }
 
-        protected Result(bool failed, string message, IEnumerable<ValidationFailure> failures)
+        protected Result(bool failed, string message, string details, IEnumerable<ValidationFailure> failures)
         {
             Failed = failed;
             Message = message;
+            Details = details;
+
             _failures = failures.ToList();
         }
 
+        public bool IsNone => this == None;
         public bool Failed { get; }
         public string Message { get; }
+        public string Details { get; }
         public IEnumerable<ValidationFailure> Failures => _failures.AsReadOnly();
-
         public Result WithFailure(string memberName, string message)
         {
             if (!Failed) throw new InvalidOperationException("Can not add failure to ok result!");
@@ -40,39 +43,45 @@ namespace DNTFrameworkCore.Functional
 
         public static Result Ok() => _ok;
 
-        public static Result Ok(string message)
+        public static Result Ok(string message, string details = null)
         {
-            return new(false, message);
+            return new(false, message, details);
         }
 
-        public static Result Fail(string message)
+        public static Result Fail(string message, string details = null)
         {
-            return new(true, message);
+            return new(true, message, details);
         }
+
 
         public static Result Fail(string message, IEnumerable<ValidationFailure> failures)
         {
-            return new(true, message, failures);
+            return new(true, message, string.Empty, failures);
         }
 
-        public static Result<T> Fail<T>(string message)
+        public static Result<T> Fail<T>(string message, string details = null)
         {
-            return new(default, true, message);
+            return new(default, true, message, details);
         }
 
         public static Result<T> Fail<T>(string message, IEnumerable<ValidationFailure> failures)
         {
-            return new(default, true, message, failures);
+            return new(default, true, message, string.Empty, failures);
+        }
+
+        public static Result<T> Fail<T>(string message, string details, IEnumerable<ValidationFailure> failures)
+        {
+            return new(default, true, message, details, failures);
         }
 
         public static Result<T> Ok<T>(T value)
         {
-            return new(value, false, string.Empty);
+            return new(value, false, string.Empty, string.Empty);
         }
 
-        public static Result<T> Ok<T>(string message, T value)
+        public static Result<T> Ok<T>(T value, string message, string details = null)
         {
-            return new(value, false, message);
+            return new(value, false, message, details);
         }
 
         public static Result Combine(string symbol, params Result[] results)
@@ -99,14 +108,14 @@ namespace DNTFrameworkCore.Functional
 
         public static Result Combine<T>(string symbol, params Result<T>[] results)
         {
-            var untyped = results.Select(result => (Result) result).ToArray();
+            var untyped = results.Select(result => (Result)result).ToArray();
             return Combine(symbol, untyped);
         }
 
         public override string ToString()
         {
             return !Failed
-                ? "Ok"
+                ? $"Ok"
                 : $"Failed: {Message}";
         }
     }
@@ -114,19 +123,26 @@ namespace DNTFrameworkCore.Functional
     public class Result<T> : Result
     {
         private readonly T _value;
-
-        protected internal Result(T value, bool failed, string message)
-            : base(failed, message)
+        public static new readonly Result<T> None = new(default, false, string.Empty, string.Empty);
+        public static new readonly Task<Result<T>> NoneTask = Task.FromResult(None);
+        protected internal Result(T value, bool failed, string message, string details)
+            : base(failed, message, details)
         {
             _value = value;
         }
 
-        protected internal Result(T value, bool failed, string message, IEnumerable<ValidationFailure> failures)
-            : base(failed, message, failures)
+        protected internal Result(T value, bool failed, string message, string details, IEnumerable<ValidationFailure> failures)
+            : base(failed, message, details, failures)
         {
             _value = value;
         }
 
+        public new bool IsNone => this == None;
         public T Value => !Failed ? _value : throw new InvalidOperationException("There is no value for failure.");
+
+        public static implicit operator Result<T>(T value)
+        {
+            return Ok(value);
+        }
     }
 }

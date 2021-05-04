@@ -6,7 +6,7 @@ namespace DNTFrameworkCore.EFCore.Context.Hooks
     /// <summary>
     /// A 'hook' usable for calling at certain point in an entities life cycle.
     /// </summary>
-    public interface IHook : ITransientDependency
+    public interface IHook : IScopedDependency
     {
         string Name { get; }
         int Order { get; }

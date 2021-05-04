@@ -9,7 +9,7 @@ namespace DNTFrameworkCore.EFCore.Eventing
 {
     public static class EventBusExtensions
     {
-        public static async Task DispatchDomainEvents(this IEventBus mediator, IEnumerable<EntityEntry> entries)
+        public static async Task DispatchDomainEvents(this IEventBus bus, IEnumerable<EntityEntry> entries)
         {
             var domainEntities = entries.Select(entry => entry.Entity)
                 .OfType<IAggregateRoot>()
@@ -23,7 +23,7 @@ namespace DNTFrameworkCore.EFCore.Eventing
                 .ForEach(entity => entity.EmptyDomainEvents());
 
             foreach (var domainEvent in domainEvents)
-                await mediator.Publish(domainEvent);
+                await bus.Dispatch(domainEvent);
         }
     }
 }
