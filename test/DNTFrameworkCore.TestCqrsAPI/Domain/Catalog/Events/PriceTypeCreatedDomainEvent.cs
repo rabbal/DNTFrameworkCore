@@ -3,9 +3,9 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Events
 {
-    public sealed class PriceTypeAddedDomainEvent : DomainEvent
+    public sealed class PriceTypeCreatedDomainEvent : DomainEvent
     {
-        public PriceTypeAddedDomainEvent(PriceType priceType)
+        public PriceTypeCreatedDomainEvent(PriceType priceType)
         {
             PriceType = priceType ?? throw new ArgumentNullException(nameof(priceType));
         }

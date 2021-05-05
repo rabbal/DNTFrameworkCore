@@ -34,7 +34,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
             var product = new Product(title);
             if (!policy.IsUnique(product)) return Fail<Product>("Product Title Should Be Unique");
 
-            product.AddDomainEvent(new ProductAddedDomainEvent(product));
+            product.AddDomainEvent(new ProductCreatedDomainEvent(product));
 
             return Ok(product);
         }

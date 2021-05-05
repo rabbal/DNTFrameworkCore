@@ -1,4 +1,4 @@
-<img src="docs/logo.png" height="64"/>
+<img alt="logo" src="docs/logo.png" height="64"/>
 
 
 [![.NET](https://github.com/rabbal/DNTFrameworkCore/actions/workflows/dotnet.yml/badge.svg)](https://github.com/rabbal/DNTFrameworkCore/actions/workflows/dotnet.yml)
@@ -14,7 +14,10 @@ Extensible Infrastructure for Building High-Quality Web Applications Based on AS
 * Reduce the development time
 * Less bug and stop bug propagation 
 * Reduce the training time of the new developer with low knowledge about OOP and OOD
- 
+
+CRUD-based Thinking
+----
+
 Application Service
 ```c#
 public interface IBlogService : IEntityService<int, BlogModel>
@@ -342,6 +345,165 @@ public class BlogsController : EntityController<IBlogService, int, BlogModel>
     protected override string DeletePermissionName => PermissionNames.Blogs_Delete;
 }
 
+```
+
+Task-based Thinking
+---------------
+Rich Domain Model
+```c#
+public class PriceType : Entity<long>, IAggregateRoot
+{
+    private PriceType(Title title)
+    {
+        Title = title;
+    }
+    
+    public PriceType(Title title, IPriceTypePolicy policy)
+    {
+        if (title == null) throw new ArgumentNullException(nameof(title));
+        if (policy == null) throw new ArgumentNullException(nameof(policy));
+
+        Title = title;
+
+        if (!policy.IsUnique(this)) ThrowRuleException("PriceType Title Should Be Unique");
+
+        AddDomainEvent(new PriceTypeCreatedDomainEvent(this));
+    }
+
+    public Title Title { get; private set; }
+
+    // public static Result<PriceType> New(Title title, IPriceTypePolicy policy)
+    // {
+    //     if (title == null) throw new ArgumentNullException(nameof(title));
+    //     if (policy == null) throw new ArgumentNullException(nameof(policy));
+    //
+    //     var priceType = new PriceType(title);
+    //     if (!policy.IsUnique(priceType)) return Fail<PriceType>("PriceType Title Should Be Unique");
+    //
+    //     priceType.AddDomainEvent(new PriceTypeCreatedDomainEvent(priceType));
+    //
+    //     return Ok(priceType);
+    // }
+}
+```
+ValueObject
+```c#
+public class Title : ValueObject
+{
+    private Title()
+    {
+    }
+
+    public Title(string value)
+    {
+        value ??= string.Empty;
+
+        if (value.Length == 0) throw new BusinessRuleException("title should not be empty");
+
+        if (value.Length > 100) throw new BusinessRuleException("title is too long");
+    }
+
+    public string Value { get; private set; }
+
+    protected override IEnumerable<object> EqualityValues
+    {
+        get { yield return Value; }
+    }
+
+    // public static Result<Title> New(string value)
+    // {
+    //     value ??= string.Empty;
+    //
+    //     if (value.Length == 0) return Fail<Title>("title should not be empty");
+    //
+    //     return value.Length > 100 ? Fail<Title>("title is too long") : Ok(new Title { Value = value });
+    // }
+
+    public static implicit operator string(Title title)
+    {
+        return title.Value;
+    }
+
+    public static explicit operator Title(string title)
+    {
+        return new(title);
+    }
+}
+```
+DomainEvent
+
+```c#
+public sealed class PriceTypeCreatedDomainEvent : DomainEvent
+{
+    public PriceTypeCreatedDomainEvent(PriceType priceType)
+    {
+        PriceType = priceType ?? throw new ArgumentNullException(nameof(priceType));
+    }
+
+    public PriceType PriceType { get; }
+}
+```
+
+CQRS (Command)
+```c#
+public sealed class CreatePriceTypeCommand : ICommand
+{
+    public string Title { get; }
+    [JsonConstructor]
+    public CreatePriceTypeCommand(string title) => Title = title;
+}
+```
+CQRS (CommandHandler)
+```c#
+public class PriceTypeCommandHandlers : ICommandHandler<RemovePriceTypeCommand, Result>,
+   ICommandHandler<CreatePriceTypeCommand, Result>
+{
+    private readonly IUnitOfWork _uow;
+    private readonly IPriceTypeRepository _repository;
+    private readonly IPriceTypePolicy _policy;
+    private readonly IEventBus _bus;
+
+    public PriceTypeCommandHandlers(
+        IUnitOfWork uow,
+        IPriceTypeRepository repository,
+        IPriceTypePolicy policy,
+        IEventBus bus)
+    {
+        _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _policy = policy ?? throw new ArgumentNullException(nameof(policy));
+        _bus = bus ?? throw new ArgumentNullException(nameof(bus));
+    }
+
+    public async Task<Result> Handle(RemovePriceTypeCommand command, CancellationToken cancellationToken)
+    {
+        var priceType = await _repository.FindAsync(command.PriceTypeId, cancellationToken);
+        if (priceType is null) return Result.Fail($"PriceType with id:{command.PriceTypeId} not found");
+
+        //Alternative: _uow.Set<PriceType>().Remove(priceType);
+        _repository.Remove(priceType);
+
+        await _uow.SaveChanges(cancellationToken);
+
+        return Result.Ok();
+    }
+
+    public async Task<Result> Handle(CreatePriceTypeCommand command, CancellationToken cancellationToken)
+    {
+        var title = new Title(command.Title);
+
+        var priceType = new PriceType(title, _policy);
+
+        //Alternative: _uow.Set<PriceType>().Add(priceType);
+        _repository.Add(priceType);
+        
+        await _uow.SaveChanges(cancellationToken);
+
+        await _bus.DispatchDomainEvents(priceType, cancellationToken);
+
+        return Result.None;
+    }
+}
 ```
 
 ## ASP.NET Boilerplate

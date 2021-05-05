@@ -30,9 +30,9 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel
         public static Result<Title> New(string value)
         {
             value ??= string.Empty;
-
+        
             if (value.Length == 0) return Fail<Title>("title should not be empty");
-
+        
             return value.Length > 100 ? Fail<Title>("title is too long") : Ok(new Title { Value = value });
         }
 
@@ -43,7 +43,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel
 
         public static explicit operator Title(string title)
         {
-            return New(title).Value;
+            return new(title);
         }
     }
 }
