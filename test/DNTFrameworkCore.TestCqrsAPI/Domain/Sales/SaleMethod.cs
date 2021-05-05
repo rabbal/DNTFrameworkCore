@@ -5,9 +5,10 @@ using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.TestCqrsAPI.Domain.Sales.Events;
 using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 using static DNTFrameworkCore.Functional.Result;
+
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales
 {
-    public class SaleMethod : AggregateRoot, ICreationTracking, IModificationTracking, IHasRowVersion
+    public class SaleMethod : Entity, IAggregateRoot, ICreationTracking, IModificationTracking, IHasRowVersion
     {
         public Title Title { get; private set; }
         public SaleNature Nature { get; private set; }
@@ -35,7 +36,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales
                 Title = title
             };
 
-            saleMethod.AddDomainEvent(new SaleMethodCreated(saleMethod.Id));
+            saleMethod.AddDomainEvent(new SaleMethodAddedDomainEvent(saleMethod.Id));
 
             return Ok(saleMethod);
         }

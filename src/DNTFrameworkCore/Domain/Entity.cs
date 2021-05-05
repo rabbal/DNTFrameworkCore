@@ -7,6 +7,8 @@ namespace DNTFrameworkCore.Domain
 {
     public interface IEntity
     {
+        IReadOnlyCollection<IDomainEvent> DomainEvents { get; }
+        void EmptyDomainEvents();
     }
 
     public abstract class Entity : Entity<int>
@@ -16,7 +18,9 @@ namespace DNTFrameworkCore.Domain
     public abstract class Entity<TKey> : IEntity
         where TKey : IEquatable<TKey>
     {
+        private List<IDomainEvent> _domainEvents;
         private int? _hash;
+        public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
         public virtual TKey Id { get; protected set; }
         protected Entity()
         {
@@ -26,6 +30,16 @@ namespace DNTFrameworkCore.Domain
         {
         }
 
+        public virtual void EmptyDomainEvents() => _domainEvents?.Clear();
+
+        protected void AddDomainEvent(IDomainEvent domainEvent)
+        {
+            _domainEvents ??= new List<IDomainEvent>();
+            _domainEvents.Add(domainEvent);
+        }
+
+        protected void RemoveDomainEvent(IDomainEvent domainEvent) => _domainEvents?.Remove(domainEvent);
+        
         public override int GetHashCode()
         {
             if (IsTransient()) return base.GetHashCode();
@@ -66,5 +80,10 @@ namespace DNTFrameworkCore.Domain
 
         public static bool operator !=(Entity<TKey> left, Entity<TKey> right) => !(left == right);
         protected virtual Type GetRealType() => this.GetUnproxiedType();
+
+        protected void ThrowRuleException(string message, string details = default)
+        {
+            throw new BusinessRuleException(message, details);
+        }
     }
 }

@@ -9,7 +9,7 @@ using static DNTFrameworkCore.Exceptions.BusinessRuleException;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 {
-    public class PriceType : AggregateRoot<long>
+    public class PriceType : Entity<long>, IAggregateRoot
     {
         private PriceType(Title title)
         {
@@ -24,7 +24,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
             var priceType = new PriceType(title);
             if (!policy.IsUnique(priceType)) return Fail<PriceType>("PriceType Title Should Be Unique");
 
-            priceType.AddDomainEvent(new PriceTypeCreated(priceType));
+            priceType.AddDomainEvent(new PriceTypeAddedDomainEvent(priceType));
 
             return Ok(priceType);
         }
@@ -38,7 +38,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 
             if (!policy.IsUnique(this)) ThrowRuleException("PriceType Title Should Be Unique");
 
-            AddDomainEvent(new PriceTypeCreated(this));
+            AddDomainEvent(new PriceTypeAddedDomainEvent(this));
         }
 
         public Title Title { get; private set; }

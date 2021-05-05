@@ -14,7 +14,7 @@ namespace DNTFrameworkCore.EFCore.Persistence
 {
     public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
         where TKey : IEquatable<TKey>
-        where TEntity : AggregateRoot<TKey>
+        where TEntity : Entity<TKey>, IAggregateRoot
     {
         protected readonly DbSet<TEntity> EntitySet;
         protected readonly IDbContext DbContext;
@@ -25,35 +25,35 @@ namespace DNTFrameworkCore.EFCore.Persistence
             EntitySet = DbContext.Set<TEntity>();
         }
 
-        public IReadOnlyList<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
+        public virtual IReadOnlyList<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
             return FindEntityQueryable.Where(predicate).ToList();
         }
 
-        public IReadOnlyList<TEntity> FindPagedList(Expression<Func<TEntity, bool>> predicate, int page, int pageSize)
+        public virtual IReadOnlyList<TEntity> FindPagedList(Expression<Func<TEntity, bool>> predicate, int page, int pageSize)
         {
             return FindEntityQueryable.Where(predicate).OrderBy(e => e.Id).Page(page, pageSize).ToList();
         }
 
-        public TEntity Find(TKey id)
+        public virtual TEntity Find(TKey id)
         {
             return FindEntityQueryable.FirstOrDefault(IdEqualityExpression<TEntity, TKey>(id));
         }
 
-        public async Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate,
+        public virtual async Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate,
             CancellationToken cancellationToken = default)
         {
             return await FindEntityQueryable.Where(predicate).ToListAsync(cancellationToken);
         }
 
-        public async Task<IReadOnlyList<TEntity>> FindPagedListAsync(Expression<Func<TEntity, bool>> predicate,
+        public virtual async Task<IReadOnlyList<TEntity>> FindPagedListAsync(Expression<Func<TEntity, bool>> predicate,
             int page, int pageSize, CancellationToken cancellationToken = default)
         {
             return await FindEntityQueryable.Where(predicate).OrderBy(e => e.Id).Page(page, pageSize)
                 .ToListAsync(cancellationToken);
         }
 
-        public Task<TEntity> FindAsync(TKey id, CancellationToken cancellationToken = default)
+        public virtual Task<TEntity> FindAsync(TKey id, CancellationToken cancellationToken = default)
         {
             return FindEntityQueryable.FirstOrDefaultAsync(IdEqualityExpression<TEntity, TKey>(id), cancellationToken);
         }
@@ -68,12 +68,12 @@ namespace DNTFrameworkCore.EFCore.Persistence
             EntitySet.AddRange(entityList);
         }
 
-        public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public virtual async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             await EntitySet.AddAsync(entity, cancellationToken);
         }
 
-        public async Task AddRangeAsync(IEnumerable<TEntity> entityList, CancellationToken cancellationToken = default)
+        public virtual async Task AddRangeAsync(IEnumerable<TEntity> entityList, CancellationToken cancellationToken = default)
         {
             await EntitySet.AddRangeAsync(entityList, cancellationToken);
         }

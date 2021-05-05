@@ -19,10 +19,11 @@ using DbException = DNTFrameworkCore.Exceptions.DbException;
 
 namespace DNTFrameworkCore.EFCore.Context
 {
-    public abstract class DbContextCore : DbContext, IDbContext,IUnitOfWork
+    public abstract class DbContextCore : DbContext, IDbContext, IUnitOfWork
     {
         private readonly IEnumerable<IHook> _hooks;
         private readonly List<string> _ignoredHookList = new();
+        private IDbContextTransaction _transaction;
 
         protected DbContextCore(DbContextOptions options, IEnumerable<IHook> hooks) : base(options)
         {
@@ -30,23 +31,22 @@ namespace DNTFrameworkCore.EFCore.Context
         }
 
         public DbConnection Connection => Database.GetDbConnection();
-        public bool HasTransaction => Transaction != null;
-        public IDbContextTransaction Transaction { get; private set; }
+        public DbTransaction Transaction => _transaction?.GetDbTransaction();
+        public bool HasTransaction => _transaction != null;
 
-        public IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
-            if (HasTransaction) return Transaction;
+            if (HasTransaction) return;
 
-            return Transaction = Database.BeginTransaction(isolationLevel);
+            _transaction = Database.BeginTransaction(isolationLevel);
         }
 
-        public async Task<IDbContextTransaction> BeginTransactionAsync(
+        public async Task BeginTransactionAsync(
             IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default)
         {
-            if (HasTransaction) return Transaction;
+            if (HasTransaction) return;
 
-            return Transaction =
-                await Database.BeginTransactionAsync(isolationLevel, cancellationToken);
+            _transaction = await Database.BeginTransactionAsync(isolationLevel, cancellationToken);
         }
 
         public void CommitTransaction()
@@ -55,7 +55,7 @@ namespace DNTFrameworkCore.EFCore.Context
 
             try
             {
-                Transaction.Commit();
+                _transaction.Commit();
             }
             catch
             {
@@ -64,10 +64,10 @@ namespace DNTFrameworkCore.EFCore.Context
             }
             finally
             {
-                if (Transaction != null)
+                if (_transaction != null)
                 {
-                    Transaction.Dispose();
-                    Transaction = null;
+                    _transaction.Dispose();
+                    _transaction = null;
                 }
             }
         }
@@ -78,7 +78,7 @@ namespace DNTFrameworkCore.EFCore.Context
 
             try
             {
-                await Transaction.CommitAsync(cancellationToken);
+                await _transaction.CommitAsync(cancellationToken);
             }
             catch
             {
@@ -87,12 +87,28 @@ namespace DNTFrameworkCore.EFCore.Context
             }
             finally
             {
-                if (Transaction != null)
+                if (_transaction != null)
                 {
-                    Transaction.Dispose();
-                    Transaction = null;
+                    _transaction.Dispose();
+                    _transaction = null;
                 }
             }
+        }
+
+        Task<int> IUnitOfWork.SaveChanges(CancellationToken cancellationToken)
+        {
+            return SaveChangesAsync(cancellationToken);
+        }
+
+        Task IUnitOfWork.BeginTransaction(IsolationLevel isolationLevel,
+            CancellationToken cancellationToken)
+        {
+            return BeginTransactionAsync(isolationLevel, cancellationToken);
+        }
+
+        Task IUnitOfWork.CommitTransaction(CancellationToken cancellationToken)
+        {
+            return CommitTransactionAsync(cancellationToken);
         }
 
         public void RollbackTransaction()
@@ -101,14 +117,14 @@ namespace DNTFrameworkCore.EFCore.Context
 
             try
             {
-                Transaction.Rollback();
+                _transaction.Rollback();
             }
             finally
             {
-                if (Transaction != null)
+                if (_transaction != null)
                 {
-                    Transaction.Dispose();
-                    Transaction = null;
+                    _transaction.Dispose();
+                    _transaction = null;
                 }
             }
         }
@@ -230,6 +246,12 @@ namespace DNTFrameworkCore.EFCore.Context
             return Database.ExecuteSqlRawAsync(query, parameters);
         }
 
+        public override void Dispose()
+        {
+            _transaction?.Dispose();
+            base.Dispose();
+        }
+
         protected virtual void ExecuteHooks<THook>(IEnumerable<EntityEntry> entryList) where THook : IHook
         {
             foreach (var entry in entryList)
@@ -244,11 +266,6 @@ namespace DNTFrameworkCore.EFCore.Context
                     hook.Hook(entry.Entity, metadata, this);
                 }
             }
-        }
-
-        public Task<int> Complete(CancellationToken cancellationToken = default)
-        {
-            return SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -2,9 +2,9 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog.Events
 {
-    public sealed class ProductCreated : IDomainEvent
+    public sealed class ProductAddedDomainEvent : DomainEvent
     {
-        public ProductCreated(Product product)
+        public ProductAddedDomainEvent(Product product)
         {
             Product = product;
         }

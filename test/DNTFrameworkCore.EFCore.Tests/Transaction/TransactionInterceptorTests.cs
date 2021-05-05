@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 using Castle.DynamicProxy;
@@ -8,7 +9,6 @@ using DNTFrameworkCore.EFCore.Context;
 using DNTFrameworkCore.EFCore.Transaction;
 using DNTFrameworkCore.Functional;
 using DNTFrameworkCore.Transaction;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -169,16 +169,15 @@ namespace DNTFrameworkCore.EFCore.Tests.Transaction
             var loggerFactory = new Mock<ILoggerFactory>();
             var logger = new Mock<ILogger>();
             loggerFactory.Setup(factory => factory.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            var dbContextTransaction = new Mock<IDbContextTransaction>();
+            var dbTransaction = new Mock<DbTransaction>();
             var dbContext = new Mock<IDbContext>();
 
-            dbContext.SetupGet(context => context.Transaction).Returns(dbContextTransaction.Object);
-            dbContext.Setup(context => context.BeginTransaction(IsolationLevel.ReadCommitted))
-                .Returns(() => dbContextTransaction.Object);
+            dbContext.SetupGet(context => context.Transaction).Returns(dbTransaction.Object);
+            dbContext.Setup(context => context.BeginTransaction(IsolationLevel.ReadCommitted));
             dbContext.Setup(context =>
                     context.BeginTransactionAsync(IsolationLevel.ReadCommitted, CancellationToken.None))
-                .Returns(() => Task.FromResult(dbContextTransaction.Object));
-            dbContext.SetupGet(context => context.Transaction).Returns(dbContextTransaction.Object);
+                .Returns(() => Task.FromResult(dbTransaction.Object));
+            dbContext.SetupGet(context => context.Transaction).Returns(dbTransaction.Object);
 
             services.AddScoped<IPartyService, PartyService>();
             services.Decorate<IPartyService>((target, _) =>

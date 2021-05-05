@@ -40,7 +40,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
 
             _repository.Remove(priceType);
 
-            await _uow.Complete(cancellationToken);
+            await _uow.SaveChanges(cancellationToken);
 
             return Result.Ok();
         }
@@ -59,7 +59,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
             var priceType = priceTypeResult.Value;
             _repository.Add(priceType);
 
-            await _uow.Complete(cancellationToken);
+            await _uow.SaveChanges(cancellationToken);
 
             await _bus.DispatchDomainEvents(priceType, cancellationToken);
 
@@ -95,7 +95,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
             //Alternative: _uow.Set<PriceType>().Remove(priceType);
             _repository.Remove(priceType);
 
-            await _uow.Complete(cancellationToken);
+            await _uow.SaveChanges(cancellationToken);
 
             return Result.Ok();
         }
@@ -109,7 +109,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
             //Alternative: _uow.Set<PriceType>().Add(priceType);
             _repository.Add(priceType);
             
-            await _uow.Complete(cancellationToken);
+            await _uow.SaveChanges(cancellationToken);
 
             await _bus.DispatchDomainEvents(priceType, cancellationToken);
 

@@ -8,9 +8,10 @@ using DNTFrameworkCore.TestCqrsAPI.Domain.Sales;
 using DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel;
 using DNTFrameworkCore.Timing;
 using static DNTFrameworkCore.Functional.Result;
+
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Orders
 {
-    public class Order : AggregateRoot<long>
+    public class Order : Entity<long>, IAggregateRoot
     {
         public OrderStatus Status { get; private set; }
         public SaleMethod SaleMethod { get; private set; }

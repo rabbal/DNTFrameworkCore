@@ -10,7 +10,7 @@ namespace DNTFrameworkCore.Eventing
     {
         public static Task Dispatch(this IEventBus bus, IEnumerable<IDomainEvent> events, CancellationToken cancellationToken = default)
         {
-            var tasks = events.Select(async domainEvent => await bus.Dispatch(domainEvent));
+            var tasks = events.Select(async domainEvent => await bus.Dispatch(domainEvent, cancellationToken));
             return Task.WhenAll(tasks);
         }
 

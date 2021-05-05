@@ -22,7 +22,7 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
     [TestFixture]
     public class NumberingTests
     {
-         [Test]
+        [Test]
         public void Should_Fill_Number_When_Number_Property_Is_Empty()
         {
             //Arrange
@@ -32,7 +32,7 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
             //Act, Assert
             provider.RunScoped<IDbContext>(dbContext =>
             {
-                using var transaction = dbContext.BeginTransaction();
+                dbContext.BeginTransaction();
                 var task1 = new NumberingTestEntity
                 {
                     DateTime = dateTime,
@@ -48,16 +48,16 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
                 dbContext.SaveChanges();
 
                 task1.Number.ShouldBe("Prefix-100");
-             
+
                 task2.Number.ShouldBe("Prefix-105");
-            
+
                 dbContext.Set<NumberedEntity>().Any(_ => _.EntityName == $"{typeof(NumberingTestEntity).FullName}")
                     .ShouldBeTrue();
-                
-                transaction.Commit();
+
+                dbContext.CommitTransaction();
             });
         }
-        
+
         [Test]
         public void Should_Fill_All_NumberingFields_BasedOn_NumberingOptions()
         {
@@ -68,7 +68,7 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
             //Act, Assert
             provider.RunScoped<IDbContext>(dbContext =>
             {
-                using var transaction = dbContext.BeginTransaction();
+                dbContext.BeginTransaction();
                 var task1 = new NumberingTestEntity
                 {
                     DateTime = dateTime,
@@ -110,7 +110,7 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
                               $"{typeof(NumberingTestEntity).FullName}_BranchId_1_CreatedDateTime_20210101" &&
                               _.NextValue == 3)
                     .ShouldBeTrue();
-                transaction.Commit();
+                dbContext.CommitTransaction();
             });
         }
 
@@ -124,7 +124,7 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
             //Act, Assert
             provider.RunScoped<IDbContext>(dbContext =>
             {
-                using var transaction = dbContext.BeginTransaction();
+                dbContext.BeginTransaction();
                 var task1 = new NumberingTestEntity
                 {
                     DateTime = dateTime,
@@ -181,7 +181,7 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
                               $"{typeof(NumberingTestEntity).FullName}_BranchId_2_CreatedDateTime_20210101" &&
                               _.NextValue == 2)
                     .ShouldBeTrue();
-                transaction.Commit();
+                dbContext.CommitTransaction();
             });
         }
 
@@ -198,12 +198,12 @@ namespace DNTFrameworkCore.EFCore.Tests.Numbering
             {
                 provider.RunScoped<IDbContext>(dbContext =>
                 {
-                    using var transaction = dbContext.BeginTransaction();
+                    dbContext.BeginTransaction();
                     var task = new NumberingTestEntity {DateTime = dateTime};
                     dbContext.Set<NumberingTestEntity>().Add(task);
                     dbContext.SaveChanges();
 
-                    transaction.Commit();
+                    dbContext.CommitTransaction();
                 });
             });
 

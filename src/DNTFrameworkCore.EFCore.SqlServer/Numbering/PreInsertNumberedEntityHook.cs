@@ -82,7 +82,7 @@ namespace DNTFrameworkCore.EFCore.SqlServer.Numbering
                 command.Parameters.Add(p);
             }
 
-            command.Transaction = dbContext.Transaction.GetDbTransaction();
+            command.Transaction = dbContext.Transaction;
 
             var result = command.ExecuteScalar();
 

@@ -14,7 +14,6 @@ namespace DNTFrameworkCore.Eventing
     public interface IEventBus : IScopedDependency
     {
         Task<Result> Dispatch(IBusinessEvent businessEvent, CancellationToken cancellationToken = default);
-
         Task Dispatch(IDomainEvent domainEvent, CancellationToken cancellationToken = default);
         // TODO: Implement IntegrationEvent dispatching mechanism
         // Task Publish(IIntegrationEvent integrationEvent, CancellationToken cancellationToken = default);

@@ -2,11 +2,11 @@ using DNTFrameworkCore.Domain;
 
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.Sales.Events
 {
-    public class SaleMethodCreated : IDomainEvent
+    public class SaleMethodAddedDomainEvent : DomainEvent
     {
         public long SaleMethodId { get; }
 
-        public SaleMethodCreated(long saleMethodId)
+        public SaleMethodAddedDomainEvent(long saleMethodId)
         {
             SaleMethodId = saleMethodId;
         }

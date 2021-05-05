@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using DNTFrameworkCore.Dependency;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DNTFrameworkCore.EFCore.Context
 {
@@ -26,10 +25,10 @@ namespace DNTFrameworkCore.EFCore.Context
         void UseConnectionString(string connectionString);
         bool HasTransaction { get; }
         DbConnection Connection { get; }
-        IDbContextTransaction Transaction { get; }
-        IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
+        DbTransaction Transaction { get; }
+        void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
 
-        Task<IDbContextTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted,
+        Task BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted,
             CancellationToken cancellationToken = default);
 
         void CommitTransaction();
