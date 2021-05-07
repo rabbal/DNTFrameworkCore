@@ -512,8 +512,25 @@ CQRS (CommandHandler)
     }
 ```
 
+## TODO
+- Write unit tests for packages
+- Use nullable reference types
+- Use HTTP problem details 
+- Implement IntegrationEvent mechanism
+- Dispatching DomainEvents before/after save changes
+- Complete CQRS and MediatR related behaviors
+- Publish DNTFrameworkCore.Cqrs.* packages to nuget.org
+- Provide sample codes for multi-tenant scenarios
+- Provide sample codes for using Cqrs packages and Rich Domain Model
+- Complete FilterExpression class with custom DSL support for filtering mechanism
+- Complete DNTFrameworkCore.NHibernate packages
+- Implement a mechanism to provide correlationId in distributed systems
+
+
+
+
 ## ASP.NET Boilerplate
-[DNTFrameworkCore vs ABP Framework](https://medium.com/@rabbal/dntframeworkcore-vs-abp-framework-b48f5b7f8a24)
+[DNTFrameworkCore (old versions) vs ABP Framework](https://medium.com/@rabbal/dntframeworkcore-vs-abp-framework-b48f5b7f8a24)
 
 A small part of this project like the following sections are taken from [ABP](https://github.com/aspnetboilerplate/aspnetboilerplate)
 - Validation with refactoring to support functional programming error handling mechanism
