@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using DNTFrameworkCore.Domain;
-using DNTFrameworkCore.Exceptions;
 using DNTFrameworkCore.Functional;
-
+using static DNTFrameworkCore.Functional.Result;
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel
 {
     public class Title : ValueObject
@@ -15,9 +14,15 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel
         {
             value ??= string.Empty;
 
-            if (value.Length == 0) throw new BusinessRuleException("title should not be empty");
-
-            if (value.Length > 100) throw new BusinessRuleException("title is too long");
+            switch (value.Length)
+            {
+                case 0:
+                    ThrowDomainException("title should not be empty");
+                    break;
+                case > 100:
+                    ThrowDomainException("title is too long");
+                    break;
+            }
         }
 
         public string Value { get; private set; }

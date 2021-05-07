@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using DNTFrameworkCore.Domain;
 using DNTFrameworkCore.Functional;
-
+using static DNTFrameworkCore.Functional.Result;
 namespace DNTFrameworkCore.TestCqrsAPI.Domain.SharedKernel
 {
     public class Price : ValueObject

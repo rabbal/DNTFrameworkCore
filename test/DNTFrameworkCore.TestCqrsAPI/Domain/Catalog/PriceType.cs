@@ -22,7 +22,7 @@ namespace DNTFrameworkCore.TestCqrsAPI.Domain.Catalog
 
             Title = title;
 
-            if (!policy.IsUnique(this)) ThrowRuleException("PriceType Title Should Be Unique");
+            if (!policy.IsUnique(this)) ThrowDomainException("PriceType Title Should Be Unique");
 
             AddDomainEvent(new PriceTypeCreatedDomainEvent(this));
         }

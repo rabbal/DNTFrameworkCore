@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using DNTFrameworkCore.Validation;
 using Microsoft.AspNetCore.Http;
@@ -11,15 +12,17 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
     public class FailureProblemDetail
     {
         private Dictionary<string, string[]> _failures;
-        [JsonPropertyName("traceId")] 
+        [DataMember(Name ="traceId")] 
         public string TraceId { get; set; }
-        [JsonPropertyName("message")] 
+        [DataMember(Name ="message")] 
         public string Message { get; set; }
-        [JsonPropertyName("development_message")]
+        [DataMember(Name ="details")]
+        public string Details { get; set; }
+        [DataMember(Name ="development_message")]
         public string DevelopmentMessage { get; set; }
-        [JsonPropertyName("path")] 
+        [DataMember(Name ="path")] 
         public string Path { get; set; }
-        [JsonPropertyName("failures")] 
+        [DataMember(Name ="failures")] 
         public IReadOnlyDictionary<string, string[]> Failures => _failures;
 
         public FailureProblemDetail WithFailures(IEnumerable<ValidationFailure> failures)

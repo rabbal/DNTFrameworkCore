@@ -79,39 +79,53 @@ namespace DNTFrameworkCore.Web.ExceptionHandling
                             break;
                         case DbException dbException
                             when options.Value.TryFindMapping(dbException, out var mapping):
+                        {
+                            logger.LogInformation($"DbException: {mapping.Message}");
+
+                            if (string.IsNullOrEmpty(mapping.MemberName))
                             {
-                                logger.LogInformation($"DbException: {mapping.Message}");
-
-                                if (string.IsNullOrEmpty(mapping.MemberName))
-                                {
-                                    detail.Message = mapping.Message;
-                                }
-                                else
-                                {
-                                    detail.WithFailures(new[]
-                                        {new ValidationFailure(mapping.MemberName, mapping.Message)});
-                                }
-
-                                context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                                break;
+                                detail.Message = mapping.Message;
                             }
+                            else
+                            {
+                                detail.WithFailures(new[]
+                                    {new ValidationFailure(mapping.MemberName, mapping.Message)});
+                            }
+
+                            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                            break;
+                        }
+
+                        case DomainException domainException:
+                            logger.LogInformation($"DomainException: {exception}");
+                            detail.Message = domainException.Message;
+                            detail.Details = domainException.Details;
+                            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                            break;
+
+                        case BusinessRuleException businessRuleException:
+                            logger.LogInformation($"BusinessRuleException: {exception}");
+                            detail.Message = businessRuleException.Message;
+                            detail.Details = businessRuleException.Details;
+                            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                            break;
                         default:
+                        {
+                            logger.LogError(new EventId(exception.HResult), exception,
+                                $"InternalServerIssue: {exception.Message}");
+
+                            detail.Message = exception is DbException
+                                ? options.Value.DbException
+                                : options.Value.InternalServerIssue;
+
+                            if (env.IsDevelopment())
                             {
-                                logger.LogError(new EventId(exception.HResult), exception,
-                                    $"InternalServerIssue: {exception.Message}");
-
-                                detail.Message = exception is DbException
-                                    ? options.Value.DbException
-                                    : options.Value.InternalServerIssue;
-
-                                if (env.IsDevelopment())
-                                {
-                                    detail.DevelopmentMessage = exception.ToString();
-                                }
-
-                                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                                break;
+                                detail.DevelopmentMessage = exception.ToString();
                             }
+
+                            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                            break;
+                        }
                     }
                 }
 

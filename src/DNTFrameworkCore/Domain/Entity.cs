@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using DNTFrameworkCore.Exceptions;
 using DNTFrameworkCore.Extensions;
 
@@ -22,6 +23,7 @@ namespace DNTFrameworkCore.Domain
         private int? _hash;
         public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
         public virtual TKey Id { get; protected set; }
+
         protected Entity()
         {
         }
@@ -39,7 +41,7 @@ namespace DNTFrameworkCore.Domain
         }
 
         protected void RemoveDomainEvent(IDomainEvent domainEvent) => _domainEvents?.Remove(domainEvent);
-        
+
         public override int GetHashCode()
         {
             if (IsTransient()) return base.GetHashCode();
@@ -81,9 +83,9 @@ namespace DNTFrameworkCore.Domain
         public static bool operator !=(Entity<TKey> left, Entity<TKey> right) => !(left == right);
         protected virtual Type GetRealType() => this.GetUnproxiedType();
 
-        protected void ThrowRuleException(string message, string details = default)
+        protected void ThrowDomainException(string message, string details = default)
         {
-            throw new BusinessRuleException(message, details);
+            throw new DomainException(message, details);
         }
     }
 }

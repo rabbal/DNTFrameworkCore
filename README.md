@@ -365,7 +365,7 @@ public class PriceType : Entity<long>, IAggregateRoot
 
         Title = title;
 
-        if (!policy.IsUnique(this)) ThrowRuleException("PriceType Title Should Be Unique");
+        if (!policy.IsUnique(this)) ThrowDomainException("PriceType Title Should Be Unique");
 
         AddDomainEvent(new PriceTypeCreatedDomainEvent(this));
     }
@@ -398,9 +398,15 @@ public class Title : ValueObject
     {
         value ??= string.Empty;
 
-        if (value.Length == 0) throw new BusinessRuleException("title should not be empty");
-
-        if (value.Length > 100) throw new BusinessRuleException("title is too long");
+        switch (value.Length)
+        {
+            case 0:
+                ThrowDomainException("title should not be empty");
+                break;
+            case > 100:
+                ThrowDomainException("title is too long");
+                break;
+        }
     }
 
     public string Value { get; private set; }
@@ -455,55 +461,55 @@ public sealed class CreatePriceTypeCommand : ICommand
 ```
 CQRS (CommandHandler)
 ```c#
-public class PriceTypeCommandHandlers : ICommandHandler<RemovePriceTypeCommand, Result>,
-   ICommandHandler<CreatePriceTypeCommand, Result>
-{
-    private readonly IUnitOfWork _uow;
-    private readonly IPriceTypeRepository _repository;
-    private readonly IPriceTypePolicy _policy;
-    private readonly IEventBus _bus;
-
-    public PriceTypeCommandHandlers(
-        IUnitOfWork uow,
-        IPriceTypeRepository repository,
-        IPriceTypePolicy policy,
-        IEventBus bus)
+    public class PriceTypeCommandHandlers : ICommandHandler<RemovePriceTypeCommand, Result>,
+       ICommandHandler<CreatePriceTypeCommand, Result>
     {
-        _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _policy = policy ?? throw new ArgumentNullException(nameof(policy));
-        _bus = bus ?? throw new ArgumentNullException(nameof(bus));
+        private readonly IUnitOfWork _uow;
+        private readonly IPriceTypeRepository _repository;
+        private readonly IPriceTypePolicy _policy;
+        private readonly IEventBus _bus;
+
+        public PriceTypeCommandHandlers(
+            IUnitOfWork uow,
+            IPriceTypeRepository repository,
+            IPriceTypePolicy policy,
+            IEventBus bus)
+        {
+            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _policy = policy ?? throw new ArgumentNullException(nameof(policy));
+            _bus = bus ?? throw new ArgumentNullException(nameof(bus));
+        }
+
+        public async Task<Result> Handle(RemovePriceTypeCommand command, CancellationToken cancellationToken)
+        {
+            var priceType = await _repository.FindAsync(command.PriceTypeId, cancellationToken);
+            if (priceType is null) return Result.Fail($"PriceType with id:{command.PriceTypeId} not found");
+            
+            //Alternative: _repository.Remove(priceType);
+            _uow.Set<PriceType>().Remove(priceType);
+            
+            await _uow.SaveChanges(cancellationToken);
+            await _bus.DispatchDomainEvents(priceType, cancellationToken);
+            
+            return Result.Ok();
+        }
+
+        public async Task<Result> Handle(CreatePriceTypeCommand command, CancellationToken cancellationToken)
+        {
+            var title = new Title(command.Title);
+
+            var priceType = new PriceType(title, _policy);
+
+            //Alternative: _repository.Add(priceType);
+            _uow.Set<PriceType>().Add(priceType);
+            
+            await _uow.SaveChanges(cancellationToken);
+            await _bus.DispatchDomainEvents(priceType, cancellationToken);
+
+            return Result.None;
+        }
     }
-
-    public async Task<Result> Handle(RemovePriceTypeCommand command, CancellationToken cancellationToken)
-    {
-        var priceType = await _repository.FindAsync(command.PriceTypeId, cancellationToken);
-        if (priceType is null) return Result.Fail($"PriceType with id:{command.PriceTypeId} not found");
-
-        //Alternative: _uow.Set<PriceType>().Remove(priceType);
-        _repository.Remove(priceType);
-
-        await _uow.SaveChanges(cancellationToken);
-
-        return Result.Ok();
-    }
-
-    public async Task<Result> Handle(CreatePriceTypeCommand command, CancellationToken cancellationToken)
-    {
-        var title = new Title(command.Title);
-
-        var priceType = new PriceType(title, _policy);
-
-        //Alternative: _uow.Set<PriceType>().Add(priceType);
-        _repository.Add(priceType);
-        
-        await _uow.SaveChanges(cancellationToken);
-
-        await _bus.DispatchDomainEvents(priceType, cancellationToken);
-
-        return Result.None;
-    }
-}
 ```
 
 ## ASP.NET Boilerplate

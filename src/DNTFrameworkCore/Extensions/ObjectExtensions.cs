@@ -8,15 +8,15 @@ namespace DNTFrameworkCore.Extensions
 {
     public static class ObjectExtensions
     {
-        private const string EFCoreProxyPrefix = "Castle.Proxies.";
-        private const string NHibernateProxyPostfix = "Proxy";
+        private const string ProxyPrefix = "Castle.Proxies.";
+        private const string ProxySuffix = "Proxy";
 
         public static Type GetUnproxiedType(this object instance)
         {
             var type = instance.GetType();
             var typeString = type.ToString();
 
-            if (typeString.Contains(EFCoreProxyPrefix) || typeString.EndsWith(NHibernateProxyPostfix))
+            if (typeString.Contains(ProxyPrefix) || typeString.EndsWith(ProxySuffix))
                 return type.BaseType;
 
             return type;

@@ -5,18 +5,26 @@ namespace DNTFrameworkCore.Exceptions
     [Serializable]
     public class DomainException : Exception
     {
-        protected DomainException()
+        public string Details { get; }
+
+        public DomainException(string message) : base(message)
         {
         }
 
-        protected DomainException(string message)
-            : base(message)
+        public DomainException(string message, string details) : base(message)
         {
+            Details = details;
         }
 
-        protected DomainException(string message, Exception innerException)
+        public DomainException(string message, Exception innerException)
             : base(message, innerException)
         {
+        }
+        
+        public DomainException(string message, string details, Exception innerException)
+            : base(message, innerException)
+        {
+            Details = details;
         }
     }
 }

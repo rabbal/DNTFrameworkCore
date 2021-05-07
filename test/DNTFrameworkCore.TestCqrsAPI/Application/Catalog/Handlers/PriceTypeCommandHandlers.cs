@@ -36,11 +36,13 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
         public async Task<Result> Handle(RemovePriceTypeCommand command, CancellationToken cancellationToken)
         {
             var priceType = await _repository.FindAsync(command.PriceTypeId, cancellationToken);
-            if (priceType is null) Result.Fail($"PriceType with id:{command.PriceTypeId} not found");
+            if (priceType is null) return Result.Fail($"PriceType with id:{command.PriceTypeId} not found");
 
-            _repository.Remove(priceType);
-
+            //Alternative: _repository.Remove(priceType);
+            _uow.Set<PriceType>().Remove(priceType);
+            
             await _uow.SaveChanges(cancellationToken);
+            await _bus.DispatchDomainEvents(priceType, cancellationToken);
 
             return Result.Ok();
         }
@@ -57,10 +59,10 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
             if (priceTypeResult.Failed) return priceTypeResult;
 
             var priceType = priceTypeResult.Value;
-            _repository.Add(priceType);
+            //Alternative: _repository.Add(priceType);
+            _uow.Set<PriceType>().Add(priceType);
 
             await _uow.SaveChanges(cancellationToken);
-
             await _bus.DispatchDomainEvents(priceType, cancellationToken);
 
             return Result.Ok();
@@ -91,12 +93,13 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
         {
             var priceType = await _repository.FindAsync(command.PriceTypeId, cancellationToken);
             if (priceType is null) return Result.Fail($"PriceType with id:{command.PriceTypeId} not found");
-
-            //Alternative: _uow.Set<PriceType>().Remove(priceType);
-            _repository.Remove(priceType);
-
+            
+            //Alternative: _repository.Remove(priceType);
+            _uow.Set<PriceType>().Remove(priceType);
+            
             await _uow.SaveChanges(cancellationToken);
-
+            await _bus.DispatchDomainEvents(priceType, cancellationToken);
+            
             return Result.Ok();
         }
 
@@ -106,11 +109,10 @@ namespace DNTFrameworkCore.TestCqrsAPI.Application.Catalog.Handlers
 
             var priceType = new PriceType(title, _policy);
 
-            //Alternative: _uow.Set<PriceType>().Add(priceType);
-            _repository.Add(priceType);
+            //Alternative: _repository.Add(priceType);
+            _uow.Set<PriceType>().Add(priceType);
             
             await _uow.SaveChanges(cancellationToken);
-
             await _bus.DispatchDomainEvents(priceType, cancellationToken);
 
             return Result.None;
