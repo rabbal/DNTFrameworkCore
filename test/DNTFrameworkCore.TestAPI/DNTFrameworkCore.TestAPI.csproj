@@ -20,7 +20,7 @@
         <PackageReference Include="Scrutor" Version="3.3.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.1.4" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.5" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
         <PackageReference Include="MappingGenerator" Version="1.22.3" />
     </ItemGroup>
 
