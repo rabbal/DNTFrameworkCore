@@ -28,7 +28,7 @@ namespace DNTFrameworkCore.Functional
             _failures = failures.ToList();
         }
 
-        public bool IsNone => this == None;
+        public virtual bool IsNone => this == None;
         public bool Failed { get; }
         public string Message { get; }
         public string Details { get; }
@@ -42,8 +42,12 @@ namespace DNTFrameworkCore.Functional
         }
 
         public static Result Ok() => _ok;
-
-        public static Result Ok(string message, string details = null)
+        
+        public static Result Ok(string message)
+        {
+            return new(false, message, null);
+        }
+        public static Result Ok(string message, string details)
         {
             return new(false, message, details);
         }
@@ -123,8 +127,8 @@ namespace DNTFrameworkCore.Functional
     public class Result<T> : Result
     {
         private readonly T _value;
-        public static new readonly Result<T> None = new(default, false, string.Empty, string.Empty);
-        public static new readonly Task<Result<T>> NoneTask = Task.FromResult(None);
+        public new static readonly Result<T> None = new(default, false, string.Empty, string.Empty);
+        public new static readonly Task<Result<T>> NoneTask = Task.FromResult(None);
         protected internal Result(T value, bool failed, string message, string details)
             : base(failed, message, details)
         {
@@ -137,7 +141,7 @@ namespace DNTFrameworkCore.Functional
             _value = value;
         }
 
-        public new bool IsNone => this == None;
+        public override bool IsNone => this == None;
         public T Value => !Failed ? _value : throw new InvalidOperationException("There is no value for failure.");
 
         public static implicit operator Result<T>(T value)

@@ -96,21 +96,18 @@ namespace DNTFrameworkCore.Logging
 
         internal void Queue(LogItem item)
         {
-            if (!_queue.IsAddingCompleted)
+            if (_queue.IsAddingCompleted) return;
+            
+            try
             {
-                try
+                if (!_queue.TryAdd(item, 0, _cancellationTokenSource.Token))
                 {
-                    _queue.Add(item, _cancellationTokenSource.Token);
-
-                    if (!_queue.TryAdd(item, 0, _cancellationTokenSource.Token))
-                    {
-                        Interlocked.Increment(ref _messagesDropped);
-                    }
+                    Interlocked.Increment(ref _messagesDropped);
                 }
-                catch
-                {
-                    //cancellation token canceled or CompleteAdding called
-                }
+            }
+            catch
+            {
+                //cancellation token canceled or CompleteAdding called
             }
         }
 
