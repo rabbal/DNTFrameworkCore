@@ -21,7 +21,7 @@ namespace DNTFrameworkCore.Eventing
         // ISubscription SubscribeDynamic<TH>(string eventName) where TH : IDynamicIntegrationEventHandler;
     }
 
-    public class EventBus : IEventBus
+    public sealed class EventBus : IEventBus
     {
         private static readonly LockingConcurrentDictionary<Type, DomainEventHandler> _domainEventHandlers = new();
         private static readonly LockingConcurrentDictionary<Type, BusinessEventHandler> _businessEventHandlers = new();
@@ -45,7 +45,7 @@ namespace DNTFrameworkCore.Eventing
             return DispatchDomainEvent(domainEvent, cancellationToken);
         }
 
-        protected virtual async Task<Result> DispatchInternal(
+        private async Task<Result> DispatchInternal(
             IEnumerable<Func<IBusinessEvent, CancellationToken, Task<Result>>> handlers,
             IBusinessEvent businessEvent, CancellationToken cancellationToken = default)
         {
@@ -58,7 +58,7 @@ namespace DNTFrameworkCore.Eventing
             return Result.Ok();
         }
 
-        protected virtual Task DispatchInternal(IEnumerable<Func<IDomainEvent, CancellationToken, Task>> handlers,
+        private Task DispatchInternal(IEnumerable<Func<IDomainEvent, CancellationToken, Task>> handlers,
             IDomainEvent domainEvent, CancellationToken cancellationToken = default)
         {
             var handles = handlers.Select(handle => handle(domainEvent, cancellationToken)).ToList();

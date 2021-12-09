@@ -8,14 +8,14 @@ namespace ProjectName.IntegrationTests.Stubs
 {
     public class StubEventBus : IEventBus
     {
-        public Task<Result> TriggerAsync(IBusinessEvent businessEvent, CancellationToken cancellationToken = default)
+        public Task<Result> Dispatch(IBusinessEvent businessEvent, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(Result.Ok());
         }
 
-        public Task TriggerAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default)
+        public Task Dispatch(IDomainEvent domainEvent, CancellationToken cancellationToken = default)
         {
-            return Task.CompletedTask;
+            return Task.CompletedTask;   
         }
     }
 }
