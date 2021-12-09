@@ -9,7 +9,7 @@
     <PackageTags>dotnet-new;templates;DNTFrameworkCore;dotnet;</PackageTags>
 	<PackageProjectUrl>https://github.com/Rabbal/DNTFrameworkCore</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
 
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeBuildOutput>false</IncludeBuildOutput>
