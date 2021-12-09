@@ -70,7 +70,7 @@ namespace DNTFrameworkCore.EFCore.Context.Converters.Json
 
                     var valueComparer = typeof(JsonValueComparer<>).MakeGenericType(modelType);
                     property.Metadata.SetValueComparer(
-                        (ValueComparer) Activator.CreateInstance(valueComparer, new object[0]));
+                        (ValueComparer) Activator.CreateInstance(valueComparer, Array.Empty<object>()));
                 }
             }
         }

@@ -1,8 +1,8 @@
 <Project>
     <PropertyGroup>
-        <VersionPrefix>5.1.10</VersionPrefix>
+        <VersionPrefix>6.0.0</VersionPrefix>
         <Authors>Salar Rabbal</Authors>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <PackageProjectUrl>https://github.com/rabbal/DNTFrameworkCore</PackageProjectUrl>
         <PackageIcon>nupkg.png</PackageIcon>
