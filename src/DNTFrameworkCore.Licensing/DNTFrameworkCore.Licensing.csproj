@@ -9,7 +9,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="System.Management" Version="6.0.0" />
-        <PackageReference Include="System.Security.Cryptography.Xml" Version="6.0.0" />
+        <PackageReference Include="System.Security.Cryptography.Xml" Version="6.0.1" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\DNTFrameworkCore\DNTFrameworkCore.csproj" />
